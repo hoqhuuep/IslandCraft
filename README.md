@@ -1,2 +1,2 @@
-CraftIslands-Generator
-======================
+CraftIslands
+============
