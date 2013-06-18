@@ -11,45 +11,42 @@ import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.purchasing.Purchasing;
 
 public class PurchasingCommandExecutor implements CommandExecutor {
-	private final ICServer server;
-	private final Purchasing purchasing;
+    private final ICServer server;
+    private final Purchasing purchasing;
 
-	public PurchasingCommandExecutor(final Purchasing purchasing,
-			final ICServer server) {
-		this.server = server;
-		this.purchasing = purchasing;
-	}
+    public PurchasingCommandExecutor(final Purchasing purchasing, final ICServer server) {
+        this.server = server;
+        this.purchasing = purchasing;
+    }
 
-	@Override
-	public boolean onCommand(final CommandSender sender, final Command command,
-			final String label, final String[] args) {
-		if (sender == null || !(sender instanceof Player)) {
-			return false;
-		}
-		final ICPlayer player = server.findOnlinePlayer(((Player) sender)
-				.getName());
-		if ("purchase".equalsIgnoreCase(label)) {
-			if (args.length != 0) {
-				return false;
-			}
-			purchasing.onPurchase(player);
-		} else if ("abandon".equalsIgnoreCase(label)) {
-			if (args.length != 0) {
-				return false;
-			}
-			purchasing.onAbandon(player);
-		} else if ("examine".equalsIgnoreCase(label)) {
-			if (args.length != 0) {
-				return false;
-			}
-			purchasing.onExamine(player);
-		} else if ("rename".equalsIgnoreCase(label)) {
-			String name = StringUtils.join(args, " ");
-			if (name.isEmpty()) {
-				return false;
-			}
-			purchasing.onRename(player, name);
-		}
-		return true;
-	}
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+        if (sender == null || !(sender instanceof Player)) {
+            return false;
+        }
+        final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
+        if ("purchase".equalsIgnoreCase(label)) {
+            if (args.length != 0) {
+                return false;
+            }
+            purchasing.onPurchase(player);
+        } else if ("abandon".equalsIgnoreCase(label)) {
+            if (args.length != 0) {
+                return false;
+            }
+            purchasing.onAbandon(player);
+        } else if ("examine".equalsIgnoreCase(label)) {
+            if (args.length != 0) {
+                return false;
+            }
+            purchasing.onExamine(player);
+        } else if ("rename".equalsIgnoreCase(label)) {
+            String name = StringUtils.join(args, " ");
+            if (name.isEmpty()) {
+                return false;
+            }
+            purchasing.onRename(player, name);
+        }
+        return true;
+    }
 }

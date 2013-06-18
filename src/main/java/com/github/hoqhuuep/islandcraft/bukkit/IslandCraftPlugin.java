@@ -39,84 +39,76 @@ import com.khorn.terraincontrol.biomegenerators.BiomeModeManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public final class IslandCraftPlugin extends JavaPlugin {
-	private BiomeModeManager getBiomeModeManager() {
-		return TerrainControl.getBiomeModeManager();
-	}
+    private BiomeModeManager getBiomeModeManager() {
+        return TerrainControl.getBiomeModeManager();
+    }
 
-	@Override
-	public List<Class<?>> getDatabaseClasses() {
-		return EbeanServerDatabase.getDatabaseClasses();
-	}
+    @Override
+    public List<Class<?>> getDatabaseClasses() {
+        return EbeanServerDatabase.getDatabaseClasses();
+    }
 
-	@Override
-	public void onEnable() {
-		getConfig().options().copyDefaults(true);
-		saveConfig();
-		try {
-			getDatabase().find(CompassTargetBean.class).findRowCount();
-		} catch (PersistenceException e) {
-			installDDL();
-		}
+    @Override
+    public void onEnable() {
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+        try {
+            getDatabase().find(CompassTargetBean.class).findRowCount();
+        } catch (PersistenceException e) {
+            installDDL();
+        }
 
-		final ICServer server = new BukkitServer(getServer());
-		final ICConfig config = new FileConfigurationConfig(getConfig());
-		final ICDatabase database = new EbeanServerDatabase(getDatabase());
-		final ICProtection protection = new WorldGuardProtection(
-				getWorldGuard());
+        final ICServer server = new BukkitServer(getServer());
+        final ICConfig config = new FileConfigurationConfig(getConfig());
+        final ICDatabase database = new EbeanServerDatabase(getDatabase());
+        final ICProtection protection = new WorldGuardProtection(getWorldGuard());
 
-		// Island Math
-		final IslandMath islandMath = new IslandMath(config, server);
+        // Island Math
+        final IslandMath islandMath = new IslandMath(config, server);
 
-		// Generator
-		IslandCraftBiomeGenerator.setGenerator(new IslandGenerator(config));
-		BiomeModeManager biomeModeManager = getBiomeModeManager();
-		biomeModeManager.register("IslandCraft",
-				IslandCraftBiomeGenerator.class);
+        // Generator
+        IslandCraftBiomeGenerator.setGenerator(new IslandGenerator(config));
+        BiomeModeManager biomeModeManager = getBiomeModeManager();
+        biomeModeManager.register("IslandCraft", IslandCraftBiomeGenerator.class);
 
-		// Purchasing
-		PurchasingCommandExecutor purchasing = new PurchasingCommandExecutor(
-				new Purchasing(database, config, protection, islandMath),
-				server);
-		getCommand("purchase").setExecutor(purchasing);
-		getCommand("abandon").setExecutor(purchasing);
-		getCommand("examine").setExecutor(purchasing);
-		getCommand("rename").setExecutor(purchasing);
+        // Purchasing
+        PurchasingCommandExecutor purchasing = new PurchasingCommandExecutor(new Purchasing(database, config, protection, islandMath), server);
+        getCommand("purchase").setExecutor(purchasing);
+        getCommand("abandon").setExecutor(purchasing);
+        getCommand("examine").setExecutor(purchasing);
+        getCommand("rename").setExecutor(purchasing);
 
-		// Chat
-		LocalChatCommandExecutor localChat = new LocalChatCommandExecutor(
-				new LocalChat(config), server);
-		getCommand("l").setExecutor(localChat);
-		PartyChatCommandExecutor partyChat = new PartyChatCommandExecutor(
-				new PartyChat(database), server);
-		getCommand("p").setExecutor(partyChat);
-		getCommand("join").setExecutor(partyChat);
-		getCommand("leave").setExecutor(partyChat);
-		getCommand("members").setExecutor(partyChat);
-		PrivateMessageCommandExecutor privateMessage = new PrivateMessageCommandExecutor(
-				new PrivateMessage(), server);
-		getCommand("m").setExecutor(privateMessage);
+        // Chat
+        LocalChatCommandExecutor localChat = new LocalChatCommandExecutor(new LocalChat(config), server);
+        getCommand("l").setExecutor(localChat);
+        PartyChatCommandExecutor partyChat = new PartyChatCommandExecutor(new PartyChat(database), server);
+        getCommand("p").setExecutor(partyChat);
+        getCommand("join").setExecutor(partyChat);
+        getCommand("leave").setExecutor(partyChat);
+        getCommand("members").setExecutor(partyChat);
+        PrivateMessageCommandExecutor privateMessage = new PrivateMessageCommandExecutor(new PrivateMessage(), server);
+        getCommand("m").setExecutor(privateMessage);
 
-		// UsefulExtras
-		register(new BetterClockListener(new BetterClock(), server));
-		register(new BetterCompassListener(new BetterCompass(database), server));
-		getCommand("suicide").setExecutor(
-				new SuicideCommandExecutor(new Suicide(), server));
-	}
+        // UsefulExtras
+        register(new BetterClockListener(new BetterClock(), server));
+        register(new BetterCompassListener(new BetterCompass(database), server));
+        getCommand("suicide").setExecutor(new SuicideCommandExecutor(new Suicide(), server));
+    }
 
-	private void register(final Listener listener) {
-		final PluginManager pluginManager = getServer().getPluginManager();
-		pluginManager.registerEvents(listener, this);
-	}
+    private void register(final Listener listener) {
+        final PluginManager pluginManager = getServer().getPluginManager();
+        pluginManager.registerEvents(listener, this);
+    }
 
-	private WorldGuardPlugin getWorldGuard() {
-		PluginManager pluginManager = getServer().getPluginManager();
-		Plugin plugin = pluginManager.getPlugin("WorldGuard");
+    private WorldGuardPlugin getWorldGuard() {
+        PluginManager pluginManager = getServer().getPluginManager();
+        Plugin plugin = pluginManager.getPlugin("WorldGuard");
 
-		// WorldGuard may not be loaded
-		if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
-			return null;
-		}
+        // WorldGuard may not be loaded
+        if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
+            return null;
+        }
 
-		return (WorldGuardPlugin) plugin;
-	}
+        return (WorldGuardPlugin) plugin;
+    }
 }

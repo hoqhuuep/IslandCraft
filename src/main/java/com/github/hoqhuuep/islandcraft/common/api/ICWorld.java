@@ -5,17 +5,17 @@ import java.util.List;
 import com.github.hoqhuuep.islandcraft.common.core.ICLocation;
 
 public interface ICWorld {
-	List<ICPlayer> getPlayers();
+    List<ICPlayer> getPlayers();
 
-	ICServer getServer();
+    ICServer getServer();
 
-	long getSeed();
+    long getSeed();
 
-	ICLocation getSpawnLocation();
+    ICLocation getSpawnLocation();
 
-	String getTime();
+    String getTime();
 
-	String getName();
+    String getName();
 
-	boolean isNormalWorld();
+    boolean isNormalWorld();
 }

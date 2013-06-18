@@ -9,12 +9,11 @@ import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
  *      wiki</a>
  */
 public class PrivateMessage {
-	public void onPrivateMessage(final ICPlayer from, final ICPlayer to,
-			final String message) {
-		if (to == null) {
-			from.info("No such player");
-			return;
-		}
-		to.privateMessage(from, message);
-	}
+    public void onPrivateMessage(final ICPlayer from, final ICPlayer to, final String message) {
+        if (to == null) {
+            from.info("No such player");
+            return;
+        }
+        to.privateMessage(from, message);
+    }
 }

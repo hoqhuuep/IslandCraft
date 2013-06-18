@@ -8,36 +8,36 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "island")
 public class IslandBean {
-	@Id
-	private String location;
+    @Id
+    private String location;
 
-	@Column
-	private Long seed;
+    @Column
+    private Long seed;
 
-	@Column
-	private String owner;
+    @Column
+    private String owner;
 
-	public String getLocation() {
-		return location;
-	}
+    public String getLocation() {
+        return location;
+    }
 
-	public String getOwner() {
-		return owner;
-	}
+    public String getOwner() {
+        return owner;
+    }
 
-	public Long getSeed() {
-		return seed;
-	}
+    public Long getSeed() {
+        return seed;
+    }
 
-	public void setLocation(final String location) {
-		this.location = location;
-	}
+    public void setLocation(final String location) {
+        this.location = location;
+    }
 
-	public void setOwner(final String owner) {
-		this.owner = owner;
-	}
+    public void setOwner(final String owner) {
+        this.owner = owner;
+    }
 
-	public void setSeed(final Long seed) {
-		this.seed = seed;
-	}
+    public void setSeed(final Long seed) {
+        this.seed = seed;
+    }
 }

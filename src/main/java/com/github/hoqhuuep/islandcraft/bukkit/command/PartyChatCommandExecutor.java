@@ -11,45 +11,42 @@ import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.chat.PartyChat;
 
 public class PartyChatCommandExecutor implements CommandExecutor {
-	private final ICServer server;
-	private final PartyChat partyChat;
+    private final ICServer server;
+    private final PartyChat partyChat;
 
-	public PartyChatCommandExecutor(final PartyChat partyChat,
-			final ICServer server) {
-		this.partyChat = partyChat;
-		this.server = server;
-	}
+    public PartyChatCommandExecutor(final PartyChat partyChat, final ICServer server) {
+        this.partyChat = partyChat;
+        this.server = server;
+    }
 
-	@Override
-	public boolean onCommand(final CommandSender sender, final Command command,
-			final String label, final String[] args) {
-		if (sender == null || !(sender instanceof Player)) {
-			return false;
-		}
-		final ICPlayer player = server.findOnlinePlayer(((Player) sender)
-				.getName());
-		if ("p".equalsIgnoreCase(label)) {
-			final String message = StringUtils.join(args, " ");
-			if (message.isEmpty()) {
-				return false;
-			}
-			partyChat.onPartyChat(player, message);
-		} else if ("join".equalsIgnoreCase(label)) {
-			if (args.length != 1) {
-				return false;
-			}
-			partyChat.onJoin(player, args[0]);
-		} else if ("leave".equalsIgnoreCase(label)) {
-			if (args.length != 0) {
-				return false;
-			}
-			partyChat.onLeave(player);
-		} else if ("members".equalsIgnoreCase(label)) {
-			if (args.length != 0) {
-				return false;
-			}
-			partyChat.onMembers(player);
-		}
-		return true;
-	}
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+        if (sender == null || !(sender instanceof Player)) {
+            return false;
+        }
+        final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
+        if ("p".equalsIgnoreCase(label)) {
+            final String message = StringUtils.join(args, " ");
+            if (message.isEmpty()) {
+                return false;
+            }
+            partyChat.onPartyChat(player, message);
+        } else if ("join".equalsIgnoreCase(label)) {
+            if (args.length != 1) {
+                return false;
+            }
+            partyChat.onJoin(player, args[0]);
+        } else if ("leave".equalsIgnoreCase(label)) {
+            if (args.length != 0) {
+                return false;
+            }
+            partyChat.onLeave(player);
+        } else if ("members".equalsIgnoreCase(label)) {
+            if (args.length != 0) {
+                return false;
+            }
+            partyChat.onMembers(player);
+        }
+        return true;
+    }
 }

@@ -10,23 +10,21 @@ import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.extras.Suicide;
 
 public class SuicideCommandExecutor implements CommandExecutor {
-	private final ICServer server;
-	private final Suicide suicide;
+    private final ICServer server;
+    private final Suicide suicide;
 
-	public SuicideCommandExecutor(final Suicide suicide, final ICServer server) {
-		this.suicide = suicide;
-		this.server = server;
-	}
+    public SuicideCommandExecutor(final Suicide suicide, final ICServer server) {
+        this.suicide = suicide;
+        this.server = server;
+    }
 
-	@Override
-	public boolean onCommand(final CommandSender sender, final Command command,
-			final String label, final String[] args) {
-		if (sender == null || !(sender instanceof Player) || args.length != 0) {
-			return false;
-		}
-		final ICPlayer player = server.findOnlinePlayer(((Player) sender)
-				.getName());
-		suicide.onSuicide(player);
-		return true;
-	}
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+        if (sender == null || !(sender instanceof Player) || args.length != 0) {
+            return false;
+        }
+        final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
+        suicide.onSuicide(player);
+        return true;
+    }
 }

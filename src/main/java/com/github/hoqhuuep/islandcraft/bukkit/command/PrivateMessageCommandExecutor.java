@@ -13,31 +13,28 @@ import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.chat.PrivateMessage;
 
 public class PrivateMessageCommandExecutor implements CommandExecutor {
-	private final ICServer server;
-	private final PrivateMessage privateMessage;
+    private final ICServer server;
+    private final PrivateMessage privateMessage;
 
-	public PrivateMessageCommandExecutor(final PrivateMessage privateMessage,
-			final ICServer server) {
-		this.privateMessage = privateMessage;
-		this.server = server;
-	}
+    public PrivateMessageCommandExecutor(final PrivateMessage privateMessage, final ICServer server) {
+        this.privateMessage = privateMessage;
+        this.server = server;
+    }
 
-	@Override
-	public boolean onCommand(final CommandSender sender, final Command command,
-			final String label, final String[] args) {
-		if (sender == null || !(sender instanceof Player) || args.length < 2) {
-			return false;
-		}
-		final String[] messageArray = Arrays.copyOfRange(args, 1, args.length);
-		final String message = StringUtils.join(messageArray, " ");
-		if (message.isEmpty()) {
-			return false;
-		}
-		final ICPlayer from = server.findOnlinePlayer(((Player) sender)
-				.getName());
-		final String toName = args[0];
-		final ICPlayer to = server.findOnlinePlayer(toName);
-		privateMessage.onPrivateMessage(from, to, message);
-		return true;
-	}
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+        if (sender == null || !(sender instanceof Player) || args.length < 2) {
+            return false;
+        }
+        final String[] messageArray = Arrays.copyOfRange(args, 1, args.length);
+        final String message = StringUtils.join(messageArray, " ");
+        if (message.isEmpty()) {
+            return false;
+        }
+        final ICPlayer from = server.findOnlinePlayer(((Player) sender).getName());
+        final String toName = args[0];
+        final ICPlayer to = server.findOnlinePlayer(toName);
+        privateMessage.onPrivateMessage(from, to, message);
+        return true;
+    }
 }

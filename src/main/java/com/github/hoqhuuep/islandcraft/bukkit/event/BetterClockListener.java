@@ -13,37 +13,35 @@ import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterClock;
 
 public class BetterClockListener implements Listener {
-	private final BetterClock betterClock;
-	private final ICServer server;
+    private final BetterClock betterClock;
+    private final ICServer server;
 
-	public BetterClockListener(final BetterClock betterClock,
-			final ICServer server) {
-		this.betterClock = betterClock;
-		this.server = server;
-	}
+    public BetterClockListener(final BetterClock betterClock, final ICServer server) {
+        this.betterClock = betterClock;
+        this.server = server;
+    }
 
-	@EventHandler
-	public void onPlayerInteract(final PlayerInteractEvent event) {
-		if (event == null) {
-			return;
-		}
-		final ItemStack item = event.getItem();
-		if (item == null) {
-			return;
-		}
-		final Player player = event.getPlayer();
-		if (player == null) {
-			return;
-		}
-		if (item.getType() == Material.WATCH) {
-			if (event.getAction() == Action.RIGHT_CLICK_AIR
-					|| event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-				final ICPlayer p = server.findOnlinePlayer(player.getName());
-				if (p == null) {
-					return;
-				}
-				betterClock.onQuery(p);
-			}
-		}
-	}
+    @EventHandler
+    public void onPlayerInteract(final PlayerInteractEvent event) {
+        if (event == null) {
+            return;
+        }
+        final ItemStack item = event.getItem();
+        if (item == null) {
+            return;
+        }
+        final Player player = event.getPlayer();
+        if (player == null) {
+            return;
+        }
+        if (item.getType() == Material.WATCH) {
+            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                final ICPlayer p = server.findOnlinePlayer(player.getName());
+                if (p == null) {
+                    return;
+                }
+                betterClock.onQuery(p);
+            }
+        }
+    }
 }
