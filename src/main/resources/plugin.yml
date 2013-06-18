@@ -1,0 +1,40 @@
+name: IslandCraft
+main: com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin
+version: 0.1
+load: STARTUP
+depend: [TerrainControl, WorldEdit, WorldGuard]
+database: true
+commands:
+  l:
+    description: TODO Write description
+    usage: /l <message>
+  p:
+    description: TODO Write description
+    usage: /p <message>
+  join:
+    description: TODO Write description
+    usage: /join <party>
+  leave:
+    description: TODO Write description
+    usage: /leave
+  members:
+    description: TODO Write description
+    usage: /members
+  m:
+    description: TODO Write description
+    usage: /m <player> <message>
+  suicide:
+    description: TODO Write description
+    usage: /suicide
+  purchase:
+    description: TODO Write description
+    usage: /purchase
+  abandon:
+    description: TODO Write description
+    usage: /abandon
+  examine:
+    description: TODO Write description
+    usage: /examine
+  rename:
+    description: TODO Write description
+    usage: /rename <name>
