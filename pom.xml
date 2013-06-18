@@ -4,7 +4,6 @@
   <artifactId>IslandCraft</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>IslandCraft</name>
-  <description>Bukkit plugin</description>
   <url>http://dev.bukkit.org/bukkit-plugins/islandcraft/</url>
   <build>
     <plugins>
@@ -59,4 +58,5 @@
       <systemPath>C:\Users\Daniel\Dropbox\Projects\IslandCraft\dependencies\TerrainControl.jar</systemPath>
     </dependency>
   </dependencies>
+  <description>IslandCraft is a Bukkit plugin which modifies the terrain generation to create an ocean with many islands.</description>
 </project>
