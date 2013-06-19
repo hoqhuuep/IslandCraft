@@ -12,7 +12,7 @@ import com.github.hoqhuuep.islandcraft.common.extras.BetterCompassTarget;
 public class EbeanServerDatabase implements ICDatabase {
     private final EbeanServer ebean;
 
-    public EbeanServerDatabase(EbeanServer ebean) {
+    public EbeanServerDatabase(final EbeanServer ebean) {
         this.ebean = ebean;
     }
 
@@ -26,7 +26,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public ICLocation loadDeathPoint(final String player) {
+    public final ICLocation loadDeathPoint(final String player) {
         final DeathPointBean bean = loadDeathPointBean(player);
         if (bean == null) {
             return null;
@@ -35,7 +35,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public void saveDeathPoint(final String player, final ICLocation deathPoint) {
+    public final void saveDeathPoint(final String player, final ICLocation deathPoint) {
         if (deathPoint == null) {
             final DeathPointBean bean = loadDeathPointBean(player);
             this.ebean.delete(bean);
@@ -58,7 +58,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public String loadParty(final String player) {
+    public final String loadParty(final String player) {
         final PartyBean bean = loadPartyBean(player);
         if (bean == null) {
             return null;
@@ -67,7 +67,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public List<String> loadPartyMembers(final String party) {
+    public final List<String> loadPartyMembers(final String party) {
         final List<PartyBean> beans = this.ebean.find(PartyBean.class).where().ieq("party", party).findList();
         final List<String> members = new ArrayList<String>(beans.size());
         for (PartyBean bean : beans) {
@@ -77,7 +77,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public void saveParty(final String player, final String party) {
+    public final void saveParty(final String player, final String party) {
         if (party == null) {
             final PartyBean bean = loadPartyBean(player);
             this.ebean.delete(bean);
@@ -98,7 +98,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public BetterCompassTarget loadCompassTarget(final String player) {
+    public final BetterCompassTarget loadCompassTarget(final String player) {
         final CompassTargetBean bean = loadCompassTargetBean(player);
         if (bean == null) {
             return null;
@@ -107,7 +107,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public void saveCompassTarget(final String player, final BetterCompassTarget target) {
+    public final void saveCompassTarget(final String player, final BetterCompassTarget target) {
         if (target == null) {
             final CompassTargetBean bean = loadCompassTargetBean(player);
             this.ebean.delete(bean);
@@ -129,7 +129,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public ICIsland loadIsland(final ICLocation location) {
+    public final ICIsland loadIsland(final ICLocation location) {
         final IslandBean bean = loadIslandBean(location);
         if (bean == null) {
             return null;
@@ -138,7 +138,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public List<ICIsland> loadIslands(final String owner) {
+    public final List<ICIsland> loadIslands(final String owner) {
         final List<IslandBean> beans = this.ebean.find(IslandBean.class).where().ieq("owner", owner).findList();
         final List<ICIsland> islands = new ArrayList<ICIsland>(beans.size());
         for (IslandBean bean : beans) {
@@ -151,7 +151,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public void saveIsland(final ICIsland island) {
+    public final void saveIsland(final ICIsland island) {
         // Override if exists
         IslandBean bean = loadIslandBean(island.getLocation());
         if (bean == null) {

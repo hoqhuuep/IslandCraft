@@ -11,30 +11,30 @@ public class ICLocation {
         this.z = z;
     }
 
-    public int distanceSquared(final ICLocation reference) {
+    public final int distanceSquared(final ICLocation reference) {
         final int dx = this.x - reference.x;
         final int dz = this.z - reference.z;
         return dx * dx + dz * dz;
     }
 
-    public ICLocation add(final int dx, final int dz) {
+    public final ICLocation add(final int dx, final int dz) {
         return new ICLocation(this.world, this.x + dx, this.z + dz);
     }
 
-    public int getX() {
+    public final int getX() {
         return this.x;
     }
 
-    public int getZ() {
+    public final int getZ() {
         return this.z;
     }
 
-    public String getWorld() {
+    public final String getWorld() {
         return this.world;
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return "ICLocation(\"" + getWorld() + "\", " + getX() + ", " + getZ() + ")";
     }
 }

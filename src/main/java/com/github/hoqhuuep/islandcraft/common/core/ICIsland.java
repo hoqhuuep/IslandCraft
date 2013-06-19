@@ -11,15 +11,15 @@ public class ICIsland {
         this.owner = owner;
     }
 
-    public String getOwner() {
+    public final String getOwner() {
         return this.owner;
     }
 
-    public long getSeed() {
+    public final long getSeed() {
         return this.seed;
     }
 
-    public ICLocation getLocation() {
+    public final ICLocation getLocation() {
         return this.location;
     }
 }

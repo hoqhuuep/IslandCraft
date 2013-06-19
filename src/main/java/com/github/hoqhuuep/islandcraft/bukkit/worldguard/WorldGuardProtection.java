@@ -22,7 +22,7 @@ public class WorldGuardProtection implements ICProtection {
     }
 
     @Override
-    public boolean addProtectedRegion(final ICRegion region, final String owner) {
+    public final boolean addProtectedRegion(final ICRegion region, final String owner) {
         ProtectedRegion protectedRegion = createRegion(region);
 
         // Set protected region flags
@@ -47,7 +47,7 @@ public class WorldGuardProtection implements ICProtection {
     }
 
     @Override
-    public boolean addVisibleRegion(final String name, final ICRegion region) {
+    public final boolean addVisibleRegion(final String name, final ICRegion region) {
         ProtectedRegion visibleRegion = createRegion(region);
 
         // Set visible region flags
@@ -66,7 +66,7 @@ public class WorldGuardProtection implements ICProtection {
     }
 
     @Override
-    public boolean removeRegion(ICRegion region) {
+    public final boolean removeRegion(final ICRegion region) {
         RegionManager regionManager = this.worldGuard.getRegionManager(this.worldGuard.getServer().getWorld(region.getWorld()));
         ProtectedRegion protectedRegion = regionManager.getRegion(regionId(region));
         regionManager.removeRegion(protectedRegion.getId());
@@ -81,7 +81,7 @@ public class WorldGuardProtection implements ICProtection {
     }
 
     @Override
-    public boolean renameRegion(ICRegion region, String title) {
+    public final boolean renameRegion(final ICRegion region, final String title) {
         RegionManager regionManager = this.worldGuard.getRegionManager(this.worldGuard.getServer().getWorld(region.getWorld()));
         ProtectedRegion visibleRegion = regionManager.getRegion(regionId(region));
         String oldGreetMessage = visibleRegion.getFlag(DefaultFlag.GREET_MESSAGE);
@@ -99,7 +99,7 @@ public class WorldGuardProtection implements ICProtection {
         return true;
     }
 
-    private static String regionId(ICRegion region) {
+    private static String regionId(final ICRegion region) {
         ICLocation min = region.getMin();
         ICLocation max = region.getMax();
         return min.getX() + ":" + min.getZ() + ":" + max.getX() + ":" + max.getZ();

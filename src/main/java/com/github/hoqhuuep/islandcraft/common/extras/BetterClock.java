@@ -10,7 +10,7 @@ import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
  *      href="https://github.com/hoqhuuep/IslandCraft/wiki /Useful-Extras#better-clock">IslandCraft
  *      wiki</a>
  */
-public class BetterClock {
+public final class BetterClock {
     public static void onQuery(final ICPlayer player) {
         if (!player.getWorld().isNormalWorld()) {
             // TODO Remove dependency on Bukkit here
@@ -18,5 +18,9 @@ public class BetterClock {
             return;
         }
         player.info("The time is " + player.getWorld().getTime());
+    }
+
+    private BetterClock() {
+        // Utility class
     }
 }

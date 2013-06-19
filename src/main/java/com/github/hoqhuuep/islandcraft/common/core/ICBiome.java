@@ -1,6 +1,6 @@
 package com.github.hoqhuuep.islandcraft.common.core;
 
-public class ICBiome {
+public final class ICBiome {
     public static final int OCEAN = 0;
     public static final int PLAINS = 1;
     public static final int DESERT = 2;
@@ -26,7 +26,7 @@ public class ICBiome {
     public static final int JUNGLE_HILLS = 22;
     public static final int UNCALCULATED = -1;
 
-    public static final String name(int biome) {
+    public static String name(final int biome) {
         switch (biome) {
         case OCEAN:
             return "Ocean";
@@ -78,5 +78,9 @@ public class ICBiome {
         case UNCALCULATED:
             return "Uncalculated";
         }
+    }
+
+    private ICBiome() {
+        // Utility class
     }
 }

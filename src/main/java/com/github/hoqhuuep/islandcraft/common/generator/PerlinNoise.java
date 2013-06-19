@@ -12,7 +12,7 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-public class PerlinNoise {
+public final class PerlinNoise {
     private static Map<Long, BufferedImage> cache = new HashMap<Long, BufferedImage>();
 
     private static BufferedImage circleCache;
@@ -41,7 +41,7 @@ public class PerlinNoise {
         return res;
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         BufferedImage result2 = perlinNoise(new Random());
         try {
             ImageIO.write(result2, "png", new File("test.png"));
@@ -81,5 +81,9 @@ public class PerlinNoise {
             }
         }
         return image;
+    }
+
+    private PerlinNoise() {
+        // Utility class
     }
 }

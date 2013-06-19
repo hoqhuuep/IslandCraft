@@ -24,7 +24,7 @@ public class BetterCompassListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDeath(final PlayerDeathEvent event) {
+    public final void onPlayerDeath(final PlayerDeathEvent event) {
         // FIXME Compass target seems to reset on death
         final Player player = event.getEntity();
         if (player == null) {
@@ -40,7 +40,7 @@ public class BetterCompassListener implements Listener {
     // TODO Bed spawn needs to update when player uses bed
 
     @EventHandler
-    public void onPlayerInteract(final PlayerInteractEvent event) {
+    public final void onPlayerInteract(final PlayerInteractEvent event) {
         if (event == null) {
             return;
         }
@@ -68,7 +68,7 @@ public class BetterCompassListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
+    public final void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
         if (event == null) {
             return;
         }

@@ -12,22 +12,22 @@ public class FileConfigurationConfig implements ICConfig {
     }
 
     @Override
-    public int getIslandGap() {
+    public final int getIslandGap() {
         return this.config.getInt("island-gap");
     }
 
     @Override
-    public int getIslandSize() {
+    public final int getIslandSize() {
         return this.config.getInt("island-size");
     }
 
     @Override
-    public int getLocalChatRadius() {
+    public final int getLocalChatRadius() {
         return this.config.getInt("local-chat-radius");
     }
 
     @Override
-    public String getWorld() {
+    public final String getWorld() {
         return this.config.getString("world");
     }
 }

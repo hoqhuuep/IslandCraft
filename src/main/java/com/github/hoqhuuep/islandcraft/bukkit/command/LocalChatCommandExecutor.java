@@ -20,7 +20,7 @@ public class LocalChatCommandExecutor implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+    public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         final String message = StringUtils.join(args, " ");
         if (message.isEmpty()) {
             return false;

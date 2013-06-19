@@ -7,11 +7,11 @@ import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.core.ICBiome;
 
 public final class IslandGenerator implements Generator {
-    private static final int div(final int x, final int divisor) {
+    private static int div(final int x, final int divisor) {
         return (int) Math.floor((double) x / divisor);
     }
 
-    private static final int mod(final int x, final int divisor) {
+    private static int mod(final int x, final int divisor) {
         return (x % divisor + divisor) % divisor;
     }
 
@@ -25,17 +25,30 @@ public final class IslandGenerator implements Generator {
     }
 
     @Override
-    public final int biomeAt(final long seed, final int x, final int z) {
+    public int biomeAt(final long seed, final int x, final int z) {
         final int xx = x + this.islandSize / 2;
         final int zz = z + this.islandSize / 2;
         final int row = div(zz, this.islandSeparation);
-        final int xxx = row % 2 == 0 ? xx : xx + this.islandSeparation / 2;
+        final int xxx;
+        if (row % 2 == 0) {
+            xxx = xx;
+        } else {
+            xxx = xx + this.islandSeparation / 2;
+        }
         final int col = div(xxx, this.islandSeparation);
         final int rx = mod(xxx, this.islandSeparation);
         final int rz = mod(zz, this.islandSeparation);
         final int cz = row * this.islandSeparation;
-        final int cx = col * this.islandSeparation - (row % 2 == 0 ? 0 : this.islandSeparation / 2);
-        return (rx >= this.islandSize || rz >= this.islandSize) ? ICBiome.OCEAN : islandBiome(islandSeed(seed, cx, cz), rx, rz);
+        final int cx;
+        if (row % 2 == 0) {
+            cx = col * this.islandSeparation;
+        } else {
+            cx = col * this.islandSeparation - this.islandSeparation / 2;
+        }
+        if (rx >= this.islandSize || rz >= this.islandSize) {
+            return ICBiome.OCEAN;
+        }
+        return islandBiome(islandSeed(seed, cx, cz), rx, rz);
     }
 
     /**
@@ -44,7 +57,7 @@ public final class IslandGenerator implements Generator {
      * @param rz
      *            z position relative to island in range [0, island-size)
      */
-    private final static int islandBiome(final long seed, final int rx, final int rz) {
+    private static int islandBiome(final long seed, final int rx, final int rz) {
         // BufferedImage img = PerlinNoise.island(seed);
         // if (img.getRGB(rx, rz) != 0xFFFFFFFF) {
         // return ICBiome.OCEAN;
@@ -52,7 +65,7 @@ public final class IslandGenerator implements Generator {
         return IslandMath.biome(seed);
     }
 
-    private final static long islandSeed(final long seed, final int cx, final int cz) {
+    private static long islandSeed(final long seed, final int cx, final int cz) {
         return seed ^ (cx + (((long) cz) << 32));
     }
 }

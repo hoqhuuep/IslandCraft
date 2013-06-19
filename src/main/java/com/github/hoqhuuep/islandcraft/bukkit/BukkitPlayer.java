@@ -25,7 +25,7 @@ public class BukkitPlayer implements ICPlayer {
     }
 
     @Override
-    public ICLocation getBedLocation() {
+    public final ICLocation getBedLocation() {
         final Location l = this.player.getBedSpawnLocation();
         if (l == null) {
             return null;
@@ -34,61 +34,61 @@ public class BukkitPlayer implements ICPlayer {
     }
 
     @Override
-    public ICLocation getLocation() {
+    public final ICLocation getLocation() {
         final Location l = this.player.getLocation();
         return new ICLocation(l.getWorld().getName(), l.getBlockX(), l.getBlockZ());
     }
 
     @Override
-    public String getName() {
+    public final String getName() {
         return this.player.getName();
     }
 
     @Override
-    public ICWorld getWorld() {
+    public final ICWorld getWorld() {
         return this.server.findOnlineWorld(this.player.getWorld().getName());
     }
 
     @Override
-    public void info(final String message) {
+    public final void info(final String message) {
         this.player.sendMessage(ChatColor.GRAY + "[INFO] " + message);
     }
 
     @Override
-    public void kill() {
+    public final void kill() {
         this.player.setHealth(0);
     }
 
     @Override
-    public void local(final ICPlayer from, final String message) {
+    public final void local(final ICPlayer from, final String message) {
         this.player.sendMessage("[" + from.getName() + "->" + ChatColor.GRAY + "local" + ChatColor.WHITE + "] " + message);
     }
 
     @Override
-    public void party(ICPlayer from, String to, String message) {
+    public final void party(final ICPlayer from, final String to, final String message) {
         this.player.sendMessage("[" + from.getName() + "->" + ChatColor.GREEN + to + ChatColor.WHITE + "] " + message);
     }
 
     @Override
-    public void privateMessage(ICPlayer from, String message) {
+    public final void privateMessage(final ICPlayer from, final String message) {
         this.player.sendMessage("[" + from.getName() + "->" + getName() + "] " + message);
     }
 
     @Override
-    public void setCompassTarget(final ICLocation location) {
+    public final void setCompassTarget(final ICLocation location) {
         final World world = this.player.getServer().getWorld(location.getWorld());
         final Location l = new Location(world, location.getX(), 64, location.getZ());
         this.player.setCompassTarget(l);
     }
 
     @Override
-    public boolean takeDiamonds(int amount) {
-        PlayerInventory inventory = this.player.getInventory();
+    public final boolean takeDiamonds(final int amount) {
+        final PlayerInventory inventory = this.player.getInventory();
         if (!inventory.containsAtLeast(new ItemStack(Material.DIAMOND), amount)) {
             // Not enough
             return false;
         }
-        HashMap<Integer, ItemStack> result = inventory.removeItem(new ItemStack(Material.DIAMOND, amount));
+        final HashMap<Integer, ItemStack> result = inventory.removeItem(new ItemStack(Material.DIAMOND, amount));
         if (!result.isEmpty()) {
             // Something went wrong, refund
             int missing = result.get(new Integer(0)).getAmount();
@@ -100,7 +100,7 @@ public class BukkitPlayer implements ICPlayer {
     }
 
     @Override
-    public ICServer getServer() {
+    public final ICServer getServer() {
         return this.server;
     }
 }

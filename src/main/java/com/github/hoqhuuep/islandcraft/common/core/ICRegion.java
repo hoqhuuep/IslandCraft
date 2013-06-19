@@ -14,15 +14,15 @@ public class ICRegion {
         this.max = max;
     }
 
-    public ICLocation getMax() {
+    public final ICLocation getMax() {
         return this.max;
     }
 
-    public ICLocation getMin() {
+    public final ICLocation getMin() {
         return this.min;
     }
 
-    public String getWorld() {
+    public final String getWorld() {
         return this.world;
     }
 }

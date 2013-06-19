@@ -14,19 +14,19 @@ public class CompassTargetBean {
     @Column
     private String target;
 
-    public String getPlayer() {
+    public final String getPlayer() {
         return this.player;
     }
 
-    public String getTarget() {
+    public final String getTarget() {
         return this.target;
     }
 
-    public void setPlayer(final String player) {
+    public final void setPlayer(final String player) {
         this.player = player;
     }
 
-    public void setTarget(final String target) {
+    public final void setTarget(final String target) {
         this.target = target;
     }
 }

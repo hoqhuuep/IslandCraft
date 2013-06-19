@@ -20,7 +20,7 @@ public class BetterClockListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerInteract(final PlayerInteractEvent event) {
+    public final void onPlayerInteract(final PlayerInteractEvent event) {
         if (event == null) {
             return;
         }

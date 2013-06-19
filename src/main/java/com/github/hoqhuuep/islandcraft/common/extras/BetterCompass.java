@@ -23,10 +23,13 @@ public class BetterCompass {
 
     private BetterCompassTarget getTarget(final String player) {
         final BetterCompassTarget t = this.database.loadCompassTarget(player);
-        return t == null ? BetterCompassTarget.SPAWN : t;
+        if (t == null) {
+            return BetterCompassTarget.SPAWN;
+        }
+        return t;
     }
 
-    public void onDeath(final ICPlayer player) {
+    public final void onDeath(final ICPlayer player) {
         final ICLocation deathPoint = player.getLocation();
         this.database.saveDeathPoint(player.getName(), deathPoint);
         if (this.database.loadCompassTarget(player.getName()) == BetterCompassTarget.DEATH_POINT) {
@@ -35,7 +38,7 @@ public class BetterCompass {
         }
     }
 
-    public void onNextTarget(final ICPlayer player) {
+    public final void onNextTarget(final ICPlayer player) {
         if (!player.getWorld().isNormalWorld()) {
             // TODO Remove dependency on Bukkit here
             player.info("Compass now pointing to " + ChatColor.MAGIC + "nowhere");
@@ -47,7 +50,7 @@ public class BetterCompass {
         player.info("Compass now pointing to " + newTarget.prettyString());
     }
 
-    public void onPreviousTarget(final ICPlayer player) {
+    public final void onPreviousTarget(final ICPlayer player) {
         if (!player.getWorld().isNormalWorld()) {
             // TODO Remove dependency on Bukkit here
             player.info("Compass now pointing to " + ChatColor.MAGIC + "nowhere");
@@ -59,14 +62,14 @@ public class BetterCompass {
         player.info("Compass now pointing to " + newTarget.prettyString());
     }
 
-    public void onSetBedLocation(final ICPlayer player) {
+    public final void onSetBedLocation(final ICPlayer player) {
         if (this.database.loadCompassTarget(player.getName()) == BetterCompassTarget.BED) {
             // Refresh location
             setTarget(player, BetterCompassTarget.BED);
         }
     }
 
-    public void onChangeWorld(final ICPlayer player) {
+    public final void onChangeWorld(final ICPlayer player) {
         // Refresh location
         setTarget(player, this.database.loadCompassTarget(player.getName()));
     }

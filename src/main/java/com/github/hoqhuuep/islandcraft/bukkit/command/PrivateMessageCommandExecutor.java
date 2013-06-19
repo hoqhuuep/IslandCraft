@@ -19,7 +19,7 @@ public class PrivateMessageCommandExecutor implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+    public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         if (sender == null || !(sender instanceof Player) || args.length < 2) {
             return false;
         }

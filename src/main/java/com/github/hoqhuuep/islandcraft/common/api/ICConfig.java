@@ -2,7 +2,7 @@ package com.github.hoqhuuep.islandcraft.common.api;
 
 /**
  * A method of loading user configurable settings.
- * 
+ *
  * @author Daniel (hoqhuuep) Simmons
  */
 public interface ICConfig {

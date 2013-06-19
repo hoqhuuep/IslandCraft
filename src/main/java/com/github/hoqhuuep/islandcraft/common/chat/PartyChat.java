@@ -20,7 +20,7 @@ public class PartyChat {
         this.database = database;
     }
 
-    public void onJoin(final ICPlayer player, final String party) {
+    public final void onJoin(final ICPlayer player, final String party) {
         final String oldParty = this.database.loadParty(player.getName());
         if (oldParty != null) {
             player.info("You are no longer a member of " + oldParty);
@@ -29,7 +29,7 @@ public class PartyChat {
         player.info("You are now a member of " + party);
     }
 
-    public void onLeave(final ICPlayer player) {
+    public final void onLeave(final ICPlayer player) {
         final String oldParty = this.database.loadParty(player.getName());
         if (oldParty == null) {
             player.info("You are not a member of any party");
@@ -39,7 +39,7 @@ public class PartyChat {
         player.info("You are no longer a member of " + oldParty);
     }
 
-    public void onMembers(final ICPlayer player) {
+    public final void onMembers(final ICPlayer player) {
         final String party = this.database.loadParty(player.getName());
         if (party == null) {
             player.info("You are not a member of any party");
@@ -49,7 +49,7 @@ public class PartyChat {
         player.info("Members: [" + StringUtils.join(members, ", ") + "]");
     }
 
-    public void onPartyChat(final ICPlayer player, final String message) {
+    public final void onPartyChat(final ICPlayer player, final String message) {
         final String party = this.database.loadParty(player.getName());
         if (party == null) {
             player.info("You are not a member of any party");

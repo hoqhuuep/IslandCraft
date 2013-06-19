@@ -19,7 +19,7 @@ public class LocalChat {
         this.config = config;
     }
 
-    public void onLocalChat(final ICPlayer player, final String message) {
+    public final void onLocalChat(final ICPlayer player, final String message) {
         final ICLocation location = player.getLocation();
         final List<ICPlayer> players = player.getWorld().getPlayers();
         for (final ICPlayer p : players) {

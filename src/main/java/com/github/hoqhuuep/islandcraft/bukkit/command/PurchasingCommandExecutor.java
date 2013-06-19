@@ -20,7 +20,7 @@ public class PurchasingCommandExecutor implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+    public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         if (sender == null || !(sender instanceof Player)) {
             return false;
         }

@@ -49,65 +49,69 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
     }
 
     @Override
-    public final int[] getBiomes(final int[] biomeArray, final int x, final int z, final int x_size, final int z_size) {
-        if (biomeArray == null || biomeArray.length < x_size * z_size) {
-            return calculate(x, z, x_size, z_size);
+    public final int[] getBiomes(final int[] biomeArray, final int x, final int z, final int xSize, final int zSize) {
+        if (biomeArray == null || biomeArray.length < xSize * zSize) {
+            return calculate(x, z, xSize, zSize);
         }
-        if (x_size == 16 && z_size == 16 && (x & 0xF) == 0 && (z & 0xF) == 0) {
+        if (xSize == 16 && zSize == 16 && (x & 0xF) == 0 && (z & 0xF) == 0) {
             synchronized (this.lockObject) {
                 return this.cache.getCachedBiomes(x, z);
             }
         }
-        int[] arrayOfInt = calculate(x, z, x_size, z_size);
-        System.arraycopy(arrayOfInt, 0, biomeArray, 0, x_size * z_size);
+        int[] arrayOfInt = calculate(x, z, xSize, zSize);
+        System.arraycopy(arrayOfInt, 0, biomeArray, 0, xSize * zSize);
         return biomeArray;
     }
 
     @Override
-    public final int[] getBiomesUnZoomed(final int[] biomeArray, final int x, final int z, final int x_size, final int z_size) {
-        if (biomeArray == null || biomeArray.length < x_size * z_size) {
-            return calculateUnZoomed(x, z, x_size, z_size);
+    public final int[] getBiomesUnZoomed(final int[] biomeArray, final int x, final int z, final int xSize, final int zSize) {
+        if (biomeArray == null || biomeArray.length < xSize * zSize) {
+            return calculateUnZoomed(x, z, xSize, zSize);
         }
-        int[] arrayOfInt = calculateUnZoomed(x, z, x_size, z_size);
-        System.arraycopy(arrayOfInt, 0, biomeArray, 0, x_size * z_size);
+        int[] arrayOfInt = calculateUnZoomed(x, z, xSize, zSize);
+        System.arraycopy(arrayOfInt, 0, biomeArray, 0, xSize * zSize);
         return biomeArray;
     }
 
     @Override
-    public final float[] getRainfall(final float[] rainfallArray, final int x, final int z, final int x_size, final int z_size) {
+    public final float[] getRainfall(final float[] rainfallArray, final int x, final int z, final int xSize, final int zSize) {
         final float[] result;
-        if (rainfallArray == null || rainfallArray.length < x_size * z_size) {
-            result = new float[x_size * z_size];
+        if (rainfallArray == null || rainfallArray.length < xSize * zSize) {
+            result = new float[xSize * zSize];
         } else {
             result = rainfallArray;
         }
-        final int[] biomeArray = calculate(x, z, x_size, z_size);
-        for (int i = 0; i < x_size * z_size; i++) {
+        final int[] biomeArray = calculate(x, z, xSize, zSize);
+        for (int i = 0; i < xSize * zSize; i++) {
             float rainfall = this.worldConfig.biomeConfigs[biomeArray[i]].getWetness() / 65536.0F;
-            if (rainfall < this.worldConfig.minMoisture)
+            if (rainfall < this.worldConfig.minMoisture) {
                 rainfall = this.worldConfig.minMoisture;
-            if (rainfall > this.worldConfig.maxMoisture)
+            }
+            if (rainfall > this.worldConfig.maxMoisture) {
                 rainfall = this.worldConfig.maxMoisture;
+            }
             result[i] = rainfall;
         }
         return result;
     }
 
     @Override
-    public final float[] getTemperatures(final float[] temperatureArray, final int x, final int z, final int x_size, final int z_size) {
+    public final float[] getTemperatures(final float[] temperatureArray, final int x, final int z, final int xSize, final int zSize) {
         final float[] result;
-        if (temperatureArray == null || temperatureArray.length < x_size * z_size) {
-            result = new float[x_size * z_size];
+        if (temperatureArray == null || temperatureArray.length < xSize * zSize) {
+            result = new float[xSize * zSize];
         } else {
             result = temperatureArray;
         }
-        final int[] biomeArray = calculate(x, z, x_size, z_size);
-        for (int i = 0; i < x_size * z_size; i++) {
+        final int[] biomeArray = calculate(x, z, xSize, zSize);
+        for (int i = 0; i < xSize * zSize; i++) {
             float temperature = this.worldConfig.biomeConfigs[biomeArray[i]].getTemperature() / 65536.0F;
-            if (temperature < this.worldConfig.minTemperature)
+            if (temperature < this.worldConfig.minTemperature) {
                 temperature = this.worldConfig.minTemperature;
-            if (temperature > this.worldConfig.maxTemperature)
+            }
+            if (temperature > this.worldConfig.maxTemperature) {
                 temperature = this.worldConfig.maxTemperature;
+            }
             result[i] = temperature;
         }
         return result;
