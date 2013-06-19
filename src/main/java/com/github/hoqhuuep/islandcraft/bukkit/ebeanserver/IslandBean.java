@@ -17,27 +17,27 @@ public class IslandBean {
     @Column
     private String owner;
 
-    public final String getLocation() {
+    public String getLocation() {
         return this.location;
     }
 
-    public final String getOwner() {
+    public String getOwner() {
         return this.owner;
     }
 
-    public final Long getSeed() {
+    public Long getSeed() {
         return this.seed;
     }
 
-    public final void setLocation(final String location) {
+    public void setLocation(final String location) {
         this.location = location;
     }
 
-    public final void setOwner(final String owner) {
+    public void setOwner(final String owner) {
         this.owner = owner;
     }
 
-    public final void setSeed(final Long seed) {
+    public void setSeed(final Long seed) {
         this.seed = seed;
     }
 }

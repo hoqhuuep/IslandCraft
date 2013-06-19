@@ -20,35 +20,35 @@ public class DeathPointBean {
     @Column
     private Integer z;
 
-    public final String getPlayer() {
+    public String getPlayer() {
         return this.player;
     }
 
-    public final String getWorld() {
+    public String getWorld() {
         return this.world;
     }
 
-    public final Integer getX() {
+    public Integer getX() {
         return this.x;
     }
 
-    public final Integer getZ() {
+    public Integer getZ() {
         return this.z;
     }
 
-    public final void setPlayer(final String player) {
+    public void setPlayer(final String player) {
         this.player = player;
     }
 
-    public final void setWorld(final String world) {
+    public void setWorld(final String world) {
         this.world = world;
     }
 
-    public final void setX(final Integer x) {
+    public void setX(final Integer x) {
         this.x = x;
     }
 
-    public final void setZ(final Integer z) {
+    public void setZ(final Integer z) {
         this.z = z;
     }
 }

@@ -14,19 +14,19 @@ public class PartyBean {
     @Column
     private String party;
 
-    public final String getPlayer() {
+    public String getPlayer() {
         return this.player;
     }
 
-    public final String getParty() {
+    public String getParty() {
         return this.party;
     }
 
-    public final void setPlayer(final String player) {
+    public void setPlayer(final String player) {
         this.player = player;
     }
 
-    public final void setParty(final String party) {
+    public void setParty(final String party) {
         this.party = party;
     }
 }
