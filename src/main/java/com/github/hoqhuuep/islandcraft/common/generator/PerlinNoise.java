@@ -48,7 +48,6 @@ public final class PerlinNoise {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private static BufferedImage perlinNoise(final Random random) {
