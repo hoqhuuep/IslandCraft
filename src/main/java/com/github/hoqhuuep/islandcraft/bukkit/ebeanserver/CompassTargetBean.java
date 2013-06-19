@@ -15,11 +15,11 @@ public class CompassTargetBean {
     private String target;
 
     public String getPlayer() {
-        return player;
+        return this.player;
     }
 
     public String getTarget() {
-        return target;
+        return this.target;
     }
 
     public void setPlayer(final String player) {

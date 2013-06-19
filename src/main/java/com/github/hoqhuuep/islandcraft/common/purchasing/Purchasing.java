@@ -23,24 +23,24 @@ public class Purchasing {
     }
 
     private int calculateCost(String player) {
-        return database.loadIslands(player).size() + 1;
+        return this.database.loadIslands(player).size() + 1;
     }
 
     public void onAbandon(final ICPlayer player) {
         ICLocation location = player.getLocation();
-        if (!location.getWorld().equalsIgnoreCase(config.getWorld())) {
+        if (!location.getWorld().equalsIgnoreCase(this.config.getWorld())) {
             player.info("You cannot abandon an island from this world");
             return;
         }
 
-        ICLocation islandLocation = islandMath.islandAt(location);
+        ICLocation islandLocation = this.islandMath.islandAt(location);
         if (islandLocation == null) {
             // No island
             player.info("You cannot abandon the ocean");
             return;
         }
 
-        ICIsland island = database.loadIsland(islandLocation);
+        ICIsland island = this.database.loadIsland(islandLocation);
         if (island == null) {
             // Not in database yet
             player.info("You cannot abandon an island you do not own");
@@ -58,32 +58,32 @@ public class Purchasing {
 
         // Success
         island = new ICIsland(islandLocation, island.getSeed(), null);
-        database.saveIsland(island);
-        protection.removeRegion(islandMath.visibleRegion(islandLocation));
-        protection.removeRegion(islandMath.protectedRegion(islandLocation));
+        this.database.saveIsland(island);
+        this.protection.removeRegion(this.islandMath.visibleRegion(islandLocation));
+        this.protection.removeRegion(this.islandMath.protectedRegion(islandLocation));
         player.info("Island successfully abandoned");
     }
 
     public void onExamine(final ICPlayer player) {
         ICLocation location = player.getLocation();
-        if (!location.getWorld().equalsIgnoreCase(config.getWorld())) {
+        if (!location.getWorld().equalsIgnoreCase(this.config.getWorld())) {
             player.info("You cannot examine an island from this world");
             return;
         }
 
-        ICLocation islandLocation = islandMath.islandAt(location);
+        ICLocation islandLocation = this.islandMath.islandAt(location);
         if (islandLocation == null) {
             // No island
             player.info("You cannot examine the ocean");
             return;
         }
 
-        ICIsland island = database.loadIsland(islandLocation);
+        ICIsland island = this.database.loadIsland(islandLocation);
         if (island == null) {
             // Not in database yet
             player.info("Available Island:");
             player.info("  Location: " + islandLocation);
-            player.info("  Biome: " + ICBiome.name(IslandMath.biome(islandMath.originalSeed(islandLocation))));
+            player.info("  Biome: " + ICBiome.name(IslandMath.biome(this.islandMath.originalSeed(islandLocation))));
             // TODO Get real regeneration here
             player.info("  Regeneration: <n> days");
             return;
@@ -125,19 +125,19 @@ public class Purchasing {
 
     public void onPurchase(final ICPlayer player) {
         ICLocation location = player.getLocation();
-        if (!location.getWorld().equalsIgnoreCase(config.getWorld())) {
+        if (!location.getWorld().equalsIgnoreCase(this.config.getWorld())) {
             player.info("You cannot purchase an island from this world");
             return;
         }
 
-        ICLocation islandLocation = islandMath.islandAt(location);
+        ICLocation islandLocation = this.islandMath.islandAt(location);
         if (islandLocation == null) {
             // No island
             player.info("You cannot purchase the ocean");
             return;
         }
 
-        ICIsland island = database.loadIsland(islandLocation);
+        ICIsland island = this.database.loadIsland(islandLocation);
 
         String name = player.getName();
         if (island != null) {
@@ -171,31 +171,31 @@ public class Purchasing {
 
         // Success
         if (island == null) {
-            island = new ICIsland(islandLocation, islandMath.originalSeed(islandLocation), name);
+            island = new ICIsland(islandLocation, this.islandMath.originalSeed(islandLocation), name);
         } else {
             island = new ICIsland(islandLocation, island.getSeed(), name);
         }
-        database.saveIsland(island);
+        this.database.saveIsland(island);
         String islandName = name + "'s Island @ " + islandLocation;
-        protection.addVisibleRegion(islandName, islandMath.visibleRegion(islandLocation));
-        protection.addProtectedRegion(islandMath.protectedRegion(islandLocation), name);
+        this.protection.addVisibleRegion(islandName, this.islandMath.visibleRegion(islandLocation));
+        this.protection.addProtectedRegion(this.islandMath.protectedRegion(islandLocation), name);
         player.info("Island successfully purchased");
     }
 
     public void onRename(ICPlayer player, String title) {
         ICLocation location = player.getLocation();
-        if (!location.getWorld().equalsIgnoreCase(config.getWorld())) {
+        if (!location.getWorld().equalsIgnoreCase(this.config.getWorld())) {
             player.info("You cannot rename an island from this world");
             return;
         }
-        ICLocation islandLocation = islandMath.islandAt(location);
+        ICLocation islandLocation = this.islandMath.islandAt(location);
         if (islandLocation == null) {
             // No island
             player.info("You cannot rename the ocean");
             return;
         }
 
-        ICIsland island = database.loadIsland(islandLocation);
+        ICIsland island = this.database.loadIsland(islandLocation);
 
         if (island == null) {
             // No island
@@ -213,7 +213,7 @@ public class Purchasing {
         }
 
         // Success
-        protection.renameRegion(islandMath.visibleRegion(islandLocation), title);
+        this.protection.renameRegion(this.islandMath.visibleRegion(islandLocation), title);
         player.info("Island successfully renamed");
     }
 }

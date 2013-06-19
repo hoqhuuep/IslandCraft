@@ -9,7 +9,7 @@ import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
  *      wiki</a>
  */
 public class Suicide {
-    public void onSuicide(final ICPlayer player) {
+    public static void onSuicide(final ICPlayer player) {
         player.kill();
     }
 }

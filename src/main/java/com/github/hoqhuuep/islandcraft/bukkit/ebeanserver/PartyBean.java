@@ -15,11 +15,11 @@ public class PartyBean {
     private String party;
 
     public String getPlayer() {
-        return player;
+        return this.player;
     }
 
     public String getParty() {
-        return party;
+        return this.party;
     }
 
     public void setPlayer(final String player) {

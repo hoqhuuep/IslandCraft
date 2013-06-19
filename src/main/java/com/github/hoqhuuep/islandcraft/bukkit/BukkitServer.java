@@ -17,7 +17,7 @@ public class BukkitServer implements ICServer {
 
     @Override
     public ICPlayer findOnlinePlayer(String name) {
-        Player player = server.getPlayerExact(name);
+        Player player = this.server.getPlayerExact(name);
         if (player == null) {
             return null;
         }
@@ -26,7 +26,7 @@ public class BukkitServer implements ICServer {
 
     @Override
     public ICWorld findOnlineWorld(String name) {
-        World world = server.getWorld(name);
+        World world = this.server.getWorld(name);
         if (world == null) {
             return null;
         }

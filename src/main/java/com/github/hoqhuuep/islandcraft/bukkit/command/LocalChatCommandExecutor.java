@@ -28,8 +28,8 @@ public class LocalChatCommandExecutor implements CommandExecutor {
         if (sender == null || !(sender instanceof Player)) {
             return false;
         }
-        final ICPlayer from = server.findOnlinePlayer(((Player) sender).getName());
-        localChat.onLocalChat(from, message);
+        final ICPlayer from = this.server.findOnlinePlayer(((Player) sender).getName());
+        this.localChat.onLocalChat(from, message);
         return true;
     }
 }

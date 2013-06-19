@@ -22,7 +22,7 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         final int[] array = new int[xSize * zSize];
         for (int x = 0; x < xSize; ++x) {
             for (int z = 0; z < zSize; ++z) {
-                array[x + z * xSize] = generator.biomeAt(seed, x + xStart, z + zStart);
+                array[x + z * xSize] = generator.biomeAt(this.seed, x + xStart, z + zStart);
             }
         }
         return array;
@@ -32,7 +32,7 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         final int[] array = new int[xSize * zSize];
         for (int x = 0; x < xSize; ++x) {
             for (int z = 0; z < zSize; ++z) {
-                array[x + z * xSize] = generator.biomeAt(seed, (x + xStart) * 4, (z + zStart) * 4);
+                array[x + z * xSize] = generator.biomeAt(this.seed, (x + xStart) * 4, (z + zStart) * 4);
             }
         }
         return array;
@@ -40,12 +40,12 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
 
     @Override
     public final void cleanupCache() {
-        cache.cleanupCache();
+        this.cache.cleanupCache();
     }
 
     @Override
     public final int getBiome(final int x, final int z) {
-        return cache.getBiome(x, z);
+        return this.cache.getBiome(x, z);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
             return calculate(x, z, x_size, z_size);
         }
         if (x_size == 16 && z_size == 16 && (x & 0xF) == 0 && (z & 0xF) == 0) {
-            synchronized (lockObject) {
-                return cache.getCachedBiomes(x, z);
+            synchronized (this.lockObject) {
+                return this.cache.getCachedBiomes(x, z);
             }
         }
         int[] arrayOfInt = calculate(x, z, x_size, z_size);
@@ -80,11 +80,11 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         }
         final int[] biomeArray = calculate(x, z, x_size, z_size);
         for (int i = 0; i < x_size * z_size; i++) {
-            float rainfall = worldConfig.biomeConfigs[biomeArray[i]].getWetness() / 65536.0F;
-            if (rainfall < worldConfig.minMoisture)
-                rainfall = worldConfig.minMoisture;
-            if (rainfall > worldConfig.maxMoisture)
-                rainfall = worldConfig.maxMoisture;
+            float rainfall = this.worldConfig.biomeConfigs[biomeArray[i]].getWetness() / 65536.0F;
+            if (rainfall < this.worldConfig.minMoisture)
+                rainfall = this.worldConfig.minMoisture;
+            if (rainfall > this.worldConfig.maxMoisture)
+                rainfall = this.worldConfig.maxMoisture;
             rainfallArray[i] = rainfall;
         }
         return rainfallArray;
@@ -97,11 +97,11 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         }
         final int[] biomeArray = calculate(x, z, x_size, z_size);
         for (int i = 0; i < x_size * z_size; i++) {
-            float temperature = worldConfig.biomeConfigs[biomeArray[i]].getTemperature() / 65536.0F;
-            if (temperature < worldConfig.minTemperature)
-                temperature = worldConfig.minTemperature;
-            if (temperature > worldConfig.maxTemperature)
-                temperature = worldConfig.maxTemperature;
+            float temperature = this.worldConfig.biomeConfigs[biomeArray[i]].getTemperature() / 65536.0F;
+            if (temperature < this.worldConfig.minTemperature)
+                temperature = this.worldConfig.minTemperature;
+            if (temperature > this.worldConfig.maxTemperature)
+                temperature = this.worldConfig.maxTemperature;
             temperatureArray[i] = temperature;
         }
         return temperatureArray;

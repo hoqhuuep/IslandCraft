@@ -34,6 +34,6 @@ public enum BetterCompassTarget {
     }
 
     public String prettyString() {
-        return string;
+        return this.string;
     }
 }

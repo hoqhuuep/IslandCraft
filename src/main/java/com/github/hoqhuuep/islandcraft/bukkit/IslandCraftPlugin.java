@@ -28,10 +28,7 @@ import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.chat.LocalChat;
 import com.github.hoqhuuep.islandcraft.common.chat.PartyChat;
-import com.github.hoqhuuep.islandcraft.common.chat.PrivateMessage;
-import com.github.hoqhuuep.islandcraft.common.extras.BetterClock;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterCompass;
-import com.github.hoqhuuep.islandcraft.common.extras.Suicide;
 import com.github.hoqhuuep.islandcraft.common.generator.IslandGenerator;
 import com.github.hoqhuuep.islandcraft.common.purchasing.Purchasing;
 import com.khorn.terraincontrol.TerrainControl;
@@ -39,7 +36,7 @@ import com.khorn.terraincontrol.biomegenerators.BiomeModeManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public final class IslandCraftPlugin extends JavaPlugin {
-    private BiomeModeManager getBiomeModeManager() {
+    private static BiomeModeManager getBiomeModeManager() {
         return TerrainControl.getBiomeModeManager();
     }
 
@@ -86,13 +83,13 @@ public final class IslandCraftPlugin extends JavaPlugin {
         getCommand("join").setExecutor(partyChat);
         getCommand("leave").setExecutor(partyChat);
         getCommand("members").setExecutor(partyChat);
-        PrivateMessageCommandExecutor privateMessage = new PrivateMessageCommandExecutor(new PrivateMessage(), server);
+        PrivateMessageCommandExecutor privateMessage = new PrivateMessageCommandExecutor(server);
         getCommand("m").setExecutor(privateMessage);
 
         // UsefulExtras
-        register(new BetterClockListener(new BetterClock(), server));
+        register(new BetterClockListener(server));
         register(new BetterCompassListener(new BetterCompass(database), server));
-        getCommand("suicide").setExecutor(new SuicideCommandExecutor(new Suicide(), server));
+        getCommand("suicide").setExecutor(new SuicideCommandExecutor(server));
     }
 
     private void register(final Listener listener) {

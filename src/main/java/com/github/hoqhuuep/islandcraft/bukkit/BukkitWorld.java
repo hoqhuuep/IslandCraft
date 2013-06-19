@@ -30,28 +30,28 @@ public class BukkitWorld implements ICWorld {
 
     @Override
     public List<ICPlayer> getPlayers() {
-        final List<Player> players = world.getPlayers();
+        final List<Player> players = this.world.getPlayers();
         final List<ICPlayer> result = new ArrayList<ICPlayer>(players.size());
         for (final Player p : players) {
-            result.add(server.findOnlinePlayer(p.getName()));
+            result.add(this.server.findOnlinePlayer(p.getName()));
         }
         return result;
     }
 
     @Override
     public long getSeed() {
-        return world.getSeed();
+        return this.world.getSeed();
     }
 
     @Override
     public ICLocation getSpawnLocation() {
-        final Location l = world.getSpawnLocation();
+        final Location l = this.world.getSpawnLocation();
         return new ICLocation(getName(), l.getBlockX(), l.getBlockZ());
     }
 
     @Override
     public String getTime() {
-        final long time = world.getTime();
+        final long time = this.world.getTime();
         final long hour = ((time + HOUR_ORIGIN) / ONE_HOUR) % HOURS_PER_DAY;
         final long minute = ((time + HOUR_ORIGIN) % ONE_HOUR) / ONE_MINUTE;
         return String.format("%02d:%02d", hour, minute);
@@ -59,20 +59,20 @@ public class BukkitWorld implements ICWorld {
 
     @Override
     public String getName() {
-        return world.getName();
+        return this.world.getName();
     }
 
     public World getBukkitWorld() {
-        return world;
+        return this.world;
     }
 
     @Override
     public boolean isNormalWorld() {
-        return world.getEnvironment() == World.Environment.NORMAL;
+        return this.world.getEnvironment() == World.Environment.NORMAL;
     }
 
     @Override
     public ICServer getServer() {
-        return server;
+        return this.server;
     }
 }

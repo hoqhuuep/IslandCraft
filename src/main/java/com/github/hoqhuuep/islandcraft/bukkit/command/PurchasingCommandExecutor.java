@@ -24,28 +24,28 @@ public class PurchasingCommandExecutor implements CommandExecutor {
         if (sender == null || !(sender instanceof Player)) {
             return false;
         }
-        final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
+        final ICPlayer player = this.server.findOnlinePlayer(((Player) sender).getName());
         if ("purchase".equalsIgnoreCase(label)) {
             if (args.length != 0) {
                 return false;
             }
-            purchasing.onPurchase(player);
+            this.purchasing.onPurchase(player);
         } else if ("abandon".equalsIgnoreCase(label)) {
             if (args.length != 0) {
                 return false;
             }
-            purchasing.onAbandon(player);
+            this.purchasing.onAbandon(player);
         } else if ("examine".equalsIgnoreCase(label)) {
             if (args.length != 0) {
                 return false;
             }
-            purchasing.onExamine(player);
+            this.purchasing.onExamine(player);
         } else if ("rename".equalsIgnoreCase(label)) {
             String name = StringUtils.join(args, " ");
             if (name.isEmpty()) {
                 return false;
             }
-            purchasing.onRename(player, name);
+            this.purchasing.onRename(player, name);
         }
         return true;
     }

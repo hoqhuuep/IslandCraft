@@ -6,8 +6,8 @@ public class ICRegion {
     private final String world;
 
     public ICRegion(final ICLocation min, final ICLocation max) {
-        world = min.getWorld();
-        if (!max.getWorld().equalsIgnoreCase(world)) {
+        this.world = min.getWorld();
+        if (!max.getWorld().equalsIgnoreCase(this.world)) {
             throw new IllegalArgumentException("Cannot create ICRegion with ICLocations from different worlds");
         }
         this.min = min;
@@ -15,14 +15,14 @@ public class ICRegion {
     }
 
     public ICLocation getMax() {
-        return max;
+        return this.max;
     }
 
     public ICLocation getMin() {
-        return min;
+        return this.min;
     }
 
     public String getWorld() {
-        return world;
+        return this.world;
     }
 }

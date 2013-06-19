@@ -12,14 +12,14 @@ public class ICIsland {
     }
 
     public String getOwner() {
-        return owner;
+        return this.owner;
     }
 
     public long getSeed() {
-        return seed;
+        return this.seed;
     }
 
     public ICLocation getLocation() {
-        return location;
+        return this.location;
     }
 }

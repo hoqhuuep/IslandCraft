@@ -21,19 +21,19 @@ public class DeathPointBean {
     private Integer z;
 
     public String getPlayer() {
-        return player;
+        return this.player;
     }
 
     public String getWorld() {
-        return world;
+        return this.world;
     }
 
     public Integer getX() {
-        return x;
+        return this.x;
     }
 
     public Integer getZ() {
-        return z;
+        return this.z;
     }
 
     public void setPlayer(final String player) {

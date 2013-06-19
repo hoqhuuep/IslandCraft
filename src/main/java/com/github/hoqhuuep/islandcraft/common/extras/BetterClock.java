@@ -11,7 +11,7 @@ import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
  *      wiki</a>
  */
 public class BetterClock {
-    public void onQuery(final ICPlayer player) {
+    public static void onQuery(final ICPlayer player) {
         if (!player.getWorld().isNormalWorld()) {
             // TODO Remove dependency on Bukkit here
             player.info("The time is " + ChatColor.MAGIC + "03:14");

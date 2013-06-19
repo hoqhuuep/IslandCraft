@@ -22,14 +22,14 @@ public class BetterCompass {
     }
 
     private BetterCompassTarget getTarget(final String player) {
-        final BetterCompassTarget t = database.loadCompassTarget(player);
+        final BetterCompassTarget t = this.database.loadCompassTarget(player);
         return t == null ? BetterCompassTarget.SPAWN : t;
     }
 
     public void onDeath(final ICPlayer player) {
         final ICLocation deathPoint = player.getLocation();
-        database.saveDeathPoint(player.getName(), deathPoint);
-        if (database.loadCompassTarget(player.getName()) == BetterCompassTarget.DEATH_POINT) {
+        this.database.saveDeathPoint(player.getName(), deathPoint);
+        if (this.database.loadCompassTarget(player.getName()) == BetterCompassTarget.DEATH_POINT) {
             // Refresh location
             setTarget(player, BetterCompassTarget.DEATH_POINT);
         }
@@ -60,7 +60,7 @@ public class BetterCompass {
     }
 
     public void onSetBedLocation(final ICPlayer player) {
-        if (database.loadCompassTarget(player.getName()) == BetterCompassTarget.BED) {
+        if (this.database.loadCompassTarget(player.getName()) == BetterCompassTarget.BED) {
             // Refresh location
             setTarget(player, BetterCompassTarget.BED);
         }
@@ -68,7 +68,7 @@ public class BetterCompass {
 
     public void onChangeWorld(final ICPlayer player) {
         // Refresh location
-        setTarget(player, database.loadCompassTarget(player.getName()));
+        setTarget(player, this.database.loadCompassTarget(player.getName()));
     }
 
     private void setTarget(final ICPlayer player, final BetterCompassTarget target) {
@@ -81,15 +81,16 @@ public class BetterCompass {
             player.setCompassTarget(bedLocation);
             break;
         case DEATH_POINT:
-            ICLocation deathPoint = database.loadDeathPoint(player.getName());
+            ICLocation deathPoint = this.database.loadDeathPoint(player.getName());
             if (deathPoint == null || !player.getServer().findOnlineWorld(deathPoint.getWorld()).isNormalWorld()) {
                 deathPoint = player.getWorld().getSpawnLocation();
             }
             player.setCompassTarget(deathPoint);
             break;
+        case SPAWN:
         default:
             player.setCompassTarget(player.getWorld().getSpawnLocation());
         }
-        database.saveCompassTarget(player.getName(), target);
+        this.database.saveCompassTarget(player.getName(), target);
     }
 }

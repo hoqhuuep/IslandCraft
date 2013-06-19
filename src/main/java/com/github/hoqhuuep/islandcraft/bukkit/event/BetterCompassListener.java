@@ -30,11 +30,11 @@ public class BetterCompassListener implements Listener {
         if (player == null) {
             return;
         }
-        final ICPlayer p = server.findOnlinePlayer(player.getName());
+        final ICPlayer p = this.server.findOnlinePlayer(player.getName());
         if (p == null) {
             return;
         }
-        betterCompass.onDeath(p);
+        this.betterCompass.onDeath(p);
     }
 
     // TODO Bed spawn needs to update when player uses bed
@@ -54,14 +54,14 @@ public class BetterCompassListener implements Listener {
         }
         if (item.getType() == Material.COMPASS) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                final ICPlayer p = server.findOnlinePlayer(player.getName());
+                final ICPlayer p = this.server.findOnlinePlayer(player.getName());
                 if (p == null) {
                     return;
                 }
                 if (player.isSneaking()) {
-                    betterCompass.onPreviousTarget(p);
+                    this.betterCompass.onPreviousTarget(p);
                 } else {
-                    betterCompass.onNextTarget(p);
+                    this.betterCompass.onNextTarget(p);
                 }
             }
         }
@@ -76,10 +76,10 @@ public class BetterCompassListener implements Listener {
         if (player == null) {
             return;
         }
-        final ICPlayer p = server.findOnlinePlayer(player.getName());
+        final ICPlayer p = this.server.findOnlinePlayer(player.getName());
         if (p == null) {
             return;
         }
-        betterCompass.onChangeWorld(p);
+        this.betterCompass.onChangeWorld(p);
     }
 }

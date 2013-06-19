@@ -20,25 +20,25 @@ public final class IslandGenerator implements Generator {
     private final int islandSeparation;
 
     public IslandGenerator(final ICConfig config) {
-        islandSize = config.getIslandSize() * 16;
-        islandSeparation = islandSize + config.getIslandGap() * 16;
+        this.islandSize = config.getIslandSize() * 16;
+        this.islandSeparation = this.islandSize + config.getIslandGap() * 16;
     }
 
     @Override
     public final int biomeAt(final long seed, final int x, final int z) {
-        final int xx = x + islandSize / 2;
-        final int zz = z + islandSize / 2;
-        final int row = div(zz, islandSeparation);
-        final int xxx = row % 2 == 0 ? xx : xx + islandSeparation / 2;
-        final int col = div(xxx, islandSeparation);
-        final int rx = mod(xxx, islandSeparation);
-        final int rz = mod(zz, islandSeparation);
-        final int cz = row * islandSeparation;
-        final int cx = col * islandSeparation - (row % 2 == 0 ? 0 : islandSeparation / 2);
-        return (rx >= islandSize || rz >= islandSize) ? ICBiome.OCEAN : islandBiome(islandSeed(seed, cx, cz), rx, rz);
+        final int xx = x + this.islandSize / 2;
+        final int zz = z + this.islandSize / 2;
+        final int row = div(zz, this.islandSeparation);
+        final int xxx = row % 2 == 0 ? xx : xx + this.islandSeparation / 2;
+        final int col = div(xxx, this.islandSeparation);
+        final int rx = mod(xxx, this.islandSeparation);
+        final int rz = mod(zz, this.islandSeparation);
+        final int cz = row * this.islandSeparation;
+        final int cx = col * this.islandSeparation - (row % 2 == 0 ? 0 : this.islandSeparation / 2);
+        return (rx >= this.islandSize || rz >= this.islandSize) ? ICBiome.OCEAN : islandBiome(islandSeed(seed, cx, cz), rx, rz);
     }
 
-    private final int islandBiome(final long seed, final int rx, final int rz) {
+    private final static int islandBiome(final long seed, final int rx, final int rz) {
         // BufferedImage img = PerlinNoise.island(seed);
         // if (img.getRGB(rx, rz) != 0xFFFFFFFF) {
         // return ICBiome.OCEAN;
@@ -46,7 +46,7 @@ public final class IslandGenerator implements Generator {
         return IslandMath.biome(seed);
     }
 
-    private final long islandSeed(final long seed, final int cx, final int cz) {
+    private final static long islandSeed(final long seed, final int cx, final int cz) {
         return seed ^ (cx + (((long) cz) << 32));
     }
 }

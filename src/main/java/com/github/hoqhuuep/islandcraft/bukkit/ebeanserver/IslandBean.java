@@ -18,15 +18,15 @@ public class IslandBean {
     private String owner;
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public String getOwner() {
-        return owner;
+        return this.owner;
     }
 
     public Long getSeed() {
-        return seed;
+        return this.seed;
     }
 
     public void setLocation(final String location) {

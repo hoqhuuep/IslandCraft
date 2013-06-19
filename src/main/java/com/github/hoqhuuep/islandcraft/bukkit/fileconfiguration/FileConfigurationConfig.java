@@ -13,21 +13,21 @@ public class FileConfigurationConfig implements ICConfig {
 
     @Override
     public int getIslandGap() {
-        return config.getInt("island-gap");
+        return this.config.getInt("island-gap");
     }
 
     @Override
     public int getIslandSize() {
-        return config.getInt("island-size");
+        return this.config.getInt("island-size");
     }
 
     @Override
     public int getLocalChatRadius() {
-        return config.getInt("local-chat-radius");
+        return this.config.getInt("local-chat-radius");
     }
 
     @Override
     public String getWorld() {
-        return config.getString("world");
+        return this.config.getString("world");
     }
 }

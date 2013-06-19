@@ -13,11 +13,9 @@ import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterClock;
 
 public class BetterClockListener implements Listener {
-    private final BetterClock betterClock;
     private final ICServer server;
 
-    public BetterClockListener(final BetterClock betterClock, final ICServer server) {
-        this.betterClock = betterClock;
+    public BetterClockListener(final ICServer server) {
         this.server = server;
     }
 
@@ -36,11 +34,11 @@ public class BetterClockListener implements Listener {
         }
         if (item.getType() == Material.WATCH) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                final ICPlayer p = server.findOnlinePlayer(player.getName());
+                final ICPlayer p = this.server.findOnlinePlayer(player.getName());
                 if (p == null) {
                     return;
                 }
-                betterClock.onQuery(p);
+                BetterClock.onQuery(p);
             }
         }
     }

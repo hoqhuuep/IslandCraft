@@ -38,7 +38,7 @@ public class EbeanServerDatabase implements ICDatabase {
     public void saveDeathPoint(final String player, final ICLocation deathPoint) {
         if (deathPoint == null) {
             final DeathPointBean bean = loadDeathPointBean(player);
-            ebean.delete(bean);
+            this.ebean.delete(bean);
             return;
         }
         // Override if exists
@@ -50,11 +50,11 @@ public class EbeanServerDatabase implements ICDatabase {
         bean.setWorld(deathPoint.getWorld());
         bean.setX(deathPoint.getX());
         bean.setZ(deathPoint.getZ());
-        ebean.save(bean);
+        this.ebean.save(bean);
     }
 
     private DeathPointBean loadDeathPointBean(final String player) {
-        return ebean.find(DeathPointBean.class).where().ieq("player", player).findUnique();
+        return this.ebean.find(DeathPointBean.class).where().ieq("player", player).findUnique();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class EbeanServerDatabase implements ICDatabase {
 
     @Override
     public List<String> loadPartyMembers(final String party) {
-        final List<PartyBean> beans = ebean.find(PartyBean.class).where().ieq("party", party).findList();
+        final List<PartyBean> beans = this.ebean.find(PartyBean.class).where().ieq("party", party).findList();
         final List<String> members = new ArrayList<String>(beans.size());
         for (PartyBean bean : beans) {
             members.add(bean.getPlayer());
@@ -80,7 +80,7 @@ public class EbeanServerDatabase implements ICDatabase {
     public void saveParty(final String player, final String party) {
         if (party == null) {
             final PartyBean bean = loadPartyBean(player);
-            ebean.delete(bean);
+            this.ebean.delete(bean);
             return;
         }
         // Override if exists
@@ -90,11 +90,11 @@ public class EbeanServerDatabase implements ICDatabase {
         }
         bean.setPlayer(player);
         bean.setParty(party);
-        ebean.save(bean);
+        this.ebean.save(bean);
     }
 
     private PartyBean loadPartyBean(final String player) {
-        return ebean.find(PartyBean.class).where().ieq("player", player).findUnique();
+        return this.ebean.find(PartyBean.class).where().ieq("player", player).findUnique();
     }
 
     @Override
@@ -110,7 +110,7 @@ public class EbeanServerDatabase implements ICDatabase {
     public void saveCompassTarget(final String player, final BetterCompassTarget target) {
         if (target == null) {
             final CompassTargetBean bean = loadCompassTargetBean(player);
-            ebean.delete(bean);
+            this.ebean.delete(bean);
             return;
         }
         // Override if exists
@@ -120,12 +120,12 @@ public class EbeanServerDatabase implements ICDatabase {
         }
         bean.setPlayer(player);
         bean.setTarget(target.toString());
-        ebean.save(bean);
+        this.ebean.save(bean);
     }
 
     private CompassTargetBean loadCompassTargetBean(final String player) {
         final String name = player;
-        return ebean.find(CompassTargetBean.class).where().ieq("player", name).findUnique();
+        return this.ebean.find(CompassTargetBean.class).where().ieq("player", name).findUnique();
     }
 
     @Override
@@ -139,7 +139,7 @@ public class EbeanServerDatabase implements ICDatabase {
 
     @Override
     public List<ICIsland> loadIslands(final String owner) {
-        final List<IslandBean> beans = ebean.find(IslandBean.class).where().ieq("owner", owner).findList();
+        final List<IslandBean> beans = this.ebean.find(IslandBean.class).where().ieq("owner", owner).findList();
         final List<ICIsland> islands = new ArrayList<ICIsland>(beans.size());
         for (IslandBean bean : beans) {
             String[] args = bean.getLocation().split("(\\s*ICLocation\\s*\\(\\s*\")|(\"\\s*,\\s*)|(\\s*,\\s*)|(\\s*\\)\\s*)");
@@ -160,11 +160,11 @@ public class EbeanServerDatabase implements ICDatabase {
         bean.setLocation(island.getLocation().toString());
         bean.setSeed(island.getSeed());
         bean.setOwner(island.getOwner());
-        ebean.save(bean);
+        this.ebean.save(bean);
     }
 
     private IslandBean loadIslandBean(final ICLocation location) {
-        return ebean.find(IslandBean.class).where().ieq("location", location.toString()).findUnique();
+        return this.ebean.find(IslandBean.class).where().ieq("location", location.toString()).findUnique();
     }
 
 }

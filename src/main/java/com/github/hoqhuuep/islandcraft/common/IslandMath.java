@@ -17,8 +17,8 @@ public class IslandMath {
     }
 
     public ICLocation islandAt(ICLocation location) {
-        final int islandSize = config.getIslandSize() * 16;
-        final int islandSeparation = islandSize + config.getIslandGap() * 16;
+        final int islandSize = this.config.getIslandSize() * 16;
+        final int islandSeparation = islandSize + this.config.getIslandGap() * 16;
         final int xx = location.getX() + islandSize / 2;
         final int zz = location.getZ() + islandSize / 2;
         final int row = div(zz, islandSeparation);
@@ -32,17 +32,17 @@ public class IslandMath {
     }
 
     public ICRegion visibleRegion(ICLocation island) {
-        final int visRad = config.getIslandSize() * 8;
+        final int visRad = this.config.getIslandSize() * 8;
         return new ICRegion(island.add(-visRad, -visRad), island.add(visRad, visRad));
     }
 
     public ICRegion protectedRegion(ICLocation island) {
-        final int proRad = config.getIslandSize() * 8 + config.getIslandGap() * 16;
+        final int proRad = this.config.getIslandSize() * 8 + this.config.getIslandGap() * 16;
         return new ICRegion(island.add(-proRad, -proRad), island.add(proRad, proRad));
     }
 
     public long originalSeed(ICLocation island) {
-        final long worldSeed = server.findOnlineWorld(island.getWorld()).getSeed();
+        final long worldSeed = this.server.findOnlineWorld(island.getWorld()).getSeed();
         return worldSeed ^ (island.getX() + (((long) island.getZ()) << 32));
     }
 

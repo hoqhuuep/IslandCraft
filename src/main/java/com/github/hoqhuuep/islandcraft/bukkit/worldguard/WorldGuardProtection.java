@@ -30,11 +30,11 @@ public class WorldGuardProtection implements ICProtection {
         owners.addPlayer(owner);
         protectedRegion.setOwners(owners);
 
-        return addRegion(protectedRegion, worldGuard.getServer().getWorld(region.getWorld()));
+        return addRegion(protectedRegion, this.worldGuard.getServer().getWorld(region.getWorld()));
     }
 
     private boolean addRegion(final ProtectedRegion region, final World world) {
-        RegionManager regionManager = worldGuard.getRegionManager(world);
+        RegionManager regionManager = this.worldGuard.getRegionManager(world);
         regionManager.addRegion(region);
         try {
             regionManager.save();
@@ -54,10 +54,10 @@ public class WorldGuardProtection implements ICProtection {
         visibleRegion.setFlag(DefaultFlag.GREET_MESSAGE, "Welcome to " + name);
         visibleRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, "Now leaving " + name);
 
-        return addRegion(visibleRegion, worldGuard.getServer().getWorld(region.getWorld()));
+        return addRegion(visibleRegion, this.worldGuard.getServer().getWorld(region.getWorld()));
     }
 
-    private ProtectedRegion createRegion(final ICRegion region) {
+    private static ProtectedRegion createRegion(final ICRegion region) {
         final ICLocation min = region.getMin();
         final ICLocation max = region.getMax();
         BlockVector bv1 = new BlockVector(min.getX(), 0, min.getZ());
@@ -67,7 +67,7 @@ public class WorldGuardProtection implements ICProtection {
 
     @Override
     public boolean removeRegion(ICRegion region) {
-        RegionManager regionManager = worldGuard.getRegionManager(worldGuard.getServer().getWorld(region.getWorld()));
+        RegionManager regionManager = this.worldGuard.getRegionManager(this.worldGuard.getServer().getWorld(region.getWorld()));
         ProtectedRegion protectedRegion = regionManager.getRegion(regionId(region));
         regionManager.removeRegion(protectedRegion.getId());
         try {
@@ -82,7 +82,7 @@ public class WorldGuardProtection implements ICProtection {
 
     @Override
     public boolean renameRegion(ICRegion region, String title) {
-        RegionManager regionManager = worldGuard.getRegionManager(worldGuard.getServer().getWorld(region.getWorld()));
+        RegionManager regionManager = this.worldGuard.getRegionManager(this.worldGuard.getServer().getWorld(region.getWorld()));
         ProtectedRegion visibleRegion = regionManager.getRegion(regionId(region));
         String oldGreetMessage = visibleRegion.getFlag(DefaultFlag.GREET_MESSAGE);
         String oldFarewellMessage = visibleRegion.getFlag(DefaultFlag.FAREWELL_MESSAGE);
@@ -99,7 +99,7 @@ public class WorldGuardProtection implements ICProtection {
         return true;
     }
 
-    private String regionId(ICRegion region) {
+    private static String regionId(ICRegion region) {
         ICLocation min = region.getMin();
         ICLocation max = region.getMax();
         return min.getX() + ":" + min.getZ() + ":" + max.getX() + ":" + max.getZ();
