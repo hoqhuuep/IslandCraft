@@ -91,7 +91,7 @@ public class BukkitPlayer implements ICPlayer {
         HashMap<Integer, ItemStack> result = inventory.removeItem(new ItemStack(Material.DIAMOND, amount));
         if (!result.isEmpty()) {
             // Something went wrong, refund
-            int missing = result.get(0).getAmount();
+            int missing = result.get(new Integer(0)).getAmount();
             inventory.addItem(new ItemStack(Material.DIAMOND, amount - missing));
             return false;
         }

@@ -31,7 +31,7 @@ public class EbeanServerDatabase implements ICDatabase {
         if (bean == null) {
             return null;
         }
-        return new ICLocation(bean.getWorld(), bean.getX(), bean.getZ());
+        return new ICLocation(bean.getWorld(), bean.getX().intValue(), bean.getZ().intValue());
     }
 
     @Override
@@ -48,8 +48,8 @@ public class EbeanServerDatabase implements ICDatabase {
         }
         bean.setPlayer(player);
         bean.setWorld(deathPoint.getWorld());
-        bean.setX(deathPoint.getX());
-        bean.setZ(deathPoint.getZ());
+        bean.setX(new Integer(deathPoint.getX()));
+        bean.setZ(new Integer(deathPoint.getZ()));
         this.ebean.save(bean);
     }
 
@@ -134,7 +134,7 @@ public class EbeanServerDatabase implements ICDatabase {
         if (bean == null) {
             return null;
         }
-        return new ICIsland(location, bean.getSeed(), bean.getOwner());
+        return new ICIsland(location, bean.getSeed().longValue(), bean.getOwner());
     }
 
     @Override
@@ -143,9 +143,9 @@ public class EbeanServerDatabase implements ICDatabase {
         final List<ICIsland> islands = new ArrayList<ICIsland>(beans.size());
         for (IslandBean bean : beans) {
             String[] args = bean.getLocation().split("(\\s*ICLocation\\s*\\(\\s*\")|(\"\\s*,\\s*)|(\\s*,\\s*)|(\\s*\\)\\s*)");
-            int x = Integer.valueOf(args[2]);
-            int z = Integer.valueOf(args[3]);
-            islands.add(new ICIsland(new ICLocation(args[1], x, z), bean.getSeed(), owner));
+            int x = Integer.valueOf(args[2]).intValue();
+            int z = Integer.valueOf(args[3]).intValue();
+            islands.add(new ICIsland(new ICLocation(args[1], x, z), bean.getSeed().longValue(), owner));
         }
         return islands;
     }
@@ -158,7 +158,7 @@ public class EbeanServerDatabase implements ICDatabase {
             bean = new IslandBean();
         }
         bean.setLocation(island.getLocation().toString());
-        bean.setSeed(island.getSeed());
+        bean.setSeed(new Long(island.getSeed()));
         bean.setOwner(island.getOwner());
         this.ebean.save(bean);
     }

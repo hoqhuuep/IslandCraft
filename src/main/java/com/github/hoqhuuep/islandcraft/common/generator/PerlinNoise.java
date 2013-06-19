@@ -33,10 +33,10 @@ public class PerlinNoise {
     }
 
     public static BufferedImage island(final long seed) {
-        BufferedImage res = cache.get(seed);
+        BufferedImage res = cache.get(new Long(seed));
         if (res == null) {
             res = perlinNoise(new Random(seed));
-            cache.put(seed, res);
+            cache.put(new Long(seed), res);
         }
         return res;
     }

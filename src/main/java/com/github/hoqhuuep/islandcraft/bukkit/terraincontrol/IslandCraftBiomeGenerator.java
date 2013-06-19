@@ -49,7 +49,7 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
     }
 
     @Override
-    public final int[] getBiomes(int[] biomeArray, final int x, final int z, final int x_size, final int z_size) {
+    public final int[] getBiomes(final int[] biomeArray, final int x, final int z, final int x_size, final int z_size) {
         if (biomeArray == null || biomeArray.length < x_size * z_size) {
             return calculate(x, z, x_size, z_size);
         }
@@ -64,7 +64,7 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
     }
 
     @Override
-    public final int[] getBiomesUnZoomed(int[] biomeArray, final int x, final int z, final int x_size, final int z_size) {
+    public final int[] getBiomesUnZoomed(final int[] biomeArray, final int x, final int z, final int x_size, final int z_size) {
         if (biomeArray == null || biomeArray.length < x_size * z_size) {
             return calculateUnZoomed(x, z, x_size, z_size);
         }
@@ -74,9 +74,12 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
     }
 
     @Override
-    public final float[] getRainfall(float[] rainfallArray, final int x, final int z, final int x_size, final int z_size) {
+    public final float[] getRainfall(final float[] rainfallArray, final int x, final int z, final int x_size, final int z_size) {
+        final float[] result;
         if (rainfallArray == null || rainfallArray.length < x_size * z_size) {
-            rainfallArray = new float[x_size * z_size];
+            result = new float[x_size * z_size];
+        } else {
+            result = rainfallArray;
         }
         final int[] biomeArray = calculate(x, z, x_size, z_size);
         for (int i = 0; i < x_size * z_size; i++) {
@@ -85,15 +88,18 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
                 rainfall = this.worldConfig.minMoisture;
             if (rainfall > this.worldConfig.maxMoisture)
                 rainfall = this.worldConfig.maxMoisture;
-            rainfallArray[i] = rainfall;
+            result[i] = rainfall;
         }
-        return rainfallArray;
+        return result;
     }
 
     @Override
-    public final float[] getTemperatures(float[] temperatureArray, final int x, final int z, final int x_size, final int z_size) {
+    public final float[] getTemperatures(final float[] temperatureArray, final int x, final int z, final int x_size, final int z_size) {
+        final float[] result;
         if (temperatureArray == null || temperatureArray.length < x_size * z_size) {
-            temperatureArray = new float[x_size * z_size];
+            result = new float[x_size * z_size];
+        } else {
+            result = temperatureArray;
         }
         final int[] biomeArray = calculate(x, z, x_size, z_size);
         for (int i = 0; i < x_size * z_size; i++) {
@@ -102,8 +108,8 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
                 temperature = this.worldConfig.minTemperature;
             if (temperature > this.worldConfig.maxTemperature)
                 temperature = this.worldConfig.maxTemperature;
-            temperatureArray[i] = temperature;
+            result[i] = temperature;
         }
-        return temperatureArray;
+        return result;
     }
 }

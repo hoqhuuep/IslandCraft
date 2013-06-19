@@ -54,7 +54,7 @@ public class BukkitWorld implements ICWorld {
         final long time = this.world.getTime();
         final long hour = ((time + HOUR_ORIGIN) / ONE_HOUR) % HOURS_PER_DAY;
         final long minute = ((time + HOUR_ORIGIN) % ONE_HOUR) / ONE_MINUTE;
-        return String.format("%02d:%02d", hour, minute);
+        return String.format("%02d:%02d", new Long(hour), new Long(minute));
     }
 
     @Override

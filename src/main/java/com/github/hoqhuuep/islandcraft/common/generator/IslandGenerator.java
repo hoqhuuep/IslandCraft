@@ -38,6 +38,12 @@ public final class IslandGenerator implements Generator {
         return (rx >= this.islandSize || rz >= this.islandSize) ? ICBiome.OCEAN : islandBiome(islandSeed(seed, cx, cz), rx, rz);
     }
 
+    /**
+     * @param rx
+     *            x position relative to island in range [0, island-size)
+     * @param rz
+     *            z position relative to island in range [0, island-size)
+     */
     private final static int islandBiome(final long seed, final int rx, final int rz) {
         // BufferedImage img = PerlinNoise.island(seed);
         // if (img.getRGB(rx, rz) != 0xFFFFFFFF) {
