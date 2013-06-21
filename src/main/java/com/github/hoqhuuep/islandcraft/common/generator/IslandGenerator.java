@@ -1,8 +1,5 @@
 package com.github.hoqhuuep.islandcraft.common.generator;
 
-//import java.awt.image.BufferedImage;
-
-import com.github.hoqhuuep.islandcraft.common.IslandMath;
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.core.ICBiome;
 
@@ -57,12 +54,8 @@ public final class IslandGenerator implements Generator {
      * @param rz
      *            z position relative to island in range [0, island-size)
      */
-    private static int islandBiome(final long seed, final int rx, final int rz) {
-        // BufferedImage img = PerlinNoise.island(seed);
-        // if (img.getRGB(rx, rz) != 0xFFFFFFFF) {
-        // return ICBiome.OCEAN;
-        // }
-        return IslandMath.biome(seed);
+    private int islandBiome(final long seed, final int rx, final int rz) {
+        return IslandCache.getBiome(rx, rz, this.islandSize, this.islandSize, seed);
     }
 
     private static long islandSeed(final long seed, final int cx, final int cz) {

@@ -28,24 +28,28 @@ import be.humphreys.simplevoronoi.Voronoi;
 public class PerlinIslandGenerator {
     static final int numDots = 1500;
 
-    public static final Color OCEAN = new Color(0x0000C0);
-    public static final Color LAND = new Color(0x00C000);
-    public static final Color SHORE = new Color(0xC0C000);
-
-    static void randomDots(final int width, final int height, final long seed, final double[] x, final double[] y) {
-        final List<Double> xi = new ArrayList<Double>(width);
-        final List<Double> yi = new ArrayList<Double>(height);
+    static void randomDots(final int xSize, final int zSize, final long seed, final double[] x, final double[] z) {
+        final List<Double> xi = new ArrayList<Double>(numDots);
+        final List<Double> zi = new ArrayList<Double>(numDots);
         for (int i = 0; i < numDots; ++i) {
-            xi.add(new Double(i % width));
-            yi.add(new Double(i % height));
+            xi.add(new Double(i % xSize));
+            zi.add(new Double(i % zSize));
         }
-        Collections.shuffle(yi, new Random(seed));
+        final Random random = new Random(seed);
+        Collections.shuffle(zi, random);
         for (int i = 0; i < numDots; ++i) {
             x[i] = xi.get(i).doubleValue();
-            y[i] = yi.get(i).doubleValue();
-            if (i >= width) {
-                if (y[i] == y[i - width]) {
-                    y[i] = (y[i] + 1) % width;
+            z[i] = zi.get(i).doubleValue();
+            boolean free = false;
+            while (!free) {
+                free = true;
+                for (int num = 1; num <= i / xSize; ++num) {
+                    if (z[i] == z[i - xSize * num]) {
+                        // z[i] = z[i - xSize * num] - 1;
+                        z[i] = random.nextInt(zSize);
+                        System.out.println("test: " + z[i]);
+                        free = false;
+                    }
                 }
             }
         }
@@ -149,7 +153,7 @@ public class PerlinIslandGenerator {
     }
 
     public static void main(String[] args) {
-        BufferedImage image = renderIsland(256, 256, 2);
+        BufferedImage image = renderIsland(256, 256, 2, 0xFF0000, 0x00FF00, 0x0000FF);
         try {
             ImageIO.write(image, "png", new File("test.png"));
         } catch (IOException e) {
@@ -157,7 +161,7 @@ public class PerlinIslandGenerator {
         }
     }
 
-    public static BufferedImage renderIsland(final int width, final int height, final long seed) {
+    public static BufferedImage renderIsland(final int width, final int height, final long seed, final int oceanColor, final int shoreColor, final int landColor) {
         // Generate random points
         Random random = new Random(seed);
 
@@ -236,18 +240,18 @@ public class PerlinIslandGenerator {
         final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         final Graphics graphics = image.getGraphics();
 
-        graphics.setColor(OCEAN);
+        graphics.setColor(new Color(oceanColor, true));
         graphics.fillRect(0, 0, width, height);
         final Vertex[] vv = new Vertex[2];
         for (Polygon p : map.ps) {
             if (p.ocean) {
                 continue;
             } else if (p.water) {
-                graphics.setColor(LAND);
+                graphics.setColor(new Color(landColor, false));
             } else if (p.coast) {
-                graphics.setColor(SHORE);
+                graphics.setColor(new Color(shoreColor, false));
             } else {
-                graphics.setColor(LAND);
+                graphics.setColor(new Color(landColor, false));
             }
             for (Edge e : p.es) {
                 if (e.vs.size() < 2) {

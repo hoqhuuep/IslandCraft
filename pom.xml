@@ -56,13 +56,7 @@
       <version>2.4.11</version>
       <scope>system</scope>
       <systemPath>C:\Users\Daniel\Dropbox\Projects\IslandCraft\dependencies\TerrainControl.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>be.humphreys</groupId>
-      <artifactId>simplevoronoi</artifactId>
-      <version>1994</version>
-      <scope>system</scope>
-      <systemPath>C:\Users\Daniel\Dropbox\Projects\IslandCraft\dependencies\Voronoi.jar</systemPath>
+      <!-- http://dev.bukkit.org/bukkit-mods/terrain-control/ -->
     </dependency>
   </dependencies>
   <description>IslandCraft is a Bukkit plugin which modifies the terrain generation to create an ocean with many islands.</description>
