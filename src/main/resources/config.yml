@@ -2,9 +2,9 @@ world: world
 island-size: 16
 island-gap: 4
 local-chat-radius: 128
-biomes:
+biome:
   ocean: Ocean
-  islands:
+  island:
     - flats: Forest
       hills: ForestHills
       shore: Beach

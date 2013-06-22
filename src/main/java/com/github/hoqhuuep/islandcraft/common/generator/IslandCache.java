@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import com.github.hoqhuuep.islandcraft.common.core.ICBiome;
+import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.BiomePicker;
 import com.github.hoqhuuep.islandcraft.common.generator.wip.PerlinIslandGenerator;
 
 public class IslandCache {
@@ -14,18 +14,14 @@ public class IslandCache {
         int[] island = cache.get(new Long(seed));
 
         if (island == null) {
-            // TODO Get width and height from ICConfig
             // TODO Biome from seed
-            final int oceanBiome = ICBiome.OCEAN;
-            final int shoreBiome = ICBiome.BEACH;
-            final int flatsBiome = ICBiome.FOREST;
-            final int hillsBiome = ICBiome.FOREST_HILLS;
-            island = PerlinIslandGenerator.getIsland(xSize, zSize, new Random(seed), oceanBiome, shoreBiome, flatsBiome, hillsBiome);
+            final Random random = new Random(seed);
+            final IslandBiomes islandBiomes = BiomePicker.pick(new Random(random.nextLong()));
+            island = PerlinIslandGenerator.getIsland(xSize, zSize, new Random(random.nextLong()), islandBiomes.getOcean(), islandBiomes.getShore(),
+                    islandBiomes.getFlats(), islandBiomes.getHills());
             cache.put(new Long(seed), island);
         }
 
-        // System.out.println("DB: " + seed + " " + x + " " + z + " " +
-        // island.getRGB(x, z));
         return island[x + z * xSize];
     }
 }

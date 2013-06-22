@@ -1,5 +1,6 @@
 package com.github.hoqhuuep.islandcraft.bukkit.terraincontrol;
 
+import com.github.hoqhuuep.islandcraft.bukkit.fileconfiguration.FileConfigurationConfig;
 import com.github.hoqhuuep.islandcraft.common.generator.Generator;
 import com.khorn.terraincontrol.LocalWorld;
 import com.khorn.terraincontrol.biomegenerators.BiomeCache;
@@ -16,6 +17,7 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
     public IslandCraftBiomeGenerator(final LocalWorld world, final BiomeCache cache) {
         super(world, cache);
         this.seed = world.getSeed();
+        FileConfigurationConfig.setWorld(world);
     }
 
     public final int[] calculate(final int xStart, final int zStart, final int xSize, final int zSize) {

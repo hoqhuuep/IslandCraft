@@ -1,14 +1,24 @@
 package com.github.hoqhuuep.islandcraft.bukkit.fileconfiguration;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+
 import org.bukkit.configuration.file.FileConfiguration;
 
+import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.BiomePicker;
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
+import com.github.hoqhuuep.islandcraft.common.generator.IslandBiomes;
+import com.khorn.terraincontrol.LocalWorld;
 
 public class FileConfigurationConfig implements ICConfig {
     private final FileConfiguration config;
+    private static LocalWorld world;
 
     public FileConfigurationConfig(final FileConfiguration config) {
         this.config = config;
+        // TODO This should be elsewhere (and not static)
+        BiomePicker.setBiomes(this);
     }
 
     @Override
@@ -29,5 +39,49 @@ public class FileConfigurationConfig implements ICConfig {
     @Override
     public final String getWorld() {
         return this.config.getString("world");
+    }
+
+    @Override
+    public IslandBiomes[] getIslandBiomes() {
+        System.out.println("PICK PICK PICK CONFIG");
+        // TODO Make this more robust
+        @SuppressWarnings("unchecked")
+        List<LinkedHashMap<String, ?>> islands = (List<LinkedHashMap<String, ?>>) this.config.getList("biome.island");
+        System.out.println("ISLANDS: " + islands);
+        List<IslandBiomes> result = new ArrayList<IslandBiomes>();
+        int ocean = biomeId(this.config.getString("biome.ocean"));
+        System.out.println("OCEAN: " + ocean);
+        for (LinkedHashMap<String, ?> island : islands) {
+            System.out.println("ISLAND: " + island);
+            int shore, flats, hills;
+            flats = biomeId((String) island.get("flats"));
+            try {
+                shore = biomeId((String) island.get("shore"));
+            } catch (Exception e) {
+                shore = flats;
+            }
+            try {
+                hills = biomeId((String) island.get("hills"));
+            } catch (Exception e) {
+                hills = flats;
+            }
+            IslandBiomes ib = new IslandBiomes(ocean, shore, flats, hills);
+            int r = ((Integer) island.get("rarity")).intValue();
+            System.out.println("r: " + r);
+            for (int i = r; i > 0; --i) {
+                result.add(ib);
+            }
+        }
+        return result.toArray(new IslandBiomes[result.size()]);
+    }
+
+    private static int biomeId(final String name) {
+        System.out.println("BIOME NAME: " + name);
+        System.out.println("BIOME ID: " + world.getBiomeIdByName(name));
+        return world.getBiomeIdByName(name);
+    }
+
+    public static void setWorld(final LocalWorld w) {
+        world = w;
     }
 }
