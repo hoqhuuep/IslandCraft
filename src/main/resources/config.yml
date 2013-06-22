@@ -2,3 +2,37 @@ world: world
 island-size: 16
 island-gap: 4
 local-chat-radius: 128
+biomes:
+  ocean: Ocean
+  islands:
+    - flats: Forest
+      hills: ForestHills
+      shore: Beach
+      rarity: 100
+    - flats: Desert
+      hills: DesertHills
+      shore: Beach
+      rarity: 100
+    - flats: Taiga
+      hills: TaigaHills
+      shore: Beach
+      rarity: 100
+    - flats: Jungle
+      hills: JungleHills
+      shore: Beach
+      rarity: 100
+    - flats: Extreme Hills
+      shore: Extreme Hills Edge
+      rarity: 100
+    - flats: Swampland
+      rarity: 100
+    - flats: Plains
+      shore: Beach
+      rarity: 100
+    - flats: Ice Plains
+      hills: Ice Mountains
+      shore: FrozenOcean
+      rarity: 100
+    - flats: MushroomIsland
+      shore: MushroomIslandShore
+      rarity: 1

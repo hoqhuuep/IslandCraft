@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -26,42 +25,22 @@ import be.humphreys.simplevoronoi.Voronoi;
 // Needs cleaning up, and performance improvements
 
 public class PerlinIslandGenerator {
-    static final int numDots = 1500;
+    static final int granularity = 8;
 
-    static void randomDots(final int xSize, final int zSize, final long seed, final double[] x, final double[] z) {
-        final List<Double> xi = new ArrayList<Double>(numDots);
-        final List<Double> zi = new ArrayList<Double>(numDots);
+    static void randomDots(final int xSize, final int zSize, final int numDots, final Random random, final double[] x, final double[] z) {
         for (int i = 0; i < numDots; ++i) {
-            xi.add(new Double(i % xSize));
-            zi.add(new Double(i % zSize));
-        }
-        final Random random = new Random(seed);
-        Collections.shuffle(zi, random);
-        for (int i = 0; i < numDots; ++i) {
-            x[i] = xi.get(i).doubleValue();
-            z[i] = zi.get(i).doubleValue();
-            boolean free = false;
-            while (!free) {
-                free = true;
-                for (int num = 1; num <= i / xSize; ++num) {
-                    if (z[i] == z[i - xSize * num]) {
-                        // z[i] = z[i - xSize * num] - 1;
-                        z[i] = random.nextInt(zSize);
-                        System.out.println("test: " + z[i]);
-                        free = false;
-                    }
-                }
-            }
+            x[i] = (double) i * xSize / numDots;
+            z[i] = random.nextDouble() * zSize;
         }
     }
 
-    static List<GraphEdge> getEdges(final int width, final int height, final double[] x, final double[] y) {
+    static List<GraphEdge> getEdges(final int xSize, final int zSize, final double[] x, final double[] y) {
         final Voronoi voronoi = new Voronoi(1);
-        final List<GraphEdge> edges = voronoi.generateVoronoi(x, y, 0, width, 0, height);
+        final List<GraphEdge> edges = voronoi.generateVoronoi(x, y, 0, xSize, 0, zSize);
         return edges;
     }
 
-    static List<List<GraphEdge>> getPolygons(final List<GraphEdge> edges) {
+    static List<List<GraphEdge>> getPolygons(final List<GraphEdge> edges, final int numDots) {
         final List<List<GraphEdge>> polygons = new ArrayList<List<GraphEdge>>(numDots);
         for (int i = 0; i < numDots; ++i) {
             polygons.add(new ArrayList<GraphEdge>());
@@ -73,7 +52,7 @@ public class PerlinIslandGenerator {
         return polygons;
     }
 
-    static void relax(final List<List<GraphEdge>> polygons, final double[] x, final double[] y) {
+    static void relax(final List<List<GraphEdge>> polygons, final int numDots, final double[] x, final double[] y) {
         for (int i = 0; i < numDots; ++i) {
             x[i] = 0;
             y[i] = 0;
@@ -153,53 +132,69 @@ public class PerlinIslandGenerator {
     }
 
     public static void main(String[] args) {
-        BufferedImage image = renderIsland(256, 256, 2, 0xFF0000, 0x00FF00, 0x0000FF);
+        System.out.println("generating perlin island");
+        BufferedImage image = renderIsland(256, 256, new Random(), new Color(0x1C6BA0), new Color(0xFBEEC2), new Color(0x758918), new Color(0x49281F));
+        System.out.println("saving");
         try {
             ImageIO.write(image, "png", new File("test.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("done");
     }
 
-    public static BufferedImage renderIsland(final int width, final int height, final long seed, final int oceanColor, final int shoreColor, final int landColor) {
+    public static int[] getIsland(final int xSize, final int zSize, final Random random, final int oceanColor, final int shoreColor, final int flatsColor,
+            final int hillsColor) {
+        final BufferedImage image = renderIsland(xSize, zSize, random, new Color(oceanColor, false), new Color(shoreColor, false),
+                new Color(flatsColor, false), new Color(hillsColor, false));
+        int[] result = new int[xSize * zSize];
+        image.getRGB(0, 0, xSize, zSize, result, 0, xSize);
+        for (int i = 0; i < xSize * zSize; ++i) {
+            result[i] = result[i] & 0xFFFFFF;
+        }
+        return result;
+    }
+
+    public static BufferedImage renderIsland(final int xSize, final int zSize, final Random random, final Color oceanColor, final Color shoreColor,
+            final Color flatsColor, final Color hillsColor) {
         // Generate random points
-        Random random = new Random(seed);
+        final int numDots = xSize * zSize / (granularity * granularity);
 
         final double[] randomX = new double[numDots];
         final double[] randomY = new double[numDots];
-        randomDots(width, height, random.nextLong(), randomX, randomY);
-        final List<GraphEdge> edges = getEdges(width, height, randomX, randomY);
-        List<List<GraphEdge>> polygons = getPolygons(edges);
+        randomDots(xSize, zSize, numDots, new Random(random.nextLong()), randomX, randomY);
+        final List<GraphEdge> edges = getEdges(xSize, zSize, randomX, randomY);
+        List<List<GraphEdge>> polygons = getPolygons(edges, numDots);
         final double[] relaxX = new double[numDots];
         final double[] relaxY = new double[numDots];
 
-        relax(polygons, relaxX, relaxY);
-        List<GraphEdge> relaxEdges = getEdges(width, height, relaxX, relaxY);
+        relax(polygons, numDots, relaxX, relaxY);
+        List<GraphEdge> relaxEdges = getEdges(xSize, zSize, relaxX, relaxY);
 
-        polygons = getPolygons(relaxEdges);
-        relax(polygons, relaxX, relaxY);
-        relaxEdges = getEdges(width, height, relaxX, relaxY);
+        polygons = getPolygons(relaxEdges, numDots);
+        relax(polygons, numDots, relaxX, relaxY);
+        relaxEdges = getEdges(xSize, zSize, relaxX, relaxY);
 
         final Map map = getMap(relaxEdges, relaxX, relaxY);
 
-        final BufferedImage noise = Perlin.generate(width, height, random.nextLong());
+        final BufferedImage noise = Perlin.generate(xSize, zSize, new Random(random.nextLong()));
 
         // Find borders
         for (final Vertex v : map.vs) {
-            if (v.x < 16 || v.x >= width - 16 || v.y < 16 || v.y >= height - 16) {
+            if (v.x < 16 || v.x >= xSize - 16 || v.y < 16 || v.y >= zSize - 16) {
                 v.border = true;
                 v.water = true;
                 v.ocean = true;
             } else {
-                final int dx = v.x - width / 2;
-                final int dy = v.y - height / 2;
-                v.water = (noise.getRGB(v.x, v.y) & 0xFF) / 256. < 0.3 + Math.sqrt(((dx * dx) / width + (dy * dy) / height)) / 30;
+                final int dx = v.x - xSize / 2;
+                final int dy = v.y - zSize / 2;
+                v.water = (noise.getRGB(v.x, v.y) & 0xFF) / 256. < 0.3 + Math.sqrt(((dx * dx) / xSize + (dy * dy) / zSize)) / 30;
             }
         }
 
         // Make water
         final Queue<Polygon> queue = new LinkedList<Polygon>();
-        for (Polygon p : map.ps) {
+        for (final Polygon p : map.ps) {
             int numWater = 0;
             for (final Vertex v : p.vs) {
                 if (v.border) {
@@ -237,34 +232,32 @@ public class PerlinIslandGenerator {
             p.ocean = true;
         }
 
-        final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        final BufferedImage image = new BufferedImage(xSize, zSize, BufferedImage.TYPE_INT_ARGB);
         final Graphics graphics = image.getGraphics();
-
-        graphics.setColor(new Color(oceanColor, true));
-        graphics.fillRect(0, 0, width, height);
+        graphics.setColor(oceanColor);
+        graphics.fillRect(0, 0, xSize, zSize);
         final Vertex[] vv = new Vertex[2];
-        for (Polygon p : map.ps) {
+        for (final Polygon p : map.ps) {
             if (p.ocean) {
                 continue;
             } else if (p.water) {
-                graphics.setColor(new Color(landColor, false));
+                graphics.setColor(hillsColor);
             } else if (p.coast) {
-                graphics.setColor(new Color(shoreColor, false));
+                graphics.setColor(shoreColor);
             } else {
-                graphics.setColor(new Color(landColor, false));
+                graphics.setColor(flatsColor);
             }
             for (Edge e : p.es) {
                 if (e.vs.size() < 2) {
                     continue;
                 }
                 e.vs.toArray(vv);
-                int x[] = { p.x, vv[0].x, vv[1].x };
-                int y[] = { p.y, vv[0].y, vv[1].y };
+                final int x[] = { p.x, vv[0].x, vv[1].x };
+                final int y[] = { p.y, vv[0].y, vv[1].y };
                 graphics.fillPolygon(x, y, 3);
                 graphics.drawPolygon(x, y, 3);
             }
         }
-
         graphics.dispose();
         return image;
     }
