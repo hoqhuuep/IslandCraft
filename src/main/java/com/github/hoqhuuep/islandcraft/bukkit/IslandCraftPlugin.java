@@ -9,6 +9,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.hoqhuuep.islandcraft.bukkit.command.BetterCompassCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.command.LocalChatCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.command.PartyChatCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.command.PrivateMessageCommandExecutor;
@@ -88,8 +89,10 @@ public final class IslandCraftPlugin extends JavaPlugin {
 
         // UsefulExtras
         register(new BetterClockListener(server));
-        register(new BetterCompassListener(new BetterCompass(database), server));
+        BetterCompass betterCompass = new BetterCompass(database);
+        register(new BetterCompassListener(betterCompass, server));
         getCommand("suicide").setExecutor(new SuicideCommandExecutor(server));
+        getCommand("waypoint").setExecutor(new BetterCompassCommandExecutor(betterCompass, server));
     }
 
     private void register(final Listener listener) {

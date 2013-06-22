@@ -1,5 +1,8 @@
 package com.github.hoqhuuep.islandcraft.common.extras;
 
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
@@ -95,5 +98,58 @@ public class BetterCompass {
             player.setCompassTarget(player.getWorld().getSpawnLocation());
         }
         this.database.saveCompassTarget(player.getName(), target);
+    }
+
+    public void onWaypointAdd(final ICPlayer player, final String name) {
+        if (BetterCompassTarget.SPAWN.prettyString().equalsIgnoreCase(name) || BetterCompassTarget.BED.prettyString().equalsIgnoreCase(name)
+                || BetterCompassTarget.DEATH_POINT.prettyString().equalsIgnoreCase(name)) {
+            player.info("You cannot override that waypoint");
+            return;
+        }
+        this.database.saveWaypoint(player.getName(), name, player.getLocation());
+        player.info("Added waypoint " + name);
+    }
+
+    public void onWaypointRemove(final ICPlayer player, final String name) {
+        if (BetterCompassTarget.SPAWN.prettyString().equalsIgnoreCase(name) || BetterCompassTarget.BED.prettyString().equalsIgnoreCase(name)
+                || BetterCompassTarget.DEATH_POINT.prettyString().equalsIgnoreCase(name)) {
+            player.info("You cannot remove that waypoint");
+            return;
+        }
+        this.database.saveWaypoint(player.getName(), name, null);
+        player.info("Removed waypoint " + name);
+    }
+
+    public void onWaypointsList(final ICPlayer player) {
+        final List<String> waypoints = this.database.loadWaypoints(player.getName());
+        waypoints.add(BetterCompassTarget.SPAWN.prettyString());
+        waypoints.add(BetterCompassTarget.BED.prettyString());
+        waypoints.add(BetterCompassTarget.DEATH_POINT.prettyString());
+        player.info("Waypoints: [" + StringUtils.join(waypoints, ", ") + "]");
+    }
+
+    public void onWaypointSet(final ICPlayer player, final String name) {
+        if (BetterCompassTarget.SPAWN.prettyString().equalsIgnoreCase(name)) {
+            setTarget(player, BetterCompassTarget.SPAWN);
+            player.info("Compass now pointing to " + BetterCompassTarget.SPAWN.prettyString());
+            return;
+        }
+        if (BetterCompassTarget.BED.prettyString().equalsIgnoreCase(name)) {
+            setTarget(player, BetterCompassTarget.BED);
+            player.info("Compass now pointing to " + BetterCompassTarget.BED.prettyString());
+            return;
+        }
+        if (BetterCompassTarget.DEATH_POINT.prettyString().equalsIgnoreCase(name)) {
+            setTarget(player, BetterCompassTarget.DEATH_POINT);
+            player.info("Compass now pointing to " + BetterCompassTarget.DEATH_POINT.prettyString());
+            return;
+        }
+        ICLocation location = this.database.loadWaypoint(player.getName(), name);
+        if (location == null) {
+            player.info("Waypoint not defined " + name);
+            return;
+        }
+        player.setCompassTarget(location);
+        player.info("Compass now pointing to " + name);
     }
 }

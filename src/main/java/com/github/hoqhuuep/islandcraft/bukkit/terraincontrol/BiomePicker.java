@@ -15,7 +15,6 @@ public class BiomePicker {
 
     public static IslandBiomes pick(final Random random) {
         if (biomes == null) {
-            System.out.println("PICK PICK PICK");
             biomes = config.getIslandBiomes();
         }
         return biomes[random.nextInt(biomes.length)];

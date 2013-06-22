@@ -41,7 +41,7 @@ public class PurchasingCommandExecutor implements CommandExecutor {
             }
             this.purchasing.onExamine(player);
         } else if ("rename".equalsIgnoreCase(label)) {
-            String name = StringUtils.join(args, " ");
+            final String name = StringUtils.join(args, " ");
             if (name.isEmpty()) {
                 return false;
             }

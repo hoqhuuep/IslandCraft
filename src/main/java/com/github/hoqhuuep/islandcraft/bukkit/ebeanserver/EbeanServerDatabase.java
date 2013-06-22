@@ -22,6 +22,7 @@ public class EbeanServerDatabase implements ICDatabase {
         list.add(CompassTargetBean.class);
         list.add(IslandBean.class);
         list.add(PartyBean.class);
+        list.add(WaypointBean.class);
         return list;
     }
 
@@ -167,4 +168,45 @@ public class EbeanServerDatabase implements ICDatabase {
         return this.ebean.find(IslandBean.class).where().ieq("location", location.toString()).findUnique();
     }
 
+    @Override
+    public List<String> loadWaypoints(String player) {
+        final List<WaypointBean> beans = this.ebean.find(WaypointBean.class).where().istartsWith("name", player + ":").findList();
+        final List<String> waypoints = new ArrayList<String>(beans.size());
+        for (WaypointBean bean : beans) {
+            waypoints.add(bean.getName().replaceFirst("[^:]*:", ""));
+        }
+        return waypoints;
+    }
+
+    @Override
+    public void saveWaypoint(final String player, final String name, final ICLocation location) {
+        if (location == null) {
+            final WaypointBean bean = loadWaypointBean(player, name);
+            this.ebean.delete(bean);
+            return;
+        }
+        // Override if exists
+        WaypointBean bean = loadWaypointBean(player, name);
+        if (bean == null) {
+            bean = new WaypointBean();
+        }
+        bean.setName(player + ":" + name);
+        bean.setWorld(location.getWorld());
+        bean.setX(new Integer(location.getX()));
+        bean.setZ(new Integer(location.getZ()));
+        this.ebean.save(bean);
+    }
+
+    private WaypointBean loadWaypointBean(final String player, final String name) {
+        return this.ebean.find(WaypointBean.class).where().ieq("name", player + ":" + name).findUnique();
+    }
+
+    @Override
+    public ICLocation loadWaypoint(final String player, final String name) {
+        final WaypointBean bean = this.ebean.find(WaypointBean.class).where().ieq("name", player + ":" + name).findUnique();
+        if (bean == null) {
+            return null;
+        }
+        return new ICLocation(bean.getWorld(), bean.getX().intValue(), bean.getZ().intValue());
+    }
 }

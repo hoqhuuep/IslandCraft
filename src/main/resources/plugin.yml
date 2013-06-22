@@ -38,3 +38,6 @@ commands:
   rename:
     description: TODO Write description
     usage: /rename <name>
+  waypoint:
+    description: TODO Write description
+    usage: /waypoint add <name> | /waypoint remove <name> | /waypoint set <name> | /waypoint list
