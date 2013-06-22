@@ -30,16 +30,15 @@ import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.chat.LocalChat;
 import com.github.hoqhuuep.islandcraft.common.chat.PartyChat;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterCompass;
-import com.github.hoqhuuep.islandcraft.common.generator.IslandGenerator;
 import com.github.hoqhuuep.islandcraft.common.purchasing.Purchasing;
 import com.khorn.terraincontrol.TerrainControl;
-import com.khorn.terraincontrol.biomegenerators.BiomeModeManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public final class IslandCraftPlugin extends JavaPlugin {
-    private static BiomeModeManager getBiomeModeManager() {
-        return TerrainControl.getBiomeModeManager();
-    }
+    private ICServer server;
+    private ICConfig config;
+    private ICDatabase database;
+    private ICProtection protection;
 
     @Override
     public List<Class<?>> getDatabaseClasses() {
@@ -56,43 +55,65 @@ public final class IslandCraftPlugin extends JavaPlugin {
             installDDL();
         }
 
-        final ICServer server = new BukkitServer(getServer());
-        final ICConfig config = new FileConfigurationConfig(getConfig());
-        final ICDatabase database = new EbeanServerDatabase(getDatabase());
-        final ICProtection protection = new WorldGuardProtection(getWorldGuard());
-
         // Island Math
-        final IslandMath islandMath = new IslandMath(config, server);
+        final IslandMath islandMath = new IslandMath(getICConfig(), getICServer());
 
         // Generator
-        IslandCraftBiomeGenerator.setGenerator(new IslandGenerator(config));
-        BiomeModeManager biomeModeManager = getBiomeModeManager();
-        biomeModeManager.register("IslandCraft", IslandCraftBiomeGenerator.class);
+        TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
 
         // Purchasing
-        PurchasingCommandExecutor purchasing = new PurchasingCommandExecutor(new Purchasing(database, config, protection, islandMath), server);
+        PurchasingCommandExecutor purchasing = new PurchasingCommandExecutor(new Purchasing(getICDatabase(), getICConfig(), getICProtection(), islandMath),
+                getICServer());
         getCommand("purchase").setExecutor(purchasing);
         getCommand("abandon").setExecutor(purchasing);
         getCommand("examine").setExecutor(purchasing);
         getCommand("rename").setExecutor(purchasing);
 
         // Chat
-        LocalChatCommandExecutor localChat = new LocalChatCommandExecutor(new LocalChat(config), server);
+        LocalChatCommandExecutor localChat = new LocalChatCommandExecutor(new LocalChat(getICConfig()), getICServer());
         getCommand("l").setExecutor(localChat);
-        PartyChatCommandExecutor partyChat = new PartyChatCommandExecutor(new PartyChat(database), server);
+        PartyChatCommandExecutor partyChat = new PartyChatCommandExecutor(new PartyChat(getICDatabase()), getICServer());
         getCommand("p").setExecutor(partyChat);
         getCommand("join").setExecutor(partyChat);
         getCommand("leave").setExecutor(partyChat);
         getCommand("members").setExecutor(partyChat);
-        PrivateMessageCommandExecutor privateMessage = new PrivateMessageCommandExecutor(server);
+        PrivateMessageCommandExecutor privateMessage = new PrivateMessageCommandExecutor(getICServer());
         getCommand("m").setExecutor(privateMessage);
 
         // UsefulExtras
-        register(new BetterClockListener(server));
-        BetterCompass betterCompass = new BetterCompass(database);
-        register(new BetterCompassListener(betterCompass, server));
-        getCommand("suicide").setExecutor(new SuicideCommandExecutor(server));
-        getCommand("waypoint").setExecutor(new BetterCompassCommandExecutor(betterCompass, server));
+        register(new BetterClockListener(getICServer()));
+        BetterCompass betterCompass = new BetterCompass(getICDatabase());
+        register(new BetterCompassListener(betterCompass, getICServer()));
+        getCommand("suicide").setExecutor(new SuicideCommandExecutor(getICServer()));
+        getCommand("waypoint").setExecutor(new BetterCompassCommandExecutor(betterCompass, getICServer()));
+    }
+
+    public ICServer getICServer() {
+        if (this.server == null) {
+            this.server = new BukkitServer(getServer());
+        }
+        return this.server;
+    }
+
+    public ICConfig getICConfig() {
+        if (this.config == null) {
+            this.config = new FileConfigurationConfig(getConfig());
+        }
+        return this.config;
+    }
+
+    public ICDatabase getICDatabase() {
+        if (this.database == null) {
+            this.database = new EbeanServerDatabase(getDatabase());
+        }
+        return this.database;
+    }
+
+    public ICProtection getICProtection() {
+        if (this.protection == null) {
+            this.protection = new WorldGuardProtection(getWorldGuard());
+        }
+        return this.protection;
     }
 
     private void register(final Listener listener) {

@@ -1,31 +1,44 @@
 package com.github.hoqhuuep.islandcraft.common.generator;
 
 public class IslandBiomes {
-    private final int ocean;
-    private final int shore;
-    private final int flats;
-    private final int hills;
+    private final String ocean;
+    private final String shore;
+    private final String flats;
+    private final String hills;
 
-    public IslandBiomes(final int ocean, final int shore, final int flats, final int hills) {
+    public IslandBiomes(final String ocean, final String shore, final String flats, final String hills) {
         this.ocean = ocean;
-        this.shore = shore;
-        this.flats = flats;
-        this.hills = hills;
+        if (flats == null) {
+            this.flats = ocean;
+        } else {
+            this.flats = flats;
+        }
+        if (shore == null) {
+            this.shore = this.flats;
+        } else {
+            this.shore = shore;
+        }
+        if (hills == null) {
+            this.hills = this.flats;
+        } else {
+            this.hills = hills;
+        }
     }
 
-    public int getOcean() {
+    public String getOcean() {
         return this.ocean;
     }
 
-    public int getShore() {
+    public String getShore() {
+
         return this.shore;
     }
 
-    public int getFlats() {
+    public String getFlats() {
         return this.flats;
     }
 
-    public int getHills() {
+    public String getHills() {
         return this.hills;
     }
 }

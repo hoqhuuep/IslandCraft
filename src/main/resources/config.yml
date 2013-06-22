@@ -5,34 +5,42 @@ local-chat-radius: 128
 biome:
   ocean: Ocean
   island:
-    - flats: Forest
+    Forest Island:
+      flats: Forest
       hills: ForestHills
       shore: Beach
       rarity: 100
-    - flats: Desert
+    Desert Island:
+      flats: Desert
       hills: DesertHills
       shore: Beach
       rarity: 100
-    - flats: Taiga
+    Taiga Island:
+      flats: Taiga
       hills: TaigaHills
       shore: Beach
       rarity: 100
-    - flats: Jungle
+    Jungle Island:
+      flats: Jungle
       hills: JungleHills
       shore: Beach
       rarity: 100
-    - flats: Extreme Hills
+    Extreme Hills Island:
+      flats: Extreme Hills
       shore: Extreme Hills Edge
       rarity: 100
-    - flats: Swampland
+    Swamp Island:
+      flats: Swampland
       rarity: 100
-    - flats: Plains
+    Plains Island:
+      flats: Plains
       shore: Beach
       rarity: 100
-    - flats: Ice Plains
+    Ice Plains Island:
+      flats: Ice Plains
       hills: Ice Mountains
-      shore: FrozenOcean
       rarity: 100
-    - flats: MushroomIsland
+    Mushroom Island:
+      flats: MushroomIsland
       shore: MushroomIslandShore
       rarity: 1

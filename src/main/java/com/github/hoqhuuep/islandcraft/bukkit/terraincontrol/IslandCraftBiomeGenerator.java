@@ -1,30 +1,37 @@
 package com.github.hoqhuuep.islandcraft.bukkit.terraincontrol;
 
-import com.github.hoqhuuep.islandcraft.bukkit.fileconfiguration.FileConfigurationConfig;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+
+import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.generator.Generator;
+import com.github.hoqhuuep.islandcraft.common.generator.IslandGenerator;
+import com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin;
 import com.khorn.terraincontrol.LocalWorld;
 import com.khorn.terraincontrol.biomegenerators.BiomeCache;
 import com.khorn.terraincontrol.biomegenerators.BiomeGenerator;
 
 public class IslandCraftBiomeGenerator extends BiomeGenerator {
-    private static Generator generator;
-    private final long seed;
-
-    public static final void setGenerator(final Generator g) {
-        generator = g;
-    }
+    private final Generator generator;
 
     public IslandCraftBiomeGenerator(final LocalWorld world, final BiomeCache cache) {
         super(world, cache);
-        this.seed = world.getSeed();
-        FileConfigurationConfig.setWorld(world);
+
+        // Hacks to get configuration from IslandCraft
+        final Plugin plugin = Bukkit.getPluginManager().getPlugin("IslandCraft");
+        if (plugin == null || !(plugin instanceof IslandCraftPlugin)) {
+            throw new Error("Could not find IslandCraft plugin");
+        }
+        final IslandCraftPlugin islandCraft = (IslandCraftPlugin) plugin;
+        final ICConfig config = islandCraft.getICConfig();
+        this.generator = new IslandGenerator(world.getSeed(), config.getIslandSize() * 16, config.getIslandGap() * 16, new TerrainControlGenerator(world));
     }
 
     public final int[] calculate(final int xStart, final int zStart, final int xSize, final int zSize) {
         final int[] array = new int[xSize * zSize];
         for (int x = 0; x < xSize; ++x) {
             for (int z = 0; z < zSize; ++z) {
-                array[x + z * xSize] = generator.biomeAt(this.seed, x + xStart, z + zStart);
+                array[x + z * xSize] = this.generator.biomeAt(x + xStart, z + zStart);
             }
         }
         return array;
@@ -34,7 +41,7 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         final int[] array = new int[xSize * zSize];
         for (int x = 0; x < xSize; ++x) {
             for (int z = 0; z < zSize; ++z) {
-                array[x + z * xSize] = generator.biomeAt(this.seed, (x + xStart) * 4, (z + zStart) * 4);
+                array[x + z * xSize] = this.generator.biomeAt((x + xStart) * 4, (z + zStart) * 4);
             }
         }
         return array;

@@ -1,7 +1,6 @@
 package com.github.hoqhuuep.islandcraft.common.generator;
 
-import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
-import com.github.hoqhuuep.islandcraft.common.core.ICBiome;
+import com.github.hoqhuuep.islandcraft.common.api.ICGenerator;
 
 public final class IslandGenerator implements Generator {
     private static int div(final int x, final int divisor) {
@@ -13,16 +12,20 @@ public final class IslandGenerator implements Generator {
     }
 
     // Cached for speed, not read from config all the time
+    private final ICGenerator generator;
     private final int islandSize;
     private final int islandSeparation;
+    private final long seed;
 
-    public IslandGenerator(final ICConfig config) {
-        this.islandSize = config.getIslandSize() * 16;
-        this.islandSeparation = this.islandSize + config.getIslandGap() * 16;
+    public IslandGenerator(final long seed, final int islandSize, final int islandGap, final ICGenerator generator) {
+        this.islandSize = islandSize;
+        this.islandSeparation = islandSize + islandGap;
+        this.generator = generator;
+        this.seed = seed;
     }
 
     @Override
-    public int biomeAt(final long seed, final int x, final int z) {
+    public int biomeAt(final int x, final int z) {
         final int xx = x + this.islandSize / 2;
         final int zz = z + this.islandSize / 2;
         final int row = div(zz, this.islandSeparation);
@@ -43,9 +46,10 @@ public final class IslandGenerator implements Generator {
             cx = col * this.islandSeparation - this.islandSeparation / 2;
         }
         if (rx >= this.islandSize || rz >= this.islandSize) {
-            return ICBiome.OCEAN;
+            // TODO Get ocean biome from config
+            return this.generator.biomeId("Ocean");
         }
-        return islandBiome(islandSeed(seed, cx, cz), rx, rz);
+        return islandBiome(islandSeed(this.seed, cx, cz), rx, rz);
     }
 
     /**
@@ -54,8 +58,8 @@ public final class IslandGenerator implements Generator {
      * @param rz
      *            z position relative to island in range [0, island-size)
      */
-    private int islandBiome(final long seed, final int rx, final int rz) {
-        return IslandCache.getBiome(rx, rz, this.islandSize, this.islandSize, seed);
+    private int islandBiome(final long islandSeed, final int rx, final int rz) {
+        return IslandCache.getBiome(rx, rz, this.islandSize, this.islandSize, islandSeed, this.generator);
     }
 
     private static long islandSeed(final long seed, final int cx, final int cz) {
