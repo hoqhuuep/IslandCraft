@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.api.ICWorld;
-import com.github.hoqhuuep.islandcraft.common.core.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 public class BukkitWorld implements ICWorld {
     private final World world;

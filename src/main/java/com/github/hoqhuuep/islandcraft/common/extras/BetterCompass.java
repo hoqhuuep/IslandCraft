@@ -7,9 +7,9 @@ import org.bukkit.ChatColor;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
-import com.github.hoqhuuep.islandcraft.common.core.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
-// TODO Compass way-points at nearest player and islands
+// TODO Include waypoints in next and previous compass targets
 
 /**
  * @author Daniel (hoqhuuep) Simmons

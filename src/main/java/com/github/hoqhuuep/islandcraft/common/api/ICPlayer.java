@@ -1,10 +1,10 @@
 package com.github.hoqhuuep.islandcraft.common.api;
 
-import com.github.hoqhuuep.islandcraft.common.core.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 /**
  * A method of interacting with players.
- *
+ * 
  * @author Daniel (hoqhuuep) Simmons
  */
 public interface ICPlayer {
@@ -35,7 +35,7 @@ public interface ICPlayer {
 
     /**
      * Send the player an informative message.
-     *
+     * 
      * @param message
      */
     void info(String message);
@@ -47,7 +47,7 @@ public interface ICPlayer {
 
     /**
      * Send the player a message formatted as local chat.
-     *
+     * 
      * @param from
      * @param message
      */
@@ -55,7 +55,7 @@ public interface ICPlayer {
 
     /**
      * Send the player a message formatted as party chat.
-     *
+     * 
      * @param from
      * @param to
      * @param message
@@ -64,7 +64,7 @@ public interface ICPlayer {
 
     /**
      * Send the player a message formatted as a private message.
-     *
+     * 
      * @param from
      * @param message
      */
@@ -72,7 +72,7 @@ public interface ICPlayer {
 
     /**
      * Set the player's compass target.
-     *
+     * 
      * @param location
      */
     void setCompassTarget(ICLocation location);
@@ -81,7 +81,7 @@ public interface ICPlayer {
      * Take a number of diamonds from a player's inventory. <i>IMPORTANT</i>: if
      * the player does not have enough diamonds for the full amount, their
      * inventory should be unchanged.
-     *
+     * 
      * @param amount
      *            the number of diamonds to take.
      * @return <code>true</code> if the transaction was successful,

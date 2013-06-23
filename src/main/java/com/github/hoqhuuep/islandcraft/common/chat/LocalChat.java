@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
-import com.github.hoqhuuep.islandcraft.common.core.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 /**
  * @author Daniel (hoqhuuep) Simmons

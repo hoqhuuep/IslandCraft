@@ -1,6 +1,6 @@
 package com.github.hoqhuuep.islandcraft.common.api;
 
-import com.github.hoqhuuep.islandcraft.common.core.ICRegion;
+import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
 
 public interface ICProtection {
     boolean addProtectedRegion(ICRegion region, String owner);

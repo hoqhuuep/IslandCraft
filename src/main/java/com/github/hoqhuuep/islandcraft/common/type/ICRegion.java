@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.common.core;
+package com.github.hoqhuuep.islandcraft.common.type;
 
 public class ICRegion {
     private final ICLocation min;

@@ -58,7 +58,7 @@ public class FileConfigurationConfig implements ICConfig {
                 final String shore = j.getString("shore");
                 final String flats = j.getString("flats");
                 final String hills = j.getString("hills");
-                result.add(new IslandBiomes(ocean, shore, flats, hills));
+                result.add(new IslandBiomes(i, ocean, shore, flats, hills));
             } else {
                 // WARNING
                 System.err.println("IslandCraft: Invalid section in config.yml");

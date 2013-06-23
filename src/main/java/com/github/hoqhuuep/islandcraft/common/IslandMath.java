@@ -2,10 +2,11 @@ package com.github.hoqhuuep.islandcraft.common;
 
 import java.util.Random;
 
+import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.BiomePicker;
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
-import com.github.hoqhuuep.islandcraft.common.core.ICLocation;
-import com.github.hoqhuuep.islandcraft.common.core.ICRegion;
+import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
 
 public class IslandMath {
     private final ICConfig config;
@@ -63,9 +64,9 @@ public class IslandMath {
         return new Random(oldSeed).nextLong();
     }
 
-    public static int biome(final long seed) {
+    public static String biome(final long seed) {
         Random random = new Random(seed);
-        return random.nextInt(23);
+        return BiomePicker.pick(new Random(random.nextLong())).getName();
     }
 
     private static int div(final int x, final int divisor) {

@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.avaje.ebean.EbeanServer;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
-import com.github.hoqhuuep.islandcraft.common.core.ICIsland;
-import com.github.hoqhuuep.islandcraft.common.core.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICIsland;
+import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterCompassTarget;
 
 public class EbeanServerDatabase implements ICDatabase {

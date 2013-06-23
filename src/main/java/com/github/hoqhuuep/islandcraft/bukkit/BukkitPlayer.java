@@ -13,7 +13,7 @@ import org.bukkit.inventory.PlayerInventory;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.api.ICWorld;
-import com.github.hoqhuuep.islandcraft.common.core.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 public class BukkitPlayer implements ICPlayer {
     private final Player player;

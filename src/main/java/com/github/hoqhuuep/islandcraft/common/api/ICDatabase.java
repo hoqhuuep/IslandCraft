@@ -2,8 +2,8 @@ package com.github.hoqhuuep.islandcraft.common.api;
 
 import java.util.List;
 
-import com.github.hoqhuuep.islandcraft.common.core.ICIsland;
-import com.github.hoqhuuep.islandcraft.common.core.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICIsland;
+import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterCompassTarget;
 
 /**
@@ -104,9 +104,35 @@ public interface ICDatabase {
      */
     void saveIsland(ICIsland island);
 
+    /**
+     * Load the list of the names of all compass waypoints configured by a
+     * player.
+     * 
+     * @param player
+     * @return A list containing the names of all the waypoints of the player.
+     *         The list will be empty if the player has no waypoints.
+     */
     List<String> loadWaypoints(String player);
 
+    /**
+     * Load the location of a waypoint.
+     * 
+     * @param player
+     *            the owner of the waypoint.
+     * @param name
+     *            the name of the waytpoint.
+     * @return <code>null</code> if the waypoint does not exist, otherwise the
+     *         location of the waypoint.
+     */
     ICLocation loadWaypoint(String player, String name);
 
+    /**
+     * Save a waypoint in the database. Removes the waypoint if the location is
+     * <code>null</code>.
+     * 
+     * @param player
+     * @param name
+     * @param location
+     */
     void saveWaypoint(String player, String name, ICLocation location);
 }

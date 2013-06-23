@@ -3,8 +3,8 @@ package com.github.hoqhuuep.islandcraft.bukkit.worldguard;
 import org.bukkit.World;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
-import com.github.hoqhuuep.islandcraft.common.core.ICLocation;
-import com.github.hoqhuuep.islandcraft.common.core.ICRegion;
+import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
