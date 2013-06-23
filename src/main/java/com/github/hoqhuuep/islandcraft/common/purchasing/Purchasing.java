@@ -14,11 +14,11 @@ public class Purchasing {
     private final ICProtection protection;
     private final IslandMath islandMath;
 
-    public Purchasing(final ICDatabase database, final ICConfig config, final ICProtection protection, final IslandMath islandMath) {
+    public Purchasing(final ICDatabase database, final ICConfig config, final ICProtection protection) {
         this.database = database;
         this.config = config;
         this.protection = protection;
-        this.islandMath = islandMath;
+        this.islandMath = new IslandMath(config);
     }
 
     private int calculateCost(final String player) {
@@ -56,7 +56,7 @@ public class Purchasing {
         }
 
         // Success
-        island = new ICIsland(islandLocation, island.getSeed(), null);
+        island = new ICIsland(islandLocation, null);
         this.database.saveIsland(island);
         this.protection.removeRegion(this.islandMath.visibleRegion(islandLocation));
         this.protection.removeRegion(this.islandMath.protectedRegion(islandLocation));
@@ -82,7 +82,8 @@ public class Purchasing {
             // Not in database yet
             player.info("Available Island:");
             player.info("  Location: " + islandLocation);
-            player.info("  Biome: " + IslandMath.biome(this.islandMath.originalSeed(islandLocation)));
+            // TODO player.info("  Biome: " +
+            // IslandMath.biome(this.islandMath.originalSeed(islandLocation)));
             // TODO Get real regeneration here
             player.info("  Regeneration: <n> days");
             return;
@@ -95,17 +96,20 @@ public class Purchasing {
             if (owner.equalsIgnoreCase("<reserved>")) {
                 player.info("Reserved Island:");
                 player.info("  Location: " + islandLocation);
-                player.info("  Biome: " + IslandMath.biome(island.getSeed()));
+                // player.info("  Biome: " +
+                // IslandMath.biome(island.getSeed()));
             } else if (owner.equalsIgnoreCase("<public>")) {
                 player.info("Public Island:");
                 player.info("  Location: " + islandLocation);
-                player.info("  Biome: " + IslandMath.biome(island.getSeed()));
+                // player.info("  Biome: " +
+                // IslandMath.biome(island.getSeed()));
                 // TODO Get real regeneration here
                 player.info("  Regeneration: <n> days");
             } else {
                 player.info("Private Island:");
                 player.info("  Location: " + islandLocation);
-                player.info("  Biome: " + IslandMath.biome(island.getSeed()));
+                // player.info("  Biome: " +
+                // IslandMath.biome(island.getSeed()));
                 player.info("  Owner: " + island.getOwner());
                 // TODO Get real members and taxes here
                 player.info("  Members: [<player>, <player>, ...]");
@@ -115,7 +119,7 @@ public class Purchasing {
         }
         player.info("Available Island:");
         player.info("  Location: " + island.getLocation());
-        player.info("  Biome: " + IslandMath.biome(island.getSeed()));
+        // player.info("  Biome: " + IslandMath.biome(island.getSeed()));
         // TODO Get real regeneration here
         player.info("  Regeneration: <n> days");
 
@@ -171,9 +175,9 @@ public class Purchasing {
         // Success
         final ICIsland newIsland;
         if (island == null) {
-            newIsland = new ICIsland(islandLocation, this.islandMath.originalSeed(islandLocation), name);
+            newIsland = new ICIsland(islandLocation, name);
         } else {
-            newIsland = new ICIsland(islandLocation, island.getSeed(), name);
+            newIsland = new ICIsland(islandLocation, name);
         }
         this.database.saveIsland(newIsland);
         String islandName = name + "'s Island @ " + islandLocation;

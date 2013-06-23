@@ -2,21 +2,19 @@ package com.github.hoqhuuep.islandcraft.common.generator;
 
 import java.util.Arrays;
 
-import com.github.hoqhuuep.islandcraft.common.api.ICGenerator;
+import com.github.hoqhuuep.islandcraft.common.api.ICWorld2;
 import com.github.hoqhuuep.islandcraft.common.IslandMath;
 
-public final class IslandGenerator implements Generator {
-    private final ICGenerator generator;
+public final class IslandGenerator implements ICGenerator {
+    private final ICWorld2 world;
     private final int islandSize;
     private final int islandSeparation;
-    private final long seed;
     private final int oceanBiome;
 
-    public IslandGenerator(final long seed, final int islandSize, final int islandGap, final ICGenerator generator, final int oceanBiome) {
+    public IslandGenerator(final int islandSize, final int islandGap, final ICWorld2 world, final int oceanBiome) {
         this.islandSize = islandSize;
         this.islandSeparation = islandSize + islandGap;
-        this.generator = generator;
-        this.seed = seed;
+        this.world = world;
         this.oceanBiome = oceanBiome;
     }
 
@@ -44,7 +42,7 @@ public final class IslandGenerator implements Generator {
         if (rx >= this.islandSize || rz >= this.islandSize) {
             return this.oceanBiome;
         }
-        return islandBiome(islandSeed(this.seed, cx, cz), rx, rz);
+        return islandBiome(islandSeed(this.world.getSeed(), cx, cz), rx, rz);
     }
 
     @Override
@@ -72,7 +70,7 @@ public final class IslandGenerator implements Generator {
             Arrays.fill(result, this.oceanBiome);
             return result;
         }
-        return islandChunk(islandSeed(this.seed, cx, cz), rx, rz, result);
+        return islandChunk(islandSeed(this.world.getSeed(), cx, cz), rx, rz, result);
     }
 
     /**
@@ -82,11 +80,11 @@ public final class IslandGenerator implements Generator {
      *            z position relative to island in range [0, island-size)
      */
     private int islandBiome(final long islandSeed, final int rx, final int rz) {
-        return IslandCache.getBiome(rx, rz, this.islandSize, this.islandSize, islandSeed, this.generator);
+        return IslandCache.getBiome(rx, rz, this.islandSize, this.islandSize, islandSeed, this.world);
     }
 
     private int[] islandChunk(final long islandSeed, final int rx, final int rz, final int[] result) {
-        return IslandCache.getChunk(rx, rz, this.islandSize, this.islandSize, islandSeed, this.generator, result);
+        return IslandCache.getChunk(rx, rz, this.islandSize, this.islandSize, islandSeed, this.world, result);
     }
 
     private static long islandSeed(final long seed, final int cx, final int cz) {

@@ -22,7 +22,6 @@ import com.github.hoqhuuep.islandcraft.bukkit.event.BetterCompassListener;
 import com.github.hoqhuuep.islandcraft.bukkit.fileconfiguration.FileConfigurationConfig;
 import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.IslandCraftBiomeGenerator;
 import com.github.hoqhuuep.islandcraft.bukkit.worldguard.WorldGuardProtection;
-import com.github.hoqhuuep.islandcraft.common.IslandMath;
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
@@ -55,15 +54,11 @@ public final class IslandCraftPlugin extends JavaPlugin {
             installDDL();
         }
 
-        // Island Math
-        final IslandMath islandMath = new IslandMath(getICConfig(), getICServer());
-
         // Generator
         TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
 
         // Purchasing
-        PurchasingCommandExecutor purchasing = new PurchasingCommandExecutor(new Purchasing(getICDatabase(), getICConfig(), getICProtection(), islandMath),
-                getICServer());
+        PurchasingCommandExecutor purchasing = new PurchasingCommandExecutor(new Purchasing(getICDatabase(), getICConfig(), getICProtection()), getICServer());
         getCommand("purchase").setExecutor(purchasing);
         getCommand("abandon").setExecutor(purchasing);
         getCommand("examine").setExecutor(purchasing);

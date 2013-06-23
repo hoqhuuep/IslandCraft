@@ -9,8 +9,6 @@ public interface ICWorld {
 
     ICServer getServer();
 
-    long getSeed();
-
     ICLocation getSpawnLocation();
 
     String getTime();

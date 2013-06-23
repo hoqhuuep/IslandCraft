@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
-import com.github.hoqhuuep.islandcraft.common.api.ICGenerator;
-import com.github.hoqhuuep.islandcraft.common.generator.Generator;
+import com.github.hoqhuuep.islandcraft.common.api.ICWorld2;
+import com.github.hoqhuuep.islandcraft.common.generator.ICGenerator;
 import com.github.hoqhuuep.islandcraft.common.generator.IslandGenerator;
 import com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin;
 import com.khorn.terraincontrol.LocalWorld;
@@ -13,7 +13,7 @@ import com.khorn.terraincontrol.biomegenerators.BiomeCache;
 import com.khorn.terraincontrol.biomegenerators.BiomeGenerator;
 
 public class IslandCraftBiomeGenerator extends BiomeGenerator {
-    private final Generator generator;
+    private final ICGenerator generator;
 
     public IslandCraftBiomeGenerator(final LocalWorld world, final BiomeCache cache) {
         super(world, cache);
@@ -25,9 +25,9 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         }
         final IslandCraftPlugin islandCraft = (IslandCraftPlugin) plugin;
         final ICConfig config = islandCraft.getICConfig();
-        final ICGenerator gen = new TerrainControlGenerator(world);
-        final int oceanBiome = gen.biomeId(config.getIslandBiomes()[0].getOcean());
-        this.generator = new IslandGenerator(world.getSeed(), config.getIslandSize() * 16, config.getIslandGap() * 16, gen, oceanBiome);
+        final ICWorld2 w2 = new TerrainControlWorld2(world);
+        final int oceanBiome = w2.biomeId(config.getIslandBiomes()[0].getOcean());
+        this.generator = new IslandGenerator(config.getIslandSize() * 16, config.getIslandGap() * 16, w2, oceanBiome);
     }
 
     public final int[] calculate(final int xStart, final int zStart, final int xSize, final int zSize, final int[] result) {

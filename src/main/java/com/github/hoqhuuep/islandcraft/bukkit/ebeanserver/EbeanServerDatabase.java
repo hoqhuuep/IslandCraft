@@ -135,7 +135,7 @@ public class EbeanServerDatabase implements ICDatabase {
         if (bean == null) {
             return null;
         }
-        return new ICIsland(location, bean.getSeed().longValue(), bean.getOwner());
+        return new ICIsland(location, bean.getOwner());
     }
 
     @Override
@@ -146,7 +146,7 @@ public class EbeanServerDatabase implements ICDatabase {
             String[] args = bean.getLocation().split("(\\s*ICLocation\\s*\\(\\s*\")|(\"\\s*,\\s*)|(\\s*,\\s*)|(\\s*\\)\\s*)");
             int x = Integer.valueOf(args[2]).intValue();
             int z = Integer.valueOf(args[3]).intValue();
-            islands.add(new ICIsland(new ICLocation(args[1], x, z), bean.getSeed().longValue(), owner));
+            islands.add(new ICIsland(new ICLocation(args[1], x, z), owner));
         }
         return islands;
     }
@@ -159,7 +159,6 @@ public class EbeanServerDatabase implements ICDatabase {
             bean = new IslandBean();
         }
         bean.setLocation(island.getLocation().toString());
-        bean.setSeed(new Long(island.getSeed()));
         bean.setOwner(island.getOwner());
         this.ebean.save(bean);
     }

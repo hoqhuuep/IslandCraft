@@ -39,11 +39,6 @@ public class BukkitWorld implements ICWorld {
     }
 
     @Override
-    public final long getSeed() {
-        return this.world.getSeed();
-    }
-
-    @Override
     public final ICLocation getSpawnLocation() {
         final Location l = this.world.getSpawnLocation();
         return new ICLocation(getName(), l.getBlockX(), l.getBlockZ());

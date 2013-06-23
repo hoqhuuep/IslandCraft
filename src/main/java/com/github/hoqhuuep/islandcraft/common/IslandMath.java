@@ -4,17 +4,14 @@ import java.util.Random;
 
 import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.BiomePicker;
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
-import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
 
 public class IslandMath {
     private final ICConfig config;
-    private final ICServer server;
 
-    public IslandMath(final ICConfig config, final ICServer server) {
+    public IslandMath(final ICConfig config) {
         this.config = config;
-        this.server = server;
     }
 
     public final ICLocation islandAt(final ICLocation location) {
@@ -53,11 +50,6 @@ public class IslandMath {
     public final ICRegion protectedRegion(final ICLocation island) {
         final int proRad = this.config.getIslandSize() * 8 + this.config.getIslandGap() * 16;
         return new ICRegion(island.add(-proRad, -proRad), island.add(proRad, proRad));
-    }
-
-    public final long originalSeed(final ICLocation island) {
-        final long worldSeed = this.server.findOnlineWorld(island.getWorld()).getSeed();
-        return worldSeed ^ (island.getX() + (((long) island.getZ()) << 32));
     }
 
     public static long newSeed(final long oldSeed) {
