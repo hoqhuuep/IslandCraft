@@ -69,11 +69,11 @@ public class IslandMath {
         return BiomePicker.pick(new Random(random.nextLong())).getName();
     }
 
-    private static int div(final int x, final int divisor) {
+    public static int div(final int x, final int divisor) {
         return (int) Math.floor((double) x / divisor);
     }
 
-    private static int mod(final int x, final int divisor) {
+    public static int mod(final int x, final int divisor) {
         return (x % divisor + divisor) % divisor;
     }
 }

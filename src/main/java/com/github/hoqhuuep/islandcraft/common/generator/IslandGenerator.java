@@ -3,43 +3,37 @@ package com.github.hoqhuuep.islandcraft.common.generator;
 import java.util.Arrays;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICGenerator;
+import com.github.hoqhuuep.islandcraft.common.IslandMath;
 
 public final class IslandGenerator implements Generator {
-    private static int div(final int x, final int divisor) {
-        return (int) Math.floor((double) x / divisor);
-    }
-
-    private static int mod(final int x, final int divisor) {
-        return (x % divisor + divisor) % divisor;
-    }
-
-    // Cached for speed, not read from config all the time
     private final ICGenerator generator;
     private final int islandSize;
     private final int islandSeparation;
     private final long seed;
+    private final int oceanBiome;
 
-    public IslandGenerator(final long seed, final int islandSize, final int islandGap, final ICGenerator generator) {
+    public IslandGenerator(final long seed, final int islandSize, final int islandGap, final ICGenerator generator, final int oceanBiome) {
         this.islandSize = islandSize;
         this.islandSeparation = islandSize + islandGap;
         this.generator = generator;
         this.seed = seed;
+        this.oceanBiome = oceanBiome;
     }
 
     @Override
     public int biomeAt(final int x, final int z) {
         final int xx = x + this.islandSize / 2;
         final int zz = z + this.islandSize / 2;
-        final int row = div(zz, this.islandSeparation);
+        final int row = IslandMath.div(zz, this.islandSeparation);
         final int xxx;
         if (row % 2 == 0) {
             xxx = xx;
         } else {
             xxx = xx + this.islandSeparation / 2;
         }
-        final int col = div(xxx, this.islandSeparation);
-        final int rx = mod(xxx, this.islandSeparation);
-        final int rz = mod(zz, this.islandSeparation);
+        final int col = IslandMath.div(xxx, this.islandSeparation);
+        final int rx = IslandMath.mod(xxx, this.islandSeparation);
+        final int rz = IslandMath.mod(zz, this.islandSeparation);
         final int cz = row * this.islandSeparation;
         final int cx;
         if (row % 2 == 0) {
@@ -48,8 +42,7 @@ public final class IslandGenerator implements Generator {
             cx = col * this.islandSeparation - this.islandSeparation / 2;
         }
         if (rx >= this.islandSize || rz >= this.islandSize) {
-            // TODO Get ocean biome from config
-            return this.generator.biomeId("Ocean");
+            return this.oceanBiome;
         }
         return islandBiome(islandSeed(this.seed, cx, cz), rx, rz);
     }
@@ -58,16 +51,16 @@ public final class IslandGenerator implements Generator {
     public int[] biomeChunk(final int x, final int z, final int[] result) {
         final int xx = x + this.islandSize / 2;
         final int zz = z + this.islandSize / 2;
-        final int row = div(zz, this.islandSeparation);
+        final int row = IslandMath.div(zz, this.islandSeparation);
         final int xxx;
         if (row % 2 == 0) {
             xxx = xx;
         } else {
             xxx = xx + this.islandSeparation / 2;
         }
-        final int col = div(xxx, this.islandSeparation);
-        final int rx = mod(xxx, this.islandSeparation);
-        final int rz = mod(zz, this.islandSeparation);
+        final int col = IslandMath.div(xxx, this.islandSeparation);
+        final int rx = IslandMath.mod(xxx, this.islandSeparation);
+        final int rz = IslandMath.mod(zz, this.islandSeparation);
         final int cz = row * this.islandSeparation;
         final int cx;
         if (row % 2 == 0) {
@@ -76,9 +69,7 @@ public final class IslandGenerator implements Generator {
             cx = col * this.islandSeparation - this.islandSeparation / 2;
         }
         if (rx >= this.islandSize || rz >= this.islandSize) {
-            // TODO Get ocean biome from config
-            int ocean = this.generator.biomeId("Ocean");
-            Arrays.fill(result, ocean);
+            Arrays.fill(result, this.oceanBiome);
             return result;
         }
         return islandChunk(islandSeed(this.seed, cx, cz), rx, rz, result);

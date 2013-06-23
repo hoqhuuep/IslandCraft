@@ -247,7 +247,7 @@ public class PerlinIslandGenerator {
             } else {
                 graphics.setColor(flatsColor);
             }
-            for (Edge e : p.es) {
+            for (final Edge e : p.es) {
                 if (e.vs.size() < 2) {
                     continue;
                 }
