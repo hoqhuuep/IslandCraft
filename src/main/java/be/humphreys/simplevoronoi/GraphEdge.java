@@ -28,8 +28,7 @@ or implied, of James Humphreys.
 
 package be.humphreys.simplevoronoi;
 
-public class GraphEdge
-{
+public class GraphEdge {
     public double x1, y1, x2, y2;
 
     public int site1;

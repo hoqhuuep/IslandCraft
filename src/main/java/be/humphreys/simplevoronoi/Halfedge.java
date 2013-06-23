@@ -28,8 +28,7 @@ or implied, of James Humphreys.
 
 package be.humphreys.simplevoronoi;
 
-public class Halfedge
-{
+public class Halfedge {
     Halfedge ELleft, ELright;
     Edge ELedge;
     boolean deleted;
@@ -37,9 +36,4 @@ public class Halfedge
     Site vertex;
     double ystar;
     Halfedge PQnext;
-
-    public Halfedge()
-    {
-        PQnext = null;
-    }
 }

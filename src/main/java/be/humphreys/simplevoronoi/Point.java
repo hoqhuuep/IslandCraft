@@ -28,16 +28,10 @@ or implied, of James Humphreys.
 
 package be.humphreys.simplevoronoi;
 
-class Point
-{
+class Point {
     double x, y;
 
-    public Point()
-    {
-    }
-
-    public void setPoint(double x, double y)
-    {
+    public void setPoint(final double x, final double y) {
         this.x = x;
         this.y = y;
     }

@@ -29,13 +29,7 @@ or implied, of James Humphreys.
 package be.humphreys.simplevoronoi;
 
 // used both for sites and for vertices
-public class Site
-{
-    Point coord;
+public class Site {
+    final Point coord = new Point();
     int sitenbr;
-
-    public Site()
-    {
-        coord = new Point();
-    }
 }
