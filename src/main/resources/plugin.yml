@@ -41,6 +41,6 @@ commands:
   waypoint:
     description: TODO Write description
     usage: /waypoint add <name> | /waypoint remove <name> | /waypoint set <name> | /waypoint list
-  regentest:
+  regenerate:
     description: TODO Write description
-    usage: /regentest
+    usage: /regenerate

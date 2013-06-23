@@ -82,7 +82,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
         getCommand("suicide").setExecutor(new SuicideCommandExecutor(getICServer()));
         getCommand("waypoint").setExecutor(new BetterCompassCommandExecutor(betterCompass, getICServer()));
 
-        getCommand("regentest").setExecutor(new BukkitRegenerator());
+        getCommand("regenerate").setExecutor(new BukkitRegenerator());
     }
 
     public ICServer getICServer() {
