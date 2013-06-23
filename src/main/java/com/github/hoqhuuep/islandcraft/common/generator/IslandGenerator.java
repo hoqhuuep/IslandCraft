@@ -2,10 +2,10 @@ package com.github.hoqhuuep.islandcraft.common.generator;
 
 import java.util.Arrays;
 
-import com.github.hoqhuuep.islandcraft.common.api.ICWorld2;
-import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
-import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.IslandMath;
+import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
+import com.github.hoqhuuep.islandcraft.common.api.ICWorld2;
+import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 public final class IslandGenerator implements ICGenerator {
     private final ICWorld2 world;

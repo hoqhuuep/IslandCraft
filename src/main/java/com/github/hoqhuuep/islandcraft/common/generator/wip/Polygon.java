@@ -1,7 +1,7 @@
 package com.github.hoqhuuep.islandcraft.common.generator.wip;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 public class Polygon {
     public int x, y;

@@ -3,12 +3,12 @@ package com.github.hoqhuuep.islandcraft.bukkit.terraincontrol;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
+import com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin;
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICWorld2;
 import com.github.hoqhuuep.islandcraft.common.generator.ICGenerator;
 import com.github.hoqhuuep.islandcraft.common.generator.IslandGenerator;
-import com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin;
 import com.khorn.terraincontrol.LocalWorld;
 import com.khorn.terraincontrol.biomegenerators.BiomeCache;
 import com.khorn.terraincontrol.biomegenerators.BiomeGenerator;

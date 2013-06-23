@@ -29,7 +29,7 @@ or implied, of James Humphreys.
 package be.humphreys.simplevoronoi;
 
 /**
- *
+ * 
  * @author James Humphreys
  */
 class Edge {

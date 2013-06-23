@@ -11,6 +11,7 @@ import com.github.hoqhuuep.islandcraft.common.extras.Suicide;
 
 public class SuicideCommandExecutor implements CommandExecutor {
     private final ICServer server;
+
     public SuicideCommandExecutor(final ICServer server) {
         this.server = server;
     }

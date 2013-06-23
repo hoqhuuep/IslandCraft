@@ -5,6 +5,7 @@ import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
+import com.github.hoqhuuep.islandcraft.common.generator.BiomePicker;
 import com.github.hoqhuuep.islandcraft.common.type.ICIsland;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
@@ -77,13 +78,19 @@ public class Purchasing {
             return;
         }
 
-        ICIsland island = this.database.loadIsland(islandLocation);
+        final ICIsland island = this.database.loadIsland(islandLocation);
+        final Long seed = this.database.loadIslandSeed(islandLocation);
+        final String biome;
+        if (seed == null) {
+            biome = "Unknown";
+        } else {
+            biome = BiomePicker.pick(seed.longValue()).getName();
+        }
         if (island == null) {
             // Not in database yet
             player.info("Available Island:");
             player.info("  Location: " + islandLocation);
-            // TODO player.info("  Biome: " +
-            // IslandMath.biome(this.islandMath.originalSeed(islandLocation)));
+            player.info("  Biome: " + biome);
             // TODO Get real regeneration here
             player.info("  Regeneration: <n> days");
             return;
@@ -96,20 +103,17 @@ public class Purchasing {
             if (owner.equalsIgnoreCase("<reserved>")) {
                 player.info("Reserved Island:");
                 player.info("  Location: " + islandLocation);
-                // player.info("  Biome: " +
-                // IslandMath.biome(island.getSeed()));
+                player.info("  Biome: " + biome);
             } else if (owner.equalsIgnoreCase("<public>")) {
                 player.info("Public Island:");
                 player.info("  Location: " + islandLocation);
-                // player.info("  Biome: " +
-                // IslandMath.biome(island.getSeed()));
+                player.info("  Biome: " + biome);
                 // TODO Get real regeneration here
                 player.info("  Regeneration: <n> days");
             } else {
                 player.info("Private Island:");
                 player.info("  Location: " + islandLocation);
-                // player.info("  Biome: " +
-                // IslandMath.biome(island.getSeed()));
+                player.info("  Biome: " + biome);
                 player.info("  Owner: " + island.getOwner());
                 // TODO Get real members and taxes here
                 player.info("  Members: [<player>, <player>, ...]");
@@ -119,7 +123,7 @@ public class Purchasing {
         }
         player.info("Available Island:");
         player.info("  Location: " + island.getLocation());
-        // player.info("  Biome: " + IslandMath.biome(island.getSeed()));
+        player.info("  Biome: " + biome);
         // TODO Get real regeneration here
         player.info("  Regeneration: <n> days");
 

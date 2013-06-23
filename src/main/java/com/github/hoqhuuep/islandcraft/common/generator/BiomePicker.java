@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.bukkit.terraincontrol;
+package com.github.hoqhuuep.islandcraft.common.generator;
 
 import java.util.Random;
 
@@ -9,10 +9,12 @@ import com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin;
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.type.ICBiome;
 
+// TODO Remove dependency on Bukkit here
+
 public class BiomePicker {
     private static ICBiome[] biomes;
 
-    public static ICBiome pick(final Random random) {
+    public static ICBiome pick(final long seed) {
         if (biomes == null) {
             // Hacks to get configuration from IslandCraft
             final Plugin plugin = Bukkit.getPluginManager().getPlugin("IslandCraft");
@@ -23,6 +25,6 @@ public class BiomePicker {
             final ICConfig config = islandCraft.getICConfig();
             biomes = config.getIslandBiomes();
         }
-        return biomes[random.nextInt(biomes.length)];
+        return biomes[new Random(seed).nextInt(biomes.length)];
     }
 }

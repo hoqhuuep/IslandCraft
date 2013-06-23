@@ -14,6 +14,7 @@ import com.github.hoqhuuep.islandcraft.common.chat.PrivateMessage;
 
 public class PrivateMessageCommandExecutor implements CommandExecutor {
     private final ICServer server;
+
     public PrivateMessageCommandExecutor(final ICServer server) {
         this.server = server;
     }
