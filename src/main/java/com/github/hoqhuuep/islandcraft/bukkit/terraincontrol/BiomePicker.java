@@ -7,12 +7,12 @@ import org.bukkit.plugin.Plugin;
 
 import com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin;
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
-import com.github.hoqhuuep.islandcraft.common.generator.IslandBiomes;
+import com.github.hoqhuuep.islandcraft.common.type.ICBiome;
 
 public class BiomePicker {
-    private static IslandBiomes[] biomes;
+    private static ICBiome[] biomes;
 
-    public static IslandBiomes pick(final Random random) {
+    public static ICBiome pick(final Random random) {
         if (biomes == null) {
             // Hacks to get configuration from IslandCraft
             final Plugin plugin = Bukkit.getPluginManager().getPlugin("IslandCraft");

@@ -1,6 +1,6 @@
 package com.github.hoqhuuep.islandcraft.common.api;
 
-import com.github.hoqhuuep.islandcraft.common.generator.IslandBiomes;
+import com.github.hoqhuuep.islandcraft.common.type.ICBiome;
 
 /**
  * A method of loading user configurable settings.
@@ -29,5 +29,5 @@ public interface ICConfig {
      */
     String getWorld();
 
-    IslandBiomes[] getIslandBiomes();
+    ICBiome[] getIslandBiomes();
 }

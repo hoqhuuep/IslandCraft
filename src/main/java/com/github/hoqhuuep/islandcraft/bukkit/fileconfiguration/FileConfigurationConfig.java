@@ -7,7 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
-import com.github.hoqhuuep.islandcraft.common.generator.IslandBiomes;
+import com.github.hoqhuuep.islandcraft.common.type.ICBiome;
 
 public class FileConfigurationConfig implements ICConfig {
     private final FileConfiguration config;
@@ -37,7 +37,7 @@ public class FileConfigurationConfig implements ICConfig {
     }
 
     @Override
-    public IslandBiomes[] getIslandBiomes() {
+    public ICBiome[] getIslandBiomes() {
         if (!this.config.isConfigurationSection("biome")) {
             // WARNING
             System.err.println("IslandCraft: Invalid section in config.yml");
@@ -51,14 +51,14 @@ public class FileConfigurationConfig implements ICConfig {
             return null;
         }
         final ConfigurationSection island = biome.getConfigurationSection("island");
-        final List<IslandBiomes> result = new ArrayList<IslandBiomes>();
+        final List<ICBiome> result = new ArrayList<ICBiome>();
         for (String i : island.getKeys(false)) {
             if (island.isConfigurationSection(i)) {
                 final ConfigurationSection j = island.getConfigurationSection(i);
                 final String shore = j.getString("shore");
                 final String flats = j.getString("flats");
                 final String hills = j.getString("hills");
-                result.add(new IslandBiomes(i, ocean, shore, flats, hills));
+                result.add(new ICBiome(i, ocean, shore, flats, hills));
             } else {
                 // WARNING
                 System.err.println("IslandCraft: Invalid section in config.yml");
@@ -66,6 +66,6 @@ public class FileConfigurationConfig implements ICConfig {
             }
 
         }
-        return result.toArray(new IslandBiomes[result.size()]);
+        return result.toArray(new ICBiome[result.size()]);
     }
 }
