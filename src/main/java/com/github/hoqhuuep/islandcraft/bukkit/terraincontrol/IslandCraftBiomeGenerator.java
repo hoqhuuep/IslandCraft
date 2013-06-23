@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
+import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICWorld2;
 import com.github.hoqhuuep.islandcraft.common.generator.ICGenerator;
 import com.github.hoqhuuep.islandcraft.common.generator.IslandGenerator;
@@ -25,9 +26,10 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         }
         final IslandCraftPlugin islandCraft = (IslandCraftPlugin) plugin;
         final ICConfig config = islandCraft.getICConfig();
+        final ICDatabase database = islandCraft.getICDatabase();
         final ICWorld2 w2 = new TerrainControlWorld2(world);
         final int oceanBiome = w2.biomeId(config.getIslandBiomes()[0].getOcean());
-        this.generator = new IslandGenerator(config.getIslandSize() * 16, config.getIslandGap() * 16, w2, oceanBiome);
+        this.generator = new IslandGenerator(config.getIslandSize() * 16, config.getIslandGap() * 16, w2, oceanBiome, database);
     }
 
     public final int[] calculate(final int xStart, final int zStart, final int xSize, final int zSize, final int[] result) {

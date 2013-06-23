@@ -23,6 +23,7 @@ public class EbeanServerDatabase implements ICDatabase {
         list.add(IslandBean.class);
         list.add(PartyBean.class);
         list.add(WaypointBean.class);
+        list.add(IslandSeedBean.class);
         return list;
     }
 
@@ -46,8 +47,8 @@ public class EbeanServerDatabase implements ICDatabase {
         DeathPointBean bean = loadDeathPointBean(player);
         if (bean == null) {
             bean = new DeathPointBean();
+            bean.setPlayer(player);
         }
-        bean.setPlayer(player);
         bean.setWorld(deathPoint.getWorld());
         bean.setX(new Integer(deathPoint.getX()));
         bean.setZ(new Integer(deathPoint.getZ()));
@@ -88,8 +89,8 @@ public class EbeanServerDatabase implements ICDatabase {
         PartyBean bean = loadPartyBean(player);
         if (bean == null) {
             bean = new PartyBean();
+            bean.setPlayer(player);
         }
-        bean.setPlayer(player);
         bean.setParty(party);
         this.ebean.save(bean);
     }
@@ -118,8 +119,8 @@ public class EbeanServerDatabase implements ICDatabase {
         CompassTargetBean bean = loadCompassTargetBean(player);
         if (bean == null) {
             bean = new CompassTargetBean();
+            bean.setPlayer(player);
         }
-        bean.setPlayer(player);
         bean.setTarget(target.toString());
         this.ebean.save(bean);
     }
@@ -157,8 +158,8 @@ public class EbeanServerDatabase implements ICDatabase {
         IslandBean bean = loadIslandBean(island.getLocation());
         if (bean == null) {
             bean = new IslandBean();
+            bean.setLocation(island.getLocation().toString());
         }
-        bean.setLocation(island.getLocation().toString());
         bean.setOwner(island.getOwner());
         this.ebean.save(bean);
     }
@@ -188,8 +189,8 @@ public class EbeanServerDatabase implements ICDatabase {
         WaypointBean bean = loadWaypointBean(player, name);
         if (bean == null) {
             bean = new WaypointBean();
+            bean.setName(player + ":" + name);
         }
-        bean.setName(player + ":" + name);
         bean.setWorld(location.getWorld());
         bean.setX(new Integer(location.getX()));
         bean.setZ(new Integer(location.getZ()));
@@ -207,5 +208,34 @@ public class EbeanServerDatabase implements ICDatabase {
             return null;
         }
         return new ICLocation(bean.getWorld(), bean.getX().intValue(), bean.getZ().intValue());
+    }
+
+    @Override
+    public void saveIslandSeed(ICLocation location, Long seed) {
+        if (seed == null) {
+            IslandSeedBean bean = loadIslandSeedBean(location);
+            this.ebean.delete(bean);
+            return;
+        }
+        IslandSeedBean bean = loadIslandSeedBean(location);
+        if (bean == null) {
+            bean = new IslandSeedBean();
+            bean.setLocation(location.toString());
+        }
+        bean.setSeed(seed);
+        this.ebean.save(bean);
+    }
+
+    @Override
+    public Long loadIslandSeed(ICLocation location) {
+        IslandSeedBean bean = loadIslandSeedBean(location);
+        if (bean == null) {
+            return null;
+        }
+        return bean.getSeed();
+    }
+
+    private IslandSeedBean loadIslandSeedBean(final ICLocation location) {
+        return this.ebean.find(IslandSeedBean.class).where().ieq("location", location.toString()).findUnique();
     }
 }

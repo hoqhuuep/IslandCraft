@@ -3,6 +3,8 @@ package com.github.hoqhuuep.islandcraft.common.generator;
 import java.util.Arrays;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICWorld2;
+import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
+import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.IslandMath;
 
 public final class IslandGenerator implements ICGenerator {
@@ -10,12 +12,14 @@ public final class IslandGenerator implements ICGenerator {
     private final int islandSize;
     private final int islandSeparation;
     private final int oceanBiome;
+    private final ICDatabase database;
 
-    public IslandGenerator(final int islandSize, final int islandGap, final ICWorld2 world, final int oceanBiome) {
+    public IslandGenerator(final int islandSize, final int islandGap, final ICWorld2 world, final int oceanBiome, final ICDatabase database) {
         this.islandSize = islandSize;
         this.islandSeparation = islandSize + islandGap;
         this.world = world;
         this.oceanBiome = oceanBiome;
+        this.database = database;
     }
 
     @Override
@@ -42,7 +46,7 @@ public final class IslandGenerator implements ICGenerator {
         if (rx >= this.islandSize || rz >= this.islandSize) {
             return this.oceanBiome;
         }
-        return islandBiome(islandSeed(this.world.getSeed(), cx, cz), rx, rz);
+        return islandBiome(islandSeed(cx, cz), rx, rz);
     }
 
     @Override
@@ -70,7 +74,7 @@ public final class IslandGenerator implements ICGenerator {
             Arrays.fill(result, this.oceanBiome);
             return result;
         }
-        return islandChunk(islandSeed(this.world.getSeed(), cx, cz), rx, rz, result);
+        return islandChunk(islandSeed(cx, cz), rx, rz, result);
     }
 
     /**
@@ -87,7 +91,14 @@ public final class IslandGenerator implements ICGenerator {
         return IslandCache.getChunk(rx, rz, this.islandSize, this.islandSize, islandSeed, this.world, result);
     }
 
-    private static long islandSeed(final long seed, final int cx, final int cz) {
-        return seed ^ (cx + (((long) cz) << 32));
+    private long islandSeed(final int cx, final int cz) {
+        ICLocation location = new ICLocation(this.world.getName(), cx, cz);
+        Long oldSeed = this.database.loadIslandSeed(location);
+        if (oldSeed == null) {
+            Long newSeed = new Long(this.world.getSeed() ^ (cx + (((long) cz) << 32)));
+            this.database.saveIslandSeed(location, newSeed);
+            return newSeed.longValue();
+        }
+        return oldSeed.longValue();
     }
 }

@@ -22,6 +22,7 @@ import com.github.hoqhuuep.islandcraft.bukkit.event.BetterCompassListener;
 import com.github.hoqhuuep.islandcraft.bukkit.fileconfiguration.FileConfigurationConfig;
 import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.IslandCraftBiomeGenerator;
 import com.github.hoqhuuep.islandcraft.bukkit.worldguard.WorldGuardProtection;
+import com.github.hoqhuuep.islandcraft.bukkit.BukkitRegenerator;
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
@@ -81,6 +82,8 @@ public final class IslandCraftPlugin extends JavaPlugin {
         register(new BetterCompassListener(betterCompass, getICServer()));
         getCommand("suicide").setExecutor(new SuicideCommandExecutor(getICServer()));
         getCommand("waypoint").setExecutor(new BetterCompassCommandExecutor(betterCompass, getICServer()));
+
+        getCommand("regentest").setExecutor(new BukkitRegenerator());
     }
 
     public ICServer getICServer() {

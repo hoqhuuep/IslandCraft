@@ -135,4 +135,8 @@ public interface ICDatabase {
      * @param location
      */
     void saveWaypoint(String player, String name, ICLocation location);
+
+    void saveIslandSeed(ICLocation location, Long seed);
+
+    Long loadIslandSeed(ICLocation location);
 }

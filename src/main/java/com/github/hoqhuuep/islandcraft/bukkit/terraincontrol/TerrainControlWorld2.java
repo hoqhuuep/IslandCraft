@@ -19,4 +19,9 @@ public class TerrainControlWorld2 implements ICWorld2 {
     public int biomeId(String name) {
         return this.world.getBiomeIdByName(name);
     }
+
+    @Override
+    public String getName() {
+        return this.world.getName();
+    }
 }
