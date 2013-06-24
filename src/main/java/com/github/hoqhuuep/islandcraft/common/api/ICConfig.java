@@ -9,25 +9,30 @@ import com.github.hoqhuuep.islandcraft.common.type.ICBiome;
  */
 public interface ICConfig {
     /**
-     * @return The distance between islands, in number of chunks.
+     * @return The distance between islands, in number of chunks
      */
     int getIslandGap();
 
     /**
-     * @return The distance across and island, in number of chunks.
+     * @return The distance across and island, in number of chunks
      */
     int getIslandSize();
 
     /**
      * @return The distance that local chat should be broadcast, in number of
-     *         blocks.
+     *         blocks
      */
     int getLocalChatRadius();
 
     /**
-     * @return The name of the world that should contain the islands.
+     * @return The name of the world that should contain the islands
      */
     String getWorld();
 
+    /**
+     * Uh... look at the biome section in config.yml :P
+     * 
+     * @return
+     */
     ICBiome[] getIslandBiomes();
 }

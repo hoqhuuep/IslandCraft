@@ -1,15 +1,22 @@
 package com.github.hoqhuuep.islandcraft.common.api;
 
+/**
+ * An interface to abstract a Bukkit server.
+ * 
+ * @author Daniel (hoqhuuep) Simmons
+ */
 public interface ICServer {
     /**
      * @param name
-     * @return <code>null</code> if the player is not online.
+     *            the name of the player to find
+     * @return <code>null</code> if the player is not online
      */
     ICPlayer findOnlinePlayer(final String name);
 
     /**
      * @param name
-     * @return <code>null</code> if the world does not exist.
+     *            the name of the world to find
+     * @return <code>null</code> if the world does not exist
      */
     ICWorld findOnlineWorld(final String name);
 }

@@ -60,18 +60,18 @@ public class BukkitPlayer implements ICPlayer {
     }
 
     @Override
-    public final void local(final ICPlayer from, final String message) {
-        player.sendMessage("[" + from.getName() + "->" + ChatColor.GRAY + "local" + ChatColor.WHITE + "] " + message);
+    public final void local(final String from, final String message) {
+        player.sendMessage("[" + from + "->" + ChatColor.GRAY + "local" + ChatColor.WHITE + "] " + message);
     }
 
     @Override
-    public final void party(final ICPlayer from, final String to, final String message) {
-        player.sendMessage("[" + from.getName() + "->" + ChatColor.GREEN + to + ChatColor.WHITE + "] " + message);
+    public final void party(final String from, final String to, final String message) {
+        player.sendMessage("[" + from + "->" + ChatColor.GREEN + to + ChatColor.WHITE + "] " + message);
     }
 
     @Override
-    public final void privateMessage(final ICPlayer from, final String message) {
-        player.sendMessage("[" + from.getName() + "->" + getName() + "] " + message);
+    public final void privateMessage(final String from, final String message) {
+        player.sendMessage("[" + from + "->" + getName() + "] " + message);
     }
 
     @Override

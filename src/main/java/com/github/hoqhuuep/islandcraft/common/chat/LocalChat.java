@@ -19,6 +19,12 @@ public class LocalChat {
         this.config = config;
     }
 
+    /**
+     * To be called when a player tries to send a local chat message.
+     * 
+     * @param player
+     * @param message
+     */
     public final void onLocalChat(final ICPlayer player, final String message) {
         final ICLocation location = player.getLocation();
         final List<ICPlayer> players = player.getWorld().getPlayers();
@@ -26,7 +32,7 @@ public class LocalChat {
             final ICLocation pLocation = p.getLocation();
             final int maxDistance = config.getLocalChatRadius();
             if (pLocation.distanceSquared(location) < maxDistance * maxDistance) {
-                p.local(player, message);
+                p.local(player.getName(), message);
             }
         }
     }

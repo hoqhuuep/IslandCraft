@@ -3,33 +3,33 @@ package com.github.hoqhuuep.islandcraft.common.api;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 /**
- * A method of interacting with players.
+ * An interface to abstract a Bukkit player.
  * 
  * @author Daniel (hoqhuuep) Simmons
  */
 public interface ICPlayer {
     /**
-     * @return The location where the player will spawn upon death.
+     * @return the location where this player will spawn upon death
      */
     ICLocation getBedLocation();
 
     /**
-     * @return The current location of the player.
+     * @return the current location of this player
      */
     ICLocation getLocation();
 
     /**
-     * @return The player's user name.
+     * @return this player's user name
      */
     String getName();
 
     /**
-     * @return The world the player is currently in.
+     * @return the world this player is currently in
      */
     ICWorld getWorld();
 
     /**
-     * @return The server the player is currently in.
+     * @return the server this player is currently on
      */
     ICServer getServer();
 
@@ -37,11 +37,12 @@ public interface ICPlayer {
      * Send the player an informative message.
      * 
      * @param message
+     *            the message to send
      */
     void info(String message);
 
     /**
-     * Kill the player.
+     * Kill the player. Regardless of health or game mode.
      */
     void kill();
 
@@ -49,31 +50,39 @@ public interface ICPlayer {
      * Send the player a message formatted as local chat.
      * 
      * @param from
+     *            the name of the player sending the message
      * @param message
+     *            the message to send
      */
-    void local(ICPlayer from, String message);
+    void local(String from, String message);
 
     /**
      * Send the player a message formatted as party chat.
      * 
      * @param from
+     *            the name of the player sending the message
      * @param to
+     *            the name of the party receiving the message
      * @param message
+     *            the message to send
      */
-    void party(ICPlayer from, String to, String message);
+    void party(String from, String to, String message);
 
     /**
      * Send the player a message formatted as a private message.
      * 
      * @param from
+     *            the name of the player sending the message
      * @param message
+     *            the message to send
      */
-    void privateMessage(ICPlayer from, String message);
+    void privateMessage(String from, String message);
 
     /**
      * Set the player's compass target.
      * 
      * @param location
+     *            the location to make the compass point to from now on
      */
     void setCompassTarget(ICLocation location);
 
@@ -83,9 +92,9 @@ public interface ICPlayer {
      * inventory should be unchanged.
      * 
      * @param amount
-     *            the number of diamonds to take.
+     *            the number of diamonds to take
      * @return <code>true</code> if the transaction was successful,
-     *         <code>false</code> otherwise.
+     *         <code>false</code> otherwise
      */
     boolean takeDiamonds(int amount);
 }

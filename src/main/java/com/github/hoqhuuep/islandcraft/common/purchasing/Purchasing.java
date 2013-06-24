@@ -21,10 +21,12 @@ public class Purchasing {
         islandMath = new IslandMath(config);
     }
 
-    private int calculateCost(final String player) {
-        return database.loadOwnershipLocations(player).size() + 1;
-    }
-
+    /**
+     * To be called when a player tries to abandon the island at their current
+     * location.
+     * 
+     * @param player
+     */
     public final void onAbandon(final ICPlayer player) {
         final ICLocation location = player.getLocation();
         if (!location.getWorld().equalsIgnoreCase(config.getWorld())) {
@@ -52,6 +54,12 @@ public class Purchasing {
         player.info("Island successfully abandoned");
     }
 
+    /**
+     * To be called when a player tries to examine the island at their current
+     * location.
+     * 
+     * @param player
+     */
     public final void onExamine(final ICPlayer player) {
         final ICLocation location = player.getLocation();
         if (!location.getWorld().equalsIgnoreCase(config.getWorld())) {
@@ -103,6 +111,12 @@ public class Purchasing {
         // TODO Abandoned island
     }
 
+    /**
+     * To be called when a player tries to purchase the island at their current
+     * location.
+     * 
+     * @param player
+     */
     public final void onPurchase(final ICPlayer player) {
         final ICLocation location = player.getLocation();
         if (!location.getWorld().equalsIgnoreCase(config.getWorld())) {
@@ -152,6 +166,13 @@ public class Purchasing {
         player.info("Island successfully purchased");
     }
 
+    /**
+     * To be called when the player tries to rename the island at their current
+     * location.
+     * 
+     * @param player
+     * @param title
+     */
     public final void onRename(final ICPlayer player, final String title) {
         final ICLocation location = player.getLocation();
         if (!location.getWorld().equalsIgnoreCase(config.getWorld())) {
@@ -175,5 +196,9 @@ public class Purchasing {
         // Success
         protection.renameRegion(islandMath.visibleRegion(islandLocation), title);
         player.info("Island successfully renamed");
+    }
+
+    private int calculateCost(final String player) {
+        return database.loadOwnershipLocations(player).size() + 1;
     }
 }

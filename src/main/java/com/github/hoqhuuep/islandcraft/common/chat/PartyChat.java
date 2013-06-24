@@ -20,6 +20,12 @@ public class PartyChat {
         this.database = database;
     }
 
+    /**
+     * To be called when a player tries to join a party.
+     * 
+     * @param player
+     * @param party
+     */
     public final void onJoin(final ICPlayer player, final String party) {
         final String oldParty = database.loadParty(player.getName());
         if (oldParty != null) {
@@ -27,8 +33,14 @@ public class PartyChat {
         }
         database.saveParty(player.getName(), party);
         player.info("You are now a member of " + party);
+        // TODO Notify members that player has joined
     }
 
+    /**
+     * To be called when a player tries to leave a party.
+     * 
+     * @param player
+     */
     public final void onLeave(final ICPlayer player) {
         final String oldParty = database.loadParty(player.getName());
         if (oldParty == null) {
@@ -37,8 +49,14 @@ public class PartyChat {
         }
         database.saveParty(player.getName(), null);
         player.info("You are no longer a member of " + oldParty);
+        // TODO Notify members that player has left
     }
 
+    /**
+     * To be called when a player requests a list of members of their party.
+     * 
+     * @param player
+     */
     public final void onMembers(final ICPlayer player) {
         final String party = database.loadParty(player.getName());
         if (party == null) {
@@ -49,8 +67,15 @@ public class PartyChat {
         player.info("Members: [" + StringUtils.join(members, ", ") + "]");
     }
 
+    /**
+     * To be called when a player tries to send a party chat message.
+     * 
+     * @param player
+     * @param message
+     */
     public final void onPartyChat(final ICPlayer player, final String message) {
-        final String party = database.loadParty(player.getName());
+        final String name = player.getName();
+        final String party = database.loadParty(name);
         if (party == null) {
             player.info("You are not a member of any party");
             return;
@@ -59,7 +84,7 @@ public class PartyChat {
         for (final String memberName : memberNames) {
             final ICPlayer member = player.getServer().findOnlinePlayer(memberName);
             if (member != null) {
-                member.party(player, party, message);
+                member.party(name, party, message);
             }
         }
     }

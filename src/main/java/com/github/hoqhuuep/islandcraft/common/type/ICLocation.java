@@ -1,5 +1,10 @@
 package com.github.hoqhuuep.islandcraft.common.type;
 
+/**
+ * Represents a location in a world. Height is not recorded.
+ * 
+ * @author Daniel (hoqhuuep) Simmons
+ */
 public class ICLocation {
     private final int x;
     private final int z;

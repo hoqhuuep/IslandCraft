@@ -26,6 +26,11 @@ public class BetterCompass {
         this.database = database;
     }
 
+    /**
+     * To be called when a player dies.
+     * 
+     * @param player
+     */
     public final void onDeath(final ICPlayer player) {
         final ICLocation location = player.getLocation();
         final String name = player.getName();
@@ -36,6 +41,12 @@ public class BetterCompass {
         }
     }
 
+    /**
+     * To be called when a player sets their compass to point at the next
+     * waypoint (by right-clicking with a compass).
+     * 
+     * @param player
+     */
     public final void onNextWaypoint(final ICPlayer player) {
         if (!player.getWorld().isNormalWorld()) {
             // TODO Remove dependency on Bukkit here
@@ -50,6 +61,12 @@ public class BetterCompass {
         }
     }
 
+    /**
+     * To be called when a player sets their compass to point at the previous
+     * waypoint (by shift-right-clicking with a compass).
+     * 
+     * @param player
+     */
     public final void onPreviousWaypoint(final ICPlayer player) {
         if (!player.getWorld().isNormalWorld()) {
             // TODO Remove dependency on Bukkit here
@@ -64,6 +81,11 @@ public class BetterCompass {
         }
     }
 
+    /**
+     * To be called when a player's bed location is updated.
+     * 
+     * @param player
+     */
     public final void onSetBedLocation(final ICPlayer player) {
         final String name = player.getName();
         if (getWaypoint(name).equals(BED)) {
@@ -72,11 +94,73 @@ public class BetterCompass {
         }
     }
 
+    /**
+     * To be called when a player changes from one world to another.
+     * 
+     * @param player
+     */
     public final void onChangeWorld(final ICPlayer player) {
         // Refresh location
         final String name = player.getName();
         final String waypoint = getWaypoint(name);
         setWaypoint(player, waypoint);
+    }
+
+    /**
+     * To be called when a player requests to set their compass waypoint.
+     * 
+     * @param player
+     * @param waypoint
+     */
+    public void onWaypointSet(final ICPlayer player, final String waypoint) {
+        if (setWaypoint(player, waypoint)) {
+            player.info("Compass now pointing to " + waypoint);
+        }
+    }
+
+    /**
+     * To be called when a player tries to add a compass waypoint.
+     * 
+     * @param player
+     * @param waypoint
+     */
+    public void onWaypointAdd(final ICPlayer player, final String waypoint) {
+        if (!player.getWorld().isNormalWorld()) {
+            player.info("You cannot set a waypoint from this world");
+            return;
+        }
+        if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
+            player.info("You cannot override that waypoint");
+            return;
+        }
+        database.saveWaypoint(player.getName(), waypoint, player.getLocation());
+        player.info("Added waypoint " + waypoint);
+    }
+
+    /**
+     * To be called when a player tries to remove a compass waypoint.
+     * 
+     * @param player
+     * @param waypoint
+     */
+    public void onWaypointRemove(final ICPlayer player, final String waypoint) {
+        if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
+            player.info("You cannot remove that waypoint");
+            return;
+        }
+        database.saveWaypoint(player.getName(), waypoint, null);
+        player.info("Removed waypoint " + waypoint);
+    }
+
+    /**
+     * To be called when a player requests a list of their saved waypoints.
+     * 
+     * @param player
+     */
+    public void onWaypointsList(final ICPlayer player) {
+        final String name = player.getName();
+        final List<String> waypoints = getWaypoints(name);
+        player.info("Waypoints: [" + StringUtils.join(waypoints, ", ") + "]");
     }
 
     private boolean setWaypoint(final ICPlayer player, final String waypoint) {
@@ -102,40 +186,6 @@ public class BetterCompass {
         }
         database.saveCompass(name, waypoint);
         return true;
-    }
-
-    public void onWaypointSet(final ICPlayer player, final String waypoint) {
-        if (setWaypoint(player, waypoint)) {
-            player.info("Compass now pointing to " + waypoint);
-        }
-    }
-
-    public void onWaypointAdd(final ICPlayer player, final String waypoint) {
-        if (!player.getWorld().isNormalWorld()) {
-            player.info("You cannot set a waypoint from this world");
-            return;
-        }
-        if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
-            player.info("You cannot override that waypoint");
-            return;
-        }
-        database.saveWaypoint(player.getName(), waypoint, player.getLocation());
-        player.info("Added waypoint " + waypoint);
-    }
-
-    public void onWaypointRemove(final ICPlayer player, final String waypoint) {
-        if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
-            player.info("You cannot remove that waypoint");
-            return;
-        }
-        database.saveWaypoint(player.getName(), waypoint, null);
-        player.info("Removed waypoint " + waypoint);
-    }
-
-    public void onWaypointsList(final ICPlayer player) {
-        final String name = player.getName();
-        final List<String> waypoints = getWaypoints(name);
-        player.info("Waypoints: [" + StringUtils.join(waypoints, ", ") + "]");
     }
 
     private String getWaypoint(final String player) {

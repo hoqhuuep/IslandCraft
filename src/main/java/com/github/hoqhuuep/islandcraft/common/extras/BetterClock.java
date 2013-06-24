@@ -11,6 +11,12 @@ import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
  *      wiki</a>
  */
 public final class BetterClock {
+    /**
+     * To be called when a player requests the time (by right-clicking with a
+     * clock).
+     * 
+     * @param player
+     */
     public static void onQuery(final ICPlayer player) {
         if (!player.getWorld().isNormalWorld()) {
             // TODO Remove dependency on Bukkit here

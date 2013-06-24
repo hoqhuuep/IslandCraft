@@ -9,6 +9,11 @@ import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
  *      wiki</a>
  */
 public final class Suicide {
+    /**
+     * To be called when a player requests to kill themselves.
+     * 
+     * @param player
+     */
     public static void onSuicide(final ICPlayer player) {
         player.kill();
     }

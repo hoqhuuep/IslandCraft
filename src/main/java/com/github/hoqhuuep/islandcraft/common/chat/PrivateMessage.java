@@ -9,12 +9,19 @@ import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
  *      wiki</a>
  */
 public final class PrivateMessage {
+    /**
+     * To be called when a player tries to send a private message.
+     * 
+     * @param from
+     * @param to
+     * @param message
+     */
     public static void onPrivateMessage(final ICPlayer from, final ICPlayer to, final String message) {
         if (to == null) {
             from.info("No such player");
             return;
         }
-        to.privateMessage(from, message);
+        to.privateMessage(from.getName(), message);
     }
 
     private PrivateMessage() {

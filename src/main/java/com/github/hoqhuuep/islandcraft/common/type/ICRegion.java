@@ -1,5 +1,10 @@
 package com.github.hoqhuuep.islandcraft.common.type;
 
+/**
+ * Represents a rectangular region in a world. Height is not recorded.
+ * 
+ * @author Daniel (hoqhuuep) Simmons
+ */
 public class ICRegion {
     private final ICLocation min;
     private final ICLocation max;
