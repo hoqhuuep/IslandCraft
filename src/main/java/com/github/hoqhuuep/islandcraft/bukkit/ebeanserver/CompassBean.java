@@ -6,27 +6,27 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "compass_target")
-public class CompassTargetBean {
+@Table(name = "compass")
+public class CompassBean {
     @Id
     private String player;
 
     @Column
-    private String target;
+    private String waypoint;
 
     public String getPlayer() {
         return player;
     }
 
-    public String getTarget() {
-        return target;
+    public String getWaypoint() {
+        return waypoint;
     }
 
     public void setPlayer(final String player) {
         this.player = player;
     }
 
-    public void setTarget(final String target) {
-        this.target = target;
+    public void setWaypoint(final String waypoint) {
+        this.waypoint = waypoint;
     }
 }

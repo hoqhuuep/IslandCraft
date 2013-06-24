@@ -59,9 +59,9 @@ public class BetterCompassListener implements Listener {
                     return;
                 }
                 if (bukkitPlayer.isSneaking()) {
-                    betterCompass.onPreviousTarget(player);
+                    betterCompass.onPreviousWaypoint(player);
                 } else {
-                    betterCompass.onNextTarget(player);
+                    betterCompass.onNextWaypoint(player);
                 }
             }
         }

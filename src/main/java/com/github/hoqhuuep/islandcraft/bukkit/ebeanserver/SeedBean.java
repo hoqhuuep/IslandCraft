@@ -6,10 +6,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "death_point")
-public class DeathPointBean {
+@Table(name = "seed")
+public class SeedBean {
     @Id
-    private String player;
+    private String id;
 
     @Column
     private String world;
@@ -20,8 +20,11 @@ public class DeathPointBean {
     @Column
     private Integer z;
 
-    public String getPlayer() {
-        return player;
+    @Column
+    private Long seed;
+
+    public String getId() {
+        return id;
     }
 
     public String getWorld() {
@@ -36,8 +39,12 @@ public class DeathPointBean {
         return z;
     }
 
-    public void setPlayer(final String player) {
-        this.player = player;
+    public Long getSeed() {
+        return seed;
+    }
+
+    public void setId(final String id) {
+        this.id = id;
     }
 
     public void setWorld(final String world) {
@@ -50,5 +57,9 @@ public class DeathPointBean {
 
     public void setZ(final Integer z) {
         this.z = z;
+    }
+
+    public void setSeed(final Long seed) {
+        this.seed = seed;
     }
 }

@@ -93,10 +93,10 @@ public final class IslandGenerator implements ICGenerator {
 
     private long islandSeed(final int cx, final int cz) {
         final ICLocation location = new ICLocation(world.getName(), cx, cz);
-        final Long oldSeed = database.loadIslandSeed(location);
+        final Long oldSeed = database.loadSeed(location);
         if (oldSeed == null) {
             final Long newSeed = new Long(world.getSeed() ^ (cx + (((long) cz) << 32)));
-            database.saveIslandSeed(location, newSeed);
+            database.saveSeed(location, newSeed);
             return newSeed.longValue();
         }
         return oldSeed.longValue();

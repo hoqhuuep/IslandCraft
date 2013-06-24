@@ -44,14 +44,14 @@ public class BukkitRegenerator implements CommandExecutor {
             player.sendMessage("[INFO] You cannot regenerate the ocean");
             return true;
         }
-        final Long oldSeed = database.loadIslandSeed(iLocation);
+        final Long oldSeed = database.loadSeed(iLocation);
         final ICRegion region = islandMath.visibleRegion(iLocation);
         final int minX = region.getMin().getX() >> 4;
         final int minZ = region.getMin().getZ() >> 4;
         final int maxX = region.getMax().getX() >> 4;
         final int maxZ = region.getMax().getZ() >> 4;
         if (oldSeed != null) {
-            database.saveIslandSeed(iLocation, new Long(new Random(oldSeed.longValue()).nextLong()));
+            database.saveSeed(iLocation, new Long(new Random(oldSeed.longValue()).nextLong()));
             final World w2 = Bukkit.getWorld(iLocation.getWorld());
             for (int x = minX; x < maxX; ++x) {
                 for (int z = minZ; z < maxZ; ++z) {

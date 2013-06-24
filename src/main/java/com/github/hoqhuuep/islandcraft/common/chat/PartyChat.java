@@ -45,7 +45,7 @@ public class PartyChat {
             player.info("You are not a member of any party");
             return;
         }
-        final List<String> members = database.loadPartyMembers(party);
+        final List<String> members = database.loadPartyPlayers(party);
         player.info("Members: [" + StringUtils.join(members, ", ") + "]");
     }
 
@@ -55,7 +55,7 @@ public class PartyChat {
             player.info("You are not a member of any party");
             return;
         }
-        final List<String> memberNames = database.loadPartyMembers(party);
+        final List<String> memberNames = database.loadPartyPlayers(party);
         for (final String memberName : memberNames) {
             final ICPlayer member = player.getServer().findOnlinePlayer(memberName);
             if (member != null) {

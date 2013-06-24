@@ -2,8 +2,6 @@ package com.github.hoqhuuep.islandcraft.common.api;
 
 import java.util.List;
 
-import com.github.hoqhuuep.islandcraft.common.extras.BetterCompassTarget;
-import com.github.hoqhuuep.islandcraft.common.type.ICIsland;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 /**
@@ -12,24 +10,16 @@ import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
  * @author Daniel (hoqhuuep) Simmons
  */
 public interface ICDatabase {
-    /**
-     * Load the location of the player's most recent death point from the
-     * database.
-     * 
-     * @param player
-     * @return <code>null</code> if player has not died, otherwise the location
-     *         of the player's most recent death.
-     */
-    ICLocation loadDeathPoint(String player);
 
-    /**
-     * Save the player's death point to the database.
-     * 
-     * @param player
-     * @param deathPoint
-     *            if <code>null</code> player's death point will be erased.
-     */
-    void saveDeathPoint(String player, ICLocation deathPoint);
+    String loadCompass(String player);
+
+    void saveCompass(String player, String waypoint);
+
+    String loadOwnership(ICLocation location);
+
+    List<ICLocation> loadOwnershipLocations(String player);
+
+    void saveOwnership(ICLocation location, String player);
 
     /**
      * Load the player's party from the database.
@@ -48,7 +38,7 @@ public interface ICDatabase {
      * @return A list containing all members of the party. List will be empty if
      *         party has no members.
      */
-    List<String> loadPartyMembers(String party);
+    List<String> loadPartyPlayers(String party);
 
     /**
      * Save the player's party to the database
@@ -59,50 +49,21 @@ public interface ICDatabase {
      */
     void saveParty(String player, String party);
 
+    Long loadSeed(ICLocation location);
+
+    void saveSeed(final ICLocation location, final Long seed);
+
     /**
-     * Load the player's compass target form the database.
+     * Load the location of a waypoint.
      * 
      * @param player
-     * @return <code>null</code> if the player has not set their compass target,
-     *         otherwise their compass target.
+     *            the owner of the waypoint.
+     * @param waypoint
+     *            the name of the waytpoint.
+     * @return <code>null</code> if the waypoint does not exist, otherwise the
+     *         location of the waypoint.
      */
-    BetterCompassTarget loadCompassTarget(String player);
-
-    /**
-     * Save the player's compass target to the database.
-     * 
-     * @param player
-     * @param target
-     *            if <code>null</code> player's compass target will be erased.
-     */
-    void saveCompassTarget(String player, BetterCompassTarget target);
-
-    /**
-     * Load the island from the database at the given location.
-     * <i>IMPORTANT</i>: location must be the center of the island.
-     * 
-     * @param location
-     *            the center of the island.
-     * @return <code>null</code> if the island is not in the database, otherwise
-     *         the island at the location.
-     */
-    ICIsland loadIsland(ICLocation location);
-
-    /**
-     * Load the list of all islands owned by the player from the database.
-     * 
-     * @param owner
-     * @return A list containing all islands owned by the player. List will be
-     *         empty if player has no islands.
-     */
-    List<ICIsland> loadIslands(String owner);
-
-    /**
-     * Save an island to the database.
-     * 
-     * @param island
-     */
-    void saveIsland(ICIsland island);
+    ICLocation loadWaypoint(String player, String waypoint);
 
     /**
      * Load the list of the names of all compass waypoints configured by a
@@ -115,28 +76,12 @@ public interface ICDatabase {
     List<String> loadWaypoints(String player);
 
     /**
-     * Load the location of a waypoint.
-     * 
-     * @param player
-     *            the owner of the waypoint.
-     * @param name
-     *            the name of the waytpoint.
-     * @return <code>null</code> if the waypoint does not exist, otherwise the
-     *         location of the waypoint.
-     */
-    ICLocation loadWaypoint(String player, String name);
-
-    /**
      * Save a waypoint in the database. Removes the waypoint if the location is
      * <code>null</code>.
      * 
      * @param player
-     * @param name
+     * @param waypoint
      * @param location
      */
-    void saveWaypoint(String player, String name, ICLocation location);
-
-    void saveIslandSeed(ICLocation location, Long seed);
-
-    Long loadIslandSeed(ICLocation location);
+    void saveWaypoint(String player, String waypoint, ICLocation location);
 }

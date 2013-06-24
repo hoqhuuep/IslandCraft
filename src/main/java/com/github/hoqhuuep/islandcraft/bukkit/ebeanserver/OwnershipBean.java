@@ -6,16 +6,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "waypoint")
-public class WaypointBean {
+@Table(name = "ownership")
+public class OwnershipBean {
     @Id
     private String id;
-
-    @Column
-    private String player;
-
-    @Column
-    private String waypoint;
 
     @Column
     private String world;
@@ -26,16 +20,15 @@ public class WaypointBean {
     @Column
     private Integer z;
 
+    @Column
+    private String player;
+
     public String getId() {
         return id;
     }
 
-    public String getPlayer() {
-        return player;
-    }
-
-    public String getWaypoint() {
-        return waypoint;
+    public String getWorld() {
+        return world;
     }
 
     public Integer getX() {
@@ -46,20 +39,16 @@ public class WaypointBean {
         return z;
     }
 
-    public String getWorld() {
-        return world;
+    public String getPlayer() {
+        return player;
     }
 
     public void setId(final String id) {
         this.id = id;
     }
 
-    public void setPlayer(final String player) {
-        this.player = player;
-    }
-
-    public void setWaypoint(final String waypoint) {
-        this.waypoint = waypoint;
+    public void setWorld(final String world) {
+        this.world = world;
     }
 
     public void setX(final Integer x) {
@@ -70,7 +59,7 @@ public class WaypointBean {
         this.z = z;
     }
 
-    public void setWorld(final String world) {
-        this.world = world;
+    public void setPlayer(final String player) {
+        this.player = player;
     }
 }

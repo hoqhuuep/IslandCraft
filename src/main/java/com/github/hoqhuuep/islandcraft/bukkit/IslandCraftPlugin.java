@@ -15,7 +15,7 @@ import com.github.hoqhuuep.islandcraft.bukkit.command.PartyChatCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.command.PrivateMessageCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.command.PurchasingCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.command.SuicideCommandExecutor;
-import com.github.hoqhuuep.islandcraft.bukkit.ebeanserver.CompassTargetBean;
+import com.github.hoqhuuep.islandcraft.bukkit.ebeanserver.CompassBean;
 import com.github.hoqhuuep.islandcraft.bukkit.ebeanserver.EbeanServerDatabase;
 import com.github.hoqhuuep.islandcraft.bukkit.event.BetterClockListener;
 import com.github.hoqhuuep.islandcraft.bukkit.event.BetterCompassListener;
@@ -49,7 +49,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveConfig();
         try {
-            getDatabase().find(CompassTargetBean.class).findRowCount();
+            getDatabase().find(CompassBean.class).findRowCount();
         } catch (PersistenceException e) {
             installDDL();
         }
@@ -58,7 +58,8 @@ public final class IslandCraftPlugin extends JavaPlugin {
         TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
 
         // Purchasing
-        final PurchasingCommandExecutor purchasing = new PurchasingCommandExecutor(new Purchasing(getICDatabase(), getICConfig(), getICProtection()), getICServer());
+        final PurchasingCommandExecutor purchasing = new PurchasingCommandExecutor(new Purchasing(getICDatabase(), getICConfig(), getICProtection()),
+                getICServer());
         getCommand("purchase").setExecutor(purchasing);
         getCommand("abandon").setExecutor(purchasing);
         getCommand("examine").setExecutor(purchasing);
