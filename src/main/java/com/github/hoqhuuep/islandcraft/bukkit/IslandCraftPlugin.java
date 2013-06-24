@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -81,7 +82,10 @@ public final class IslandCraftPlugin extends JavaPlugin {
         final BetterCompass betterCompass = new BetterCompass(getICDatabase());
         register(new BetterCompassListener(betterCompass, getICServer()));
         getCommand("suicide").setExecutor(new SuicideCommandExecutor(getICServer()));
-        getCommand("waypoint").setExecutor(new BetterCompassCommandExecutor(betterCompass, getICServer()));
+        final BetterCompassCommandExecutor betterCompassCommandExecutor = new BetterCompassCommandExecutor(betterCompass, getICServer());
+        final PluginCommand waypointCommand = getCommand("waypoint");
+        waypointCommand.setExecutor(betterCompassCommandExecutor);
+        waypointCommand.setTabCompleter(betterCompassCommandExecutor);
 
         getCommand("regenerate").setExecutor(new BukkitRegenerator());
     }
