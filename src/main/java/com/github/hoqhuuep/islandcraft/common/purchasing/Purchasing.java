@@ -28,29 +28,15 @@ public class Purchasing {
      * @param player
      */
     public final void onAbandon(final ICPlayer player) {
-        final ICLocation location = player.getLocation();
-        if (!location.getWorld().equalsIgnoreCase(config.getWorld())) {
-            player.info("You cannot abandon an island from this world");
-            return;
-        }
-
-        final ICLocation islandLocation = islandMath.islandAt(location);
-        if (islandLocation == null) {
-            player.info("You cannot abandon the ocean");
-            return;
-        }
-
-        final String owner = database.loadOwnership(islandLocation);
-        final String name = player.getName();
-        if (owner == null || !owner.equalsIgnoreCase(name)) {
-            player.info("You cannot abandon an island you do not own");
+        final ICLocation location = islandAtPlayer(player, "abandon");
+        if (location == null || !isOwner(player, location, "abandon")) {
             return;
         }
 
         // Success
-        database.saveOwnership(islandLocation, null);
-        protection.removeRegion(islandMath.visibleRegion(islandLocation));
-        protection.removeRegion(islandMath.protectedRegion(islandLocation));
+        database.saveOwnership(location, null);
+        protection.removeRegion(islandMath.visibleRegion(location));
+        protection.removeRegion(islandMath.protectedRegion(location));
         player.info("Island successfully abandoned");
     }
 
@@ -61,20 +47,13 @@ public class Purchasing {
      * @param player
      */
     public final void onExamine(final ICPlayer player) {
-        final ICLocation location = player.getLocation();
-        if (!location.getWorld().equalsIgnoreCase(config.getWorld())) {
-            player.info("You cannot examine an island from this world");
+        final ICLocation location = islandAtPlayer(player, "examine");
+        if (location == null) {
             return;
         }
 
-        final ICLocation islandLocation = islandMath.islandAt(location);
-        if (islandLocation == null) {
-            player.info("You cannot examine the ocean");
-            return;
-        }
-
-        final String owner = database.loadOwnership(islandLocation);
-        final Long seed = database.loadSeed(islandLocation);
+        final String owner = database.loadOwnership(location);
+        final Long seed = database.loadSeed(location);
         final String biome;
         if (seed == null) {
             biome = "Unknown";
@@ -84,23 +63,23 @@ public class Purchasing {
 
         if (owner == null) {
             player.info("Available Island:");
-            player.info("  Location: " + islandLocation);
+            player.info("  Location: " + location);
             player.info("  Biome: " + biome);
             // TODO Get real regeneration here
             player.info("  Regeneration: <n> days");
         } else if (owner.equalsIgnoreCase("<reserved>")) {
             player.info("Reserved Island:");
-            player.info("  Location: " + islandLocation);
+            player.info("  Location: " + location);
             player.info("  Biome: " + biome);
         } else if (owner.equalsIgnoreCase("<resource>")) {
             player.info("Public Island:");
-            player.info("  Location: " + islandLocation);
+            player.info("  Location: " + location);
             player.info("  Biome: " + biome);
             // TODO Get real regeneration here
             player.info("  Regeneration: <n> days");
         } else {
             player.info("Private Island:");
-            player.info("  Location: " + islandLocation);
+            player.info("  Location: " + location);
             player.info("  Biome: " + biome);
             player.info("  Owner: " + owner);
             // TODO Get real members and tax here
@@ -118,19 +97,12 @@ public class Purchasing {
      * @param player
      */
     public final void onPurchase(final ICPlayer player) {
-        final ICLocation location = player.getLocation();
-        if (!location.getWorld().equalsIgnoreCase(config.getWorld())) {
-            player.info("You cannot purchase an island from this world");
+        final ICLocation location = islandAtPlayer(player, "purchase");
+        if (location == null) {
             return;
         }
 
-        final ICLocation islandLocation = islandMath.islandAt(location);
-        if (islandLocation == null) {
-            player.info("You cannot purchase the ocean");
-            return;
-        }
-
-        final String owner = database.loadOwnership(islandLocation);
+        final String owner = database.loadOwnership(location);
         final String name = player.getName();
 
         if (owner != null) {
@@ -159,10 +131,10 @@ public class Purchasing {
         }
 
         // Success
-        database.saveOwnership(islandLocation, name);
-        final String title = name + "'s Island @ " + islandLocation;
-        protection.addVisibleRegion(title, islandMath.visibleRegion(islandLocation));
-        protection.addProtectedRegion(islandMath.protectedRegion(islandLocation), name);
+        database.saveOwnership(location, name);
+        final String title = name + "'s Island @ " + location;
+        protection.addVisibleRegion(title, islandMath.visibleRegion(location));
+        protection.addProtectedRegion(islandMath.protectedRegion(location), name);
         player.info("Island successfully purchased");
     }
 
@@ -174,28 +146,40 @@ public class Purchasing {
      * @param title
      */
     public final void onRename(final ICPlayer player, final String title) {
-        final ICLocation location = player.getLocation();
-        if (!location.getWorld().equalsIgnoreCase(config.getWorld())) {
-            player.info("You cannot rename an island from this world");
-            return;
-        }
-
-        final ICLocation islandLocation = islandMath.islandAt(location);
-        if (islandLocation == null) {
-            player.info("You cannot rename the ocean");
-            return;
-        }
-
-        final String owner = database.loadOwnership(islandLocation);
-        final String name = player.getName();
-        if (owner == null || !owner.equalsIgnoreCase(name)) {
-            player.info("You cannot rename an island you do not own");
+        final ICLocation location = islandAtPlayer(player, "rename");
+        if (location == null || !isOwner(player, location, "rename")) {
             return;
         }
 
         // Success
-        protection.renameRegion(islandMath.visibleRegion(islandLocation), title);
+        protection.renameRegion(islandMath.visibleRegion(location), title);
         player.info("Island successfully renamed");
+    }
+
+    private ICLocation islandAtPlayer(final ICPlayer player, final String action) {
+        final ICLocation location = player.getLocation();
+        if (!location.getWorld().equalsIgnoreCase(config.getWorld())) {
+            player.info("You cannot " + action + " an island from this world");
+            return null;
+        }
+
+        final ICLocation islandLocation = islandMath.islandAt(location);
+        if (islandLocation == null) {
+            player.info("You cannot " + action + " the ocean");
+            return null;
+        }
+
+        return islandLocation;
+    }
+
+    private boolean isOwner(final ICPlayer player, final ICLocation location, final String action) {
+        final String owner = database.loadOwnership(location);
+        final String name = player.getName();
+        if (owner == null || !owner.equalsIgnoreCase(name)) {
+            player.info("You cannot " + action + " an island you do not own");
+            return false;
+        }
+        return true;
     }
 
     private int calculateCost(final String player) {

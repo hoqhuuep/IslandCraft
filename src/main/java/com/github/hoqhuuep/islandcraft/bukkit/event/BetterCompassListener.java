@@ -8,7 +8,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
@@ -26,11 +25,7 @@ public class BetterCompassListener implements Listener {
     @EventHandler
     public final void onPlayerDeath(final PlayerDeathEvent event) {
         // FIXME Compass target seems to reset on death
-        final Player bukkitPlayer = event.getEntity();
-        if (bukkitPlayer == null) {
-            return;
-        }
-        final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
+        final ICPlayer player = fromBukkitPlayer(event.getEntity());
         if (player == null) {
             return;
         }
@@ -41,45 +36,30 @@ public class BetterCompassListener implements Listener {
 
     @EventHandler
     public final void onPlayerInteract(final PlayerInteractEvent event) {
-        if (event == null) {
-            return;
-        }
-        final ItemStack item = event.getItem();
-        if (item == null) {
-            return;
-        }
-        final Player bukkitPlayer = event.getPlayer();
-        if (bukkitPlayer == null) {
-            return;
-        }
-        if (item.getType() == Material.COMPASS) {
-            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
-                if (player == null) {
-                    return;
-                }
-                if (bukkitPlayer.isSneaking()) {
-                    betterCompass.onPreviousWaypoint(player);
-                } else {
-                    betterCompass.onNextWaypoint(player);
-                }
+        final Action action = event.getAction();
+        if (Material.COMPASS == event.getMaterial() && (Action.RIGHT_CLICK_AIR == action || Action.RIGHT_CLICK_BLOCK == action)) {
+            final Player bukkitPlayer = event.getPlayer();
+            final ICPlayer player = fromBukkitPlayer(bukkitPlayer);
+            if (player == null) {
+                return;
             }
+            betterCompass.onNextWaypoint(player, bukkitPlayer.isSneaking());
         }
     }
 
     @EventHandler
     public final void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
-        if (event == null) {
-            return;
-        }
-        final Player bukkitPlayer = event.getPlayer();
-        if (bukkitPlayer == null) {
-            return;
-        }
-        final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
+        final ICPlayer player = fromBukkitPlayer(event.getPlayer());
         if (player == null) {
             return;
         }
         betterCompass.onChangeWorld(player);
+    }
+
+    private final ICPlayer fromBukkitPlayer(Player bukkitPlayer) {
+        if (bukkitPlayer == null) {
+            return null;
+        }
+        return server.findOnlinePlayer(bukkitPlayer.getName());
     }
 }

@@ -47,7 +47,7 @@ public class BetterCompass {
      * 
      * @param player
      */
-    public final void onNextWaypoint(final ICPlayer player) {
+    public final void onNextWaypoint(final ICPlayer player, final boolean previous) {
         if (!player.getWorld().isNormalWorld()) {
             // TODO Remove dependency on Bukkit here
             player.info("Compass now pointing to " + ChatColor.MAGIC + "nowhere");
@@ -55,27 +55,7 @@ public class BetterCompass {
         }
         final String name = player.getName();
         final String oldWaypoint = getWaypoint(name);
-        final String newWaypoint = getNext(name, oldWaypoint);
-        if (setWaypoint(player, newWaypoint)) {
-            player.info("Compass now pointing to " + newWaypoint);
-        }
-    }
-
-    /**
-     * To be called when a player sets their compass to point at the previous
-     * waypoint (by shift-right-clicking with a compass).
-     * 
-     * @param player
-     */
-    public final void onPreviousWaypoint(final ICPlayer player) {
-        if (!player.getWorld().isNormalWorld()) {
-            // TODO Remove dependency on Bukkit here
-            player.info("Compass now pointing to " + ChatColor.MAGIC + "nowhere");
-            return;
-        }
-        final String name = player.getName();
-        final String oldWaypoint = getWaypoint(name);
-        final String newWaypoint = getPrevious(name, oldWaypoint);
+        final String newWaypoint = getNext(name, oldWaypoint, previous);
         if (setWaypoint(player, newWaypoint)) {
             player.info("Compass now pointing to " + newWaypoint);
         }
@@ -204,27 +184,20 @@ public class BetterCompass {
         return waypoints;
     }
 
-    private String getNext(String player, String waypoint) {
+    private String getNext(final String player, final String waypoint, final boolean previous) {
         final List<String> waypoints = getWaypoints(player);
         final int index = waypoints.indexOf(waypoint);
         if (index == -1) {
-            return null;
+            return SPAWN;
         }
-        if (index == waypoints.size() - 1) {
+        if (previous) {
+            if (index == 0) {
+                return waypoints.get(waypoints.size() - 1);
+            }
+            return waypoints.get(index - 1);
+        } else if (index == waypoints.size() - 1) {
             return waypoints.get(0);
         }
         return waypoints.get(index + 1);
-    }
-
-    private String getPrevious(String player, String waypoint) {
-        final List<String> waypoints = getWaypoints(player);
-        final int index = waypoints.indexOf(waypoint);
-        if (index == -1) {
-            return null;
-        }
-        if (index == 0) {
-            return waypoints.get(waypoints.size() - 1);
-        }
-        return waypoints.get(index - 1);
     }
 }

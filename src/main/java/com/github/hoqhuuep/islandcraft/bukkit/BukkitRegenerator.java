@@ -44,6 +44,13 @@ public class BukkitRegenerator implements CommandExecutor {
             player.sendMessage("[INFO] You cannot regenerate the ocean");
             return true;
         }
+
+        regenerateRegion(iLocation, database, islandMath);
+
+        return true;
+    }
+
+    private static void regenerateRegion(ICLocation iLocation, ICDatabase database, IslandMath islandMath) {
         final Long oldSeed = database.loadSeed(iLocation);
         final ICRegion region = islandMath.visibleRegion(iLocation);
         final int minX = region.getMin().getX() >> 4;
@@ -64,6 +71,5 @@ public class BukkitRegenerator implements CommandExecutor {
                 }
             }
         }
-        return true;
     }
 }
