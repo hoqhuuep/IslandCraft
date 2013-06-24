@@ -59,7 +59,7 @@ public interface ICDatabase {
      * @param player
      *            the owner of the waypoint.
      * @param waypoint
-     *            the name of the waytpoint.
+     *            the name of the waypoint.
      * @return <code>null</code> if the waypoint does not exist, otherwise the
      *         location of the waypoint.
      */
