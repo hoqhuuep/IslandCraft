@@ -24,28 +24,28 @@ public class PartyChatCommandExecutor implements CommandExecutor {
         if (sender == null || !(sender instanceof Player)) {
             return false;
         }
-        final ICPlayer player = this.server.findOnlinePlayer(((Player) sender).getName());
+        final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
         if ("p".equalsIgnoreCase(label)) {
             final String message = StringUtils.join(args, " ");
             if (message.isEmpty()) {
                 return false;
             }
-            this.partyChat.onPartyChat(player, message);
+            partyChat.onPartyChat(player, message);
         } else if ("join".equalsIgnoreCase(label)) {
             if (args.length != 1) {
                 return false;
             }
-            this.partyChat.onJoin(player, args[0]);
+            partyChat.onJoin(player, args[0]);
         } else if ("leave".equalsIgnoreCase(label)) {
             if (args.length != 0) {
                 return false;
             }
-            this.partyChat.onLeave(player);
+            partyChat.onLeave(player);
         } else if ("members".equalsIgnoreCase(label)) {
             if (args.length != 0) {
                 return false;
             }
-            this.partyChat.onMembers(player);
+            partyChat.onMembers(player);
         }
         return true;
     }

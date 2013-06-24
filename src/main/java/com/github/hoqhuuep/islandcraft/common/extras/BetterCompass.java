@@ -25,17 +25,17 @@ public class BetterCompass {
     }
 
     private BetterCompassTarget getTarget(final String player) {
-        final BetterCompassTarget t = this.database.loadCompassTarget(player);
-        if (t == null) {
+        final BetterCompassTarget target = database.loadCompassTarget(player);
+        if (target == null) {
             return BetterCompassTarget.SPAWN;
         }
-        return t;
+        return target;
     }
 
     public final void onDeath(final ICPlayer player) {
         final ICLocation deathPoint = player.getLocation();
-        this.database.saveDeathPoint(player.getName(), deathPoint);
-        if (this.database.loadCompassTarget(player.getName()) == BetterCompassTarget.DEATH_POINT) {
+        database.saveDeathPoint(player.getName(), deathPoint);
+        if (database.loadCompassTarget(player.getName()) == BetterCompassTarget.DEATH_POINT) {
             // Refresh location
             setTarget(player, BetterCompassTarget.DEATH_POINT);
         }
@@ -66,7 +66,7 @@ public class BetterCompass {
     }
 
     public final void onSetBedLocation(final ICPlayer player) {
-        if (this.database.loadCompassTarget(player.getName()) == BetterCompassTarget.BED) {
+        if (database.loadCompassTarget(player.getName()) == BetterCompassTarget.BED) {
             // Refresh location
             setTarget(player, BetterCompassTarget.BED);
         }
@@ -74,7 +74,7 @@ public class BetterCompass {
 
     public final void onChangeWorld(final ICPlayer player) {
         // Refresh location
-        setTarget(player, this.database.loadCompassTarget(player.getName()));
+        setTarget(player, database.loadCompassTarget(player.getName()));
     }
 
     private void setTarget(final ICPlayer player, final BetterCompassTarget target) {
@@ -87,7 +87,7 @@ public class BetterCompass {
             player.setCompassTarget(bedLocation);
             break;
         case DEATH_POINT:
-            ICLocation deathPoint = this.database.loadDeathPoint(player.getName());
+            ICLocation deathPoint = database.loadDeathPoint(player.getName());
             if (deathPoint == null || !player.getServer().findOnlineWorld(deathPoint.getWorld()).isNormalWorld()) {
                 deathPoint = player.getWorld().getSpawnLocation();
             }
@@ -96,8 +96,9 @@ public class BetterCompass {
         case SPAWN:
         default:
             player.setCompassTarget(player.getWorld().getSpawnLocation());
+            break;
         }
-        this.database.saveCompassTarget(player.getName(), target);
+        database.saveCompassTarget(player.getName(), target);
     }
 
     public void onWaypointAdd(final ICPlayer player, final String name) {
@@ -106,7 +107,7 @@ public class BetterCompass {
             player.info("You cannot override that waypoint");
             return;
         }
-        this.database.saveWaypoint(player.getName(), name, player.getLocation());
+        database.saveWaypoint(player.getName(), name, player.getLocation());
         player.info("Added waypoint " + name);
     }
 
@@ -116,12 +117,12 @@ public class BetterCompass {
             player.info("You cannot remove that waypoint");
             return;
         }
-        this.database.saveWaypoint(player.getName(), name, null);
+        database.saveWaypoint(player.getName(), name, null);
         player.info("Removed waypoint " + name);
     }
 
     public void onWaypointsList(final ICPlayer player) {
-        final List<String> waypoints = this.database.loadWaypoints(player.getName());
+        final List<String> waypoints = database.loadWaypoints(player.getName());
         waypoints.add(BetterCompassTarget.SPAWN.prettyString());
         waypoints.add(BetterCompassTarget.BED.prettyString());
         waypoints.add(BetterCompassTarget.DEATH_POINT.prettyString());
@@ -144,7 +145,7 @@ public class BetterCompass {
             player.info("Compass now pointing to " + BetterCompassTarget.DEATH_POINT.prettyString());
             return;
         }
-        ICLocation location = this.database.loadWaypoint(player.getName(), name);
+        final ICLocation location = database.loadWaypoint(player.getName(), name);
         if (location == null) {
             player.info("Waypoint not defined " + name);
             return;

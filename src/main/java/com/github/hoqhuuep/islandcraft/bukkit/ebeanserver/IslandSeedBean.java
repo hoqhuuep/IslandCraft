@@ -15,11 +15,11 @@ public class IslandSeedBean {
     private Long seed;
 
     public String getLocation() {
-        return this.location;
+        return location;
     }
 
     public Long getSeed() {
-        return this.seed;
+        return seed;
     }
 
     public void setLocation(final String location) {

@@ -21,19 +21,19 @@ public class WaypointBean {
     private Integer z;
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public Integer getX() {
-        return this.x;
+        return x;
     }
 
     public Integer getZ() {
-        return this.z;
+        return z;
     }
 
     public String getWorld() {
-        return this.world;
+        return world;
     }
 
     public void setName(final String name) {

@@ -13,11 +13,11 @@ public class Perlin {
         final BufferedImage perlin = new BufferedImage(xSize, zSize, BufferedImage.TYPE_INT_ARGB);
         for (int z = 0; z < zSize; ++z) {
             for (int x = 0; x < zSize; ++x) {
-                int c = noise7.getRGB(x, z) & 0xFF;
-                c += noise11.getRGB(x, z) & 0xFF;
-                c += noise42.getRGB(x, z) & 0xFF;
-                c /= 3;
-                perlin.setRGB(x, z, (0xFF << 24) | c);
+                int value = noise7.getRGB(x, z) & 0xFF;
+                value += noise11.getRGB(x, z) & 0xFF;
+                value += noise42.getRGB(x, z) & 0xFF;
+                value /= 3;
+                perlin.setRGB(x, z, (0xFF << 24) | value);
             }
         }
         return perlin;
@@ -27,14 +27,14 @@ public class Perlin {
         final BufferedImage noise = new BufferedImage(xWave, zWave, BufferedImage.TYPE_INT_ARGB);
         for (int z = 0; z < zWave; ++z) {
             for (int x = 0; x < xWave; ++x) {
-                int c = random.nextInt(256);
-                noise.setRGB(x, z, (0xFF << 24) | c);
+                int value = random.nextInt(256);
+                noise.setRGB(x, z, (0xFF << 24) | value);
             }
         }
         final BufferedImage scaledNoise = new BufferedImage(xSize, zSize, BufferedImage.TYPE_INT_ARGB);
-        final Graphics2D g = scaledNoise.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        g.drawImage(noise, 0, 0, xSize, zSize, null);
+        final Graphics2D graphics = scaledNoise.createGraphics();
+        graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        graphics.drawImage(noise, 0, 0, xSize, zSize, null);
         return scaledNoise;
     }
 }

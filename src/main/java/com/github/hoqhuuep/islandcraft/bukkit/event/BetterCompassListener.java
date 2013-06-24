@@ -26,15 +26,15 @@ public class BetterCompassListener implements Listener {
     @EventHandler
     public final void onPlayerDeath(final PlayerDeathEvent event) {
         // FIXME Compass target seems to reset on death
-        final Player player = event.getEntity();
+        final Player bukkitPlayer = event.getEntity();
+        if (bukkitPlayer == null) {
+            return;
+        }
+        final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
         if (player == null) {
             return;
         }
-        final ICPlayer p = this.server.findOnlinePlayer(player.getName());
-        if (p == null) {
-            return;
-        }
-        this.betterCompass.onDeath(p);
+        betterCompass.onDeath(player);
     }
 
     // TODO Bed spawn needs to update when player uses bed
@@ -48,20 +48,20 @@ public class BetterCompassListener implements Listener {
         if (item == null) {
             return;
         }
-        final Player player = event.getPlayer();
-        if (player == null) {
+        final Player bukkitPlayer = event.getPlayer();
+        if (bukkitPlayer == null) {
             return;
         }
         if (item.getType() == Material.COMPASS) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                final ICPlayer p = this.server.findOnlinePlayer(player.getName());
-                if (p == null) {
+                final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
+                if (player == null) {
                     return;
                 }
-                if (player.isSneaking()) {
-                    this.betterCompass.onPreviousTarget(p);
+                if (bukkitPlayer.isSneaking()) {
+                    betterCompass.onPreviousTarget(player);
                 } else {
-                    this.betterCompass.onNextTarget(p);
+                    betterCompass.onNextTarget(player);
                 }
             }
         }
@@ -72,14 +72,14 @@ public class BetterCompassListener implements Listener {
         if (event == null) {
             return;
         }
-        final Player player = event.getPlayer();
+        final Player bukkitPlayer = event.getPlayer();
+        if (bukkitPlayer == null) {
+            return;
+        }
+        final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
         if (player == null) {
             return;
         }
-        final ICPlayer p = this.server.findOnlinePlayer(player.getName());
-        if (p == null) {
-            return;
-        }
-        this.betterCompass.onChangeWorld(p);
+        betterCompass.onChangeWorld(player);
     }
 }

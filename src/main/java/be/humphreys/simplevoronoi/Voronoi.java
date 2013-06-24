@@ -60,19 +60,19 @@ public class Voronoi {
     private int nsites;
     private Site[] sites;
     private Site bottomsite;
-    private int sqrt_nsites;
+    private int sqrtNSites;
     private final double minDistanceBetweenSites;
-    private int PQcount;
-    private int PQmin;
-    private int PQhashsize;
-    private Halfedge[] PQhash;
+    private int pqCount;
+    private int pqMin;
+    private int pqHashSize;
+    private Halfedge[] pqHash;
 
     private static final int LE = 0;
     private static final int RE = 1;
 
-    private int ELhashsize;
-    private Halfedge[] ELhash;
-    private Halfedge ELleftend, ELrightend;
+    private int elHashSize;
+    private Halfedge[] elHash;
+    private Halfedge elLeftEnd, elRightEnd;
     private List<GraphEdge> allEdges;
 
     /*********************************************************
@@ -80,10 +80,10 @@ public class Voronoi {
      ********************************************************/
 
     public Voronoi(final double minDistanceBetweenSites) {
-        this.siteidx = 0;
-        this.sites = null;
+        siteidx = 0;
+        sites = null;
 
-        this.allEdges = null;
+        allEdges = null;
         this.minDistanceBetweenSites = minDistanceBetweenSites;
     }
 
@@ -109,15 +109,15 @@ public class Voronoi {
         sort(xValuesIn, yValuesIn, xValuesIn.length);
 
         // Check bounding box inputs - if mins are bigger than maxes, swap them
-        this.borderMinX = Math.min(minX, maxX);
-        this.borderMinY = Math.min(minY, maxY);
-        this.borderMaxX = Math.max(minX, maxX);
-        this.borderMaxY = Math.max(minY, maxY);
+        borderMinX = Math.min(minX, maxX);
+        borderMinY = Math.min(minY, maxY);
+        borderMaxX = Math.max(minX, maxX);
+        borderMaxY = Math.max(minY, maxY);
 
-        this.siteidx = 0;
-        voronoi_bd();
+        siteidx = 0;
+        voronoiBd();
 
-        return this.allEdges;
+        return allEdges;
     }
 
     /*********************************************************
@@ -125,19 +125,19 @@ public class Voronoi {
      ********************************************************/
 
     private void sort(final double[] xValuesIn, final double[] yValuesIn, final int count) {
-        this.sites = null;
-        this.allEdges = new LinkedList<GraphEdge>();
+        sites = null;
+        allEdges = new LinkedList<GraphEdge>();
 
-        this.nsites = count;
-        this.nvertices = 0;
-        this.nedges = 0;
+        nsites = count;
+        nvertices = 0;
+        nedges = 0;
 
-        double sn = (double) this.nsites + 4;
-        this.sqrt_nsites = (int) Math.sqrt(sn);
+        final double sn = (double) nsites + 4;
+        sqrtNSites = (int) Math.sqrt(sn);
 
         // Copy the inputs so we don't modify the originals
-        double[] xValues = new double[count];
-        double[] yValues = new double[count];
+        final double[] xValues = new double[count];
+        final double[] yValues = new double[count];
         for (int i = 0; i < count; i++) {
             xValues[i] = xValuesIn[i];
             yValues[i] = yValuesIn[i];
@@ -146,7 +146,7 @@ public class Voronoi {
     }
 
     private static void qsort(final Site[] sites) {
-        List<Site> listSites = new ArrayList<Site>(sites.length);
+        final List<Site> listSites = new ArrayList<Site>(sites.length);
         for (Site s : sites) {
             listSites.add(s);
         }
@@ -154,20 +154,20 @@ public class Voronoi {
         Collections.sort(listSites, new Comparator<Site>() {
             @Override
             public final int compare(final Site p1, final Site p2) {
-                Point s1 = p1.coord, s2 = p2.coord;
+                final Point s1 = p1.coord, s2 = p2.coord;
                 if (s1.y < s2.y) {
-                    return (-1);
+                    return -1;
                 }
                 if (s1.y > s2.y) {
-                    return (1);
+                    return 1;
                 }
                 if (s1.x < s2.x) {
-                    return (-1);
+                    return -1;
                 }
                 if (s1.x > s2.x) {
-                    return (1);
+                    return 1;
                 }
-                return (0);
+                return 0;
             }
         });
 
@@ -178,49 +178,47 @@ public class Voronoi {
     }
 
     private void sortNode(final double[] xValues, final double[] yValues, final int numPoints) {
-        int i;
-        this.nsites = numPoints;
-        this.sites = new Site[this.nsites];
-        this.xmin = xValues[0];
-        this.ymin = yValues[0];
-        this.xmax = xValues[0];
-        this.ymax = yValues[0];
-        for (i = 0; i < this.nsites; i++) {
-            this.sites[i] = new Site();
-            this.sites[i].coord.setPoint(xValues[i], yValues[i]);
-            this.sites[i].sitenbr = i;
+        nsites = numPoints;
+        sites = new Site[nsites];
+        xmin = xValues[0];
+        ymin = yValues[0];
+        xmax = xValues[0];
+        ymax = yValues[0];
+        for (int i = 0; i < nsites; i++) {
+            sites[i] = new Site();
+            sites[i].coord.setPoint(xValues[i], yValues[i]);
+            sites[i].sitenbr = i;
 
-            if (xValues[i] < this.xmin) {
-                this.xmin = xValues[i];
-            } else if (xValues[i] > this.xmax) {
-                this.xmax = xValues[i];
+            if (xValues[i] < xmin) {
+                xmin = xValues[i];
+            } else if (xValues[i] > xmax) {
+                xmax = xValues[i];
             }
 
-            if (yValues[i] < this.ymin) {
-                this.ymin = yValues[i];
-            } else if (yValues[i] > this.ymax) {
-                this.ymax = yValues[i];
+            if (yValues[i] < ymin) {
+                ymin = yValues[i];
+            } else if (yValues[i] > ymax) {
+                ymax = yValues[i];
             }
         }
-        qsort(this.sites);
-        this.deltay = this.ymax - this.ymin;
-        this.deltax = this.xmax - this.xmin;
+        qsort(sites);
+        deltay = ymax - ymin;
+        deltax = this.xmax - this.xmin;
     }
 
     /* return a single in-storage site */
     private Site nextone() {
-        Site s;
         if (this.siteidx < this.nsites) {
-            s = this.sites[this.siteidx];
+            final Site s = this.sites[this.siteidx];
             this.siteidx += 1;
-            return (s);
+            return s;
         }
-        return (null);
+        return null;
     }
 
     private Edge bisect(final Site s1, final Site s2) {
-        double dx, dy, adx, ady;
-        Edge newedge;
+        final double dx, dy, adx, ady;
+        final Edge newedge;
 
         newedge = new Edge();
 
@@ -258,7 +256,7 @@ public class Voronoi {
         newedge.edgenbr = this.nedges;
 
         this.nedges += 1;
-        return (newedge);
+        return newedge;
     }
 
     private void makevertex(final Site v) {
@@ -266,226 +264,226 @@ public class Voronoi {
         this.nvertices += 1;
     }
 
-    private boolean PQinitialize() {
-        this.PQcount = 0;
-        this.PQmin = 0;
-        this.PQhashsize = 4 * this.sqrt_nsites;
-        this.PQhash = new Halfedge[this.PQhashsize];
+    private boolean pqInitialize() {
+        this.pqCount = 0;
+        this.pqMin = 0;
+        this.pqHashSize = 4 * this.sqrtNSites;
+        this.pqHash = new Halfedge[this.pqHashSize];
 
-        for (int i = 0; i < this.PQhashsize; i += 1) {
-            this.PQhash[i] = new Halfedge();
+        for (int i = 0; i < this.pqHashSize; i += 1) {
+            this.pqHash[i] = new Halfedge();
         }
         return true;
     }
 
-    private int PQbucket(final Halfedge he) {
+    private int pqBucket(final Halfedge he) {
         int bucket;
 
-        bucket = (int) ((he.ystar - this.ymin) / this.deltay * this.PQhashsize);
+        bucket = (int) ((he.ystar - this.ymin) / this.deltay * this.pqHashSize);
         if (bucket < 0) {
             bucket = 0;
         }
-        if (bucket >= this.PQhashsize) {
-            bucket = this.PQhashsize - 1;
+        if (bucket >= this.pqHashSize) {
+            bucket = this.pqHashSize - 1;
         }
-        if (bucket < this.PQmin) {
-            this.PQmin = bucket;
+        if (bucket < this.pqMin) {
+            this.pqMin = bucket;
         }
-        return (bucket);
+        return bucket;
     }
 
     // push the HalfEdge into the ordered linked list of vertices
-    private void PQinsert(final Halfedge he, final Site v, final double offset) {
+    private void pqInsert(final Halfedge he, final Site v, final double offset) {
         Halfedge last, next;
 
         he.vertex = v;
         he.ystar = v.coord.y + offset;
-        last = this.PQhash[PQbucket(he)];
-        while ((next = last.PQnext) != null && (he.ystar > next.ystar || (he.ystar == next.ystar && v.coord.x > next.vertex.coord.x))) {
+        last = this.pqHash[pqBucket(he)];
+        while ((next = last.pqNext) != null && (he.ystar > next.ystar || (he.ystar == next.ystar && v.coord.x > next.vertex.coord.x))) {
             last = next;
         }
-        he.PQnext = last.PQnext;
-        last.PQnext = he;
-        this.PQcount += 1;
+        he.pqNext = last.pqNext;
+        last.pqNext = he;
+        this.pqCount += 1;
     }
 
     // remove the HalfEdge from the list of vertices
-    private void PQdelete(final Halfedge he) {
+    private void pqDelete(final Halfedge he) {
         Halfedge last;
 
         if (he.vertex != null) {
-            last = this.PQhash[PQbucket(he)];
-            while (last.PQnext != he) {
-                last = last.PQnext;
+            last = this.pqHash[pqBucket(he)];
+            while (last.pqNext != he) {
+                last = last.pqNext;
             }
 
-            last.PQnext = he.PQnext;
-            this.PQcount -= 1;
+            last.pqNext = he.pqNext;
+            this.pqCount -= 1;
             he.vertex = null;
         }
     }
 
-    private boolean PQempty() {
-        return (this.PQcount == 0);
+    private boolean pqEmpty() {
+        return this.pqCount == 0;
     }
 
-    private Point PQ_min() {
-        Point answer = new Point();
+    private Point pqMin() {
+        final Point answer = new Point();
 
-        while (this.PQhash[this.PQmin].PQnext == null) {
-            this.PQmin += 1;
+        while (this.pqHash[this.pqMin].pqNext == null) {
+            this.pqMin += 1;
         }
-        answer.x = this.PQhash[this.PQmin].PQnext.vertex.coord.x;
-        answer.y = this.PQhash[this.PQmin].PQnext.ystar;
-        return (answer);
+        answer.x = this.pqHash[this.pqMin].pqNext.vertex.coord.x;
+        answer.y = this.pqHash[this.pqMin].pqNext.ystar;
+        return answer;
     }
 
-    private Halfedge PQextractmin() {
-        Halfedge curr;
+    private Halfedge pqExtractMin() {
+        final Halfedge curr;
 
-        curr = this.PQhash[this.PQmin].PQnext;
-        this.PQhash[this.PQmin].PQnext = curr.PQnext;
-        this.PQcount -= 1;
-        return (curr);
+        curr = this.pqHash[this.pqMin].pqNext;
+        this.pqHash[this.pqMin].pqNext = curr.pqNext;
+        this.pqCount -= 1;
+        return curr;
     }
 
-    private static Halfedge HEcreate(final Edge e, final int pm) {
-        Halfedge answer;
+    private static Halfedge heCreate(final Edge e, final int pm) {
+        final Halfedge answer;
         answer = new Halfedge();
-        answer.ELedge = e;
-        answer.ELpm = pm;
-        answer.PQnext = null;
+        answer.elEdge = e;
+        answer.elPm = pm;
+        answer.pqNext = null;
         answer.vertex = null;
-        return (answer);
+        return answer;
     }
 
-    private boolean ELinitialize() {
+    private boolean elInitialize() {
         int i;
-        this.ELhashsize = 2 * this.sqrt_nsites;
-        this.ELhash = new Halfedge[this.ELhashsize];
+        this.elHashSize = 2 * this.sqrtNSites;
+        this.elHash = new Halfedge[this.elHashSize];
 
-        for (i = 0; i < this.ELhashsize; i += 1) {
-            this.ELhash[i] = null;
+        for (i = 0; i < this.elHashSize; i += 1) {
+            this.elHash[i] = null;
         }
-        this.ELleftend = HEcreate(null, 0);
-        this.ELrightend = HEcreate(null, 0);
-        this.ELleftend.ELleft = null;
-        this.ELleftend.ELright = this.ELrightend;
-        this.ELrightend.ELleft = this.ELleftend;
-        this.ELrightend.ELright = null;
-        this.ELhash[0] = this.ELleftend;
-        this.ELhash[this.ELhashsize - 1] = this.ELrightend;
+        this.elLeftEnd = heCreate(null, 0);
+        this.elRightEnd = heCreate(null, 0);
+        this.elLeftEnd.elLeft = null;
+        this.elLeftEnd.elRight = this.elRightEnd;
+        this.elRightEnd.elLeft = this.elLeftEnd;
+        this.elRightEnd.elRight = null;
+        this.elHash[0] = this.elLeftEnd;
+        this.elHash[this.elHashSize - 1] = this.elRightEnd;
 
         return true;
     }
 
-    private static Halfedge ELright(final Halfedge he) {
-        return (he.ELright);
+    private static Halfedge elRight(final Halfedge he) {
+        return he.elRight;
     }
 
-    private static Halfedge ELleft(final Halfedge he) {
-        return (he.ELleft);
+    private static Halfedge elLeft(final Halfedge he) {
+        return he.elLeft;
     }
 
     private Site leftreg(final Halfedge he) {
-        if (he.ELedge == null) {
-            return (this.bottomsite);
+        if (he.elEdge == null) {
+            return this.bottomsite;
         }
-        return (he.ELpm == LE ? he.ELedge.reg[LE] : he.ELedge.reg[RE]);
+        return he.elPm == LE ? he.elEdge.reg[LE] : he.elEdge.reg[RE];
     }
 
-    private static void ELinsert(final Halfedge lb, final Halfedge newHe) {
-        newHe.ELleft = lb;
-        newHe.ELright = lb.ELright;
-        (lb.ELright).ELleft = newHe;
-        lb.ELright = newHe;
+    private static void elInsert(final Halfedge lb, final Halfedge newHe) {
+        newHe.elLeft = lb;
+        newHe.elRight = lb.elRight;
+        (lb.elRight).elLeft = newHe;
+        lb.elRight = newHe;
     }
 
     /*
      * This delete routine can't reclaim node, since pointers from hash table
      * may be present.
      */
-    private static void ELdelete(final Halfedge he) {
-        (he.ELleft).ELright = he.ELright;
-        (he.ELright).ELleft = he.ELleft;
+    private static void elDelete(final Halfedge he) {
+        (he.elLeft).elRight = he.elRight;
+        (he.elRight).elLeft = he.elLeft;
         he.deleted = true;
     }
 
     /* Get entry from hash table, pruning any deleted nodes */
-    private Halfedge ELgethash(final int b) {
-        Halfedge he;
+    private Halfedge elGetHash(final int b) {
+        final Halfedge he;
 
-        if (b < 0 || b >= this.ELhashsize) {
-            return (null);
+        if (b < 0 || b >= this.elHashSize) {
+            return null;
         }
-        he = this.ELhash[b];
+        he = this.elHash[b];
         if (he == null || !he.deleted) {
-            return (he);
+            return he;
         }
 
         /* Hash table points to deleted half edge. Patch as necessary. */
-        this.ELhash[b] = null;
-        return (null);
+        this.elHash[b] = null;
+        return null;
     }
 
     @SuppressWarnings("null")
-    private Halfedge ELleftbnd(final Point p) {
+    private Halfedge elLeftBnd(final Point p) {
         int i, bucket;
         Halfedge he;
 
         /* Use hash table to get close to desired halfedge */
         // use the hash function to find the place in the hash map that this
         // HalfEdge should be
-        bucket = (int) ((p.x - this.xmin) / this.deltax * this.ELhashsize);
+        bucket = (int) ((p.x - this.xmin) / this.deltax * this.elHashSize);
 
         // make sure that the bucket position in within the range of the hash
         // array
         if (bucket < 0) {
             bucket = 0;
         }
-        if (bucket >= this.ELhashsize) {
-            bucket = this.ELhashsize - 1;
+        if (bucket >= this.elHashSize) {
+            bucket = this.elHashSize - 1;
         }
 
-        he = ELgethash(bucket);
+        he = elGetHash(bucket);
         if (he == null) {
             // if the HE isn't found, search backwards and forwards in the hash
             // map
             // for the first non-null entry
-            for (i = 1; i < this.ELhashsize; i += 1) {
-                if ((he = ELgethash(bucket - i)) != null) {
+            for (i = 1; i < this.elHashSize; i += 1) {
+                if ((he = elGetHash(bucket - i)) != null) {
                     break;
                 }
-                if ((he = ELgethash(bucket + i)) != null) {
+                if ((he = elGetHash(bucket + i)) != null) {
                     break;
                 }
             }
         }
         /* Now search linear list of halfedges for the correct one */
-        if (he == this.ELleftend || (he != this.ELrightend && right_of(he, p))) {
+        if (he == this.elLeftEnd || (he != this.elRightEnd && rightOf(he, p))) {
             // keep going right on the list until either the end is reached, or
             // you find the 1st edge which the point isn't to the right of
             do {
-                he = he.ELright;
-            } while (he != this.ELrightend && right_of(he, p));
-            he = he.ELleft;
+                he = he.elRight;
+            } while (he != this.elRightEnd && rightOf(he, p));
+            he = he.elLeft;
         } else {
             // if the point is to the left of the HalfEdge, then search left for
             // the HE just to the left of the point
             do {
-                he = he.ELleft;
-            } while (he != this.ELleftend && !right_of(he, p));
+                he = he.elLeft;
+            } while (he != this.elLeftEnd && !rightOf(he, p));
         }
 
         /* Update hash table and reference counts */
-        if (bucket > 0 && bucket < this.ELhashsize - 1) {
-            this.ELhash[bucket] = he;
+        if (bucket > 0 && bucket < this.elHashSize - 1) {
+            this.elHash[bucket] = he;
         }
         return (he);
     }
 
     private void pushGraphEdge(final Site leftSite, final Site rightSite, final double x1, final double y1, final double x2, final double y2) {
-        GraphEdge newEdge = new GraphEdge();
+        final GraphEdge newEdge = new GraphEdge();
         this.allEdges.add(newEdge);
         newEdge.x1 = x1;
         newEdge.y1 = y1;
@@ -496,8 +494,8 @@ public class Voronoi {
         newEdge.site2 = rightSite.sitenbr;
     }
 
-    private void clip_line(final Edge e) {
-        double pxmin, pxmax, pymin, pymax;
+    private void clipLine(final Edge e) {
+        final double pxmin, pxmax, pymin, pymax;
         Site s1, s2;
         double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
 
@@ -607,28 +605,28 @@ public class Voronoi {
         if (e.ep[RE - lr] == null) {
             return;
         }
-        clip_line(e);
+        clipLine(e);
     }
 
     /* returns 1 if p is to right of halfedge e */
-    private static boolean right_of(final Halfedge el, final Point p) {
+    private static boolean rightOf(final Halfedge el, final Point p) {
         Edge e;
         Site topsite;
-        boolean right_of_site;
+        boolean rightOfSite;
         boolean above, fast;
-        double dxp, dyp, dxs, t1, t2, t3, yl;
+        final double dxp, dyp, dxs, t1, t2, t3, yl;
 
-        e = el.ELedge;
+        e = el.elEdge;
         topsite = e.reg[1];
         if (p.x > topsite.coord.x) {
-            right_of_site = true;
+            rightOfSite = true;
         } else {
-            right_of_site = false;
+            rightOfSite = false;
         }
-        if (right_of_site && el.ELpm == LE) {
+        if (rightOfSite && el.elPm == LE) {
             return (true);
         }
-        if (!right_of_site && el.ELpm == RE) {
+        if (!rightOfSite && el.elPm == RE) {
             return (false);
         }
 
@@ -636,7 +634,7 @@ public class Voronoi {
             dyp = p.y - topsite.coord.y;
             dxp = p.x - topsite.coord.x;
             fast = false;
-            if ((!right_of_site & (e.b < 0.0)) | (right_of_site & (e.b >= 0.0))) {
+            if ((!rightOfSite & (e.b < 0.0)) | (rightOfSite & (e.b >= 0.0))) {
                 above = dyp >= e.b * dxp;
                 fast = above;
             } else {
@@ -662,19 +660,19 @@ public class Voronoi {
             t3 = yl - topsite.coord.y;
             above = t1 * t1 > t2 * t2 + t3 * t3;
         }
-        return (el.ELpm == LE ? above : !above);
+        return (el.elPm == LE ? above : !above);
     }
 
     private Site rightreg(final Halfedge he) {
-        if (he.ELedge == null) {
+        if (he.elEdge == null) {
             // if this halfedge has no edge, return the bottom site (whatever
             // that is)
             return (this.bottomsite);
         }
 
-        // if the ELpm field is zero, return the site 0 that this edge bisects,
+        // if the elPm field is zero, return the site 0 that this edge bisects,
         // otherwise return site number 1
-        return (he.ELpm == LE ? he.ELedge.reg[RE] : he.ELedge.reg[LE]);
+        return (he.elPm == LE ? he.elEdge.reg[RE] : he.elEdge.reg[LE]);
     }
 
     private static double dist(final Site s, final Site t) {
@@ -690,11 +688,11 @@ public class Voronoi {
         Edge e1, e2, e;
         Halfedge el;
         double d, xint, yint;
-        boolean right_of_site;
+        boolean rightOfSite;
         Site v;
 
-        e1 = el1.ELedge;
-        e2 = el2.ELedge;
+        e1 = el1.elEdge;
+        e2 = el2.elEdge;
         if (e1 == null || e2 == null) {
             return null;
         }
@@ -720,8 +718,8 @@ public class Voronoi {
             e = e2;
         }
 
-        right_of_site = xint >= e.reg[1].coord.x;
-        if ((right_of_site && el.ELpm == LE) || (!right_of_site && el.ELpm == RE)) {
+        rightOfSite = xint >= e.reg[1].coord.x;
+        if ((rightOfSite && el.elPm == LE) || (!rightOfSite && el.elPm == RE)) {
             return null;
         }
 
@@ -734,12 +732,12 @@ public class Voronoi {
     }
 
     /*
-     * implicit parameters: nsites, sqrt_nsites, xmin, xmax, ymin, ymax, deltax,
+     * implicit parameters: nsites, sqrtNSites, xmin, xmax, ymin, ymax, deltax,
      * deltay (can all be estimates). Performance suffers if they are wrong;
      * better to make nsites, deltax, and deltay too big than too small. (?)
      */
     @SuppressWarnings("null")
-    private boolean voronoi_bd() {
+    private boolean voronoiBd() {
         Site newsite, bot, top, temp, p;
         Site v;
         Point newintstar = null;
@@ -747,68 +745,68 @@ public class Voronoi {
         Halfedge lbnd, rbnd, llbnd, rrbnd, bisector;
         Edge e;
 
-        PQinitialize();
-        ELinitialize();
+        pqInitialize();
+        elInitialize();
 
         this.bottomsite = nextone();
         newsite = nextone();
         while (true) {
-            if (!PQempty()) {
-                newintstar = PQ_min();
+            if (!pqEmpty()) {
+                newintstar = pqMin();
             }
             // if the lowest site has a smaller y value than the lowest vector
             // intersection,
             // process the site otherwise process the vector intersection
 
-            if (newsite != null && (PQempty() || newsite.coord.y < newintstar.y || (newsite.coord.y == newintstar.y && newsite.coord.x < newintstar.x))) {
+            if (newsite != null && (pqEmpty() || newsite.coord.y < newintstar.y || (newsite.coord.y == newintstar.y && newsite.coord.x < newintstar.x))) {
                 /* new site is smallest -this is a site event */
                 // get the first HalfEdge to the LEFT of the new site
-                lbnd = ELleftbnd((newsite.coord));
+                lbnd = elLeftBnd((newsite.coord));
                 // get the first HalfEdge to the RIGHT of the new site
-                rbnd = ELright(lbnd);
+                rbnd = elRight(lbnd);
                 // if this halfedge has no edge,bot =bottom site (whatever that
                 // is)
                 bot = rightreg(lbnd);
                 // create a new edge that bisects
                 e = bisect(bot, newsite);
 
-                // create a new HalfEdge, setting its ELpm field to 0
-                bisector = HEcreate(e, LE);
+                // create a new HalfEdge, setting its elPm field to 0
+                bisector = heCreate(e, LE);
                 // insert this new bisector edge between the left and right
                 // vectors in a linked list
-                ELinsert(lbnd, bisector);
+                elInsert(lbnd, bisector);
 
                 // if the new bisector intersects with the left edge,
                 // remove the left edge's vertex, and put in the new one
                 if ((p = intersect(lbnd, bisector)) != null) {
-                    PQdelete(lbnd);
-                    PQinsert(lbnd, p, dist(p, newsite));
+                    pqDelete(lbnd);
+                    pqInsert(lbnd, p, dist(p, newsite));
                 }
                 lbnd = bisector;
-                // create a new HalfEdge, setting its ELpm field to 1
-                bisector = HEcreate(e, RE);
+                // create a new HalfEdge, setting its elPm field to 1
+                bisector = heCreate(e, RE);
                 // insert the new HE to the right of the original bisector
                 // earlier in the IF stmt
-                ELinsert(lbnd, bisector);
+                elInsert(lbnd, bisector);
 
                 // if this new bisector intersects with the new HalfEdge
                 if ((p = intersect(bisector, rbnd)) != null) {
                     // push the HE into the ordered linked list of vertices
-                    PQinsert(bisector, p, dist(p, newsite));
+                    pqInsert(bisector, p, dist(p, newsite));
                 }
                 newsite = nextone();
-            } else if (!PQempty()) {
+            } else if (!pqEmpty()) {
                 /* intersection is smallest - this is a vector event */
                 // pop the HalfEdge with the lowest vector off the ordered list
                 // of vectors
-                lbnd = PQextractmin();
+                lbnd = pqExtractMin();
                 // get the HalfEdge to the left of the above HE
-                llbnd = ELleft(lbnd);
+                llbnd = elLeft(lbnd);
                 // get the HalfEdge to the right of the above HE
-                rbnd = ELright(lbnd);
+                rbnd = elRight(lbnd);
                 // get the HalfEdge to the right of the HE to the right of the
                 // lowest HE
-                rrbnd = ELright(rbnd);
+                rrbnd = elRight(rbnd);
                 // get the Site to the left of the left HE which it bisects
                 bot = leftreg(lbnd);
                 // get the Site to the right of the right HE which it bisects
@@ -817,18 +815,18 @@ public class Voronoi {
                 v = lbnd.vertex; // get the vertex that caused this event
                 makevertex(v); // set the vertex number - couldn't do this
                 // earlier since we didn't know when it would be processed
-                endpoint(lbnd.ELedge, lbnd.ELpm, v);
+                endpoint(lbnd.elEdge, lbnd.elPm, v);
                 // set the endpoint of
                 // the left HalfEdge to be this vector
-                endpoint(rbnd.ELedge, rbnd.ELpm, v);
+                endpoint(rbnd.elEdge, rbnd.elPm, v);
                 // set the endpoint of the right HalfEdge to
                 // be this vector
-                ELdelete(lbnd); // mark the lowest HE for
+                elDelete(lbnd); // mark the lowest HE for
                 // deletion - can't delete yet because there might be pointers
                 // to it in Hash Map
-                PQdelete(rbnd);
+                pqDelete(rbnd);
                 // remove all vertex events to do with the right HE
-                ELdelete(rbnd); // mark the right HE for
+                elDelete(rbnd); // mark the right HE for
                 // deletion - can't delete yet because there might be pointers
                 // to it in Hash Map
                 pm = LE; // set the pm variable to zero
@@ -846,10 +844,10 @@ public class Voronoi {
                 e = bisect(bot, top); // create an Edge (or line)
                 // that is between the two Sites. This creates the formula of
                 // the line, and assigns a line number to it
-                bisector = HEcreate(e, pm); // create a HE from the Edge 'e',
+                bisector = heCreate(e, pm); // create a HE from the Edge 'e',
                 // and make it point to that edge
-                // with its ELedge field
-                ELinsert(llbnd, bisector); // insert the new bisector to the
+                // with its elEdge field
+                elInsert(llbnd, bisector); // insert the new bisector to the
                 // right of the left HE
                 endpoint(e, RE - pm, v); // set one endpoint to the new edge
                 // to be the vector point 'v'.
@@ -860,23 +858,23 @@ public class Voronoi {
                 // if left HE and the new bisector intersect, then delete
                 // the left HE, and reinsert it
                 if ((p = intersect(llbnd, bisector)) != null) {
-                    PQdelete(llbnd);
-                    PQinsert(llbnd, p, dist(p, bot));
+                    pqDelete(llbnd);
+                    pqInsert(llbnd, p, dist(p, bot));
                 }
 
                 // if right HE and the new bisector intersect, then
                 // reinsert it
                 if ((p = intersect(bisector, rrbnd)) != null) {
-                    PQinsert(bisector, p, dist(p, bot));
+                    pqInsert(bisector, p, dist(p, bot));
                 }
             } else {
                 break;
             }
         }
 
-        for (lbnd = ELright(this.ELleftend); lbnd != this.ELrightend; lbnd = ELright(lbnd)) {
-            e = lbnd.ELedge;
-            clip_line(e);
+        for (lbnd = elRight(this.elLeftEnd); lbnd != this.elRightEnd; lbnd = elRight(lbnd)) {
+            e = lbnd.elEdge;
+            clipLine(e);
         }
 
         return true;

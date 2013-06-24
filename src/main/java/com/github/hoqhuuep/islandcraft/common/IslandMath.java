@@ -14,16 +14,16 @@ public class IslandMath {
     }
 
     public final ICLocation islandAt(final ICLocation location) {
-        final int islandSize = this.config.getIslandSize() * 16;
-        final int islandSeparation = islandSize + this.config.getIslandGap() * 16;
-        final int xx = location.getX() + islandSize / 2;
-        final int zz = location.getZ() + islandSize / 2;
+        final int islandSize = config.getIslandSize() << 4;
+        final int islandSeparation = islandSize + (config.getIslandGap() << 4);
+        final int xx = location.getX() + (islandSize >> 1);
+        final int zz = location.getZ() + (islandSize >> 1);
         final int row = div(zz, islandSeparation);
         final int xxx;
         if (row % 2 == 0) {
             xxx = xx;
         } else {
-            xxx = xx + islandSeparation / 2;
+            xxx = xx + (islandSeparation >> 1);
         }
         final int col = div(xxx, islandSeparation);
         final int rx = mod(xxx, islandSeparation);
@@ -33,7 +33,7 @@ public class IslandMath {
         if (row % 2 == 0) {
             cx = col * islandSeparation;
         } else {
-            cx = col * islandSeparation - islandSeparation / 2;
+            cx = col * islandSeparation - (islandSeparation >> 1);
         }
         if (rx >= islandSize || rz >= islandSize) {
             return null;
@@ -42,12 +42,12 @@ public class IslandMath {
     }
 
     public final ICRegion visibleRegion(final ICLocation island) {
-        final int visRad = this.config.getIslandSize() * 8;
+        final int visRad = config.getIslandSize() << 3;
         return new ICRegion(island.add(-visRad, -visRad), island.add(visRad, visRad));
     }
 
     public final ICRegion protectedRegion(final ICLocation island) {
-        final int proRad = this.config.getIslandSize() * 8 + this.config.getIslandGap() * 16;
+        final int proRad = (config.getIslandSize() << 3) + (config.getIslandGap() << 4);
         return new ICRegion(island.add(-proRad, -proRad), island.add(proRad, proRad));
     }
 

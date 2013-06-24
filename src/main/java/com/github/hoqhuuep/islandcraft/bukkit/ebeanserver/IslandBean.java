@@ -15,11 +15,11 @@ public class IslandBean {
     private String owner;
 
     public String getLocation() {
-        return this.location;
+        return location;
     }
 
     public String getOwner() {
-        return this.owner;
+        return owner;
     }
 
     public void setLocation(final String location) {

@@ -21,45 +21,45 @@ public class PartyChat {
     }
 
     public final void onJoin(final ICPlayer player, final String party) {
-        final String oldParty = this.database.loadParty(player.getName());
+        final String oldParty = database.loadParty(player.getName());
         if (oldParty != null) {
             player.info("You are no longer a member of " + oldParty);
         }
-        this.database.saveParty(player.getName(), party);
+        database.saveParty(player.getName(), party);
         player.info("You are now a member of " + party);
     }
 
     public final void onLeave(final ICPlayer player) {
-        final String oldParty = this.database.loadParty(player.getName());
+        final String oldParty = database.loadParty(player.getName());
         if (oldParty == null) {
             player.info("You are not a member of any party");
             return;
         }
-        this.database.saveParty(player.getName(), null);
+        database.saveParty(player.getName(), null);
         player.info("You are no longer a member of " + oldParty);
     }
 
     public final void onMembers(final ICPlayer player) {
-        final String party = this.database.loadParty(player.getName());
+        final String party = database.loadParty(player.getName());
         if (party == null) {
             player.info("You are not a member of any party");
             return;
         }
-        final List<String> members = this.database.loadPartyMembers(party);
+        final List<String> members = database.loadPartyMembers(party);
         player.info("Members: [" + StringUtils.join(members, ", ") + "]");
     }
 
     public final void onPartyChat(final ICPlayer player, final String message) {
-        final String party = this.database.loadParty(player.getName());
+        final String party = database.loadParty(player.getName());
         if (party == null) {
             player.info("You are not a member of any party");
             return;
         }
-        final List<String> members = this.database.loadPartyMembers(party);
-        for (final String member : members) {
-            final ICPlayer m = player.getServer().findOnlinePlayer(member);
-            if (m != null) {
-                m.party(player, party, message);
+        final List<String> memberNames = database.loadPartyMembers(party);
+        for (final String memberName : memberNames) {
+            final ICPlayer member = player.getServer().findOnlinePlayer(memberName);
+            if (member != null) {
+                member.party(player, party, message);
             }
         }
     }

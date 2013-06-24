@@ -29,11 +29,11 @@ or implied, of James Humphreys.
 package be.humphreys.simplevoronoi;
 
 public class Halfedge {
-    Halfedge ELleft, ELright;
-    Edge ELedge;
+    Halfedge elLeft, elRight;
+    Edge elEdge;
     boolean deleted;
-    int ELpm;
+    int elPm;
     Site vertex;
     double ystar;
-    Halfedge PQnext;
+    Halfedge pqNext;
 }

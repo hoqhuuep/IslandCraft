@@ -12,25 +12,25 @@ public class ICLocation {
     }
 
     public final int distanceSquared(final ICLocation reference) {
-        final int dx = this.x - reference.x;
-        final int dz = this.z - reference.z;
+        final int dx = x - reference.x;
+        final int dz = z - reference.z;
         return dx * dx + dz * dz;
     }
 
     public final ICLocation add(final int dx, final int dz) {
-        return new ICLocation(this.world, this.x + dx, this.z + dz);
+        return new ICLocation(world, x + dx, z + dz);
     }
 
     public final int getX() {
-        return this.x;
+        return x;
     }
 
     public final int getZ() {
-        return this.z;
+        return z;
     }
 
     public final String getWorld() {
-        return this.world;
+        return world;
     }
 
     @Override

@@ -28,22 +28,22 @@ public class ICBiome {
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public String getOcean() {
-        return this.ocean;
+        return ocean;
     }
 
     public String getShore() {
-        return this.shore;
+        return shore;
     }
 
     public String getFlats() {
-        return this.flats;
+        return flats;
     }
 
     public String getHills() {
-        return this.hills;
+        return hills;
     }
 }

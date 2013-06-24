@@ -4,7 +4,7 @@ import com.github.hoqhuuep.islandcraft.common.api.ICWorld2;
 import com.khorn.terraincontrol.LocalWorld;
 
 public class TerrainControlWorld2 implements ICWorld2 {
-    private LocalWorld world;
+    private final LocalWorld world;
 
     public TerrainControlWorld2(final LocalWorld world) {
         this.world = world;
@@ -12,16 +12,16 @@ public class TerrainControlWorld2 implements ICWorld2 {
 
     @Override
     public long getSeed() {
-        return this.world.getSeed();
+        return world.getSeed();
     }
 
     @Override
     public int biomeId(String name) {
-        return this.world.getBiomeIdByName(name);
+        return world.getBiomeIdByName(name);
     }
 
     @Override
     public String getName() {
-        return this.world.getName();
+        return world.getName();
     }
 }

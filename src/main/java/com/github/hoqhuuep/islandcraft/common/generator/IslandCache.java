@@ -9,7 +9,7 @@ import com.github.hoqhuuep.islandcraft.common.generator.wip.PerlinIslandGenerato
 import com.github.hoqhuuep.islandcraft.common.type.ICBiome;
 
 public class IslandCache {
-    private static Map<Long, int[]> cache = new HashMap<Long, int[]>();
+    private static final Map<Long, int[]> CACHE = new HashMap<Long, int[]>();
 
     public static int getBiome(final int x, final int z, final int xSize, final int zSize, final long seed, final ICWorld2 world) {
         final int[] island = generate(xSize, zSize, seed, world);
@@ -19,14 +19,14 @@ public class IslandCache {
     public static int[] getChunk(final int rx, final int rz, final int xSize, final int zSize, final long seed, final ICWorld2 world, final int[] result) {
         final int[] island = generate(xSize, zSize, seed, world);
         for (int z = 0; z < 16; ++z) {
-            System.arraycopy(island, xSize * (z + rz) + rx, result, z * 16, 16);
+            System.arraycopy(island, xSize * (z + rz) + rx, result, z << 4, 16);
         }
         return result;
     }
 
     public static int[] generate(final int xSize, final int zSize, final long seed, final ICWorld2 world) {
         final Long seedKey = new Long(seed);
-        final int[] cachedIsland = cache.get(seedKey);
+        final int[] cachedIsland = CACHE.get(seedKey);
 
         if (cachedIsland == null) {
             final Random random = new Random(seed);
@@ -36,7 +36,7 @@ public class IslandCache {
             final int flats = world.biomeId(islandBiomes.getFlats());
             final int hills = world.biomeId(islandBiomes.getHills());
             final int[] newIsland = PerlinIslandGenerator.getIsland(xSize, zSize, new Random(random.nextLong()), ocean, shore, flats, hills);
-            cache.put(seedKey, newIsland);
+            CACHE.put(seedKey, newIsland);
             return newIsland;
         }
         return cachedIsland;

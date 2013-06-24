@@ -11,11 +11,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import com.github.hoqhuuep.islandcraft.common.IslandMath;
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
-import com.github.hoqhuuep.islandcraft.common.IslandMath;
 
 public class BukkitRegenerator implements CommandExecutor {
     @Override
@@ -24,8 +24,8 @@ public class BukkitRegenerator implements CommandExecutor {
             return false;
         }
         final Player player = ((Player) sender);
-        final Location l = player.getLocation();
-        final ICLocation pLocation = new ICLocation(l.getWorld().getName(), l.getBlockX(), l.getBlockZ());
+        final Location bLocation = player.getLocation();
+        final ICLocation pLocation = new ICLocation(bLocation.getWorld().getName(), bLocation.getBlockX(), bLocation.getBlockZ());
         // Hacks to get configuration from IslandCraft
         final Plugin plugin = Bukkit.getPluginManager().getPlugin("IslandCraft");
         if (plugin == null || !(plugin instanceof IslandCraftPlugin)) {
@@ -46,10 +46,10 @@ public class BukkitRegenerator implements CommandExecutor {
         }
         final Long oldSeed = database.loadIslandSeed(iLocation);
         final ICRegion region = islandMath.visibleRegion(iLocation);
-        final int minX = region.getMin().getX() / 16;
-        final int minZ = region.getMin().getZ() / 16;
-        final int maxX = region.getMax().getX() / 16;
-        final int maxZ = region.getMax().getZ() / 16;
+        final int minX = region.getMin().getX() >> 4;
+        final int minZ = region.getMin().getZ() >> 4;
+        final int maxX = region.getMax().getX() >> 4;
+        final int maxZ = region.getMax().getZ() >> 4;
         if (oldSeed != null) {
             database.saveIslandSeed(iLocation, new Long(new Random(oldSeed.longValue()).nextLong()));
             final World w2 = Bukkit.getWorld(iLocation.getWorld());

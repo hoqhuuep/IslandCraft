@@ -28,17 +28,17 @@ public class BetterClockListener implements Listener {
         if (item == null) {
             return;
         }
-        final Player player = event.getPlayer();
-        if (player == null) {
+        final Player bukkitPlayer = event.getPlayer();
+        if (bukkitPlayer == null) {
             return;
         }
         if (item.getType() == Material.WATCH) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                final ICPlayer p = this.server.findOnlinePlayer(player.getName());
-                if (p == null) {
+                final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
+                if (player == null) {
                     return;
                 }
-                BetterClock.onQuery(p);
+                BetterClock.onQuery(player);
             }
         }
     }

@@ -1,6 +1,6 @@
 package com.github.hoqhuuep.islandcraft.bukkit;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -26,72 +26,74 @@ public class BukkitPlayer implements ICPlayer {
 
     @Override
     public final ICLocation getBedLocation() {
-        final Location l = this.player.getBedSpawnLocation();
-        if (l == null) {
+        final Location location = player.getBedSpawnLocation();
+        if (location == null) {
             return null;
         }
-        return new ICLocation(l.getWorld().getName(), l.getBlockX(), l.getBlockZ());
+        return new ICLocation(location.getWorld().getName(), location.getBlockX(), location.getBlockZ());
     }
 
     @Override
     public final ICLocation getLocation() {
-        final Location l = this.player.getLocation();
-        return new ICLocation(l.getWorld().getName(), l.getBlockX(), l.getBlockZ());
+        final Location location = player.getLocation();
+        return new ICLocation(location.getWorld().getName(), location.getBlockX(), location.getBlockZ());
     }
 
     @Override
     public final String getName() {
-        return this.player.getName();
+        return player.getName();
     }
 
     @Override
     public final ICWorld getWorld() {
-        return this.server.findOnlineWorld(this.player.getWorld().getName());
+        return server.findOnlineWorld(player.getWorld().getName());
     }
 
     @Override
     public final void info(final String message) {
-        this.player.sendMessage(ChatColor.GRAY + "[INFO] " + message);
+        player.sendMessage(ChatColor.GRAY + "[INFO] " + message);
     }
 
     @Override
     public final void kill() {
-        this.player.setHealth(0);
+        player.setHealth(0);
     }
 
     @Override
     public final void local(final ICPlayer from, final String message) {
-        this.player.sendMessage("[" + from.getName() + "->" + ChatColor.GRAY + "local" + ChatColor.WHITE + "] " + message);
+        player.sendMessage("[" + from.getName() + "->" + ChatColor.GRAY + "local" + ChatColor.WHITE + "] " + message);
     }
 
     @Override
     public final void party(final ICPlayer from, final String to, final String message) {
-        this.player.sendMessage("[" + from.getName() + "->" + ChatColor.GREEN + to + ChatColor.WHITE + "] " + message);
+        player.sendMessage("[" + from.getName() + "->" + ChatColor.GREEN + to + ChatColor.WHITE + "] " + message);
     }
 
     @Override
     public final void privateMessage(final ICPlayer from, final String message) {
-        this.player.sendMessage("[" + from.getName() + "->" + getName() + "] " + message);
+        player.sendMessage("[" + from.getName() + "->" + getName() + "] " + message);
     }
 
     @Override
     public final void setCompassTarget(final ICLocation location) {
-        final World world = this.player.getServer().getWorld(location.getWorld());
-        final Location l = new Location(world, location.getX(), 64, location.getZ());
-        this.player.setCompassTarget(l);
+        final World world = player.getServer().getWorld(location.getWorld());
+        final Location bukkitLocation = new Location(world, location.getX(), 64, location.getZ());
+        player.setCompassTarget(bukkitLocation);
     }
+
+    private static final Integer FIRST = new Integer(0);
 
     @Override
     public final boolean takeDiamonds(final int amount) {
-        final PlayerInventory inventory = this.player.getInventory();
+        final PlayerInventory inventory = player.getInventory();
         if (!inventory.containsAtLeast(new ItemStack(Material.DIAMOND), amount)) {
             // Not enough
             return false;
         }
-        final HashMap<Integer, ItemStack> result = inventory.removeItem(new ItemStack(Material.DIAMOND, amount));
+        final Map<Integer, ItemStack> result = inventory.removeItem(new ItemStack(Material.DIAMOND, amount));
         if (!result.isEmpty()) {
             // Something went wrong, refund
-            int missing = result.get(new Integer(0)).getAmount();
+            final int missing = result.get(FIRST).getAmount();
             inventory.addItem(new ItemStack(Material.DIAMOND, amount - missing));
             return false;
         }
@@ -101,6 +103,6 @@ public class BukkitPlayer implements ICPlayer {
 
     @Override
     public final ICServer getServer() {
-        return this.server;
+        return server;
     }
 }

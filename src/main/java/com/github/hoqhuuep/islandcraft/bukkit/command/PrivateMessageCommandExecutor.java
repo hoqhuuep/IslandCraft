@@ -29,9 +29,9 @@ public class PrivateMessageCommandExecutor implements CommandExecutor {
         if (message.isEmpty()) {
             return false;
         }
-        final ICPlayer from = this.server.findOnlinePlayer(((Player) sender).getName());
+        final ICPlayer from = server.findOnlinePlayer(((Player) sender).getName());
         final String toName = args[0];
-        final ICPlayer to = this.server.findOnlinePlayer(toName);
+        final ICPlayer to = server.findOnlinePlayer(toName);
         PrivateMessage.onPrivateMessage(from, to, message);
         return true;
     }

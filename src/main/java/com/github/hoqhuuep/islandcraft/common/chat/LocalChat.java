@@ -24,7 +24,7 @@ public class LocalChat {
         final List<ICPlayer> players = player.getWorld().getPlayers();
         for (final ICPlayer p : players) {
             final ICLocation pLocation = p.getLocation();
-            final int maxDistance = this.config.getLocalChatRadius();
+            final int maxDistance = config.getLocalChatRadius();
             if (pLocation.distanceSquared(location) < maxDistance * maxDistance) {
                 p.local(player, message);
             }

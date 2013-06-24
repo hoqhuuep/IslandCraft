@@ -15,8 +15,8 @@ public enum BetterCompassTarget {
             return BED;
         case BED:
             return DEATH_POINT;
-        default:
         case DEATH_POINT:
+        default:
             return SPAWN;
         }
     }
@@ -27,13 +27,13 @@ public enum BetterCompassTarget {
             return SPAWN;
         case DEATH_POINT:
             return BED;
-        default:
         case SPAWN:
+        default:
             return DEATH_POINT;
         }
     }
 
     public String prettyString() {
-        return this.string;
+        return string;
     }
 }

@@ -25,7 +25,7 @@ import be.humphreys.simplevoronoi.Voronoi;
 // Needs cleaning up, and performance improvements
 
 public class PerlinIslandGenerator {
-    static final int granularity = 8;
+    static final int GRANULARITY = 8;
 
     static void randomDots(final int xSize, final int zSize, final int numDots, final Random random, final double[] x, final double[] z) {
         for (int i = 0; i < numDots; ++i) {
@@ -62,14 +62,14 @@ public class PerlinIslandGenerator {
                 y[i] += edge.y1 + edge.y2;
             }
             final int numEdges = edges.size();
-            x[i] /= numEdges * 2;
-            y[i] /= numEdges * 2;
+            x[i] /= numEdges << 1;
+            y[i] /= numEdges << 1;
         }
     }
 
     public static Map getMap(final List<GraphEdge> edges, final double[] x, final double[] y) {
-        java.util.Map<Long, Polygon> ps = new HashMap<Long, Polygon>();
-        java.util.Map<Long, Vertex> vs = new HashMap<Long, Vertex>();
+        final java.util.Map<Long, Polygon> ps = new HashMap<Long, Polygon>();
+        final java.util.Map<Long, Vertex> vs = new HashMap<Long, Vertex>();
         final Set<Edge> es = new HashSet<Edge>();
 
         for (final GraphEdge e : edges) {
@@ -124,7 +124,7 @@ public class PerlinIslandGenerator {
             es.add(e1);
         }
 
-        Map map = new Map();
+        final Map map = new Map();
         map.ps.addAll(ps.values());
         map.vs.addAll(vs.values());
         map.es.addAll(es);
@@ -132,25 +132,22 @@ public class PerlinIslandGenerator {
     }
 
     public static void main(String[] args) {
-        System.out.println("generating perlin island");
-        BufferedImage image = renderIsland(256, 256, new Random(), new Color(0x1C6BA0), new Color(0xFBEEC2), new Color(0x758918), new Color(0x49281F));
-        System.out.println("saving");
+        final BufferedImage image = renderIsland(256, 256, new Random(), new Color(0x1C6BA0), new Color(0xFBEEC2), new Color(0x758918), new Color(0x49281F));
         try {
             ImageIO.write(image, "png", new File("test.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("done");
     }
 
     public static int[] getIsland(final int xSize, final int zSize, final Random random, final int oceanColor, final int shoreColor, final int flatsColor,
             final int hillsColor) {
         final BufferedImage image = renderIsland(xSize, zSize, random, new Color(oceanColor, false), new Color(shoreColor, false),
                 new Color(flatsColor, false), new Color(hillsColor, false));
-        int[] result = new int[xSize * zSize];
+        final int[] result = new int[xSize * zSize];
         image.getRGB(0, 0, xSize, zSize, result, 0, xSize);
         for (int i = 0; i < xSize * zSize; ++i) {
-            result[i] = result[i] & 0xFFFFFF;
+            result[i] &= 0xFFFFFF;
         }
         return result;
     }
@@ -158,7 +155,7 @@ public class PerlinIslandGenerator {
     public static BufferedImage renderIsland(final int xSize, final int zSize, final Random random, final Color oceanColor, final Color shoreColor,
             final Color flatsColor, final Color hillsColor) {
         // Generate random points
-        final int numDots = xSize * zSize / (granularity * granularity);
+        final int numDots = xSize * zSize / (GRANULARITY * GRANULARITY);
 
         final double[] randomX = new double[numDots];
         final double[] randomY = new double[numDots];
@@ -186,8 +183,8 @@ public class PerlinIslandGenerator {
                 v.water = true;
                 v.ocean = true;
             } else {
-                final int dx = v.x - xSize / 2;
-                final int dy = v.y - zSize / 2;
+                final int dx = v.x - (xSize >> 1);
+                final int dy = v.y - (zSize >> 1);
                 v.water = (noise.getRGB(v.x, v.y) & 0xFF) / 256. < 0.3 + Math.sqrt(((dx * dx) / xSize + (dy * dy) / zSize)) / 30;
             }
         }
@@ -210,8 +207,8 @@ public class PerlinIslandGenerator {
         final Queue<Polygon> queue2 = new LinkedList<Polygon>();
         // Find oceans and coasts
         while (!queue.isEmpty()) {
-            final Polygon p = queue.remove();
-            for (final Polygon q : p.ps) {
+            final Polygon polygon = queue.remove();
+            for (final Polygon q : polygon.ps) {
                 if (q.water && !q.ocean) {
                     q.ocean = true;
                     queue.add(q);
@@ -222,14 +219,14 @@ public class PerlinIslandGenerator {
             }
         }
         // Remove derpy coasts
-        QUEUE2: while (!queue2.isEmpty()) {
-            final Polygon p = queue2.remove();
-            for (final Polygon q : p.ps) {
+        queue2: while (!queue2.isEmpty()) {
+            final Polygon polygon = queue2.remove();
+            for (final Polygon q : polygon.ps) {
                 if (!q.ocean && !q.coast) {
-                    continue QUEUE2;
+                    continue queue2;
                 }
             }
-            p.ocean = true;
+            polygon.ocean = true;
         }
 
         final BufferedImage image = new BufferedImage(xSize, zSize, BufferedImage.TYPE_INT_ARGB);
@@ -252,8 +249,8 @@ public class PerlinIslandGenerator {
                     continue;
                 }
                 e.vs.toArray(vv);
-                final int x[] = { p.x, vv[0].x, vv[1].x };
-                final int y[] = { p.y, vv[0].y, vv[1].y };
+                final int[] x = { p.x, vv[0].x, vv[1].x };
+                final int[] y = { p.y, vv[0].y, vv[1].y };
                 graphics.fillPolygon(x, y, 3);
                 graphics.drawPolygon(x, y, 3);
             }

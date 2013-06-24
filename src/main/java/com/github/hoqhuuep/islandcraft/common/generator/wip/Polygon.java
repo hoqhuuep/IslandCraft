@@ -14,6 +14,6 @@ public class Polygon {
     public boolean coast = false;
 
     public long getId() {
-        return this.x & 0xFFFFFFFFL | (long) this.y << Integer.SIZE;
+        return x & 0xFFFFFFFFL | (long) y << Integer.SIZE;
     }
 }

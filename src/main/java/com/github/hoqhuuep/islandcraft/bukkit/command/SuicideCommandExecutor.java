@@ -21,7 +21,7 @@ public class SuicideCommandExecutor implements CommandExecutor {
         if (sender == null || !(sender instanceof Player) || args.length != 0) {
             return false;
         }
-        final ICPlayer player = this.server.findOnlinePlayer(((Player) sender).getName());
+        final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
         Suicide.onSuicide(player);
         return true;
     }

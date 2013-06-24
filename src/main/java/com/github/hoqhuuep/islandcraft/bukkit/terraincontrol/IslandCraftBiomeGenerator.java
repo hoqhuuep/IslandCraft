@@ -29,16 +29,16 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         final ICDatabase database = islandCraft.getICDatabase();
         final ICWorld2 w2 = new TerrainControlWorld2(world);
         final int oceanBiome = w2.biomeId(config.getIslandBiomes()[0].getOcean());
-        this.generator = new IslandGenerator(config.getIslandSize() * 16, config.getIslandGap() * 16, w2, oceanBiome, database);
+        generator = new IslandGenerator(config.getIslandSize() << 4, config.getIslandGap() << 4, w2, oceanBiome, database);
     }
 
     public final int[] calculate(final int xStart, final int zStart, final int xSize, final int zSize, final int[] result) {
         if (xSize == 16 && zSize == 16 && (xStart & 0xF) == 0 && (zStart & 0xF) == 0) {
-            return this.generator.biomeChunk(xStart, zStart, result);
+            return generator.biomeChunk(xStart, zStart, result);
         }
         for (int x = 0; x < xSize; ++x) {
             for (int z = 0; z < zSize; ++z) {
-                result[x + z * xSize] = this.generator.biomeAt(x + xStart, z + zStart);
+                result[x + z * xSize] = generator.biomeAt(x + xStart, z + zStart);
             }
         }
         return result;
@@ -47,7 +47,7 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
     public final int[] calculateUnZoomed(final int xStart, final int zStart, final int xSize, final int zSize, final int[] result) {
         for (int x = 0; x < xSize; ++x) {
             for (int z = 0; z < zSize; ++z) {
-                result[x + z * xSize] = this.generator.biomeAt((x + xStart) * 4, (z + zStart) * 4);
+                result[x + z * xSize] = generator.biomeAt((x + xStart) << 2, (z + zStart) << 2);
             }
         }
         return result;
@@ -55,12 +55,12 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
 
     @Override
     public final void cleanupCache() {
-        this.cache.cleanupCache();
+        cache.cleanupCache();
     }
 
     @Override
     public final int getBiome(final int x, final int z) {
-        return this.cache.getBiome(x, z);
+        return cache.getBiome(x, z);
     }
 
     @Override
@@ -69,8 +69,8 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
             return calculate(x, z, xSize, zSize, new int[xSize * zSize]);
         }
         if (xSize == 16 && zSize == 16 && (x & 0xF) == 0 && (z & 0xF) == 0) {
-            synchronized (this.lockObject) {
-                return this.cache.getCachedBiomes(x, z);
+            synchronized (lockObject) {
+                return cache.getCachedBiomes(x, z);
             }
         }
         return calculate(x, z, xSize, zSize, biomeArray);
@@ -94,12 +94,12 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         }
         final int[] biomeArray = calculate(x, z, xSize, zSize, new int[xSize * zSize]);
         for (int i = 0; i < xSize * zSize; i++) {
-            float rainfall = this.worldConfig.biomeConfigs[biomeArray[i]].getWetness() / 65536.0F;
-            if (rainfall < this.worldConfig.minMoisture) {
-                rainfall = this.worldConfig.minMoisture;
+            float rainfall = worldConfig.biomeConfigs[biomeArray[i]].getWetness() / 65536.0F;
+            if (rainfall < worldConfig.minMoisture) {
+                rainfall = worldConfig.minMoisture;
             }
-            if (rainfall > this.worldConfig.maxMoisture) {
-                rainfall = this.worldConfig.maxMoisture;
+            if (rainfall > worldConfig.maxMoisture) {
+                rainfall = worldConfig.maxMoisture;
             }
             result[i] = rainfall;
         }
@@ -116,12 +116,12 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         }
         final int[] biomeArray = calculate(x, z, xSize, zSize, new int[xSize * zSize]);
         for (int i = 0; i < xSize * zSize; i++) {
-            float temperature = this.worldConfig.biomeConfigs[biomeArray[i]].getTemperature() / 65536.0F;
-            if (temperature < this.worldConfig.minTemperature) {
-                temperature = this.worldConfig.minTemperature;
+            float temperature = worldConfig.biomeConfigs[biomeArray[i]].getTemperature() / 65536.0F;
+            if (temperature < worldConfig.minTemperature) {
+                temperature = worldConfig.minTemperature;
             }
-            if (temperature > this.worldConfig.maxTemperature) {
-                temperature = this.worldConfig.maxTemperature;
+            if (temperature > worldConfig.maxTemperature) {
+                temperature = worldConfig.maxTemperature;
             }
             result[i] = temperature;
         }

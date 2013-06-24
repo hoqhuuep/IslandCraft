@@ -39,7 +39,7 @@ class Edge {
     int edgenbr;
 
     Edge() {
-        this.ep = new Site[2];
-        this.reg = new Site[2];
+        ep = new Site[2];
+        reg = new Site[2];
     }
 }

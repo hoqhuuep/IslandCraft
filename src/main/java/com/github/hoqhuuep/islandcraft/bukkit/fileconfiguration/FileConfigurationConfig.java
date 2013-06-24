@@ -18,51 +18,53 @@ public class FileConfigurationConfig implements ICConfig {
 
     @Override
     public final int getIslandGap() {
-        return this.config.getInt("island-gap", 4);
+        return config.getInt("island-gap", 4);
     }
 
     @Override
     public final int getIslandSize() {
-        return this.config.getInt("island-size", 16);
+        return config.getInt("island-size", 16);
     }
 
     @Override
     public final int getLocalChatRadius() {
-        return this.config.getInt("local-chat-radius", 128);
+        return config.getInt("local-chat-radius", 128);
     }
 
     @Override
     public final String getWorld() {
-        return this.config.getString("world", "world");
+        return config.getString("world", "world");
     }
+
+    private static final ICBiome[] NO_BIOMES = new ICBiome[0];
 
     @Override
     public ICBiome[] getIslandBiomes() {
-        if (!this.config.isConfigurationSection("biome")) {
+        if (!config.isConfigurationSection("biome")) {
             // WARNING
             System.err.println("IslandCraft: Invalid section in config.yml");
-            return null;
+            return NO_BIOMES;
         }
-        final ConfigurationSection biome = this.config.getConfigurationSection("biome");
+        final ConfigurationSection biome = config.getConfigurationSection("biome");
         final String ocean = biome.getString("ocean", "Ocean");
         if (!biome.isConfigurationSection("island")) {
             // WARNING
             System.err.println("IslandCraft: Invalid section in config.yml");
-            return null;
+            return NO_BIOMES;
         }
         final ConfigurationSection island = biome.getConfigurationSection("island");
         final List<ICBiome> result = new ArrayList<ICBiome>();
-        for (String i : island.getKeys(false)) {
-            if (island.isConfigurationSection(i)) {
-                final ConfigurationSection j = island.getConfigurationSection(i);
-                final String shore = j.getString("shore");
-                final String flats = j.getString("flats");
-                final String hills = j.getString("hills");
-                result.add(new ICBiome(i, ocean, shore, flats, hills));
+        for (String biomeName : island.getKeys(false)) {
+            if (island.isConfigurationSection(biomeName)) {
+                final ConfigurationSection biomeSection = island.getConfigurationSection(biomeName);
+                final String shore = biomeSection.getString("shore");
+                final String flats = biomeSection.getString("flats");
+                final String hills = biomeSection.getString("hills");
+                result.add(new ICBiome(biomeName, ocean, shore, flats, hills));
             } else {
                 // WARNING
                 System.err.println("IslandCraft: Invalid section in config.yml");
-                return null;
+                return NO_BIOMES;
             }
 
         }

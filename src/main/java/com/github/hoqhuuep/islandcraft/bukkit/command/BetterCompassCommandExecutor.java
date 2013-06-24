@@ -29,33 +29,33 @@ public class BetterCompassCommandExecutor implements CommandExecutor {
         if (args.length < 1) {
             return false;
         }
-        final ICPlayer player = this.server.findOnlinePlayer(((Player) sender).getName());
+        final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
         if ("add".equalsIgnoreCase(args[0])) {
             final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
             final String name = StringUtils.join(nameArray, " ");
             if (name.isEmpty()) {
                 return false;
             }
-            this.betterCompass.onWaypointAdd(player, name);
+            betterCompass.onWaypointAdd(player, name);
         } else if ("remove".equalsIgnoreCase(args[0])) {
             final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
             final String name = StringUtils.join(nameArray, " ");
             if (name.isEmpty()) {
                 return false;
             }
-            this.betterCompass.onWaypointRemove(player, name);
+            betterCompass.onWaypointRemove(player, name);
         } else if ("set".equalsIgnoreCase(args[0])) {
             final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
             final String name = StringUtils.join(nameArray, " ");
             if (name.isEmpty()) {
                 return false;
             }
-            this.betterCompass.onWaypointSet(player, name);
+            betterCompass.onWaypointSet(player, name);
         } else if ("list".equalsIgnoreCase(args[0])) {
             if (args.length != 1) {
                 return false;
             }
-            this.betterCompass.onWaypointsList(player);
+            betterCompass.onWaypointsList(player);
         }
         return true;
     }

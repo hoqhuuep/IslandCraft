@@ -10,10 +10,10 @@ public class ICIsland {
     }
 
     public final String getOwner() {
-        return this.owner;
+        return owner;
     }
 
     public final ICLocation getLocation() {
-        return this.location;
+        return location;
     }
 }

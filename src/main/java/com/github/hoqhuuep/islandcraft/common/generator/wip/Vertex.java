@@ -13,6 +13,6 @@ public class Vertex {
     public boolean ocean = false;
 
     public long getId() {
-        return this.x & 0xFFFFFFFFL | (long) this.y << Integer.SIZE;
+        return x & 0xFFFFFFFFL | (long) y << Integer.SIZE;
     }
 }

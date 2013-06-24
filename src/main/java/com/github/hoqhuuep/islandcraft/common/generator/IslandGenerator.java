@@ -16,7 +16,7 @@ public final class IslandGenerator implements ICGenerator {
 
     public IslandGenerator(final int islandSize, final int islandGap, final ICWorld2 world, final int oceanBiome, final ICDatabase database) {
         this.islandSize = islandSize;
-        this.islandSeparation = islandSize + islandGap;
+        islandSeparation = islandSize + islandGap;
         this.world = world;
         this.oceanBiome = oceanBiome;
         this.database = database;
@@ -24,54 +24,54 @@ public final class IslandGenerator implements ICGenerator {
 
     @Override
     public int biomeAt(final int x, final int z) {
-        final int xx = x + this.islandSize / 2;
-        final int zz = z + this.islandSize / 2;
-        final int row = IslandMath.div(zz, this.islandSeparation);
+        final int xx = x + (islandSize >> 1);
+        final int zz = z + (islandSize >> 1);
+        final int row = IslandMath.div(zz, islandSeparation);
         final int xxx;
         if (row % 2 == 0) {
             xxx = xx;
         } else {
-            xxx = xx + this.islandSeparation / 2;
+            xxx = xx + (islandSeparation >> 1);
         }
-        final int col = IslandMath.div(xxx, this.islandSeparation);
-        final int rx = IslandMath.mod(xxx, this.islandSeparation);
-        final int rz = IslandMath.mod(zz, this.islandSeparation);
-        final int cz = row * this.islandSeparation;
+        final int col = IslandMath.div(xxx, islandSeparation);
+        final int rx = IslandMath.mod(xxx, islandSeparation);
+        final int rz = IslandMath.mod(zz, islandSeparation);
+        final int cz = row * islandSeparation;
         final int cx;
         if (row % 2 == 0) {
-            cx = col * this.islandSeparation;
+            cx = col * islandSeparation;
         } else {
-            cx = col * this.islandSeparation - this.islandSeparation / 2;
+            cx = col * islandSeparation - (islandSeparation >> 1);
         }
-        if (rx >= this.islandSize || rz >= this.islandSize) {
-            return this.oceanBiome;
+        if (rx >= islandSize || rz >= islandSize) {
+            return oceanBiome;
         }
         return islandBiome(islandSeed(cx, cz), rx, rz);
     }
 
     @Override
     public int[] biomeChunk(final int x, final int z, final int[] result) {
-        final int xx = x + this.islandSize / 2;
-        final int zz = z + this.islandSize / 2;
-        final int row = IslandMath.div(zz, this.islandSeparation);
+        final int xx = x + (islandSize >> 1);
+        final int zz = z + (islandSize >> 1);
+        final int row = IslandMath.div(zz, islandSeparation);
         final int xxx;
         if (row % 2 == 0) {
             xxx = xx;
         } else {
-            xxx = xx + this.islandSeparation / 2;
+            xxx = xx + (islandSeparation >> 1);
         }
-        final int col = IslandMath.div(xxx, this.islandSeparation);
-        final int rx = IslandMath.mod(xxx, this.islandSeparation);
-        final int rz = IslandMath.mod(zz, this.islandSeparation);
-        final int cz = row * this.islandSeparation;
+        final int col = IslandMath.div(xxx, islandSeparation);
+        final int rx = IslandMath.mod(xxx, islandSeparation);
+        final int rz = IslandMath.mod(zz, islandSeparation);
+        final int cz = row * islandSeparation;
         final int cx;
         if (row % 2 == 0) {
-            cx = col * this.islandSeparation;
+            cx = col * islandSeparation;
         } else {
-            cx = col * this.islandSeparation - this.islandSeparation / 2;
+            cx = col * islandSeparation - (islandSeparation >> 1);
         }
-        if (rx >= this.islandSize || rz >= this.islandSize) {
-            Arrays.fill(result, this.oceanBiome);
+        if (rx >= islandSize || rz >= islandSize) {
+            Arrays.fill(result, oceanBiome);
             return result;
         }
         return islandChunk(islandSeed(cx, cz), rx, rz, result);
@@ -84,19 +84,19 @@ public final class IslandGenerator implements ICGenerator {
      *            z position relative to island in range [0, island-size)
      */
     private int islandBiome(final long islandSeed, final int rx, final int rz) {
-        return IslandCache.getBiome(rx, rz, this.islandSize, this.islandSize, islandSeed, this.world);
+        return IslandCache.getBiome(rx, rz, islandSize, islandSize, islandSeed, world);
     }
 
     private int[] islandChunk(final long islandSeed, final int rx, final int rz, final int[] result) {
-        return IslandCache.getChunk(rx, rz, this.islandSize, this.islandSize, islandSeed, this.world, result);
+        return IslandCache.getChunk(rx, rz, islandSize, islandSize, islandSeed, world, result);
     }
 
     private long islandSeed(final int cx, final int cz) {
-        ICLocation location = new ICLocation(this.world.getName(), cx, cz);
-        Long oldSeed = this.database.loadIslandSeed(location);
+        final ICLocation location = new ICLocation(world.getName(), cx, cz);
+        final Long oldSeed = database.loadIslandSeed(location);
         if (oldSeed == null) {
-            Long newSeed = new Long(this.world.getSeed() ^ (cx + (((long) cz) << 32)));
-            this.database.saveIslandSeed(location, newSeed);
+            final Long newSeed = new Long(world.getSeed() ^ (cx + (((long) cz) << 32)));
+            database.saveIslandSeed(location, newSeed);
             return newSeed.longValue();
         }
         return oldSeed.longValue();

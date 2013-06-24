@@ -58,26 +58,26 @@ public final class IslandCraftPlugin extends JavaPlugin {
         TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
 
         // Purchasing
-        PurchasingCommandExecutor purchasing = new PurchasingCommandExecutor(new Purchasing(getICDatabase(), getICConfig(), getICProtection()), getICServer());
+        final PurchasingCommandExecutor purchasing = new PurchasingCommandExecutor(new Purchasing(getICDatabase(), getICConfig(), getICProtection()), getICServer());
         getCommand("purchase").setExecutor(purchasing);
         getCommand("abandon").setExecutor(purchasing);
         getCommand("examine").setExecutor(purchasing);
         getCommand("rename").setExecutor(purchasing);
 
         // Chat
-        LocalChatCommandExecutor localChat = new LocalChatCommandExecutor(new LocalChat(getICConfig()), getICServer());
+        final LocalChatCommandExecutor localChat = new LocalChatCommandExecutor(new LocalChat(getICConfig()), getICServer());
         getCommand("l").setExecutor(localChat);
-        PartyChatCommandExecutor partyChat = new PartyChatCommandExecutor(new PartyChat(getICDatabase()), getICServer());
+        final PartyChatCommandExecutor partyChat = new PartyChatCommandExecutor(new PartyChat(getICDatabase()), getICServer());
         getCommand("p").setExecutor(partyChat);
         getCommand("join").setExecutor(partyChat);
         getCommand("leave").setExecutor(partyChat);
         getCommand("members").setExecutor(partyChat);
-        PrivateMessageCommandExecutor privateMessage = new PrivateMessageCommandExecutor(getICServer());
+        final PrivateMessageCommandExecutor privateMessage = new PrivateMessageCommandExecutor(getICServer());
         getCommand("m").setExecutor(privateMessage);
 
         // UsefulExtras
         register(new BetterClockListener(getICServer()));
-        BetterCompass betterCompass = new BetterCompass(getICDatabase());
+        final BetterCompass betterCompass = new BetterCompass(getICDatabase());
         register(new BetterCompassListener(betterCompass, getICServer()));
         getCommand("suicide").setExecutor(new SuicideCommandExecutor(getICServer()));
         getCommand("waypoint").setExecutor(new BetterCompassCommandExecutor(betterCompass, getICServer()));
@@ -86,31 +86,31 @@ public final class IslandCraftPlugin extends JavaPlugin {
     }
 
     public ICServer getICServer() {
-        if (this.server == null) {
-            this.server = new BukkitServer(getServer());
+        if (server == null) {
+            server = new BukkitServer(getServer());
         }
-        return this.server;
+        return server;
     }
 
     public ICConfig getICConfig() {
-        if (this.config == null) {
-            this.config = new FileConfigurationConfig(getConfig());
+        if (config == null) {
+            config = new FileConfigurationConfig(getConfig());
         }
-        return this.config;
+        return config;
     }
 
     public ICDatabase getICDatabase() {
-        if (this.database == null) {
-            this.database = new EbeanServerDatabase(getDatabase());
+        if (database == null) {
+            database = new EbeanServerDatabase(getDatabase());
         }
-        return this.database;
+        return database;
     }
 
     public ICProtection getICProtection() {
-        if (this.protection == null) {
-            this.protection = new WorldGuardProtection(getWorldGuard());
+        if (protection == null) {
+            protection = new WorldGuardProtection(getWorldGuard());
         }
-        return this.protection;
+        return protection;
     }
 
     private void register(final Listener listener) {
@@ -119,8 +119,8 @@ public final class IslandCraftPlugin extends JavaPlugin {
     }
 
     private WorldGuardPlugin getWorldGuard() {
-        PluginManager pluginManager = getServer().getPluginManager();
-        Plugin plugin = pluginManager.getPlugin("WorldGuard");
+        final PluginManager pluginManager = getServer().getPluginManager();
+        final Plugin plugin = pluginManager.getPlugin("WorldGuard");
 
         // WorldGuard may not be loaded
         if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
