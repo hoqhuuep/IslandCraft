@@ -1,46 +1,182 @@
 name: IslandCraft
-main: com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin
-version: 0.1
+version: 0.0.2
+description: This plugin modifies the terrain generation to create an ocean with many islands, each of a single biome.
 load: STARTUP
-depend: [TerrainControl, WorldEdit, WorldGuard]
+author: hoqhuuep
+website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
+main: com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin
 database: true
+depend: [TerrainControl, WorldEdit, WorldGuard]
 commands:
-  l:
-    description: TODO Write description
-    usage: /l <message>
-  p:
-    description: TODO Write description
-    usage: /p <message>
-  join:
-    description: TODO Write description
-    usage: /join <party>
-  leave:
-    description: TODO Write description
-    usage: /leave
-  members:
-    description: TODO Write description
-    usage: /members
   m:
-    description: TODO Write description
-    usage: /m <player> <message>
+    description: Send a private message to another player
+    permission: islandcraft.command.m
+    usage: "Usage: /<command> <player> <message...>"
+  l:
+    description: Send a message to nearby players
+    permission: islandcraft.command.l
+    usage: "Usage: /<command> <message...>"
+  p:
+    description: Send a message to members of your party
+    permission: islandcraft.command.p
+    usage: "Usage: /<command> <message...>"
+  party:
+    description: Commands to manage your party
+    permission: islandcraft.command.party
+    usage: |
+      Use /help <command> [subcommand] for more information
+      /<command> join - Join a party
+      /<command> leave - Leave your party
+      /<command> members - List the members of your party
+  party join:
+    description: Join a party
+    permission: islandcraft.command.party.join
+    usage: "Usage: /<command> <party...>"
+  party leave:
+    description: Leave your party
+    permission: islandcraft.command.party.leave
+    usage: "Usage: /<command>"
+  party members:
+    description: List the members of your party
+    permission: islandcraft.command.party.members
+    usage: "Usage: /<command>"
   suicide:
-    description: TODO Write description
-    usage: /suicide
-  purchase:
-    description: TODO Write description
-    usage: /purchase
-  abandon:
-    description: TODO Write description
-    usage: /abandon
-  examine:
-    description: TODO Write description
-    usage: /examine
-  rename:
-    description: TODO Write description
-    usage: /rename <name>
+    description: Kill yourself
+    permission: islandcraft.command.suicide
+    usage: "Usage: /<command>"
+  island:
+    description: Commands for managing islands
+    permission: islandcraft.command.island
+    usage: |
+      Use /help <command> [subcommand] for more information
+      /<command> purchase - Purchase an island
+      /<command> abandon - Abandon an island
+      /<command> examine - List information about an island
+      /<command> rename - Give a new name to an island
+  island purchase:
+    description: Purchase the island you are standing on
+    permission: islandcraft.command.island.purchase
+    usage: "Usage: /<command>"
+  island abandon:
+    description: Abandon the island you are standing on
+    permission: islandcraft.command.island.abandon
+    usage: "Usage: /<command>"
+  island examine:
+    description: List information about the island you are standing on
+    permission: islandcraft.command.island.examine
+    usage: "Usage: /<command>"
+  island rename:
+    description: Give a new name to the island you are standing on (used in greeting and farewell messages)
+    permission: islandcraft.command.island.rename
+    usage: "Usage: /<command> <name...>"
   waypoint:
-    description: TODO Write description
-    usage: /waypoint add <name> | /waypoint remove <name> | /waypoint set <name> | /waypoint list
-  regenerate:
-    description: TODO Write description
-    usage: /regenerate
+    description: Commands to manage your compass waypoints
+    permission: islandcraft.command.waypoint
+    usage: |
+      Use /help <command> [subcommand] for more information
+      /<command> add - Add a waypoint at your current location
+      /<command> remove - Remove a waypoint
+      /<command> list - List your waypoints
+      /<command> set - Make your compass point towards a waypoint
+  waypoint add:
+    description: Add a waypoint at your current location
+    permission: islandcraft.command.waypoint.add
+    usage: "Usage: /<command> <waypoint...>"
+  waypoint remove:
+    description: Remove a waypoint
+    permission: islandcraft.command.waypoint.remove
+    usage: "Usage: /<command> <waypoint...>"
+  waypoint list:
+    description: List your waypoints
+    permission: islandcraft.command.waypoint.list
+    usage: "Usage: /<command>"
+  waypoint set:
+    description: Make your compass point towards a waypoint
+    permission: islandcraft.command.waypoint.set
+    usage: "Usage: /<command> <waypoint...>"
+  icsudo:
+    description: Dangerous commands for IslandCraft
+    permission: islandcraft.command.icsudo
+    usage: |
+      Use /help <command> [subcommand] for more information
+      /<command> regenerate - Completely regenerate a whole island
+      /<command> reserved - Set an island to be a reserved island
+      /<command> resource - Set an island to be a resource island
+      /<command> available - Set an island to be an available island
+      /<command> purchase - Purchase an island for another player without charge
+      /<command> rename - Rename an island you do not own
+  icsudo regenerate:
+    description: |
+      Completely regenerate the island you are standing on and the surrounding ocean
+      New randomly selected biome and shape
+      Everything will be destroyed
+      You have been warned!
+    permission: islandcraft.command.icsudo.regenerate
+    usage: "Usage: /<command>"
+  icsudo reserved:
+    description: |
+      Set the island you are standing on to be a reserved island
+      No player have any permission to build on a reserved island
+    permission: islandcraft.command.icsudo.reserved
+    usage: "Usage: /<command>"
+  icsudo resource:
+    description: |
+      Set the island you are standing on to be a resource island
+      All players have permission to build on a resource island
+    permission: islandcraft.command.icsudo.resource
+    usage: "Usage: /<command>"
+  icsudo available:
+    description: |
+      Set the island you are standing on to be a available island
+      Players may purchase available islands
+    permission: islandcraft.command.icsudo.available
+    usage: "Usage: /<command>"
+  icsudo purchase:
+    description: Purchase the island you are standing on for another player without charge
+    permission: islandcraft.command.icsudo.purchase
+    usage: "Usage: /<command> <player>"
+  icsudo rename:
+    description: Rename the island you are standing on even if you do not own it
+    permission: islandcraft.command.icsudo.rename
+    usage: "Usage: /<command> <name...>"
+permissions:
+  islandcraft.command.m:
+    default: true
+  islandcraft.command.l:
+    default: true
+  islandcraft.command.p:
+    default: true
+  islandcraft.command.party.*:
+    default: true
+    children:
+      islandcraft.command.party.join: true
+      islandcraft.command.party.leave: true
+      islandcraft.command.party.members: true
+  islandcraft.command.suicide:
+    default: true
+  islandcraft.island.*:
+    default: true
+    children:
+      islandcraft.command.island.purchase: true
+      islandcraft.command.island.abandon: true
+      islandcraft.command.island.examine: true
+      islandcraft.command.island.rename: true
+  islandcraft.command.waypoint.*:
+    default: true
+    children:
+      islandcraft.command.waypoint.add: true
+      islandcraft.command.waypoint.remove: true
+      islandcraft.command.waypoint.list: true
+      islandcraft.command.waypoint.set: true
+  islandcraft.command.icsudo:
+    default: op
+    children:
+      islandcraft.command.icsudo.regenerate: true
+      islandcraft.command.icsudo.reserved: true
+      islandcraft.command.icsudo.resource: true
+      islandcraft.command.icsudo.available: true
+      islandcraft.command.icsudo.purchase: true
+      islandcraft.command.icsudo.rename: true
+  islandcraft.clock:
+    default: true
+  
