@@ -18,10 +18,10 @@ public final class PrivateMessage {
      */
     public static void onPrivateMessage(final ICPlayer from, final ICPlayer to, final String message) {
         if (to == null) {
-            from.info("No such player");
+            from.message("m-error");
             return;
         }
-        to.privateMessage(from.getName(), message);
+        to.message("m", from.getName(), to.getName(), message);
     }
 
     private PrivateMessage() {

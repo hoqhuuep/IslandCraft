@@ -61,6 +61,6 @@
   </dependencies>
   <description>IslandCraft is a Bukkit plugin which modifies the terrain generation to create an ocean with many islands.</description>
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
   </properties>
 </project>

@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
@@ -49,15 +48,14 @@ public class BetterCompass {
      */
     public final void onNextWaypoint(final ICPlayer player, final boolean previous) {
         if (!player.getWorld().isNormalWorld()) {
-            // TODO Remove dependency on Bukkit here
-            player.info("Compass now pointing to " + ChatColor.MAGIC + "nowhere");
+            player.message("compass-error");
             return;
         }
         final String name = player.getName();
         final String oldWaypoint = getWaypoint(name);
         final String newWaypoint = getNext(name, oldWaypoint, previous);
         if (setWaypoint(player, newWaypoint)) {
-            player.info("Compass now pointing to " + newWaypoint);
+            player.message("compass", newWaypoint);
         }
     }
 
@@ -94,7 +92,7 @@ public class BetterCompass {
      */
     public void onWaypointSet(final ICPlayer player, final String waypoint) {
         if (setWaypoint(player, waypoint)) {
-            player.info("Compass now pointing to " + waypoint);
+            player.message("compass", waypoint);
         }
     }
 
@@ -106,15 +104,15 @@ public class BetterCompass {
      */
     public void onWaypointAdd(final ICPlayer player, final String waypoint) {
         if (!player.getWorld().isNormalWorld()) {
-            player.info("You cannot set a waypoint from this world");
+            player.message("waypoint-add-world-error");
             return;
         }
         if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
-            player.info("You cannot override that waypoint");
+            player.message("waypoint-add-reserved-error");
             return;
         }
         database.saveWaypoint(player.getName(), waypoint, player.getLocation());
-        player.info("Added waypoint " + waypoint);
+        player.message("waypoint-add", waypoint);
     }
 
     /**
@@ -125,11 +123,11 @@ public class BetterCompass {
      */
     public void onWaypointRemove(final ICPlayer player, final String waypoint) {
         if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
-            player.info("You cannot remove that waypoint");
+            player.message("waypoint-remove-error");
             return;
         }
         database.saveWaypoint(player.getName(), waypoint, null);
-        player.info("Removed waypoint " + waypoint);
+        player.message("waypoint-remove", waypoint);
     }
 
     /**
@@ -137,10 +135,10 @@ public class BetterCompass {
      * 
      * @param player
      */
-    public void onWaypointsList(final ICPlayer player) {
+    public void onWaypointList(final ICPlayer player) {
         final String name = player.getName();
         final List<String> waypoints = getWaypoints(name);
-        player.info("Waypoints: [" + StringUtils.join(waypoints, ", ") + "]");
+        player.message("waypoint-list", StringUtils.join(waypoints, ", "));
     }
 
     private boolean setWaypoint(final ICPlayer player, final String waypoint) {
@@ -156,7 +154,7 @@ public class BetterCompass {
         } else {
             ICLocation location = database.loadWaypoint(name, waypoint);
             if (location == null) {
-                player.info("Waypoint not defined " + waypoint);
+                player.message("waypoint-set-error", waypoint);
                 return false;
             }
             if (!player.getServer().findOnlineWorld(location.getWorld()).isNormalWorld()) {

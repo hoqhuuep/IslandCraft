@@ -32,7 +32,7 @@ public class LocalChat {
             final ICLocation pLocation = p.getLocation();
             final int maxDistance = config.getLocalChatRadius();
             if (pLocation.distanceSquared(location) < maxDistance * maxDistance) {
-                p.local(player.getName(), message);
+                p.message("l", player.getName(), message);
             }
         }
     }

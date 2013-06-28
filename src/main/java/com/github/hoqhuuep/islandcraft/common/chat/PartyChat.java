@@ -27,13 +27,22 @@ public class PartyChat {
      * @param party
      */
     public final void onJoin(final ICPlayer player, final String party) {
-        final String oldParty = database.loadParty(player.getName());
+        final String name = player.getName();
+        final String oldParty = database.loadParty(name);
         if (oldParty != null) {
-            player.info("You are no longer a member of " + oldParty);
+            player.message("party-leave", oldParty);
         }
-        database.saveParty(player.getName(), party);
-        player.info("You are now a member of " + party);
-        // TODO Notify members that player has joined
+        database.saveParty(name, party);
+        player.message("party-join", party);
+
+        // Notify members that player has joined
+        final List<String> memberNames = database.loadPartyPlayers(party);
+        for (final String memberName : memberNames) {
+            final ICPlayer member = player.getServer().findOnlinePlayer(memberName);
+            if (member != null && !member.getName().equalsIgnoreCase(player.getName())) {
+                member.message("party-join-notify", name);
+            }
+        }
     }
 
     /**
@@ -42,14 +51,23 @@ public class PartyChat {
      * @param player
      */
     public final void onLeave(final ICPlayer player) {
-        final String oldParty = database.loadParty(player.getName());
-        if (oldParty == null) {
-            player.info("You are not a member of any party");
+        final String name = player.getName();
+        final String party = database.loadParty(name);
+        if (party == null) {
+            player.message("party-leave-error");
             return;
         }
-        database.saveParty(player.getName(), null);
-        player.info("You are no longer a member of " + oldParty);
-        // TODO Notify members that player has left
+        database.saveParty(name, null);
+        player.message("party-leave", party);
+
+        // Notify members that player has left
+        final List<String> memberNames = database.loadPartyPlayers(party);
+        for (final String memberName : memberNames) {
+            final ICPlayer member = player.getServer().findOnlinePlayer(memberName);
+            if (member != null && !member.getName().equalsIgnoreCase(player.getName())) {
+                member.message("party-leave-notify", name);
+            }
+        }
     }
 
     /**
@@ -60,11 +78,11 @@ public class PartyChat {
     public final void onMembers(final ICPlayer player) {
         final String party = database.loadParty(player.getName());
         if (party == null) {
-            player.info("You are not a member of any party");
+            player.message("party-members-error");
             return;
         }
         final List<String> members = database.loadPartyPlayers(party);
-        player.info("Members: [" + StringUtils.join(members, ", ") + "]");
+        player.message("party-members", StringUtils.join(members, ", "));
     }
 
     /**
@@ -77,14 +95,14 @@ public class PartyChat {
         final String name = player.getName();
         final String party = database.loadParty(name);
         if (party == null) {
-            player.info("You are not a member of any party");
+            player.message("p-error");
             return;
         }
         final List<String> memberNames = database.loadPartyPlayers(party);
         for (final String memberName : memberNames) {
             final ICPlayer member = player.getServer().findOnlinePlayer(memberName);
             if (member != null) {
-                member.party(name, party, message);
+                member.message("p", name, party, message);
             }
         }
     }

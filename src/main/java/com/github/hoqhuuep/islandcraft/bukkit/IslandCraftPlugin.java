@@ -1,10 +1,16 @@
 package com.github.hoqhuuep.islandcraft.bukkit;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.persistence.PersistenceException;
 
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -27,12 +33,13 @@ import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.IslandCraftBiomeGen
 import com.github.hoqhuuep.islandcraft.bukkit.worldguard.WorldGuardProtection;
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
+import com.github.hoqhuuep.islandcraft.common.api.ICLanguage;
 import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.chat.LocalChat;
 import com.github.hoqhuuep.islandcraft.common.chat.PartyChat;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterCompass;
-import com.github.hoqhuuep.islandcraft.common.purchasing.Purchasing;
+import com.github.hoqhuuep.islandcraft.common.island.Island;
 import com.khorn.terraincontrol.TerrainControl;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
@@ -41,6 +48,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
     private ICConfig config;
     private ICDatabase database;
     private ICProtection protection;
+    private ICLanguage language;
 
     @Override
     public List<Class<?>> getDatabaseClasses() {
@@ -51,6 +59,8 @@ public final class IslandCraftPlugin extends JavaPlugin {
     public void onEnable() {
         getConfig().options().copyDefaults(true);
         saveConfig();
+        getLanguageConfig().options().copyDefaults(true);
+        saveLanguageConfig();
         try {
             getDatabase().find(CompassBean.class).findRowCount();
         } catch (PersistenceException e) {
@@ -61,7 +71,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
         TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
 
         // Island Commands
-        final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(new Purchasing(getICDatabase(), getICConfig(), getICProtection()),
+        final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(new Island(getICDatabase(), getICConfig(), getICProtection()),
                 getICServer());
         final PluginCommand islandCommand = getCommand("island");
         islandCommand.setExecutor(islandCommandExecutor);
@@ -100,7 +110,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
 
     public ICServer getICServer() {
         if (server == null) {
-            server = new BukkitServer(getServer());
+            server = new BukkitServer(getServer(), getICLanguage());
         }
         return server;
     }
@@ -126,6 +136,13 @@ public final class IslandCraftPlugin extends JavaPlugin {
         return protection;
     }
 
+    public ICLanguage getICLanguage() {
+        if (language == null) {
+            language = new BukkitLanguage(getLanguageConfig());
+        }
+        return language;
+    }
+
     private void register(final Listener listener) {
         final PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(listener, this);
@@ -141,5 +158,40 @@ public final class IslandCraftPlugin extends JavaPlugin {
         }
 
         return (WorldGuardPlugin) plugin;
+    }
+
+    private File languageConfigFile;
+    private FileConfiguration languageConfig;
+
+    private void reloadLanguageConfig() {
+        if (languageConfigFile == null) {
+            languageConfigFile = new File(getDataFolder(), "language.yml");
+        }
+        // Look for defaults in the jar
+        languageConfig = YamlConfiguration.loadConfiguration(languageConfigFile);
+        @SuppressWarnings("resource")
+        InputStream defConfigStream = getResource("language.yml");
+        if (defConfigStream != null) {
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            languageConfig.setDefaults(defConfig);
+        }
+    }
+
+    private FileConfiguration getLanguageConfig() {
+        if (languageConfig == null) {
+            reloadLanguageConfig();
+        }
+        return languageConfig;
+    }
+
+    private void saveLanguageConfig() {
+        if (languageConfig == null || languageConfigFile == null) {
+            return;
+        }
+        try {
+            getLanguageConfig().save(languageConfigFile);
+        } catch (IOException ex) {
+            this.getLogger().log(Level.SEVERE, "Could not save config to " + languageConfigFile, ex);
+        }
     }
 }

@@ -58,7 +58,7 @@ public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
             if (args.length != 1) {
                 return false;
             }
-            betterCompass.onWaypointsList(player);
+            betterCompass.onWaypointList(player);
             return true;
         }
         return false;

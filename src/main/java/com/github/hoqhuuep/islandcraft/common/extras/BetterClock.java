@@ -1,7 +1,5 @@
 package com.github.hoqhuuep.islandcraft.common.extras;
 
-import org.bukkit.ChatColor;
-
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 
 /**
@@ -19,11 +17,10 @@ public final class BetterClock {
      */
     public static void onQuery(final ICPlayer player) {
         if (!player.getWorld().isNormalWorld()) {
-            // TODO Remove dependency on Bukkit here
-            player.info("The time is " + ChatColor.MAGIC + "03:14");
+            player.message("clock-error");
             return;
         }
-        player.info("The time is " + player.getWorld().getTime());
+        player.message("clock", player.getWorld().getTime());
     }
 
     private BetterClock() {

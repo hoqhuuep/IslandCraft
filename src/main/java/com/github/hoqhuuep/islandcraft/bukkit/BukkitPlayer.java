@@ -2,7 +2,6 @@ package com.github.hoqhuuep.islandcraft.bukkit;
 
 import java.util.Map;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -10,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import com.github.hoqhuuep.islandcraft.common.api.ICLanguage;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.api.ICWorld;
@@ -18,10 +18,12 @@ import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 public class BukkitPlayer implements ICPlayer {
     private final Player player;
     private final ICServer server;
+    private final ICLanguage language;
 
-    public BukkitPlayer(final Player player, final ICServer server) {
+    public BukkitPlayer(final Player player, final ICServer server, final ICLanguage language) {
         this.player = player;
         this.server = server;
+        this.language = language;
     }
 
     @Override
@@ -50,28 +52,13 @@ public class BukkitPlayer implements ICPlayer {
     }
 
     @Override
-    public final void info(final String message) {
-        player.sendMessage(ChatColor.GRAY + "[INFO] " + message);
+    public final void message(final String id, final Object... args) {
+        player.sendMessage(language.get(id, args));
     }
 
     @Override
     public final void kill() {
         player.setHealth(0);
-    }
-
-    @Override
-    public final void local(final String from, final String message) {
-        player.sendMessage("[" + from + "->" + ChatColor.GRAY + "local" + ChatColor.WHITE + "] " + message);
-    }
-
-    @Override
-    public final void party(final String from, final String to, final String message) {
-        player.sendMessage("[" + from + "->" + ChatColor.GREEN + to + ChatColor.WHITE + "] " + message);
-    }
-
-    @Override
-    public final void privateMessage(final String from, final String message) {
-        player.sendMessage("[" + from + "->" + getName() + "] " + message);
     }
 
     @Override

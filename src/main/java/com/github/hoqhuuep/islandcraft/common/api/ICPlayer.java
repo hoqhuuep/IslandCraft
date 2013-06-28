@@ -34,49 +34,9 @@ public interface ICPlayer {
     ICServer getServer();
 
     /**
-     * Send the player an informative message.
-     * 
-     * @param message
-     *            the message to send
-     */
-    void info(String message);
-
-    /**
      * Kill the player. Regardless of health or game mode.
      */
     void kill();
-
-    /**
-     * Send the player a message formatted as local chat.
-     * 
-     * @param from
-     *            the name of the player sending the message
-     * @param message
-     *            the message to send
-     */
-    void local(String from, String message);
-
-    /**
-     * Send the player a message formatted as party chat.
-     * 
-     * @param from
-     *            the name of the player sending the message
-     * @param to
-     *            the name of the party receiving the message
-     * @param message
-     *            the message to send
-     */
-    void party(String from, String to, String message);
-
-    /**
-     * Send the player a message formatted as a private message.
-     * 
-     * @param from
-     *            the name of the player sending the message
-     * @param message
-     *            the message to send
-     */
-    void privateMessage(String from, String message);
 
     /**
      * Set the player's compass target.
@@ -97,4 +57,6 @@ public interface ICPlayer {
      *         <code>false</code> otherwise
      */
     boolean takeDiamonds(int amount);
+
+    void message(String id, Object... args);
 }

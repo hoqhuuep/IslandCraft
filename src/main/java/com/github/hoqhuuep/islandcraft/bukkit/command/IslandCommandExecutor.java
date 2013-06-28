@@ -13,15 +13,15 @@ import org.bukkit.entity.Player;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
-import com.github.hoqhuuep.islandcraft.common.purchasing.Purchasing;
+import com.github.hoqhuuep.islandcraft.common.island.Island;
 
 public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
     private final ICServer server;
-    private final Purchasing purchasing;
+    private final Island island;
 
-    public IslandCommandExecutor(final Purchasing purchasing, final ICServer server) {
+    public IslandCommandExecutor(final Island island, final ICServer server) {
         this.server = server;
-        this.purchasing = purchasing;
+        this.island = island;
     }
 
     @Override
@@ -34,19 +34,19 @@ public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
             if (args.length != 1) {
                 return false;
             }
-            purchasing.onPurchase(player);
+            island.onPurchase(player);
             return true;
         } else if ("abandon".equalsIgnoreCase(args[0])) {
             if (args.length != 1) {
                 return false;
             }
-            purchasing.onAbandon(player);
+            island.onAbandon(player);
             return true;
         } else if ("examine".equalsIgnoreCase(args[0])) {
             if (args.length != 1) {
                 return false;
             }
-            purchasing.onExamine(player);
+            island.onExamine(player);
             return true;
         } else if ("rename".equalsIgnoreCase(args[0])) {
             final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
@@ -54,7 +54,7 @@ public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
             if (name.isEmpty()) {
                 return false;
             }
-            purchasing.onRename(player, name);
+            island.onRename(player, name);
             return true;
         }
         return false;
