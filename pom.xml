@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.githup.hoqhuuep</groupId>
   <artifactId>IslandCraft</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <name>IslandCraft</name>
   <url>http://dev.bukkit.org/bukkit-plugins/islandcraft/</url>
   <build>
