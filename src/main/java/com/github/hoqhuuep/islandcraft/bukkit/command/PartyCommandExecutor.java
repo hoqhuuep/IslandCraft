@@ -13,57 +13,48 @@ import org.bukkit.entity.Player;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
-import com.github.hoqhuuep.islandcraft.common.extras.BetterCompass;
+import com.github.hoqhuuep.islandcraft.common.chat.PartyChat;
 
-public class BetterCompassCommandExecutor implements CommandExecutor, TabCompleter {
+public class PartyCommandExecutor implements CommandExecutor, TabCompleter {
     private final ICServer server;
-    private final BetterCompass betterCompass;
+    private final PartyChat partyChat;
 
-    public BetterCompassCommandExecutor(BetterCompass betterCompass, ICServer server) {
-        this.betterCompass = betterCompass;
+    public PartyCommandExecutor(final PartyChat partyChat, final ICServer server) {
         this.server = server;
+        this.partyChat = partyChat;
     }
 
     @Override
     public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (sender == null || !(sender instanceof Player)) {
-            return false;
-        }
-        if (args.length < 1) {
+        if (sender == null || !(sender instanceof Player) || args.length < 1) {
             return false;
         }
         final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
-        if ("add".equalsIgnoreCase(args[0])) {
-            final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
-            final String name = StringUtils.join(nameArray, " ");
-            if (name.isEmpty()) {
+        if ("join".equalsIgnoreCase(args[0])) {
+            final String[] partyArray = Arrays.copyOfRange(args, 1, args.length);
+            final String party = StringUtils.join(partyArray, " ");
+            if (party.isEmpty()) {
                 return false;
             }
-            betterCompass.onWaypointAdd(player, name);
-        } else if ("remove".equalsIgnoreCase(args[0])) {
-            final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
-            final String name = StringUtils.join(nameArray, " ");
-            if (name.isEmpty()) {
-                return false;
-            }
-            betterCompass.onWaypointRemove(player, name);
-        } else if ("set".equalsIgnoreCase(args[0])) {
-            final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
-            final String name = StringUtils.join(nameArray, " ");
-            if (name.isEmpty()) {
-                return false;
-            }
-            betterCompass.onWaypointSet(player, name);
-        } else if ("list".equalsIgnoreCase(args[0])) {
+            partyChat.onJoin(player, party);
+            return true;
+        } else if ("leave".equalsIgnoreCase(args[0])) {
             if (args.length != 1) {
                 return false;
             }
-            betterCompass.onWaypointsList(player);
+            partyChat.onLeave(player);
+            return true;
+        } else if ("members".equalsIgnoreCase(args[0])) {
+            if (args.length != 1) {
+                return false;
+            }
+            partyChat.onMembers(player);
+            return true;
         }
-        return true;
+        return false;
     }
 
-    private static final String[] OPTIONS = { "add", "remove", "set", "list" };
+    private static final String[] OPTIONS = { "join", "leave", "members" };
 
     @Override
     public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {

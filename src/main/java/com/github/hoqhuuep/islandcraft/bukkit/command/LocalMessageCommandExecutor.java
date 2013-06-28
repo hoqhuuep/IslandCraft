@@ -10,11 +10,11 @@ import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.chat.LocalChat;
 
-public class LocalChatCommandExecutor implements CommandExecutor {
+public class LocalMessageCommandExecutor implements CommandExecutor {
     private final ICServer server;
     private final LocalChat localChat;
 
-    public LocalChatCommandExecutor(final LocalChat localChat, final ICServer server) {
+    public LocalMessageCommandExecutor(final LocalChat localChat, final ICServer server) {
         this.localChat = localChat;
         this.server = server;
     }
@@ -22,14 +22,11 @@ public class LocalChatCommandExecutor implements CommandExecutor {
     @Override
     public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         final String message = StringUtils.join(args, " ");
-        if (message.isEmpty()) {
+        if (sender == null || !(sender instanceof Player) || message.isEmpty()) {
             return false;
         }
-        if (sender == null || !(sender instanceof Player)) {
-            return false;
-        }
-        final ICPlayer from = server.findOnlinePlayer(((Player) sender).getName());
-        localChat.onLocalChat(from, message);
+        final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
+        localChat.onLocalChat(player, message);
         return true;
     }
 }

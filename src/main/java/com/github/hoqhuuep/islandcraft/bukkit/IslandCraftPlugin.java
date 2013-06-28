@@ -10,16 +10,18 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.hoqhuuep.islandcraft.bukkit.command.BetterCompassCommandExecutor;
-import com.github.hoqhuuep.islandcraft.bukkit.command.LocalChatCommandExecutor;
-import com.github.hoqhuuep.islandcraft.bukkit.command.PartyChatCommandExecutor;
+import com.github.hoqhuuep.islandcraft.bukkit.command.ICSudoCommandExecutor;
+import com.github.hoqhuuep.islandcraft.bukkit.command.IslandCommandExecutor;
+import com.github.hoqhuuep.islandcraft.bukkit.command.LocalMessageCommandExecutor;
+import com.github.hoqhuuep.islandcraft.bukkit.command.PartyCommandExecutor;
+import com.github.hoqhuuep.islandcraft.bukkit.command.PartyMessageCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.command.PrivateMessageCommandExecutor;
-import com.github.hoqhuuep.islandcraft.bukkit.command.PurchasingCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.command.SuicideCommandExecutor;
+import com.github.hoqhuuep.islandcraft.bukkit.command.WaypointCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.ebeanserver.CompassBean;
 import com.github.hoqhuuep.islandcraft.bukkit.ebeanserver.EbeanServerDatabase;
-import com.github.hoqhuuep.islandcraft.bukkit.event.BetterClockListener;
-import com.github.hoqhuuep.islandcraft.bukkit.event.BetterCompassListener;
+import com.github.hoqhuuep.islandcraft.bukkit.event.ClockListener;
+import com.github.hoqhuuep.islandcraft.bukkit.event.CompassListener;
 import com.github.hoqhuuep.islandcraft.bukkit.fileconfiguration.FileConfigurationConfig;
 import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.IslandCraftBiomeGenerator;
 import com.github.hoqhuuep.islandcraft.bukkit.worldguard.WorldGuardProtection;
@@ -58,36 +60,42 @@ public final class IslandCraftPlugin extends JavaPlugin {
         // Generator
         TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
 
-        // Purchasing
-        final PurchasingCommandExecutor purchasing = new PurchasingCommandExecutor(new Purchasing(getICDatabase(), getICConfig(), getICProtection()),
+        // Island Commands
+        final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(new Purchasing(getICDatabase(), getICConfig(), getICProtection()),
                 getICServer());
-        getCommand("purchase").setExecutor(purchasing);
-        getCommand("abandon").setExecutor(purchasing);
-        getCommand("examine").setExecutor(purchasing);
-        getCommand("rename").setExecutor(purchasing);
+        final PluginCommand islandCommand = getCommand("island");
+        islandCommand.setExecutor(islandCommandExecutor);
+        islandCommand.setTabCompleter(islandCommandExecutor);
 
-        // Chat
-        final LocalChatCommandExecutor localChat = new LocalChatCommandExecutor(new LocalChat(getICConfig()), getICServer());
-        getCommand("l").setExecutor(localChat);
-        final PartyChatCommandExecutor partyChat = new PartyChatCommandExecutor(new PartyChat(getICDatabase()), getICServer());
-        getCommand("p").setExecutor(partyChat);
-        getCommand("join").setExecutor(partyChat);
-        getCommand("leave").setExecutor(partyChat);
-        getCommand("members").setExecutor(partyChat);
-        final PrivateMessageCommandExecutor privateMessage = new PrivateMessageCommandExecutor(getICServer());
-        getCommand("m").setExecutor(privateMessage);
+        // Chat Commands
+        final PrivateMessageCommandExecutor privateMessageCommandExecutor = new PrivateMessageCommandExecutor(getICServer());
+        final LocalMessageCommandExecutor localMessageCommandExecutor = new LocalMessageCommandExecutor(new LocalChat(getICConfig()), getICServer());
+        final PartyChat partyChat = new PartyChat(getICDatabase());
+        final PartyMessageCommandExecutor partyMessageCommandExecutor = new PartyMessageCommandExecutor(partyChat, getICServer());
+        final PartyCommandExecutor partyCommandExecutor = new PartyCommandExecutor(partyChat, getICServer());
+        getCommand("m").setExecutor(privateMessageCommandExecutor);
+        getCommand("l").setExecutor(localMessageCommandExecutor);
+        getCommand("p").setExecutor(partyMessageCommandExecutor);
+        final PluginCommand partyCommand = getCommand("party");
+        partyCommand.setExecutor(partyCommandExecutor);
+        partyCommand.setTabCompleter(partyCommandExecutor);
 
-        // UsefulExtras
-        register(new BetterClockListener(getICServer()));
+        // Administrative commands
+        ICSudoCommandExecutor icsudoCommandExecutor = new ICSudoCommandExecutor();
+        final PluginCommand icsudoCommand = getCommand("icsudo");
+        icsudoCommand.setExecutor(icsudoCommandExecutor);
+        icsudoCommand.setTabCompleter(icsudoCommandExecutor);
+
+        // Extras
         final BetterCompass betterCompass = new BetterCompass(getICDatabase());
-        register(new BetterCompassListener(betterCompass, getICServer()));
-        getCommand("suicide").setExecutor(new SuicideCommandExecutor(getICServer()));
-        final BetterCompassCommandExecutor betterCompassCommandExecutor = new BetterCompassCommandExecutor(betterCompass, getICServer());
+        final WaypointCommandExecutor waypointCommandExecutor = new WaypointCommandExecutor(betterCompass, getICServer());
+        final SuicideCommandExecutor suicideCommandExecutor = new SuicideCommandExecutor(getICServer());
+        getCommand("suicide").setExecutor(suicideCommandExecutor);
+        register(new ClockListener(getICServer()));
+        register(new CompassListener(betterCompass, getICServer()));
         final PluginCommand waypointCommand = getCommand("waypoint");
-        waypointCommand.setExecutor(betterCompassCommandExecutor);
-        waypointCommand.setTabCompleter(betterCompassCommandExecutor);
-
-        getCommand("regenerate").setExecutor(new BukkitRegenerator());
+        waypointCommand.setExecutor(waypointCommandExecutor);
+        waypointCommand.setTabCompleter(waypointCommandExecutor);
     }
 
     public ICServer getICServer() {

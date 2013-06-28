@@ -11,10 +11,10 @@ import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterClock;
 
-public class BetterClockListener implements Listener {
+public class ClockListener implements Listener {
     private final ICServer server;
 
-    public BetterClockListener(final ICServer server) {
+    public ClockListener(final ICServer server) {
         this.server = server;
     }
 
@@ -23,14 +23,21 @@ public class BetterClockListener implements Listener {
         final Action action = event.getAction();
         if (Material.WATCH == event.getMaterial() && (Action.RIGHT_CLICK_AIR == action || Action.RIGHT_CLICK_BLOCK == action)) {
             final Player bukkitPlayer = event.getPlayer();
-            if (bukkitPlayer == null) {
+            if (!bukkitPlayer.hasPermission("islandcraft.clock")) {
                 return;
             }
-            final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
+            final ICPlayer player = fromBukkitPlayer(bukkitPlayer);
             if (player == null) {
                 return;
             }
             BetterClock.onQuery(player);
         }
+    }
+
+    private final ICPlayer fromBukkitPlayer(Player bukkitPlayer) {
+        if (bukkitPlayer == null) {
+            return null;
+        }
+        return server.findOnlinePlayer(bukkitPlayer.getName());
     }
 }

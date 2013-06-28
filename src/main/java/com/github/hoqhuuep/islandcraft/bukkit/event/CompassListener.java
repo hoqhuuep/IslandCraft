@@ -13,11 +13,11 @@ import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterCompass;
 
-public class BetterCompassListener implements Listener {
+public class CompassListener implements Listener {
     private final BetterCompass betterCompass;
     private final ICServer server;
 
-    public BetterCompassListener(final BetterCompass betterCompass, final ICServer server) {
+    public CompassListener(final BetterCompass betterCompass, final ICServer server) {
         this.betterCompass = betterCompass;
         this.server = server;
     }
@@ -25,7 +25,11 @@ public class BetterCompassListener implements Listener {
     @EventHandler
     public final void onPlayerDeath(final PlayerDeathEvent event) {
         // FIXME Compass target seems to reset on death
-        final ICPlayer player = fromBukkitPlayer(event.getEntity());
+        final Player bukkitPlayer = event.getEntity();
+        if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
+            return;
+        }
+        final ICPlayer player = fromBukkitPlayer(bukkitPlayer);
         if (player == null) {
             return;
         }
@@ -39,6 +43,9 @@ public class BetterCompassListener implements Listener {
         final Action action = event.getAction();
         if (Material.COMPASS == event.getMaterial() && (Action.RIGHT_CLICK_AIR == action || Action.RIGHT_CLICK_BLOCK == action)) {
             final Player bukkitPlayer = event.getPlayer();
+            if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
+                return;
+            }
             final ICPlayer player = fromBukkitPlayer(bukkitPlayer);
             if (player == null) {
                 return;
@@ -49,7 +56,11 @@ public class BetterCompassListener implements Listener {
 
     @EventHandler
     public final void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
-        final ICPlayer player = fromBukkitPlayer(event.getPlayer());
+        final Player bukkitPlayer = event.getPlayer();
+        if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
+            return;
+        }
+        final ICPlayer player = fromBukkitPlayer(bukkitPlayer);
         if (player == null) {
             return;
         }

@@ -11,15 +11,15 @@ commands:
   m:
     description: Send a private message to another player
     permission: islandcraft.command.m
-    usage: "Usage: /<command> <player> <message...>"
+    usage: /<command> <player> <message...>
   l:
     description: Send a message to nearby players
     permission: islandcraft.command.l
-    usage: "Usage: /<command> <message...>"
+    usage: /<command> <message...>
   p:
     description: Send a message to members of your party
     permission: islandcraft.command.p
-    usage: "Usage: /<command> <message...>"
+    usage: /<command> <message...>
   party:
     description: Commands to manage your party
     permission: islandcraft.command.party
@@ -31,19 +31,19 @@ commands:
   party join:
     description: Join a party
     permission: islandcraft.command.party.join
-    usage: "Usage: /<command> <party...>"
+    usage: /<command> <party...>
   party leave:
     description: Leave your party
     permission: islandcraft.command.party.leave
-    usage: "Usage: /<command>"
+    usage: /<command>
   party members:
     description: List the members of your party
     permission: islandcraft.command.party.members
-    usage: "Usage: /<command>"
+    usage: /<command>
   suicide:
     description: Kill yourself
     permission: islandcraft.command.suicide
-    usage: "Usage: /<command>"
+    usage: /<command>
   island:
     description: Commands for managing islands
     permission: islandcraft.command.island
@@ -56,19 +56,19 @@ commands:
   island purchase:
     description: Purchase the island you are standing on
     permission: islandcraft.command.island.purchase
-    usage: "Usage: /<command>"
+    usage: /<command>
   island abandon:
     description: Abandon the island you are standing on
     permission: islandcraft.command.island.abandon
-    usage: "Usage: /<command>"
+    usage: /<command>
   island examine:
     description: List information about the island you are standing on
     permission: islandcraft.command.island.examine
-    usage: "Usage: /<command>"
+    usage: /<command>
   island rename:
     description: Give a new name to the island you are standing on (used in greeting and farewell messages)
     permission: islandcraft.command.island.rename
-    usage: "Usage: /<command> <name...>"
+    usage: /<command> <name...>
   waypoint:
     description: Commands to manage your compass waypoints
     permission: islandcraft.command.waypoint
@@ -81,19 +81,19 @@ commands:
   waypoint add:
     description: Add a waypoint at your current location
     permission: islandcraft.command.waypoint.add
-    usage: "Usage: /<command> <waypoint...>"
+    usage: /<command> <waypoint...>
   waypoint remove:
     description: Remove a waypoint
     permission: islandcraft.command.waypoint.remove
-    usage: "Usage: /<command> <waypoint...>"
+    usage: /<command> <waypoint...>
   waypoint list:
     description: List your waypoints
     permission: islandcraft.command.waypoint.list
-    usage: "Usage: /<command>"
+    usage: /<command>
   waypoint set:
     description: Make your compass point towards a waypoint
     permission: islandcraft.command.waypoint.set
-    usage: "Usage: /<command> <waypoint...>"
+    usage: /<command> <waypoint...>
   icsudo:
     description: Dangerous commands for IslandCraft
     permission: islandcraft.command.icsudo
@@ -112,33 +112,33 @@ commands:
       Everything will be destroyed
       You have been warned!
     permission: islandcraft.command.icsudo.regenerate
-    usage: "Usage: /<command>"
+    usage: /<command>
   icsudo reserved:
     description: |
       Set the island you are standing on to be a reserved island
       No player have any permission to build on a reserved island
     permission: islandcraft.command.icsudo.reserved
-    usage: "Usage: /<command>"
+    usage: /<command>
   icsudo resource:
     description: |
       Set the island you are standing on to be a resource island
       All players have permission to build on a resource island
     permission: islandcraft.command.icsudo.resource
-    usage: "Usage: /<command>"
+    usage: /<command>
   icsudo available:
     description: |
       Set the island you are standing on to be a available island
       Players may purchase available islands
     permission: islandcraft.command.icsudo.available
-    usage: "Usage: /<command>"
+    usage: /<command>
   icsudo purchase:
     description: Purchase the island you are standing on for another player without charge
     permission: islandcraft.command.icsudo.purchase
-    usage: "Usage: /<command> <player>"
+    usage: /<command> <player>
   icsudo rename:
     description: Rename the island you are standing on even if you do not own it
     permission: islandcraft.command.icsudo.rename
-    usage: "Usage: /<command> <name...>"
+    usage: /<command> <name...>
 permissions:
   islandcraft.command.m:
     default: true
@@ -146,7 +146,7 @@ permissions:
     default: true
   islandcraft.command.p:
     default: true
-  islandcraft.command.party.*:
+  islandcraft.command.party:
     default: true
     children:
       islandcraft.command.party.join: true
@@ -154,14 +154,14 @@ permissions:
       islandcraft.command.party.members: true
   islandcraft.command.suicide:
     default: true
-  islandcraft.island.*:
+  islandcraft.command.island:
     default: true
     children:
       islandcraft.command.island.purchase: true
       islandcraft.command.island.abandon: true
       islandcraft.command.island.examine: true
       islandcraft.command.island.rename: true
-  islandcraft.command.waypoint.*:
+  islandcraft.command.waypoint:
     default: true
     children:
       islandcraft.command.waypoint.add: true
