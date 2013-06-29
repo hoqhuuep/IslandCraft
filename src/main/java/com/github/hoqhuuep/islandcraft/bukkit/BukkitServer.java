@@ -5,15 +5,14 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
-import com.github.hoqhuuep.islandcraft.common.api.ICLanguage;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.api.ICWorld;
 
 public class BukkitServer implements ICServer {
     private final Server server;
-    private final ICLanguage language;
+    private final Language language;
 
-    public BukkitServer(final Server server, final ICLanguage language) {
+    public BukkitServer(final Server server, final Language language) {
         this.server = server;
         this.language = language;
     }

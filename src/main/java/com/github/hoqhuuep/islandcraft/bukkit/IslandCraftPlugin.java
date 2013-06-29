@@ -33,7 +33,6 @@ import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.IslandCraftBiomeGen
 import com.github.hoqhuuep.islandcraft.bukkit.worldguard.WorldGuardProtection;
 import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
-import com.github.hoqhuuep.islandcraft.common.api.ICLanguage;
 import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.chat.LocalChat;
@@ -48,7 +47,6 @@ public final class IslandCraftPlugin extends JavaPlugin {
     private ICConfig config;
     private ICDatabase database;
     private ICProtection protection;
-    private ICLanguage language;
 
     @Override
     public List<Class<?>> getDatabaseClasses() {
@@ -110,7 +108,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
 
     public ICServer getICServer() {
         if (server == null) {
-            server = new BukkitServer(getServer(), getICLanguage());
+            server = new BukkitServer(getServer(), new Language(getLanguageConfig()));
         }
         return server;
     }
@@ -134,13 +132,6 @@ public final class IslandCraftPlugin extends JavaPlugin {
             protection = new WorldGuardProtection(getWorldGuard());
         }
         return protection;
-    }
-
-    public ICLanguage getICLanguage() {
-        if (language == null) {
-            language = new BukkitLanguage(getLanguageConfig());
-        }
-        return language;
     }
 
     private void register(final Listener listener) {

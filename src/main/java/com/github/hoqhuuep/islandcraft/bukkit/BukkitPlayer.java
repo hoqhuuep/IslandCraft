@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import com.github.hoqhuuep.islandcraft.common.api.ICLanguage;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.api.ICWorld;
@@ -18,9 +17,9 @@ import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 public class BukkitPlayer implements ICPlayer {
     private final Player player;
     private final ICServer server;
-    private final ICLanguage language;
+    private final Language language;
 
-    public BukkitPlayer(final Player player, final ICServer server, final ICLanguage language) {
+    public BukkitPlayer(final Player player, final ICServer server, final Language language) {
         this.player = player;
         this.server = server;
         this.language = language;
