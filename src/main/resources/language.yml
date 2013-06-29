@@ -1,45 +1,50 @@
 m: "[%s->%s] %s"
+m-error: §7[INFO] No such player
 l: "[%s->§9local§f] %s"
 p: "[%s->§a%s§f] %s"
-m-error: "§7[INFO] No such player"
-p-error: "§7[INFO] You are not a member of any party"
-party-join: "§7[INFO] You are now a member of §a%s"
-party-join-notify: "§7[INFO] %s has joined your party"
-party-leave: "§7[INFO] You are no longer a member of §a%s"
-party-leave-notify: "§7[INFO] %s has left your party"
-party-leave-error: "§7[INFO] You are not a member of any party"
+p-error: §7[INFO] You are not a member of any party
+
+party-join: §7[INFO] You are now a member of §a%s
+party-join-notify: §7[INFO] %s has joined your party
+party-leave: §7[INFO] You are no longer a member of §a%s
+party-leave-notify: §7[INFO] %s has left your party
+party-leave-error: §7[INFO] You are not a member of any party
 party-members: "§7[INFO] Members: %s"
-party-members-error: "§7[INFO] You are not a member of any party"
+party-members-error: §7[INFO] You are not a member of any party
 
-clock: "§7[INFO] The time is %s"
-clock-error: "§7[INFO] The time is §k03:14"
+clock: §7[INFO] The time is %s
+clock-error: §7[INFO] The time is §k03:14
 
-compass: "§7[INFO] Compass now pointing to %s"
-compass-error: "§7[INFO] Compass now pointing to §knowhere"
-waypoint-add: "§7[INFO] Added waypoint %s"
-waypoint-add-world-error: "§7[INFO] You cannot set a waypoint from this world"
-waypoint-add-reserved-error: "§7[INFO] You cannot override that waypoint"
-waypoint-remove: "§7[INFO] Removed waypoint %s"
-waypoint-remove-error: "§7[INFO] You cannot remove that waypoint"
+compass: §7[INFO] Compass now pointing to %s
+compass-error: §7[INFO] Compass now pointing to §knowhere
+
+waypoint-add: §7[INFO] Added waypoint %s
+waypoint-add-world-error: §7[INFO] You cannot set a waypoint from this world
+waypoint-add-reserved-error: §7[INFO] You cannot override that waypoint
+waypoint-remove: §7[INFO] Removed waypoint %s
+waypoint-remove-error: §7[INFO] You cannot remove that waypoint
 waypoint-list: "§7[INFO] Waypoints: %s"
-waypoint-set-error: "§7[INFO] Waypoint not defined"
+waypoint-set-error: §7[INFO] Waypoint not defined
 
-island-abandon: "§7[INFO] Island successfully abandoned"
-island-abandon-world-error: "§7[INFO] You cannot abandon an island from this world"
-island-abandon-ocean-error: "§7[INFO] You cannot abandon the ocean"
-island-abandon-owner-error: "§7[INFO] You cannot abandon an island you do not own"
-island-purchase: "§7[INFO] Island successfully purchased"
-island-rename-world-error: "§7[INFO] You cannot purchase an island from this world"
-island-rename-ocean-error: "§7[INFO] You cannot purchase the ocean"
-island-purchase-self-error: "§7[INFO] You cannot purchase an island you already own"
-island-purchase-other-error: "§7[INFO] You cannot purchase an island owned by another player"
-island-purchase-reserved-error: "§7[INFO] You cannot purchase a reserved island"
-island-purchase-resource-error: "§7[INFO] You cannot purchase a resource island"
-island-purchase-funds-error: "§7[INFO] You need %s diamonds in your inventory to purchase this island"
-island-rename: "§7[INFO] Island successfully renamed"
-island-rename-world-error: "§7[INFO] You cannot rename an island from this world"
-island-rename-ocean-error: "§7[INFO] You cannot rename the ocean"
-island-rename-owner-error: "§7[INFO] You cannot rename an island you do not own"
+island-abandon: §7[INFO] Island successfully abandoned
+island-abandon-world-error: §7[INFO] You cannot abandon an island from this world
+island-abandon-ocean-error: §7[INFO] You cannot abandon the ocean
+island-abandon-owner-error: §7[INFO] You cannot abandon an island you do not own
+
+island-purchase: §7[INFO] Island successfully purchased
+island-purchase-world-error: §7[INFO] You cannot purchase an island from this world
+island-purchase-ocean-error: §7[INFO] You cannot purchase the ocean
+island-purchase-self-error: §7[INFO] You cannot purchase an island you already own
+island-purchase-other-error: §7[INFO] You cannot purchase an island owned by another player
+island-purchase-reserved-error: §7[INFO] You cannot purchase a reserved island
+island-purchase-resource-error: §7[INFO] You cannot purchase a resource island
+island-purchase-funds-error: §7[INFO] You need %s diamonds in your inventory to purchase this island
+
+island-rename: §7[INFO] Island successfully renamed
+island-rename-world-error: §7[INFO] You cannot rename an island from this world
+island-rename-ocean-error: §7[INFO] You cannot rename the ocean
+island-rename-owner-error: §7[INFO] You cannot rename an island you do not own
+
 island-examine-available: |
   §7[INFO] Available Island:
   §7[INFO]   Location: %s
@@ -60,5 +65,5 @@ island-examine-private: |
   §7[INFO]   Biome: %s
   §7[INFO]   Owner: %s
   §7[INFO]   Tax paid: %s days
-island-examine-world-error: "§7[INFO] You cannot examine an island from this world"
-island-examine-ocean-error: "§7[INFO] You cannot examine the ocean"
+island-examine-world-error: §7[INFO] You cannot examine an island from this world
+island-examine-ocean-error: §7[INFO] You cannot examine the ocean

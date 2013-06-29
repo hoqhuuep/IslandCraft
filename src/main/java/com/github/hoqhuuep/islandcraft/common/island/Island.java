@@ -84,7 +84,7 @@ public class Island {
             player.message("island-examine-reserved", islandLocation, biome);
         } else if (owner.equalsIgnoreCase("<resource>")) {
             // TODO Get real regeneration here
-            player.message("island-resource-available", islandLocation, biome, "<n>");
+            player.message("island-examine-resource", islandLocation, biome, "<n>");
         } else {
             // TODO Get real tax paid here
             player.message("island-examine-private", islandLocation, biome, owner, "<n>");
