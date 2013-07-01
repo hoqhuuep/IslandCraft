@@ -115,11 +115,11 @@ public class Island {
             if (owner.equalsIgnoreCase(name)) {
                 player.message("island-purchase-self-error"); //$NON-NLS-1$
             } else if (owner.equalsIgnoreCase("<reserved>")) { //$NON-NLS-1$
-                player.message("island-purchase-reserved-error");
-            } else if (owner.equalsIgnoreCase("<resource>")) {
-                player.message("island-purchase-resource-error");
+                player.message("island-purchase-reserved-error"); //$NON-NLS-1$
+            } else if (owner.equalsIgnoreCase("<resource>")) { //$NON-NLS-1$
+                player.message("island-purchase-resource-error"); //$NON-NLS-1$
             } else {
-                player.message("island-purchase-other-error");
+                player.message("island-purchase-other-error"); //$NON-NLS-1$
             }
             return;
         }
@@ -128,7 +128,7 @@ public class Island {
 
         if (!player.takeDiamonds(cost)) {
             // Insufficient funds
-            player.message("island-purchase-funds-error", Integer.toString(cost));
+            player.message("island-purchase-funds-error", Integer.toString(cost)); //$NON-NLS-1$
             return;
         }
 
@@ -137,7 +137,7 @@ public class Island {
         final String title = name + "'s Island @ " + islandLocation;
         protection.addVisibleRegion(title, islandMath.visibleRegion(islandLocation));
         protection.addProtectedRegion(islandMath.protectedRegion(islandLocation), name);
-        player.message("island-purchase");
+        player.message("island-purchase"); //$NON-NLS-1$
     }
 
     /**
@@ -150,23 +150,23 @@ public class Island {
     public final void onRename(final ICPlayer player, final String title) {
         final IslandMath islandMath = player.getWorld().getIslandMath();
         if (null == islandMath) {
-            player.message("island-rename-world-error");
+            player.message("island-rename-world-error"); //$NON-NLS-1$
             return;
         }
         final ICLocation location = player.getLocation();
         final ICLocation islandLocation = islandMath.islandAt(location);
         if (isOcean(islandLocation)) {
-            player.message("island-rename-ocean-error");
+            player.message("island-rename-ocean-error"); //$NON-NLS-1$
             return;
         }
         if (!isOwner(player, islandLocation)) {
-            player.message("island-rename-owner-error");
+            player.message("island-rename-owner-error"); //$NON-NLS-1$
             return;
         }
 
         // Success
         protection.renameRegion(islandMath.visibleRegion(islandLocation), title);
-        player.message("island-rename");
+        player.message("island-rename"); //$NON-NLS-1$
     }
 
     private static boolean isOcean(final ICLocation location) {

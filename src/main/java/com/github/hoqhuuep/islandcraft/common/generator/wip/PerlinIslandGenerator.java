@@ -25,22 +25,22 @@ import be.humphreys.simplevoronoi.Voronoi;
 // Needs cleaning up, and performance improvements
 
 public final class PerlinIslandGenerator {
-    static final int GRANULARITY = 8;
+    private static final int GRANULARITY = 8;
 
-    static void randomDots(final int size, final int numDots, final Random random, final double[] x, final double[] z) {
+    private static void randomDots(final int size, final int numDots, final Random random, final double[] x, final double[] z) {
         for (int i = 0; i < numDots; ++i) {
             x[i] = (double) i * size / numDots;
             z[i] = random.nextDouble() * size;
         }
     }
 
-    static List<GraphEdge> getEdges(final int size, final double[] x, final double[] y) {
+    private static List<GraphEdge> getEdges(final int size, final double[] x, final double[] y) {
         final Voronoi voronoi = new Voronoi(1);
         final List<GraphEdge> edges = voronoi.generateVoronoi(x, y, 0, size, 0, size);
         return edges;
     }
 
-    static List<List<GraphEdge>> getPolygons(final List<GraphEdge> edges, final int numDots) {
+    private static List<List<GraphEdge>> getPolygons(final List<GraphEdge> edges, final int numDots) {
         final List<List<GraphEdge>> polygons = new ArrayList<List<GraphEdge>>(numDots);
         for (int i = 0; i < numDots; ++i) {
             polygons.add(new ArrayList<GraphEdge>());
@@ -52,7 +52,7 @@ public final class PerlinIslandGenerator {
         return polygons;
     }
 
-    static void relax(final List<List<GraphEdge>> polygons, final int numDots, final double[] x, final double[] y) {
+    private static void relax(final List<List<GraphEdge>> polygons, final int numDots, final double[] x, final double[] y) {
         for (int i = 0; i < numDots; ++i) {
             x[i] = 0;
             y[i] = 0;
@@ -67,7 +67,7 @@ public final class PerlinIslandGenerator {
         }
     }
 
-    public static Map getMap(final List<GraphEdge> edges, final double[] x, final double[] y) {
+    private static Map getMap(final List<GraphEdge> edges, final double[] x, final double[] y) {
         final java.util.Map<Long, Polygon> ps = new HashMap<Long, Polygon>();
         final java.util.Map<Long, Vertex> vs = new HashMap<Long, Vertex>();
         final Set<Edge> es = new HashSet<Edge>();
@@ -151,7 +151,7 @@ public final class PerlinIslandGenerator {
         return result;
     }
 
-    public static BufferedImage renderIsland(final int size, final Random random, final Color oceanColor, final Color shoreColor, final Color flatsColor,
+    private static BufferedImage renderIsland(final int size, final Random random, final Color oceanColor, final Color shoreColor, final Color flatsColor,
             final Color hillsColor) {
         // Generate random points
         final int numDots = size * size / (GRANULARITY * GRANULARITY);
