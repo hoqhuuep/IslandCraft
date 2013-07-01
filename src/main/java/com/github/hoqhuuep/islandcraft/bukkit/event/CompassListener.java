@@ -30,7 +30,7 @@ public class CompassListener implements Listener {
         if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
             return;
         }
-        final ICPlayer player = fromBukkitPlayer(bukkitPlayer);
+        final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
         if (player == null) {
             return;
         }
@@ -43,7 +43,7 @@ public class CompassListener implements Listener {
         if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
             return;
         }
-        final ICPlayer player = fromBukkitPlayer(bukkitPlayer);
+        final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
         if (player == null) {
             return;
         }
@@ -58,7 +58,7 @@ public class CompassListener implements Listener {
             if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
                 return;
             }
-            final ICPlayer player = fromBukkitPlayer(bukkitPlayer);
+            final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
             if (player == null) {
                 return;
             }
@@ -72,7 +72,7 @@ public class CompassListener implements Listener {
         if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
             return;
         }
-        final ICPlayer player = fromBukkitPlayer(bukkitPlayer);
+        final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
         if (player == null) {
             return;
         }
@@ -85,17 +85,10 @@ public class CompassListener implements Listener {
         if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
             return;
         }
-        final ICPlayer player = fromBukkitPlayer(bukkitPlayer);
+        final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
         if (player == null) {
             return;
         }
         betterCompass.onRespawn(player);
-    }
-
-    private final ICPlayer fromBukkitPlayer(Player bukkitPlayer) {
-        if (bukkitPlayer == null) {
-            return null;
-        }
-        return server.findOnlinePlayer(bukkitPlayer.getName());
     }
 }

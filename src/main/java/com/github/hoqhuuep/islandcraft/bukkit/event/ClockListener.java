@@ -26,18 +26,11 @@ public class ClockListener implements Listener {
             if (!bukkitPlayer.hasPermission("islandcraft.clock")) {
                 return;
             }
-            final ICPlayer player = fromBukkitPlayer(bukkitPlayer);
+            final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
             if (player == null) {
                 return;
             }
             BetterClock.onQuery(player);
         }
-    }
-
-    private final ICPlayer fromBukkitPlayer(Player bukkitPlayer) {
-        if (bukkitPlayer == null) {
-            return null;
-        }
-        return server.findOnlinePlayer(bukkitPlayer.getName());
     }
 }
