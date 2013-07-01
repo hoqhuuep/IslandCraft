@@ -26,7 +26,6 @@ public class CompassListener implements Listener {
 
     @EventHandler
     public final void onPlayerDeath(final PlayerDeathEvent event) {
-        // FIXME Compass target seems to reset on death
         final Player bukkitPlayer = event.getEntity();
         if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
             return;
