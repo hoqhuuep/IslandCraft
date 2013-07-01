@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import com.github.hoqhuuep.islandcraft.common.IslandMath;
 import com.github.hoqhuuep.islandcraft.common.generator.wip.PerlinIslandGenerator;
 import com.github.hoqhuuep.islandcraft.common.type.ICBiome;
-import com.github.hoqhuuep.islandcraft.common.IslandMath;
 
 public class IslandGenerator {
     private final Map<Long, int[]> CACHE = new HashMap<Long, int[]>();
