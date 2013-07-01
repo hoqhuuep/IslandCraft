@@ -21,7 +21,7 @@ public class PrivateMessageCommandExecutor implements CommandExecutor {
 
     @Override
     public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (sender == null || !(sender instanceof Player) || args.length < 2) {
+        if (null == sender || !(sender instanceof Player) || args.length < 2) {
             return false;
         }
         final String[] messageArray = Arrays.copyOfRange(args, 1, args.length);

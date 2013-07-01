@@ -67,14 +67,14 @@ public class BetterCompass {
      */
     public final void onNextWaypoint(final ICPlayer player, final boolean previous) {
         if (!player.getWorld().isNormalWorld()) {
-            player.message("compass-error");
+            player.message("compass-error"); //$NON-NLS-1$
             return;
         }
         final String name = player.getName();
         final String oldWaypoint = getWaypoint(name);
         final String newWaypoint = getNext(name, oldWaypoint, previous);
         if (setWaypoint(player, newWaypoint)) {
-            player.message("compass", newWaypoint);
+            player.message("compass", newWaypoint); //$NON-NLS-1$
         }
     }
 
@@ -86,7 +86,7 @@ public class BetterCompass {
      */
     public final void onWaypointSet(final ICPlayer player, final String waypoint) {
         if (setWaypoint(player, waypoint)) {
-            player.message("compass", waypoint);
+            player.message("compass", waypoint); //$NON-NLS-1$
         }
     }
 
@@ -98,15 +98,15 @@ public class BetterCompass {
      */
     public final void onWaypointAdd(final ICPlayer player, final String waypoint) {
         if (!player.getWorld().isNormalWorld()) {
-            player.message("waypoint-add-world-error");
+            player.message("waypoint-add-world-error"); //$NON-NLS-1$
             return;
         }
         if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
-            player.message("waypoint-add-reserved-error");
+            player.message("waypoint-add-reserved-error"); //$NON-NLS-1$
             return;
         }
         database.saveWaypoint(player.getName(), waypoint, player.getLocation());
-        player.message("waypoint-add", waypoint);
+        player.message("waypoint-add", waypoint); //$NON-NLS-1$
     }
 
     /**
@@ -117,11 +117,11 @@ public class BetterCompass {
      */
     public final void onWaypointRemove(final ICPlayer player, final String waypoint) {
         if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
-            player.message("waypoint-remove-error");
+            player.message("waypoint-remove-error"); //$NON-NLS-1$
             return;
         }
         database.saveWaypoint(player.getName(), waypoint, null);
-        player.message("waypoint-remove", waypoint);
+        player.message("waypoint-remove", waypoint); //$NON-NLS-1$
     }
 
     /**
@@ -132,7 +132,7 @@ public class BetterCompass {
     public final void onWaypointList(final ICPlayer player) {
         final String name = player.getName();
         final List<String> waypoints = getWaypoints(name);
-        player.message("waypoint-list", StringUtils.join(waypoints, ", "));
+        player.message("waypoint-list", StringUtils.join(waypoints, ", ")); //$NON-NLS-1$
     }
 
     private boolean setWaypoint(final ICPlayer player, final String waypoint) {
@@ -141,8 +141,8 @@ public class BetterCompass {
             player.setCompassTarget(player.getWorld().getSpawnLocation());
         } else {
             ICLocation location = database.loadWaypoint(name, waypoint);
-            if (location == null) {
-                player.message("waypoint-set-error", waypoint);
+            if (null == location) {
+                player.message("waypoint-set-error", waypoint); //$NON-NLS-1$
                 return false;
             }
             if (!player.getWorld().getName().equalsIgnoreCase(location.getWorld())) {
@@ -156,7 +156,7 @@ public class BetterCompass {
 
     private String getWaypoint(final String player) {
         final String waypoint = database.loadCompass(player);
-        if (waypoint == null) {
+        if (null == waypoint) {
             return SPAWN;
         }
         return waypoint;
@@ -176,7 +176,7 @@ public class BetterCompass {
             return SPAWN;
         }
         if (previous) {
-            if (index == 0) {
+            if (0 == index) {
                 return waypoints.get(waypoints.size() - 1);
             }
             return waypoints.get(index - 1);

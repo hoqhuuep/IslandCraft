@@ -18,7 +18,7 @@ public class SuicideCommandExecutor implements CommandExecutor {
 
     @Override
     public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (sender == null || !(sender instanceof Player) || args.length != 0) {
+        if (null == sender || !(sender instanceof Player) || 0 != args.length) {
             return false;
         }
         final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());

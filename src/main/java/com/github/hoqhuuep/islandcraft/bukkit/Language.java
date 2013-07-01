@@ -10,8 +10,8 @@ public class Language {
     }
 
     public final String get(final String id, final Object... args) {
-        String format = fileConfiguration.getString(id);
-        if (format == null) {
+        final String format = fileConfiguration.getString(id);
+        if (null == format) {
             return null;
         }
         return String.format(format, args);

@@ -6,13 +6,13 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public final class Perlin {
-    public static BufferedImage generate(final int xSize, final int zSize, final Random random) {
-        final BufferedImage noise7 = scaledNoise(xSize, zSize, 7, 7, new Random(random.nextLong()));
-        final BufferedImage noise11 = scaledNoise(xSize, zSize, 11, 11, new Random(random.nextLong()));
-        final BufferedImage noise42 = scaledNoise(xSize, zSize, 42, 42, new Random(random.nextLong()));
-        final BufferedImage perlin = new BufferedImage(xSize, zSize, BufferedImage.TYPE_INT_ARGB);
-        for (int z = 0; z < zSize; ++z) {
-            for (int x = 0; x < zSize; ++x) {
+    public static BufferedImage generate(final int size, final Random random) {
+        final BufferedImage noise7 = scaledNoise(size, 7, 7, new Random(random.nextLong()));
+        final BufferedImage noise11 = scaledNoise(size, 11, 11, new Random(random.nextLong()));
+        final BufferedImage noise42 = scaledNoise(size, 42, 42, new Random(random.nextLong()));
+        final BufferedImage perlin = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        for (int z = 0; z < size; ++z) {
+            for (int x = 0; x < size; ++x) {
                 int value = noise7.getRGB(x, z) & 0xFF;
                 value += noise11.getRGB(x, z) & 0xFF;
                 value += noise42.getRGB(x, z) & 0xFF;
@@ -23,7 +23,7 @@ public final class Perlin {
         return perlin;
     }
 
-    public static BufferedImage scaledNoise(final int xSize, final int zSize, final int xWave, final int zWave, final Random random) {
+    public static BufferedImage scaledNoise(final int size, final int xWave, final int zWave, final Random random) {
         final BufferedImage noise = new BufferedImage(xWave, zWave, BufferedImage.TYPE_INT_ARGB);
         for (int z = 0; z < zWave; ++z) {
             for (int x = 0; x < xWave; ++x) {
@@ -31,10 +31,10 @@ public final class Perlin {
                 noise.setRGB(x, z, (0xFF << 24) | value);
             }
         }
-        final BufferedImage scaledNoise = new BufferedImage(xSize, zSize, BufferedImage.TYPE_INT_ARGB);
+        final BufferedImage scaledNoise = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D graphics = scaledNoise.createGraphics();
         graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        graphics.drawImage(noise, 0, 0, xSize, zSize, null);
+        graphics.drawImage(noise, 0, 0, size, size, null);
         return scaledNoise;
     }
 

@@ -15,7 +15,7 @@ public class LocalChat {
     private final int localChatRadiusSquared;
 
     public LocalChat(final int localChatRadius) {
-        this.localChatRadiusSquared = localChatRadius * localChatRadius;
+        localChatRadiusSquared = localChatRadius * localChatRadius;
     }
 
     /**

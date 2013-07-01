@@ -68,7 +68,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
         final ICProtection protection = new WorldGuardProtection(getWorldGuard());
 
         // Generator
-        TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
+        TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class); //$NON-NLS-1$
 
         // Island Commands
         final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(new Island(getICDatabase(), protection), server);
@@ -89,8 +89,8 @@ public final class IslandCraftPlugin extends JavaPlugin {
         partyCommand.setExecutor(partyCommandExecutor);
         partyCommand.setTabCompleter(partyCommandExecutor);
 
-        // Administrative commands
-        ICSudoCommandExecutor icsudoCommandExecutor = new ICSudoCommandExecutor(server, database);
+        // Administrative commfinal ands
+        final ICSudoCommandExecutor icsudoCommandExecutor = new ICSudoCommandExecutor(server, database);
         final PluginCommand icsudoCommand = getCommand("icsudo");
         icsudoCommand.setExecutor(icsudoCommandExecutor);
         icsudoCommand.setTabCompleter(icsudoCommandExecutor);
@@ -122,10 +122,10 @@ public final class IslandCraftPlugin extends JavaPlugin {
 
     private WorldGuardPlugin getWorldGuard() {
         final PluginManager pluginManager = getServer().getPluginManager();
-        final Plugin plugin = pluginManager.getPlugin("WorldGuard");
+        final Plugin plugin = pluginManager.getPlugin("WorldGuard"); //$NON-NLS-1$
 
         // WorldGuard may not be loaded
-        if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
+        if (null == plugin || !(plugin instanceof WorldGuardPlugin)) {
             return null;
         }
 
@@ -136,28 +136,28 @@ public final class IslandCraftPlugin extends JavaPlugin {
     private FileConfiguration languageConfig;
 
     private void reloadLanguageConfig() {
-        if (languageConfigFile == null) {
-            languageConfigFile = new File(getDataFolder(), "language.yml");
+        if (null == languageConfigFile) {
+            languageConfigFile = new File(getDataFolder(), "language.yml"); //$NON-NLS-1$
         }
         // Look for defaults in the jar
         languageConfig = YamlConfiguration.loadConfiguration(languageConfigFile);
         @SuppressWarnings("resource")
-        InputStream defConfigStream = getResource("language.yml");
-        if (defConfigStream != null) {
-            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+        final InputStream defConfigStream = getResource("language.yml");
+        if (null != defConfigStream) {
+            final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             languageConfig.setDefaults(defConfig);
         }
     }
 
     private FileConfiguration getLanguageConfig() {
-        if (languageConfig == null) {
+        if (null == languageConfig) {
             reloadLanguageConfig();
         }
         return languageConfig;
     }
 
     private void saveLanguageConfig() {
-        if (languageConfig == null || languageConfigFile == null) {
+        if (null == languageConfig || null == languageConfigFile) {
             return;
         }
         try {

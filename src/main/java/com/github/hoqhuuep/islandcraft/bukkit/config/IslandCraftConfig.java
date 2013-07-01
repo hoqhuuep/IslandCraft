@@ -10,10 +10,10 @@ public class IslandCraftConfig {
     }
 
     public final int getLocalChatRadius() {
-        return config.getInt("local-chat-radius", 128);
+        return config.getInt("local-chat-radius", 128); //$NON-NLS-1$
     }
 
     public final WorldConfig getWorldConfig(final String world) {
-        return new WorldConfig(config.getConfigurationSection("worlds." + world));
+        return new WorldConfig(config.getConfigurationSection("worlds." + world)); //$NON-NLS-1$
     }
 }

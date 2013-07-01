@@ -17,8 +17,8 @@ public final class PrivateMessage {
      * @param message
      */
     public static void onPrivateMessage(final ICPlayer from, final ICPlayer to, final String message) {
-        if (to == null) {
-            from.message("m-error");
+        if (null == to) {
+            from.message("m-error"); //$NON-NLS-1$
             return;
         }
         to.message("m", from.getName(), to.getName(), message);

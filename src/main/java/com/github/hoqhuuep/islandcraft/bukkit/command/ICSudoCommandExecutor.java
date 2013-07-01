@@ -30,33 +30,33 @@ public class ICSudoCommandExecutor implements CommandExecutor, TabCompleter {
 
     @Override
     public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (sender == null || !(sender instanceof Player) || args.length < 1) {
+        if (null == sender || !(sender instanceof Player) || args.length < 1) {
             return false;
         }
         final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
         if ("regenerate".equalsIgnoreCase(args[0])) {
             final IslandMath islandMath = player.getWorld().getIslandMath();
-            if (islandMath == null) {
-                player.message("icsudo-regenerate-world-error");
+            if (null == islandMath) {
+                player.message("icsudo-regenerate-world-error"); //$NON-NLS-1$
                 return true;
             }
             final ICLocation location = islandMath.islandAt(player.getLocation());
-            if (location == null) {
-                player.message("icsudo-regenerate-oecan-error");
+            if (null == location) {
+                player.message("icsudo-regenerate-oecan-error"); //$NON-NLS-1$
                 return true;
             }
             regenerateRegion(location, database, islandMath);
             return true;
         } else if ("reserved".equalsIgnoreCase(args[0])) {
-            player.message("not-yet-implemented");
+            player.message("not-yet-implemented"); //$NON-NLS-1$
         } else if ("resource".equalsIgnoreCase(args[0])) {
-            player.message("not-yet-implemented");
+            player.message("not-yet-implemented"); //$NON-NLS-1$
         } else if ("available".equalsIgnoreCase(args[0])) {
-            player.message("not-yet-implemented");
+            player.message("not-yet-implemented"); //$NON-NLS-1$
         } else if ("purchase".equalsIgnoreCase(args[0])) {
-            player.message("not-yet-implemented");
+            player.message("not-yet-implemented"); //$NON-NLS-1$
         } else if ("rename".equalsIgnoreCase(args[0])) {
-            player.message("not-yet-implemented");
+            player.message("not-yet-implemented"); //$NON-NLS-1$
         }
         return false;
     }
@@ -67,9 +67,9 @@ public class ICSudoCommandExecutor implements CommandExecutor, TabCompleter {
     public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
         final String partialArg;
         final List<String> completions = new ArrayList<String>();
-        if (args.length == 0) {
+        if (0 == args.length) {
             partialArg = "";
-        } else if (args.length == 1) {
+        } else if (1 == args.length) {
             partialArg = args[0].toLowerCase();
         } else {
             return null;
@@ -89,7 +89,7 @@ public class ICSudoCommandExecutor implements CommandExecutor, TabCompleter {
         final int minZ = region.getMin().getZ() >> 4;
         final int maxX = region.getMax().getX() >> 4;
         final int maxZ = region.getMax().getZ() >> 4;
-        if (oldSeed != null) {
+        if (null != oldSeed) {
             database.saveSeed(iLocation, new Long(new Random(oldSeed.longValue()).nextLong()));
             final World w2 = Bukkit.getWorld(iLocation.getWorld());
             for (int x = minX; x < maxX; ++x) {

@@ -23,18 +23,18 @@ public class Island {
      */
     public final void onAbandon(final ICPlayer player) {
         final IslandMath islandMath = player.getWorld().getIslandMath();
-        if (islandMath == null) {
-            player.message("island-abandon-world-error");
+        if (null == islandMath) {
+            player.message("island-abandon-world-error"); //$NON-NLS-1$
             return;
         }
         final ICLocation location = player.getLocation();
         final ICLocation islandLocation = islandMath.islandAt(location);
         if (isOcean(islandLocation)) {
-            player.message("island-abandon-ocean-error");
+            player.message("island-abandon-ocean-error"); //$NON-NLS-1$
             return;
         }
         if (!isOwner(player, islandLocation)) {
-            player.message("island-abandon-owner-error");
+            player.message("island-abandon-owner-error"); //$NON-NLS-1$
             return;
         }
 
@@ -42,7 +42,7 @@ public class Island {
         database.saveOwnership(islandLocation, null);
         protection.removeRegion(islandMath.visibleRegion(islandLocation));
         protection.removeRegion(islandMath.protectedRegion(islandLocation));
-        player.message("island-abandon");
+        player.message("island-abandon"); //$NON-NLS-1$
     }
 
     /**
@@ -53,37 +53,37 @@ public class Island {
      */
     public final void onExamine(final ICPlayer player) {
         final IslandMath islandMath = player.getWorld().getIslandMath();
-        if (islandMath == null) {
-            player.message("island-examine-world-error");
+        if (null == islandMath) {
+            player.message("island-examine-world-error"); //$NON-NLS-1$
             return;
         }
         final ICLocation location = player.getLocation();
         final ICLocation islandLocation = islandMath.islandAt(location);
         if (isOcean(islandLocation)) {
-            player.message("island-examine-ocean-error");
+            player.message("island-examine-ocean-error"); //$NON-NLS-1$
             return;
         }
 
         final String owner = database.loadOwnership(islandLocation);
         final Long seed = database.loadSeed(islandLocation);
         final String biome;
-        if (seed == null) {
+        if (null == seed) {
             biome = "Unknown";
         } else {
             biome = islandMath.biome(seed.longValue()).getName();
         }
 
-        if (owner == null) {
+        if (null == owner) {
             // TODO Get real regeneration here
-            player.message("island-examine-available", islandLocation, biome, "<n>");
-        } else if (owner.equalsIgnoreCase("<reserved>")) {
-            player.message("island-examine-reserved", islandLocation, biome);
-        } else if (owner.equalsIgnoreCase("<resource>")) {
+            player.message("island-examine-available", islandLocation, biome, "<n>"); //$NON-NLS-2$ //$NON-NLS-1$
+        } else if (owner.equalsIgnoreCase("<reserved>")) { //$NON-NLS-1$
+            player.message("island-examine-reserved", islandLocation, biome); //$NON-NLS-1$
+        } else if (owner.equalsIgnoreCase("<resource>")) { //$NON-NLS-1$
             // TODO Get real regeneration here
-            player.message("island-examine-resource", islandLocation, biome, "<n>");
+            player.message("island-examine-resource", islandLocation, biome, "<n>"); //$NON-NLS-2$ //$NON-NLS-1$
         } else {
             // TODO Get real tax paid here
-            player.message("island-examine-private", islandLocation, biome, owner, "<n>");
+            player.message("island-examine-private", islandLocation, biome, owner, "<n>"); //$NON-NLS-2$ //$NON-NLS-1$
         }
 
         // TODO Abandoned island
@@ -97,24 +97,24 @@ public class Island {
      */
     public final void onPurchase(final ICPlayer player) {
         final IslandMath islandMath = player.getWorld().getIslandMath();
-        if (islandMath == null) {
-            player.message("island-purchase-world-error");
+        if (null == islandMath) {
+            player.message("island-purchase-world-error"); //$NON-NLS-1$
             return;
         }
         final ICLocation location = player.getLocation();
         final ICLocation islandLocation = islandMath.islandAt(location);
         if (isOcean(islandLocation)) {
-            player.message("island-purchase-ocean-error");
+            player.message("island-purchase-ocean-error"); //$NON-NLS-1$
             return;
         }
 
         final String owner = database.loadOwnership(islandLocation);
         final String name = player.getName();
 
-        if (owner != null) {
+        if (null != owner) {
             if (owner.equalsIgnoreCase(name)) {
-                player.message("island-purchase-self-error");
-            } else if (owner.equalsIgnoreCase("<reserved>")) {
+                player.message("island-purchase-self-error"); //$NON-NLS-1$
+            } else if (owner.equalsIgnoreCase("<reserved>")) { //$NON-NLS-1$
                 player.message("island-purchase-reserved-error");
             } else if (owner.equalsIgnoreCase("<resource>")) {
                 player.message("island-purchase-resource-error");
@@ -149,7 +149,7 @@ public class Island {
      */
     public final void onRename(final ICPlayer player, final String title) {
         final IslandMath islandMath = player.getWorld().getIslandMath();
-        if (islandMath == null) {
+        if (null == islandMath) {
             player.message("island-rename-world-error");
             return;
         }
@@ -170,13 +170,13 @@ public class Island {
     }
 
     private static boolean isOcean(final ICLocation location) {
-        return location == null;
+        return null == location;
     }
 
     private boolean isOwner(final ICPlayer player, final ICLocation location) {
         final String owner = database.loadOwnership(location);
         final String name = player.getName();
-        if (owner == null || !owner.equalsIgnoreCase(name)) {
+        if (null == owner || !owner.equalsIgnoreCase(name)) {
             return false;
         }
         return true;

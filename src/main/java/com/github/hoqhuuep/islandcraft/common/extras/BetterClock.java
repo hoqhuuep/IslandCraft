@@ -17,10 +17,10 @@ public final class BetterClock {
      */
     public static void onQuery(final ICPlayer player) {
         if (!player.getWorld().isNormalWorld()) {
-            player.message("clock-error");
+            player.message("clock-error"); //$NON-NLS-1$
             return;
         }
-        player.message("clock", player.getWorld().getTime());
+        player.message("clock", player.getWorld().getTime()); //$NON-NLS-1$
     }
 
     private BetterClock() {

@@ -28,7 +28,7 @@ public class BukkitPlayer implements ICPlayer {
     @Override
     public final ICLocation getBedLocation() {
         final Location location = player.getBedSpawnLocation();
-        if (location == null) {
+        if (null == location) {
             return null;
         }
         return new ICLocation(location.getWorld().getName(), location.getBlockX(), location.getBlockZ());

@@ -27,7 +27,7 @@ public class CompassListener implements Listener {
     @EventHandler
     public final void onPlayerDeath(final PlayerDeathEvent event) {
         final ICPlayer player = getPlayer(event.getEntity());
-        if (player == null) {
+        if (null == player) {
             return;
         }
         betterCompass.onDeath(player);
@@ -36,7 +36,7 @@ public class CompassListener implements Listener {
     @EventHandler
     public final void onPlayerBedEnter(final PlayerBedEnterEvent event) {
         final ICPlayer player = getPlayer(event.getPlayer());
-        if (player == null) {
+        if (null == player) {
             return;
         }
         betterCompass.onUseBed(player);
@@ -48,7 +48,7 @@ public class CompassListener implements Listener {
         if (Material.COMPASS == event.getMaterial() && (Action.RIGHT_CLICK_AIR == action || Action.RIGHT_CLICK_BLOCK == action)) {
             final Player bukkitPlayer = event.getPlayer();
             final ICPlayer player = getPlayer(bukkitPlayer);
-            if (player == null) {
+            if (null == player) {
                 return;
             }
             betterCompass.onNextWaypoint(player, bukkitPlayer.isSneaking());
@@ -58,23 +58,23 @@ public class CompassListener implements Listener {
     @EventHandler
     public final void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
         final ICPlayer player = getPlayer(event.getPlayer());
-        if (player == null) {
+        if (null == player) {
             return;
         }
         betterCompass.onRespawn(player);
     }
 
     @EventHandler
-    public final void onPlayerChangedWorld(final PlayerRespawnEvent event) {
+    public final void onPlayerRespawn(final PlayerRespawnEvent event) {
         final ICPlayer player = getPlayer(event.getPlayer());
-        if (player == null) {
+        if (null == player) {
             return;
         }
         betterCompass.onRespawn(player);
     }
 
     private ICPlayer getPlayer(final Player player) {
-        if (!player.hasPermission("islandcraft.command.waypoint")) {
+        if (!player.hasPermission("islandcraft.command.waypoint")) { //$NON-NLS-1$
             return null;
         }
         return server.findOnlinePlayer(player.getName());

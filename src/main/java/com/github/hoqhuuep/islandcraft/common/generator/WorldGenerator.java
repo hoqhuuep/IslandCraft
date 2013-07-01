@@ -35,7 +35,7 @@ public final class WorldGenerator {
         final int xx = x + (islandSize >> 1);
         final int row = IslandMath.div(zz, islandSeparation);
         final int xxx;
-        if (row % 2 == 0) {
+        if (0 == row % 2) {
             xxx = xx;
         } else {
             xxx = xx + (islandSeparation >> 1);
@@ -47,7 +47,7 @@ public final class WorldGenerator {
         final int cz = row * islandSeparation;
         final int col = IslandMath.div(xxx, islandSeparation);
         final int cx;
-        if (row % 2 == 0) {
+        if (0 == row % 2) {
             cx = col * islandSeparation;
         } else {
             cx = col * islandSeparation - (islandSeparation >> 1);
@@ -65,7 +65,7 @@ public final class WorldGenerator {
         final int xx = x + (islandSize >> 1);
         final int row = IslandMath.div(zz, islandSeparation);
         final int xxx;
-        if (row % 2 == 0) {
+        if (0 == row % 2) {
             xxx = xx;
         } else {
             xxx = xx + (islandSeparation >> 1);
@@ -78,7 +78,7 @@ public final class WorldGenerator {
         final int cz = row * islandSeparation;
         final int col = IslandMath.div(xxx, islandSeparation);
         final int cx;
-        if (row % 2 == 0) {
+        if (0 == row % 2) {
             cx = col * islandSeparation;
         } else {
             cx = col * islandSeparation - (islandSeparation >> 1);
@@ -89,7 +89,7 @@ public final class WorldGenerator {
     private long islandSeed(final int cx, final int cz) {
         final ICLocation location = new ICLocation(world, cx, cz);
         final Long oldSeed = database.loadSeed(location);
-        if (oldSeed == null) {
+        if (null == oldSeed) {
             final Long newSeed = new Long(worldSeed ^ (cx + (((long) cz) << 32)));
             database.saveSeed(location, newSeed);
             return newSeed.longValue();

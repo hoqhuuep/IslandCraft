@@ -35,13 +35,13 @@ public class IslandGenerator {
         final Long seedKey = new Long(seed);
         final int[] cachedIsland = cache.get(seedKey);
 
-        if (cachedIsland == null) {
+        if (null == cachedIsland) {
             final ICBiome islandBiomes = islandMath.biome(seed);
             final int ocean = islandBiomes.getOcean();
             final int shore = islandBiomes.getShore();
             final int flats = islandBiomes.getFlats();
             final int hills = islandBiomes.getHills();
-            final int[] newIsland = PerlinIslandGenerator.getIsland(islandSize, islandSize, new Random(seed), ocean, shore, flats, hills);
+            final int[] newIsland = PerlinIslandGenerator.getIsland(islandSize, new Random(seed), ocean, shore, flats, hills);
             cache.put(seedKey, newIsland);
             return newIsland;
         }

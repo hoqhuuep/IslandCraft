@@ -29,18 +29,18 @@ public class PartyChat {
     public final void onJoin(final ICPlayer player, final String party) {
         final String name = player.getName();
         final String oldParty = database.loadParty(name);
-        if (oldParty != null) {
-            player.message("party-leave", oldParty);
+        if (null != oldParty) {
+            player.message("party-leave", oldParty); //$NON-NLS-1$
         }
         database.saveParty(name, party);
-        player.message("party-join", party);
+        player.message("party-join", party); //$NON-NLS-1$
 
         // Notify members that player has joined
         final List<String> memberNames = database.loadPartyPlayers(party);
         for (final String memberName : memberNames) {
             final ICPlayer member = player.getServer().findOnlinePlayer(memberName);
-            if (member != null && !member.getName().equalsIgnoreCase(player.getName())) {
-                member.message("party-join-notify", name);
+            if (null != member && !member.getName().equalsIgnoreCase(player.getName())) {
+                member.message("party-join-notify", name); //$NON-NLS-1$
             }
         }
     }
@@ -53,19 +53,19 @@ public class PartyChat {
     public final void onLeave(final ICPlayer player) {
         final String name = player.getName();
         final String party = database.loadParty(name);
-        if (party == null) {
-            player.message("party-leave-error");
+        if (null == party) {
+            player.message("party-leave-error"); //$NON-NLS-1$
             return;
         }
         database.saveParty(name, null);
-        player.message("party-leave", party);
+        player.message("party-leave", party); //$NON-NLS-1$
 
         // Notify members that player has left
         final List<String> memberNames = database.loadPartyPlayers(party);
         for (final String memberName : memberNames) {
             final ICPlayer member = player.getServer().findOnlinePlayer(memberName);
-            if (member != null && !member.getName().equalsIgnoreCase(player.getName())) {
-                member.message("party-leave-notify", name);
+            if (null != member && !member.getName().equalsIgnoreCase(player.getName())) {
+                member.message("party-leave-notify", name); //$NON-NLS-1$
             }
         }
     }
@@ -77,12 +77,12 @@ public class PartyChat {
      */
     public final void onMembers(final ICPlayer player) {
         final String party = database.loadParty(player.getName());
-        if (party == null) {
-            player.message("party-members-error");
+        if (null == party) {
+            player.message("party-members-error"); //$NON-NLS-1$
             return;
         }
         final List<String> members = database.loadPartyPlayers(party);
-        player.message("party-members", StringUtils.join(members, ", "));
+        player.message("party-members", StringUtils.join(members, ", ")); //$NON-NLS-1$
     }
 
     /**
@@ -94,14 +94,14 @@ public class PartyChat {
     public final void onPartyChat(final ICPlayer player, final String message) {
         final String name = player.getName();
         final String party = database.loadParty(name);
-        if (party == null) {
-            player.message("p-error");
+        if (null == party) {
+            player.message("p-error"); //$NON-NLS-1$
             return;
         }
         final List<String> memberNames = database.loadPartyPlayers(party);
         for (final String memberName : memberNames) {
             final ICPlayer member = player.getServer().findOnlinePlayer(memberName);
-            if (member != null) {
+            if (null != member) {
                 member.message("p", name, party, message);
             }
         }

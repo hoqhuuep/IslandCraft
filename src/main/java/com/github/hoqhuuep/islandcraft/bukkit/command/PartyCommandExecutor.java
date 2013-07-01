@@ -26,7 +26,7 @@ public class PartyCommandExecutor implements CommandExecutor, TabCompleter {
 
     @Override
     public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (sender == null || !(sender instanceof Player) || args.length < 1) {
+        if (null == sender || !(sender instanceof Player) || args.length < 1) {
             return false;
         }
         final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
@@ -39,13 +39,13 @@ public class PartyCommandExecutor implements CommandExecutor, TabCompleter {
             partyChat.onJoin(player, party);
             return true;
         } else if ("leave".equalsIgnoreCase(args[0])) {
-            if (args.length != 1) {
+            if (1 != args.length) {
                 return false;
             }
             partyChat.onLeave(player);
             return true;
         } else if ("members".equalsIgnoreCase(args[0])) {
-            if (args.length != 1) {
+            if (1 != args.length) {
                 return false;
             }
             partyChat.onMembers(player);
@@ -60,9 +60,9 @@ public class PartyCommandExecutor implements CommandExecutor, TabCompleter {
     public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
         final String partialArg;
         final List<String> completions = new ArrayList<String>();
-        if (args.length == 0) {
+        if (0 == args.length) {
             partialArg = "";
-        } else if (args.length == 1) {
+        } else if (1 == args.length) {
             partialArg = args[0].toLowerCase();
         } else {
             return null;

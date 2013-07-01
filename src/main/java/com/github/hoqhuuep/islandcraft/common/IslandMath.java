@@ -31,7 +31,7 @@ public class IslandMath {
         final int xx = location.getX() + (islandSize >> 1);
         final int row = div(zz, islandSeparation);
         final int xxx;
-        if (row % 2 == 0) {
+        if (0 == row % 2) {
             xxx = xx;
         } else {
             xxx = xx + (islandSeparation >> 1);
@@ -43,7 +43,7 @@ public class IslandMath {
         final int cz = row * islandSeparation;
         final int col = div(xxx, islandSeparation);
         final int cx;
-        if (row % 2 == 0) {
+        if (0 == row % 2) {
             cx = col * islandSeparation;
         } else {
             cx = col * islandSeparation - (islandSeparation >> 1);

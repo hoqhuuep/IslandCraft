@@ -58,7 +58,7 @@ public class BukkitWorld implements ICWorld {
         final long time = world.getTime();
         final long hour = ((time + HOUR_ORIGIN) / ONE_HOUR) % HOURS_PER_DAY;
         final long minute = ((time + HOUR_ORIGIN) % ONE_HOUR) / ONE_MINUTE;
-        return String.format("%02d:%02d", new Long(hour), new Long(minute));
+        return String.format("%02d:%02d", new Long(hour), new Long(minute)); //$NON-NLS-1$
     }
 
     @Override
@@ -82,11 +82,11 @@ public class BukkitWorld implements ICWorld {
 
     @Override
     public final IslandMath getIslandMath() {
-        LocalWorld tcWorld = TerrainControl.getWorld(world.getName());
-        if (tcWorld.getSettings().biomeMode != IslandCraftBiomeGenerator.class) {
+        final LocalWorld tcWorld = TerrainControl.getWorld(world.getName());
+        if (IslandCraftBiomeGenerator.class != tcWorld.getSettings().biomeMode) {
             return null;
         }
-        ICBiome[] biomes = BiomeIndex.getBiomes(tcWorld, config);
+        final ICBiome[] biomes = BiomeIndex.getBiomes(tcWorld, config);
         return new IslandMath(config.getIslandSizeChunks(), config.getIslandGapChunks(), biomes);
     }
 }

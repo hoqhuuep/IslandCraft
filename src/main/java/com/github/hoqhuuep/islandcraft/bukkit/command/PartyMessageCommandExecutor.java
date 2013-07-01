@@ -22,7 +22,7 @@ public class PartyMessageCommandExecutor implements CommandExecutor {
     @Override
     public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         final String message = StringUtils.join(args, " ");
-        if (sender == null || !(sender instanceof Player) || message.isEmpty()) {
+        if (null == sender || !(sender instanceof Player) || message.isEmpty()) {
             return false;
         }
         final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());

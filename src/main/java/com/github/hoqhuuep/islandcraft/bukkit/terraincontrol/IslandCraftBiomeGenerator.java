@@ -20,8 +20,8 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         super(world, cache);
 
         // Hacks to get configuration from IslandCraft
-        final Plugin plugin = Bukkit.getPluginManager().getPlugin("IslandCraft");
-        if (plugin == null || !(plugin instanceof IslandCraftPlugin)) {
+        final Plugin plugin = Bukkit.getPluginManager().getPlugin("IslandCraft"); //$NON-NLS-1$
+        if (null == plugin || !(plugin instanceof IslandCraftPlugin)) {
             throw new Error("Could not find IslandCraft plugin");
         }
         final IslandCraftPlugin islandCraft = (IslandCraftPlugin) plugin;
@@ -36,7 +36,7 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
     }
 
     public final int[] calculate(final int xStart, final int zStart, final int xSize, final int zSize, final int[] result) {
-        if (xSize == 16 && zSize == 16 && (xStart & 0xF) == 0 && (zStart & 0xF) == 0) {
+        if (16 == xSize && 16 == zSize && 0 == (xStart & 0xF) && 0 == (zStart & 0xF)) {
             return generator.biomeChunk(xStart, zStart, result);
         }
         for (int x = 0; x < xSize; ++x) {
@@ -68,10 +68,10 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
 
     @Override
     public final int[] getBiomes(final int[] biomeArray, final int x, final int z, final int xSize, final int zSize) {
-        if (biomeArray == null || biomeArray.length < xSize * zSize) {
+        if (null == biomeArray || biomeArray.length < xSize * zSize) {
             return calculate(x, z, xSize, zSize, new int[xSize * zSize]);
         }
-        if (xSize == 16 && zSize == 16 && (x & 0xF) == 0 && (z & 0xF) == 0) {
+        if (16 == xSize && 16 == zSize && 0 == (x & 0xF) && 0 == (z & 0xF)) {
             synchronized (lockObject) {
                 return cache.getCachedBiomes(x, z);
             }
@@ -81,7 +81,7 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
 
     @Override
     public final int[] getBiomesUnZoomed(final int[] biomeArray, final int x, final int z, final int xSize, final int zSize) {
-        if (biomeArray == null || biomeArray.length < xSize * zSize) {
+        if (null == biomeArray || biomeArray.length < xSize * zSize) {
             return calculateUnZoomed(x, z, xSize, zSize, new int[xSize * zSize]);
         }
         return calculateUnZoomed(x, z, xSize, zSize, biomeArray);
@@ -90,7 +90,7 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
     @Override
     public final float[] getRainfall(final float[] rainfallArray, final int x, final int z, final int xSize, final int zSize) {
         final float[] result;
-        if (rainfallArray == null || rainfallArray.length < xSize * zSize) {
+        if (null == rainfallArray || rainfallArray.length < xSize * zSize) {
             result = new float[xSize * zSize];
         } else {
             result = rainfallArray;
@@ -112,7 +112,7 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
     @Override
     public final float[] getTemperatures(final float[] temperatureArray, final int x, final int z, final int xSize, final int zSize) {
         final float[] result;
-        if (temperatureArray == null || temperatureArray.length < xSize * zSize) {
+        if (null == temperatureArray || temperatureArray.length < xSize * zSize) {
             result = new float[xSize * zSize];
         } else {
             result = temperatureArray;

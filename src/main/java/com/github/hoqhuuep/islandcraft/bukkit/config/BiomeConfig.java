@@ -14,18 +14,18 @@ public class BiomeConfig {
     }
 
     public final String getNormal() {
-        return config.getString("normal");
+        return config.getString("normal"); //$NON-NLS-1$
     }
 
     public final String getDetail() {
-        return config.getString("detail");
+        return config.getString("detail"); //$NON-NLS-1$
     }
 
     public final String getBorder() {
-        return config.getString("border");
+        return config.getString("border"); //$NON-NLS-1$
     }
 
     public final int getRarity() {
-        return config.getInt("rarity");
+        return config.getInt("rarity"); //$NON-NLS-1$
     }
 }

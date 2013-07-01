@@ -203,14 +203,14 @@ public class Voronoi {
         }
         qsort(sites);
         deltay = ymax - ymin;
-        deltax = this.xmax - this.xmin;
+        deltax = xmax - xmin;
     }
 
     /* return a single in-storage site */
     private Site nextone() {
-        if (this.siteidx < this.nsites) {
-            final Site s = this.sites[this.siteidx];
-            this.siteidx += 1;
+        if (siteidx < nsites) {
+            final Site s = sites[siteidx];
+            siteidx += 1;
             return s;
         }
         return null;
@@ -234,8 +234,8 @@ public class Voronoi {
         dx = s2.coord.x - s1.coord.x;
         dy = s2.coord.y - s1.coord.y;
         // make sure that the difference in positive
-        adx = dx > 0 ? dx : -dx;
-        ady = dy > 0 ? dy : -dy;
+        adx = (dx > 0) ? dx : -dx;
+        ady = (dy > 0) ? dy : -dy;
         newedge.c = s1.coord.x * dx + s1.coord.y * dy + (dx * dx + dy * dy) * 0.5; // get
                                                                                    // the
                                                                                    // slope
@@ -253,25 +253,25 @@ public class Voronoi {
             newedge.c /= dy; // set formula of line, with y fixed to 1
         }
 
-        newedge.edgenbr = this.nedges;
+        newedge.edgenbr = nedges;
 
-        this.nedges += 1;
+        nedges += 1;
         return newedge;
     }
 
     private void makevertex(final Site v) {
-        v.sitenbr = this.nvertices;
-        this.nvertices += 1;
+        v.sitenbr = nvertices;
+        nvertices += 1;
     }
 
     private boolean pqInitialize() {
-        this.pqCount = 0;
-        this.pqMin = 0;
-        this.pqHashSize = 4 * this.sqrtNSites;
-        this.pqHash = new Halfedge[this.pqHashSize];
+        pqCount = 0;
+        pqMin = 0;
+        pqHashSize = 4 * sqrtNSites;
+        pqHash = new Halfedge[pqHashSize];
 
-        for (int i = 0; i < this.pqHashSize; i += 1) {
-            this.pqHash[i] = new Halfedge();
+        for (int i = 0; i < pqHashSize; i += 1) {
+            pqHash[i] = new Halfedge();
         }
         return true;
     }
@@ -279,7 +279,7 @@ public class Voronoi {
     private int pqBucket(final Halfedge he) {
         int bucket;
 
-        bucket = (int) ((he.ystar - this.ymin) / this.deltay * this.pqHashSize);
+        bucket = (int) ((he.ystar - ymin) / this.deltay * this.pqHashSize);
         if (bucket < 0) {
             bucket = 0;
         }
@@ -299,7 +299,7 @@ public class Voronoi {
         he.vertex = v;
         he.ystar = v.coord.y + offset;
         last = this.pqHash[pqBucket(he)];
-        while ((next = last.pqNext) != null && (he.ystar > next.ystar || (he.ystar == next.ystar && v.coord.x > next.vertex.coord.x))) {
+        while (null != (next = last.pqNext) && (he.ystar > next.ystar || (he.ystar == next.ystar && v.coord.x > next.vertex.coord.x))) {
             last = next;
         }
         he.pqNext = last.pqNext;
@@ -311,7 +311,7 @@ public class Voronoi {
     private void pqDelete(final Halfedge he) {
         Halfedge last;
 
-        if (he.vertex != null) {
+        if (null != he.vertex) {
             last = this.pqHash[pqBucket(he)];
             while (last.pqNext != he) {
                 last = last.pqNext;
@@ -324,13 +324,13 @@ public class Voronoi {
     }
 
     private boolean pqEmpty() {
-        return this.pqCount == 0;
+        return 0 == this.pqCount;
     }
 
     private Point pqMin() {
         final Point answer = new Point();
 
-        while (this.pqHash[this.pqMin].pqNext == null) {
+        while (null == this.pqHash[this.pqMin].pqNext) {
             this.pqMin += 1;
         }
         answer.x = this.pqHash[this.pqMin].pqNext.vertex.coord.x;
@@ -386,10 +386,10 @@ public class Voronoi {
     }
 
     private Site leftreg(final Halfedge he) {
-        if (he.elEdge == null) {
+        if (null == he.elEdge) {
             return this.bottomsite;
         }
-        return he.elPm == LE ? he.elEdge.reg[LE] : he.elEdge.reg[RE];
+        return (he.elPm == LE) ? he.elEdge.reg[LE] : he.elEdge.reg[RE];
     }
 
     private static void elInsert(final Halfedge lb, final Halfedge newHe) {
@@ -417,7 +417,7 @@ public class Voronoi {
             return null;
         }
         he = this.elHash[b];
-        if (he == null || !he.deleted) {
+        if (null == he || !he.deleted) {
             return he;
         }
 
@@ -446,15 +446,15 @@ public class Voronoi {
         }
 
         he = elGetHash(bucket);
-        if (he == null) {
+        if (null == he) {
             // if the HE isn't found, search backwards and forwards in the hash
             // map
             // for the first non-null entry
             for (i = 1; i < this.elHashSize; i += 1) {
-                if ((he = elGetHash(bucket - i)) != null) {
+                if (null != (he = elGetHash(bucket - i))) {
                     break;
                 }
-                if ((he = elGetHash(bucket + i)) != null) {
+                if (null != (he = elGetHash(bucket + i))) {
                     break;
                 }
             }
@@ -479,7 +479,7 @@ public class Voronoi {
         if (bucket > 0 && bucket < this.elHashSize - 1) {
             this.elHash[bucket] = he;
         }
-        return (he);
+        return he;
     }
 
     private void pushGraphEdge(final Site leftSite, final Site rightSite, final double x1, final double y1, final double x2, final double y2) {
