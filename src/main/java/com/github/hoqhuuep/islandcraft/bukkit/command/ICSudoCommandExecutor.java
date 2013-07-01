@@ -61,10 +61,10 @@ public class ICSudoCommandExecutor implements CommandExecutor, TabCompleter {
         return false;
     }
 
-    private static final String[] OPTIONS = { "regenerate", "reserved", "resource", "available", "purchase", "rename" };
+    private static final String[] OPTIONS = {"regenerate", "reserved", "resource", "available", "purchase", "rename"};
 
     @Override
-    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
+    public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
         final String partialArg;
         final List<String> completions = new ArrayList<String>();
         if (args.length == 0) {
@@ -82,7 +82,7 @@ public class ICSudoCommandExecutor implements CommandExecutor, TabCompleter {
         return completions;
     }
 
-    private static void regenerateRegion(ICLocation iLocation, ICDatabase database, IslandMath islandMath) {
+    private static void regenerateRegion(final ICLocation iLocation, final ICDatabase database, final IslandMath islandMath) {
         final Long oldSeed = database.loadSeed(iLocation);
         final ICRegion region = islandMath.visibleRegion(iLocation);
         final int minX = region.getMin().getX() >> 4;

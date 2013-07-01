@@ -73,7 +73,7 @@ public class CompassListener implements Listener {
         betterCompass.onRespawn(player);
     }
 
-    public ICPlayer getPlayer(Player player) {
+    private ICPlayer getPlayer(final Player player) {
         if (!player.hasPermission("islandcraft.command.waypoint")) {
             return null;
         }

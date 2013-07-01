@@ -9,23 +9,23 @@ public class BiomeConfig {
         this.config = config;
     }
 
-    public String getName() {
+    public final String getName() {
         return config.getName();
     }
 
-    public String getNormal() {
+    public final String getNormal() {
         return config.getString("normal");
     }
 
-    public String getDetail() {
+    public final String getDetail() {
         return config.getString("detail");
     }
 
-    public String getBorder() {
+    public final String getBorder() {
         return config.getString("border");
     }
 
-    public int getRarity() {
+    public final int getRarity() {
         return config.getInt("rarity");
     }
 }

@@ -19,7 +19,7 @@ public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
     private final ICServer server;
     private final BetterCompass betterCompass;
 
-    public WaypointCommandExecutor(BetterCompass betterCompass, ICServer server) {
+    public WaypointCommandExecutor(final BetterCompass betterCompass, final ICServer server) {
         this.betterCompass = betterCompass;
         this.server = server;
     }
@@ -64,10 +64,10 @@ public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
         return false;
     }
 
-    private static final String[] OPTIONS = { "add", "remove", "set", "list" };
+    private static final String[] OPTIONS = {"add", "remove", "set", "list"};
 
     @Override
-    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
+    public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
         final String partialArg;
         final List<String> completions = new ArrayList<String>();
         if (args.length == 0) {

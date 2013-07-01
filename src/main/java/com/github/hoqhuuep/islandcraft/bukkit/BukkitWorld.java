@@ -81,7 +81,7 @@ public class BukkitWorld implements ICWorld {
     }
 
     @Override
-    public IslandMath getIslandMath() {
+    public final IslandMath getIslandMath() {
         LocalWorld tcWorld = TerrainControl.getWorld(world.getName());
         if (tcWorld.getSettings().biomeMode != IslandCraftBiomeGenerator.class) {
             return null;

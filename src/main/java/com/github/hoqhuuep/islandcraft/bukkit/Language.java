@@ -3,13 +3,13 @@ package com.github.hoqhuuep.islandcraft.bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class Language {
-    final FileConfiguration fileConfiguration;
+    private final FileConfiguration fileConfiguration;
 
     public Language(final FileConfiguration fileConfiguration) {
         this.fileConfiguration = fileConfiguration;
     }
 
-    public String get(final String id, final Object... args) {
+    public final String get(final String id, final Object... args) {
         String format = fileConfiguration.getString(id);
         if (format == null) {
             return null;

@@ -15,23 +15,23 @@ public class ICBiome {
         this.hills = hills;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
-    public int getOcean() {
+    public final int getOcean() {
         return ocean;
     }
 
-    public int getShore() {
+    public final int getShore() {
         return shore;
     }
 
-    public int getFlats() {
+    public final int getFlats() {
         return flats;
     }
 
-    public int getHills() {
+    public final int getHills() {
         return hills;
     }
 }

@@ -9,11 +9,11 @@ public class IslandCraftConfig {
         this.config = config;
     }
 
-    public int getLocalChatRadius() {
+    public final int getLocalChatRadius() {
         return config.getInt("local-chat-radius", 128);
     }
 
-    public WorldConfig getWorldConfig(final String world) {
+    public final WorldConfig getWorldConfig(final String world) {
         return new WorldConfig(config.getConfigurationSection("worlds." + world));
     }
 }

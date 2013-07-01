@@ -134,7 +134,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public Long loadSeed(final ICLocation location) {
+    public final Long loadSeed(final ICLocation location) {
         final String id = location.getWorld() + ":" + location.getX() + ":" + location.getZ();
         final SeedBean bean = loadSeedBean(id);
         if (bean == null) {
@@ -144,7 +144,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public void saveSeed(final ICLocation location, final Long seed) {
+    public final void saveSeed(final ICLocation location, final Long seed) {
         final String id = location.getWorld() + ":" + location.getX() + ":" + location.getZ();
         SeedBean bean = loadSeedBean(id);
         if (seed == null) {
@@ -167,7 +167,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public ICLocation loadWaypoint(final String player, final String waypoint) {
+    public final ICLocation loadWaypoint(final String player, final String waypoint) {
         final String id = player + ":" + waypoint;
         final WaypointBean bean = loadWaypointBean(id);
         if (bean == null) {
@@ -177,7 +177,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public List<String> loadWaypoints(String player) {
+    public final List<String> loadWaypoints(final String player) {
         final List<WaypointBean> beans = ebean.find(WaypointBean.class).where().ieq("player", player).findList();
         final List<String> waypoints = new ArrayList<String>(beans.size());
         for (final WaypointBean bean : beans) {
@@ -187,7 +187,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     @Override
-    public void saveWaypoint(final String player, final String waypoint, final ICLocation location) {
+    public final void saveWaypoint(final String player, final String waypoint, final ICLocation location) {
         final String id = player + ":" + waypoint;
         WaypointBean bean = loadWaypointBean(id);
         if (location == null) {

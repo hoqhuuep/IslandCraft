@@ -8,12 +8,12 @@ import com.github.hoqhuuep.islandcraft.bukkit.config.WorldConfig;
 import com.github.hoqhuuep.islandcraft.common.type.ICBiome;
 import com.khorn.terraincontrol.LocalWorld;
 
-public class BiomeIndex {
-    public final static int biomeId(final LocalWorld world, final String biome) {
+public final class BiomeIndex {
+    public static int biomeId(final LocalWorld world, final String biome) {
         return world.getBiomeIdByName(biome);
     }
 
-    public final static ICBiome[] getBiomes(final LocalWorld world, final WorldConfig config) {
+    public static ICBiome[] getBiomes(final LocalWorld world, final WorldConfig config) {
         final int ocean = biomeId(world, config.getOceanBiome());
         final List<String> biomeNames = config.getBiomes();
         final List<ICBiome> biomes = new ArrayList<ICBiome>(biomeNames.size());
@@ -28,5 +28,9 @@ public class BiomeIndex {
             }
         }
         return biomes.toArray(new ICBiome[biomes.size()]);
+    }
+
+    private BiomeIndex() {
+        // Utility class
     }
 }

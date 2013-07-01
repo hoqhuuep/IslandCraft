@@ -12,7 +12,7 @@ public class Vertex {
     public boolean water = false;
     public boolean ocean = false;
 
-    public long getId() {
+    public final long getId() {
         return x & 0xFFFFFFFFL | (long) y << Integer.SIZE;
     }
 }

@@ -9,7 +9,7 @@ import com.github.hoqhuuep.islandcraft.common.generator.wip.PerlinIslandGenerato
 import com.github.hoqhuuep.islandcraft.common.type.ICBiome;
 
 public class IslandGenerator {
-    private final Map<Long, int[]> CACHE = new HashMap<Long, int[]>();
+    private final Map<Long, int[]> cache = new HashMap<Long, int[]>();
     private final int islandSize;
     private final IslandMath islandMath;
 
@@ -31,9 +31,9 @@ public class IslandGenerator {
         return result;
     }
 
-    private final int[] biomeIsland(final long seed) {
+    private int[] biomeIsland(final long seed) {
         final Long seedKey = new Long(seed);
-        final int[] cachedIsland = CACHE.get(seedKey);
+        final int[] cachedIsland = cache.get(seedKey);
 
         if (cachedIsland == null) {
             final ICBiome islandBiomes = islandMath.biome(seed);
@@ -42,7 +42,7 @@ public class IslandGenerator {
             final int flats = islandBiomes.getFlats();
             final int hills = islandBiomes.getHills();
             final int[] newIsland = PerlinIslandGenerator.getIsland(islandSize, islandSize, new Random(seed), ocean, shore, flats, hills);
-            CACHE.put(seedKey, newIsland);
+            cache.put(seedKey, newIsland);
             return newIsland;
         }
         return cachedIsland;

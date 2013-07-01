@@ -13,7 +13,7 @@ public class Polygon {
     public boolean ocean = false;
     public boolean coast = false;
 
-    public long getId() {
+    public final long getId() {
         return x & 0xFFFFFFFFL | (long) y << Integer.SIZE;
     }
 }

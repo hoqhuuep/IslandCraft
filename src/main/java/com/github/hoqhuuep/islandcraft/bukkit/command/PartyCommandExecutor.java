@@ -54,10 +54,10 @@ public class PartyCommandExecutor implements CommandExecutor, TabCompleter {
         return false;
     }
 
-    private static final String[] OPTIONS = { "join", "leave", "members" };
+    private static final String[] OPTIONS = {"join", "leave", "members"};
 
     @Override
-    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
+    public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
         final String partialArg;
         final List<String> completions = new ArrayList<String>();
         if (args.length == 0) {

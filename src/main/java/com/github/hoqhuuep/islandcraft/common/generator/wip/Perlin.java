@@ -5,7 +5,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-public class Perlin {
+public final class Perlin {
     public static BufferedImage generate(final int xSize, final int zSize, final Random random) {
         final BufferedImage noise7 = scaledNoise(xSize, zSize, 7, 7, new Random(random.nextLong()));
         final BufferedImage noise11 = scaledNoise(xSize, zSize, 11, 11, new Random(random.nextLong()));
@@ -36,5 +36,9 @@ public class Perlin {
         graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         graphics.drawImage(noise, 0, 0, xSize, zSize, null);
         return scaledNoise;
+    }
+
+    private Perlin() {
+        // Utility class
     }
 }

@@ -84,7 +84,7 @@ public class BetterCompass {
      * @param player
      * @param waypoint
      */
-    public void onWaypointSet(final ICPlayer player, final String waypoint) {
+    public final void onWaypointSet(final ICPlayer player, final String waypoint) {
         if (setWaypoint(player, waypoint)) {
             player.message("compass", waypoint);
         }
@@ -96,7 +96,7 @@ public class BetterCompass {
      * @param player
      * @param waypoint
      */
-    public void onWaypointAdd(final ICPlayer player, final String waypoint) {
+    public final void onWaypointAdd(final ICPlayer player, final String waypoint) {
         if (!player.getWorld().isNormalWorld()) {
             player.message("waypoint-add-world-error");
             return;
@@ -115,7 +115,7 @@ public class BetterCompass {
      * @param player
      * @param waypoint
      */
-    public void onWaypointRemove(final ICPlayer player, final String waypoint) {
+    public final void onWaypointRemove(final ICPlayer player, final String waypoint) {
         if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
             player.message("waypoint-remove-error");
             return;
@@ -129,7 +129,7 @@ public class BetterCompass {
      * 
      * @param player
      */
-    public void onWaypointList(final ICPlayer player) {
+    public final void onWaypointList(final ICPlayer player) {
         final String name = player.getName();
         final List<String> waypoints = getWaypoints(name);
         player.message("waypoint-list", StringUtils.join(waypoints, ", "));
@@ -162,7 +162,7 @@ public class BetterCompass {
         return waypoint;
     }
 
-    private List<String> getWaypoints(String player) {
+    private List<String> getWaypoints(final String player) {
         final List<String> waypoints = database.loadWaypoints(player);
         waypoints.add(SPAWN);
         Collections.sort(waypoints);

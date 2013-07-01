@@ -24,7 +24,7 @@ import be.humphreys.simplevoronoi.Voronoi;
 // But the code is a horrible mess that I wrote several months ago
 // Needs cleaning up, and performance improvements
 
-public class PerlinIslandGenerator {
+public final class PerlinIslandGenerator {
     static final int GRANULARITY = 8;
 
     static void randomDots(final int xSize, final int zSize, final int numDots, final Random random, final double[] x, final double[] z) {
@@ -131,7 +131,7 @@ public class PerlinIslandGenerator {
         return map;
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         final BufferedImage image = renderIsland(256, 256, new Random(), new Color(0x1C6BA0), new Color(0xFBEEC2), new Color(0x758918), new Color(0x49281F));
         try {
             ImageIO.write(image, "png", new File("test.png"));
@@ -249,13 +249,17 @@ public class PerlinIslandGenerator {
                     continue;
                 }
                 e.vs.toArray(vv);
-                final int[] x = { p.x, vv[0].x, vv[1].x };
-                final int[] y = { p.y, vv[0].y, vv[1].y };
+                final int[] x = {p.x, vv[0].x, vv[1].x};
+                final int[] y = {p.y, vv[0].y, vv[1].y};
                 graphics.fillPolygon(x, y, 3);
                 graphics.drawPolygon(x, y, 3);
             }
         }
         graphics.dispose();
         return image;
+    }
+
+    private PerlinIslandGenerator() {
+        // Utility class
     }
 }

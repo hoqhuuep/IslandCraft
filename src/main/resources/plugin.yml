@@ -179,4 +179,3 @@ permissions:
       islandcraft.command.icsudo.rename: true
   islandcraft.clock:
     default: true
-  
