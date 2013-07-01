@@ -41,6 +41,25 @@ public class BetterCompass {
     }
 
     /**
+     * To be called when a player uses a bed.
+     * 
+     * @param player
+     */
+    public final void onUseBed(final ICPlayer player) {
+        final ICLocation location = player.getLocation();
+        final String name = player.getName();
+        database.saveWaypoint(name, BED, location);
+        if (getWaypoint(name).equals(BED)) {
+            // Refresh location
+            setWaypoint(player, BED);
+        }
+    }
+
+    public final void onRespawn(final ICPlayer player) {
+        setWaypoint(player, SPAWN);
+    }
+
+    /**
      * To be called when a player sets their compass to point at the next
      * waypoint (by right-clicking with a compass).
      * 
@@ -57,31 +76,6 @@ public class BetterCompass {
         if (setWaypoint(player, newWaypoint)) {
             player.message("compass", newWaypoint);
         }
-    }
-
-    /**
-     * To be called when a player's bed location is updated.
-     * 
-     * @param player
-     */
-    public final void onSetBedLocation(final ICPlayer player) {
-        final String name = player.getName();
-        if (getWaypoint(name).equals(BED)) {
-            // Refresh location
-            setWaypoint(player, BED);
-        }
-    }
-
-    /**
-     * To be called when a player changes from one world to another.
-     * 
-     * @param player
-     */
-    public final void onChangeWorld(final ICPlayer player) {
-        // Refresh location
-        final String name = player.getName();
-        final String waypoint = getWaypoint(name);
-        setWaypoint(player, waypoint);
     }
 
     /**
@@ -143,13 +137,7 @@ public class BetterCompass {
 
     private boolean setWaypoint(final ICPlayer player, final String waypoint) {
         final String name = player.getName();
-        if (BED.equalsIgnoreCase(waypoint)) {
-            ICLocation location = player.getBedLocation();
-            if (location == null || !player.getServer().findOnlineWorld(location.getWorld()).isNormalWorld()) {
-                location = player.getWorld().getSpawnLocation();
-            }
-            player.setCompassTarget(location);
-        } else if (SPAWN.equalsIgnoreCase(waypoint)) {
+        if (SPAWN.equalsIgnoreCase(waypoint)) {
             player.setCompassTarget(player.getWorld().getSpawnLocation());
         } else {
             ICLocation location = database.loadWaypoint(name, waypoint);
@@ -157,7 +145,7 @@ public class BetterCompass {
                 player.message("waypoint-set-error", waypoint);
                 return false;
             }
-            if (!player.getServer().findOnlineWorld(location.getWorld()).isNormalWorld()) {
+            if (!player.getWorld().getName().equalsIgnoreCase(location.getWorld())) {
                 location = player.getWorld().getSpawnLocation();
             }
             player.setCompassTarget(location);
@@ -176,7 +164,6 @@ public class BetterCompass {
 
     private List<String> getWaypoints(String player) {
         final List<String> waypoints = database.loadWaypoints(player);
-        waypoints.add(BED);
         waypoints.add(SPAWN);
         Collections.sort(waypoints);
         return waypoints;

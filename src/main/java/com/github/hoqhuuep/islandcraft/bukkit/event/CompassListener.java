@@ -6,8 +6,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
@@ -36,7 +38,18 @@ public class CompassListener implements Listener {
         betterCompass.onDeath(player);
     }
 
-    // TODO Bed spawn needs to update when player uses bed
+    @EventHandler
+    public final void onPlayerBedEnter(final PlayerBedEnterEvent event) {
+        final Player bukkitPlayer = event.getPlayer();
+        if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
+            return;
+        }
+        final ICPlayer player = fromBukkitPlayer(bukkitPlayer);
+        if (player == null) {
+            return;
+        }
+        betterCompass.onUseBed(player);
+    }
 
     @EventHandler
     public final void onPlayerInteract(final PlayerInteractEvent event) {
@@ -64,7 +77,20 @@ public class CompassListener implements Listener {
         if (player == null) {
             return;
         }
-        betterCompass.onChangeWorld(player);
+        betterCompass.onRespawn(player);
+    }
+
+    @EventHandler
+    public final void onPlayerChangedWorld(final PlayerRespawnEvent event) {
+        final Player bukkitPlayer = event.getPlayer();
+        if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
+            return;
+        }
+        final ICPlayer player = fromBukkitPlayer(bukkitPlayer);
+        if (player == null) {
+            return;
+        }
+        betterCompass.onRespawn(player);
     }
 
     private final ICPlayer fromBukkitPlayer(Player bukkitPlayer) {
