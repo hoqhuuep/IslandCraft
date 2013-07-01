@@ -1,24 +1,18 @@
 package com.github.hoqhuuep.islandcraft.common.island;
 
 import com.github.hoqhuuep.islandcraft.common.IslandMath;
-import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
-import com.github.hoqhuuep.islandcraft.common.generator.BiomePicker;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 public class Island {
     private final ICDatabase database;
-    private final ICConfig config;
     private final ICProtection protection;
-    private final IslandMath islandMath;
 
-    public Island(final ICDatabase database, final ICConfig config, final ICProtection protection) {
+    public Island(final ICDatabase database, final ICProtection protection) {
         this.database = database;
-        this.config = config;
         this.protection = protection;
-        islandMath = new IslandMath(config);
     }
 
     /**
@@ -28,11 +22,12 @@ public class Island {
      * @param player
      */
     public final void onAbandon(final ICPlayer player) {
-        final ICLocation location = player.getLocation();
-        if (!isNormalWorld(location)) {
+        final IslandMath islandMath = player.getWorld().getIslandMath();
+        if (islandMath == null) {
             player.message("island-abandon-world-error");
             return;
         }
+        final ICLocation location = player.getLocation();
         final ICLocation islandLocation = islandMath.islandAt(location);
         if (isOcean(islandLocation)) {
             player.message("island-abandon-ocean-error");
@@ -57,11 +52,12 @@ public class Island {
      * @param player
      */
     public final void onExamine(final ICPlayer player) {
-        final ICLocation location = player.getLocation();
-        if (!isNormalWorld(location)) {
+        final IslandMath islandMath = player.getWorld().getIslandMath();
+        if (islandMath == null) {
             player.message("island-examine-world-error");
             return;
         }
+        final ICLocation location = player.getLocation();
         final ICLocation islandLocation = islandMath.islandAt(location);
         if (isOcean(islandLocation)) {
             player.message("island-examine-ocean-error");
@@ -74,7 +70,7 @@ public class Island {
         if (seed == null) {
             biome = "Unknown";
         } else {
-            biome = BiomePicker.pick(seed.longValue()).getName();
+            biome = islandMath.biome(seed.longValue()).getName();
         }
 
         if (owner == null) {
@@ -100,11 +96,12 @@ public class Island {
      * @param player
      */
     public final void onPurchase(final ICPlayer player) {
-        final ICLocation location = player.getLocation();
-        if (!isNormalWorld(location)) {
+        final IslandMath islandMath = player.getWorld().getIslandMath();
+        if (islandMath == null) {
             player.message("island-purchase-world-error");
             return;
         }
+        final ICLocation location = player.getLocation();
         final ICLocation islandLocation = islandMath.islandAt(location);
         if (isOcean(islandLocation)) {
             player.message("island-purchase-ocean-error");
@@ -151,11 +148,12 @@ public class Island {
      * @param title
      */
     public final void onRename(final ICPlayer player, final String title) {
-        final ICLocation location = player.getLocation();
-        if (!isNormalWorld(location)) {
+        final IslandMath islandMath = player.getWorld().getIslandMath();
+        if (islandMath == null) {
             player.message("island-rename-world-error");
             return;
         }
+        final ICLocation location = player.getLocation();
         final ICLocation islandLocation = islandMath.islandAt(location);
         if (isOcean(islandLocation)) {
             player.message("island-rename-ocean-error");
@@ -169,10 +167,6 @@ public class Island {
         // Success
         protection.renameRegion(islandMath.visibleRegion(islandLocation), title);
         player.message("island-rename");
-    }
-
-    private boolean isNormalWorld(final ICLocation location) {
-        return location.getWorld().equalsIgnoreCase(config.getWorld());
     }
 
     private static boolean isOcean(final ICLocation location) {

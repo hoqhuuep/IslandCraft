@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.bukkit.ebeanserver;
+package com.github.hoqhuuep.islandcraft.bukkit.database;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -6,10 +6,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ownership")
-public class OwnershipBean {
+@Table(name = "waypoint")
+public class WaypointBean {
     @Id
     private String id;
+
+    @Column
+    private String player;
+
+    @Column
+    private String waypoint;
 
     @Column
     private String world;
@@ -20,15 +26,16 @@ public class OwnershipBean {
     @Column
     private Integer z;
 
-    @Column
-    private String player;
-
     public String getId() {
         return id;
     }
 
-    public String getWorld() {
-        return world;
+    public String getPlayer() {
+        return player;
+    }
+
+    public String getWaypoint() {
+        return waypoint;
     }
 
     public Integer getX() {
@@ -39,16 +46,20 @@ public class OwnershipBean {
         return z;
     }
 
-    public String getPlayer() {
-        return player;
+    public String getWorld() {
+        return world;
     }
 
     public void setId(final String id) {
         this.id = id;
     }
 
-    public void setWorld(final String world) {
-        this.world = world;
+    public void setPlayer(final String player) {
+        this.player = player;
+    }
+
+    public void setWaypoint(final String waypoint) {
+        this.waypoint = waypoint;
     }
 
     public void setX(final Integer x) {
@@ -59,7 +70,7 @@ public class OwnershipBean {
         this.z = z;
     }
 
-    public void setPlayer(final String player) {
-        this.player = player;
+    public void setWorld(final String world) {
+        this.world = world;
     }
 }

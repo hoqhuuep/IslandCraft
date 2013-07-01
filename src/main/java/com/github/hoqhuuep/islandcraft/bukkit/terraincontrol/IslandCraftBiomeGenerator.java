@@ -4,17 +4,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin;
-import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
+import com.github.hoqhuuep.islandcraft.bukkit.config.WorldConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
-import com.github.hoqhuuep.islandcraft.common.api.ICWorld2;
-import com.github.hoqhuuep.islandcraft.common.generator.ICGenerator;
+import com.github.hoqhuuep.islandcraft.common.generator.WorldGenerator;
 import com.github.hoqhuuep.islandcraft.common.generator.IslandGenerator;
+import com.github.hoqhuuep.islandcraft.common.IslandMath;
 import com.khorn.terraincontrol.LocalWorld;
 import com.khorn.terraincontrol.biomegenerators.BiomeCache;
 import com.khorn.terraincontrol.biomegenerators.BiomeGenerator;
 
 public class IslandCraftBiomeGenerator extends BiomeGenerator {
-    private final ICGenerator generator;
+    private final WorldGenerator generator;
 
     public IslandCraftBiomeGenerator(final LocalWorld world, final BiomeCache cache) {
         super(world, cache);
@@ -25,11 +25,14 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
             throw new Error("Could not find IslandCraft plugin");
         }
         final IslandCraftPlugin islandCraft = (IslandCraftPlugin) plugin;
-        final ICConfig config = islandCraft.getICConfig();
+        final WorldConfig config = islandCraft.getICConfig().getWorldConfig(world.getName());
         final ICDatabase database = islandCraft.getICDatabase();
-        final ICWorld2 w2 = new TerrainControlWorld2(world);
-        final int oceanBiome = w2.biomeId(config.getIslandBiomes()[0].getOcean());
-        generator = new IslandGenerator(config.getIslandSize() << 4, config.getIslandGap() << 4, w2, oceanBiome, database);
+        final int oceanBiome = BiomeIndex.biomeId(world, config.getOceanBiome());
+        final int islandSize = config.getIslandSizeChunks() << 4;
+        final int islandGap = config.getIslandGapChunks() << 4;
+        final IslandMath islandMath = new IslandMath(config.getIslandSizeChunks(), config.getIslandGapChunks(), BiomeIndex.getBiomes(world, config));
+        final IslandGenerator islandGenerator = new IslandGenerator(islandSize, islandMath);
+        generator = new WorldGenerator(islandSize, islandGap, oceanBiome, database, world.getSeed(), world.getName(), islandGenerator);
     }
 
     public final int[] calculate(final int xStart, final int zStart, final int xSize, final int zSize, final int[] result) {

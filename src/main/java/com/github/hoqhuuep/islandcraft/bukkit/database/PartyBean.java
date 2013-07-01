@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.bukkit.ebeanserver;
+package com.github.hoqhuuep.islandcraft.bukkit.database;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -6,27 +6,27 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "compass")
-public class CompassBean {
+@Table(name = "party")
+public class PartyBean {
     @Id
     private String player;
 
     @Column
-    private String waypoint;
+    private String party;
 
     public String getPlayer() {
         return player;
     }
 
-    public String getWaypoint() {
-        return waypoint;
+    public String getParty() {
+        return party;
     }
 
     public void setPlayer(final String player) {
         this.player = player;
     }
 
-    public void setWaypoint(final String waypoint) {
-        this.waypoint = waypoint;
+    public void setParty(final String party) {
+        this.party = party;
     }
 }

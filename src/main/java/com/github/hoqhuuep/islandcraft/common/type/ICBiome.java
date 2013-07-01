@@ -2,48 +2,36 @@ package com.github.hoqhuuep.islandcraft.common.type;
 
 public class ICBiome {
     private final String name;
-    private final String ocean;
-    private final String shore;
-    private final String flats;
-    private final String hills;
+    private final int ocean;
+    private final int shore;
+    private final int flats;
+    private final int hills;
 
-    public ICBiome(final String name, final String ocean, final String shore, final String flats, final String hills) {
+    public ICBiome(final String name, final int ocean, final int shore, final int flats, final int hills) {
         this.name = name;
         this.ocean = ocean;
-        if (flats == null) {
-            this.flats = ocean;
-        } else {
-            this.flats = flats;
-        }
-        if (shore == null) {
-            this.shore = this.flats;
-        } else {
-            this.shore = shore;
-        }
-        if (hills == null) {
-            this.hills = this.flats;
-        } else {
-            this.hills = hills;
-        }
+        this.flats = flats;
+        this.shore = shore;
+        this.hills = hills;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getOcean() {
+    public int getOcean() {
         return ocean;
     }
 
-    public String getShore() {
+    public int getShore() {
         return shore;
     }
 
-    public String getFlats() {
+    public int getFlats() {
         return flats;
     }
 
-    public String getHills() {
+    public int getHills() {
         return hills;
     }
 }

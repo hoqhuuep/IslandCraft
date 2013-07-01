@@ -5,64 +5,57 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-
-import com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin;
 import com.github.hoqhuuep.islandcraft.common.IslandMath;
-import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
+import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
+import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
 
 public class ICSudoCommandExecutor implements CommandExecutor, TabCompleter {
+    private final ICServer server;
+    private final ICDatabase database;
+
+    public ICSudoCommandExecutor(final ICServer server, final ICDatabase database) {
+        this.server = server;
+        this.database = database;
+    }
 
     @Override
     public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         if (sender == null || !(sender instanceof Player) || args.length < 1) {
             return false;
         }
-        final Player bukkitPlayer = ((Player) sender);
+        final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
         if ("regenerate".equalsIgnoreCase(args[0])) {
-            final Location bLocation = bukkitPlayer.getLocation();
-            final ICLocation pLocation = new ICLocation(bLocation.getWorld().getName(), bLocation.getBlockX(), bLocation.getBlockZ());
-            // Hacks to get configuration from IslandCraft
-            final Plugin plugin = Bukkit.getPluginManager().getPlugin("IslandCraft");
-            if (plugin == null || !(plugin instanceof IslandCraftPlugin)) {
-                throw new Error("Could not find IslandCraft plugin");
-            }
-            final IslandCraftPlugin islandCraft = (IslandCraftPlugin) plugin;
-            final ICDatabase database = islandCraft.getICDatabase();
-            final ICConfig config = islandCraft.getICConfig();
-            if (!bukkitPlayer.getWorld().getName().equalsIgnoreCase(config.getWorld())) {
-                bukkitPlayer.sendMessage("[INFO] You cannot regenerate and island in this world");
+            final IslandMath islandMath = player.getWorld().getIslandMath();
+            if (islandMath == null) {
+                player.message("icsudo-regenerate-world-error");
                 return true;
             }
-            final IslandMath islandMath = new IslandMath(config);
-            final ICLocation iLocation = islandMath.islandAt(pLocation);
-            if (iLocation == null) {
-                bukkitPlayer.sendMessage("[INFO] You cannot regenerate the ocean");
+            final ICLocation location = islandMath.islandAt(player.getLocation());
+            if (location == null) {
+                player.message("icsudo-regenerate-oecan-error");
                 return true;
             }
-
-            regenerateRegion(iLocation, database, islandMath);
+            regenerateRegion(location, database, islandMath);
             return true;
         } else if ("reserved".equalsIgnoreCase(args[0])) {
-            bukkitPlayer.sendMessage("[INFO] Not yet implemented");
+            player.message("not-yet-implemented");
         } else if ("resource".equalsIgnoreCase(args[0])) {
-            bukkitPlayer.sendMessage("[INFO] Not yet implemented");
+            player.message("not-yet-implemented");
         } else if ("available".equalsIgnoreCase(args[0])) {
-            bukkitPlayer.sendMessage("[INFO] Not yet implemented");
+            player.message("not-yet-implemented");
         } else if ("purchase".equalsIgnoreCase(args[0])) {
-            bukkitPlayer.sendMessage("[INFO] Not yet implemented");
+            player.message("not-yet-implemented");
         } else if ("rename".equalsIgnoreCase(args[0])) {
-            bukkitPlayer.sendMessage("[INFO] Not yet implemented");
+            player.message("not-yet-implemented");
         }
         return false;
     }

@@ -67,3 +67,8 @@ island-examine-private: |
   §7[INFO]   Tax paid: %s days
 island-examine-world-error: §7[INFO] You cannot examine an island from this world
 island-examine-ocean-error: §7[INFO] You cannot examine the ocean
+
+icsudo-regenerate-world-error: §7[INFO] You cannot regenerate an island from this world
+icsudo-regenerate-ocean-error: §7[INFO] You cannot regenerate the ocean
+
+not-yet-implemented: §7[INFO] Not yet implemented

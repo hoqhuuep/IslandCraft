@@ -7,14 +7,22 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import com.github.hoqhuuep.islandcraft.bukkit.config.WorldConfig;
+import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.BiomeIndex;
+import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.IslandCraftBiomeGenerator;
+import com.github.hoqhuuep.islandcraft.common.IslandMath;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.api.ICWorld;
+import com.github.hoqhuuep.islandcraft.common.type.ICBiome;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
+import com.khorn.terraincontrol.LocalWorld;
+import com.khorn.terraincontrol.TerrainControl;
 
 public class BukkitWorld implements ICWorld {
     private final World world;
-    private final BukkitServer server;
+    private final WorldConfig config;
+    private final ICServer server;
 
     private static final long ONE_DAY = 24000;
     private static final long HOURS_PER_DAY = 24;
@@ -23,8 +31,9 @@ public class BukkitWorld implements ICWorld {
     private static final long ONE_MINUTE = ONE_HOUR / MINUTES_PER_HOUR;
     private static final long HOUR_ORIGIN = 6 * ONE_HOUR;
 
-    public BukkitWorld(final World world, final BukkitServer server) {
+    public BukkitWorld(final World world, final WorldConfig config, final ICServer server) {
         this.world = world;
+        this.config = config;
         this.server = server;
     }
 
@@ -69,5 +78,15 @@ public class BukkitWorld implements ICWorld {
     @Override
     public final ICServer getServer() {
         return server;
+    }
+
+    @Override
+    public IslandMath getIslandMath() {
+        LocalWorld tcWorld = TerrainControl.getWorld(world.getName());
+        if (tcWorld.getSettings().biomeMode != IslandCraftBiomeGenerator.class) {
+            return null;
+        }
+        ICBiome[] biomes = BiomeIndex.getBiomes(tcWorld, config);
+        return new IslandMath(config.getIslandSizeChunks(), config.getIslandGapChunks(), biomes);
     }
 }

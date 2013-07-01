@@ -1,104 +1,50 @@
 package com.github.hoqhuuep.islandcraft.common.generator;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
+import com.github.hoqhuuep.islandcraft.common.generator.wip.PerlinIslandGenerator;
+import com.github.hoqhuuep.islandcraft.common.type.ICBiome;
 import com.github.hoqhuuep.islandcraft.common.IslandMath;
-import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
-import com.github.hoqhuuep.islandcraft.common.api.ICWorld2;
-import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
-public final class IslandGenerator implements ICGenerator {
-    private final ICWorld2 world;
+public class IslandGenerator {
+    private final Map<Long, int[]> CACHE = new HashMap<Long, int[]>();
     private final int islandSize;
-    private final int islandSeparation;
-    private final int oceanBiome;
-    private final ICDatabase database;
+    private final IslandMath islandMath;
 
-    public IslandGenerator(final int islandSize, final int islandGap, final ICWorld2 world, final int oceanBiome, final ICDatabase database) {
+    public IslandGenerator(final int islandSize, final IslandMath islandMath) {
         this.islandSize = islandSize;
-        islandSeparation = islandSize + islandGap;
-        this.world = world;
-        this.oceanBiome = oceanBiome;
-        this.database = database;
+        this.islandMath = islandMath;
     }
 
-    @Override
-    public int biomeAt(final int x, final int z) {
-        final int xx = x + (islandSize >> 1);
-        final int zz = z + (islandSize >> 1);
-        final int row = IslandMath.div(zz, islandSeparation);
-        final int xxx;
-        if (row % 2 == 0) {
-            xxx = xx;
-        } else {
-            xxx = xx + (islandSeparation >> 1);
-        }
-        final int col = IslandMath.div(xxx, islandSeparation);
-        final int rx = IslandMath.mod(xxx, islandSeparation);
-        final int rz = IslandMath.mod(zz, islandSeparation);
-        final int cz = row * islandSeparation;
-        final int cx;
-        if (row % 2 == 0) {
-            cx = col * islandSeparation;
-        } else {
-            cx = col * islandSeparation - (islandSeparation >> 1);
-        }
-        if (rx >= islandSize || rz >= islandSize) {
-            return oceanBiome;
-        }
-        return islandBiome(islandSeed(cx, cz), rx, rz);
+    public final int biomeAt(final long seed, final int rx, final int rz) {
+        final int[] island = biomeIsland(seed);
+        return island[rx + rz * islandSize];
     }
 
-    @Override
-    public int[] biomeChunk(final int x, final int z, final int[] result) {
-        final int xx = x + (islandSize >> 1);
-        final int zz = z + (islandSize >> 1);
-        final int row = IslandMath.div(zz, islandSeparation);
-        final int xxx;
-        if (row % 2 == 0) {
-            xxx = xx;
-        } else {
-            xxx = xx + (islandSeparation >> 1);
+    public final int[] biomeChunk(final long seed, final int rx, final int rz, final int[] result) {
+        final int[] island = biomeIsland(seed);
+        for (int z = 0; z < 16; ++z) {
+            System.arraycopy(island, islandSize * (z + rz) + rx, result, z << 4, 16);
         }
-        final int col = IslandMath.div(xxx, islandSeparation);
-        final int rx = IslandMath.mod(xxx, islandSeparation);
-        final int rz = IslandMath.mod(zz, islandSeparation);
-        final int cz = row * islandSeparation;
-        final int cx;
-        if (row % 2 == 0) {
-            cx = col * islandSeparation;
-        } else {
-            cx = col * islandSeparation - (islandSeparation >> 1);
-        }
-        if (rx >= islandSize || rz >= islandSize) {
-            Arrays.fill(result, oceanBiome);
-            return result;
-        }
-        return islandChunk(islandSeed(cx, cz), rx, rz, result);
+        return result;
     }
 
-    /**
-     * @param rx
-     *            x position relative to island in range [0, island-size)
-     * @param rz
-     *            z position relative to island in range [0, island-size)
-     */
-    private int islandBiome(final long islandSeed, final int rx, final int rz) {
-        return IslandCache.getBiome(rx, rz, islandSize, islandSize, islandSeed, world);
-    }
+    private final int[] biomeIsland(final long seed) {
+        final Long seedKey = new Long(seed);
+        final int[] cachedIsland = CACHE.get(seedKey);
 
-    private int[] islandChunk(final long islandSeed, final int rx, final int rz, final int[] result) {
-        return IslandCache.getChunk(rx, rz, islandSize, islandSize, islandSeed, world, result);
-    }
-
-    private long islandSeed(final int cx, final int cz) {
-        final ICLocation location = new ICLocation(world.getName(), cx, cz);
-        final Long oldSeed = database.loadSeed(location);
-        if (oldSeed == null) {
-            final Long newSeed = new Long(world.getSeed() ^ (cx + (((long) cz) << 32)));
-            database.saveSeed(location, newSeed);
-            return newSeed.longValue();
+        if (cachedIsland == null) {
+            final ICBiome islandBiomes = islandMath.biome(seed);
+            final int ocean = islandBiomes.getOcean();
+            final int shore = islandBiomes.getShore();
+            final int flats = islandBiomes.getFlats();
+            final int hills = islandBiomes.getHills();
+            final int[] newIsland = PerlinIslandGenerator.getIsland(islandSize, islandSize, new Random(seed), ocean, shore, flats, hills);
+            CACHE.put(seedKey, newIsland);
+            return newIsland;
         }
-        return oldSeed.longValue();
+        return cachedIsland;
     }
 }

@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.bukkit.ebeanserver;
+package com.github.hoqhuuep.islandcraft.bukkit.database;
 
 import java.util.ArrayList;
 import java.util.List;

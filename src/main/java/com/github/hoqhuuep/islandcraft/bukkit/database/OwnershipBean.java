@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.bukkit.ebeanserver;
+package com.github.hoqhuuep.islandcraft.bukkit.database;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -6,8 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "seed")
-public class SeedBean {
+@Table(name = "ownership")
+public class OwnershipBean {
     @Id
     private String id;
 
@@ -21,7 +21,7 @@ public class SeedBean {
     private Integer z;
 
     @Column
-    private Long seed;
+    private String player;
 
     public String getId() {
         return id;
@@ -39,8 +39,8 @@ public class SeedBean {
         return z;
     }
 
-    public Long getSeed() {
-        return seed;
+    public String getPlayer() {
+        return player;
     }
 
     public void setId(final String id) {
@@ -59,7 +59,7 @@ public class SeedBean {
         this.z = z;
     }
 
-    public void setSeed(final Long seed) {
-        this.seed = seed;
+    public void setPlayer(final String player) {
+        this.player = player;
     }
 }

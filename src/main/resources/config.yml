@@ -1,46 +1,52 @@
-world: world
-island-size: 16
-island-gap: 4
 local-chat-radius: 128
-biome:
-  ocean: Ocean
-  island:
-    Forest Island:
-      flats: Forest
-      hills: ForestHills
-      shore: Beach
-      rarity: 100
-    Desert Island:
-      flats: Desert
-      hills: DesertHills
-      shore: Beach
-      rarity: 100
-    Taiga Island:
-      flats: Taiga
-      hills: TaigaHills
-      shore: Beach
-      rarity: 100
-    Jungle Island:
-      flats: Jungle
-      hills: JungleHills
-      shore: Beach
-      rarity: 100
-    Extreme Hills Island:
-      flats: Extreme Hills
-      shore: Extreme Hills Edge
-      rarity: 100
-    Swamp Island:
-      flats: Swampland
-      rarity: 100
-    Plains Island:
-      flats: Plains
-      shore: Beach
-      rarity: 100
-    Ice Plains Island:
-      flats: Ice Plains
-      hills: Ice Mountains
-      rarity: 100
-    Mushroom Island:
-      flats: MushroomIsland
-      shore: MushroomIslandShore
-      rarity: 1
+worlds:
+  world:
+    island-size-chunks: 16
+    island-gap-chunks: 4
+    ocean-biome: Ocean
+    biomes:
+      Forest Island:
+        normal: Forest
+        detail: ForestHills
+        border: Beach
+        rarity: 100
+      Desert Island:
+        normal: Desert
+        detail: DesertHills
+        border: Beach
+        rarity: 100
+      Taiga Island:
+        normal: Taiga
+        detail: TaigaHills
+        border: Beach
+        rarity: 100
+      Jungle Island:
+        normal: Jungle
+        detail: JungleHills
+        border: Beach
+        rarity: 100
+      Extreme Hills Island:
+        normal: Extreme Hills
+        detail: Extreme Hills
+        border: Extreme Hills Edge
+        rarity: 100
+      Swamp Island:
+        normal: Swampland
+        detail: Swampland
+        border: Swampland
+        rarity: 100
+      Plains Island:
+        normal: Plains
+        detail: Plains
+        border: Beach
+        rarity: 100
+      Ice Plains Island:
+        normal: Ice Plains
+        detail: Ice Mountains
+        border: Ice Plains
+        rarity: 100
+      Mushroom Island:
+        normal: MushroomIsland
+        detail: MushroomIsland
+        border: MushroomIslandShore
+        rarity: 1

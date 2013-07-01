@@ -2,7 +2,6 @@ package com.github.hoqhuuep.islandcraft.common.chat;
 
 import java.util.List;
 
-import com.github.hoqhuuep.islandcraft.common.api.ICConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
@@ -13,26 +12,25 @@ import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
  *      wiki</a>
  */
 public class LocalChat {
-    private final ICConfig config;
+    private final int localChatRadiusSquared;
 
-    public LocalChat(final ICConfig config) {
-        this.config = config;
+    public LocalChat(final int localChatRadius) {
+        this.localChatRadiusSquared = localChatRadius * localChatRadius;
     }
 
     /**
      * To be called when a player tries to send a local chat message.
      * 
-     * @param player
+     * @param from
      * @param message
      */
-    public final void onLocalChat(final ICPlayer player, final String message) {
-        final ICLocation location = player.getLocation();
-        final List<ICPlayer> players = player.getWorld().getPlayers();
-        for (final ICPlayer p : players) {
-            final ICLocation pLocation = p.getLocation();
-            final int maxDistance = config.getLocalChatRadius();
-            if (pLocation.distanceSquared(location) < maxDistance * maxDistance) {
-                p.message("l", player.getName(), message);
+    public final void onLocalChat(final ICPlayer from, final String message) {
+        final ICLocation location = from.getLocation();
+        final List<ICPlayer> players = from.getWorld().getPlayers();
+        for (final ICPlayer to : players) {
+            final ICLocation pLocation = to.getLocation();
+            if (pLocation.distanceSquared(location) <= localChatRadiusSquared) {
+                to.message("l", from.getName(), message);
             }
         }
     }
