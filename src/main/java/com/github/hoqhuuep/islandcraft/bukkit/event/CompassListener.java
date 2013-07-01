@@ -26,11 +26,7 @@ public class CompassListener implements Listener {
 
     @EventHandler
     public final void onPlayerDeath(final PlayerDeathEvent event) {
-        final Player bukkitPlayer = event.getEntity();
-        if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
-            return;
-        }
-        final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
+        final ICPlayer player = getPlayer(event.getEntity());
         if (player == null) {
             return;
         }
@@ -39,11 +35,7 @@ public class CompassListener implements Listener {
 
     @EventHandler
     public final void onPlayerBedEnter(final PlayerBedEnterEvent event) {
-        final Player bukkitPlayer = event.getPlayer();
-        if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
-            return;
-        }
-        final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
+        final ICPlayer player = getPlayer(event.getPlayer());
         if (player == null) {
             return;
         }
@@ -55,10 +47,7 @@ public class CompassListener implements Listener {
         final Action action = event.getAction();
         if (Material.COMPASS == event.getMaterial() && (Action.RIGHT_CLICK_AIR == action || Action.RIGHT_CLICK_BLOCK == action)) {
             final Player bukkitPlayer = event.getPlayer();
-            if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
-                return;
-            }
-            final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
+            final ICPlayer player = getPlayer(bukkitPlayer);
             if (player == null) {
                 return;
             }
@@ -68,11 +57,7 @@ public class CompassListener implements Listener {
 
     @EventHandler
     public final void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
-        final Player bukkitPlayer = event.getPlayer();
-        if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
-            return;
-        }
-        final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
+        final ICPlayer player = getPlayer(event.getPlayer());
         if (player == null) {
             return;
         }
@@ -81,14 +66,17 @@ public class CompassListener implements Listener {
 
     @EventHandler
     public final void onPlayerChangedWorld(final PlayerRespawnEvent event) {
-        final Player bukkitPlayer = event.getPlayer();
-        if (!bukkitPlayer.hasPermission("islandcraft.command.waypoint")) {
-            return;
-        }
-        final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());
+        final ICPlayer player = getPlayer(event.getPlayer());
         if (player == null) {
             return;
         }
         betterCompass.onRespawn(player);
+    }
+
+    public ICPlayer getPlayer(Player player) {
+        if (!player.hasPermission("islandcraft.command.waypoint")) {
+            return null;
+        }
+        return server.findOnlinePlayer(player.getName());
     }
 }
