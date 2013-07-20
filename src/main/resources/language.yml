@@ -64,7 +64,7 @@ island-examine-private: |
   §7[INFO]   Location: %s
   §7[INFO]   Biome: %s
   §7[INFO]   Owner: %s
-  §7[INFO]   Tax paid: %s days
+  §7[INFO]   Tax paid: %s minecraft days
 island-examine-world-error: §7[INFO] You cannot examine an island from this world
 island-examine-ocean-error: §7[INFO] You cannot examine the ocean
 

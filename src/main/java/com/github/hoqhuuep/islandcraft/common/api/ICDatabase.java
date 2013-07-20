@@ -136,4 +136,10 @@ public interface ICDatabase {
      *            the location of the new waypoint
      */
     void saveWaypoint(String player, String waypoint, ICLocation location);
+
+    Integer loadTax(ICLocation location);
+
+    void saveTax(ICLocation location, Integer tax);
+
+    List<ICLocation> loadTaxByWorld(String world);
 }

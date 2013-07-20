@@ -29,6 +29,8 @@ import com.github.hoqhuuep.islandcraft.bukkit.database.CompassBean;
 import com.github.hoqhuuep.islandcraft.bukkit.database.EbeanServerDatabase;
 import com.github.hoqhuuep.islandcraft.bukkit.event.ClockListener;
 import com.github.hoqhuuep.islandcraft.bukkit.event.CompassListener;
+import com.github.hoqhuuep.islandcraft.bukkit.event.DawnListener;
+import com.github.hoqhuuep.islandcraft.bukkit.event.WorldLoadListener;
 import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.IslandCraftBiomeGenerator;
 import com.github.hoqhuuep.islandcraft.bukkit.worldguard.WorldGuardProtection;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
@@ -71,10 +73,15 @@ public final class IslandCraftPlugin extends JavaPlugin {
         TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class); //$NON-NLS-1$
 
         // Island Commands
-        final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(new Island(getICDatabase(), protection), server);
+        final Island island = new Island(getICDatabase(), protection);
+        final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(island, server);
         final PluginCommand islandCommand = getCommand("island");
         islandCommand.setExecutor(islandCommandExecutor);
         islandCommand.setTabCompleter(islandCommandExecutor);
+
+        // Dawn (for tax system)
+        register(new WorldLoadListener(this));
+        register(new DawnListener(island));
 
         // Chat Commands
         final PrivateMessageCommandExecutor privateMessageCommandExecutor = new PrivateMessageCommandExecutor(server);
@@ -89,7 +96,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
         partyCommand.setExecutor(partyCommandExecutor);
         partyCommand.setTabCompleter(partyCommandExecutor);
 
-        // Administrative commfinal ands
+        // Administrative commands
         final ICSudoCommandExecutor icsudoCommandExecutor = new ICSudoCommandExecutor(server, database);
         final PluginCommand icsudoCommand = getCommand("icsudo");
         icsudoCommand.setExecutor(icsudoCommandExecutor);

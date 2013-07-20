@@ -209,4 +209,47 @@ public class EbeanServerDatabase implements ICDatabase {
     private WaypointBean loadWaypointBean(final String id) {
         return ebean.find(WaypointBean.class).where().ieq("id", id).findUnique();
     }
+
+    @Override
+    public Integer loadTax(ICLocation location) {
+        final String id = location.getWorld() + ":" + location.getX() + ":" + location.getZ();
+        final TaxBean bean = loadTaxBean(id);
+        if (null == bean) {
+            return null;
+        }
+        return bean.getTax();
+    }
+
+    @Override
+    public void saveTax(ICLocation location, Integer tax) {
+        final String id = location.getWorld() + ":" + location.getX() + ":" + location.getZ();
+        TaxBean bean = loadTaxBean(id);
+        if (null == tax) {
+            ebean.delete(bean);
+            return;
+        }
+        if (null == bean) {
+            bean = new TaxBean();
+            bean.setId(id);
+            bean.setWorld(location.getWorld());
+            bean.setX(new Integer(location.getX()));
+            bean.setZ(new Integer(location.getZ()));
+        }
+        bean.setTax(tax);
+        ebean.save(bean);
+    }
+
+    private TaxBean loadTaxBean(final String id) {
+        return ebean.find(TaxBean.class).where().ieq("id", id).findUnique();
+    }
+
+    @Override
+    public List<ICLocation> loadTaxByWorld(String world) {
+        final List<TaxBean> beans = ebean.find(TaxBean.class).where().ieq("world", world).findList(); //$NON-NLS-1$
+        final List<ICLocation> islands = new ArrayList<ICLocation>(beans.size());
+        for (final TaxBean bean : beans) {
+            islands.add(new ICLocation(world, bean.getX().intValue(), bean.getZ().intValue()));
+        }
+        return islands;
+    }
 }

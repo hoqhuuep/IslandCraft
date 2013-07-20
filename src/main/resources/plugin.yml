@@ -61,6 +61,10 @@ commands:
     description: Abandon the island you are standing on
     permission: islandcraft.command.island.abandon
     usage: /<command>
+  island tax:
+    description: Pay 500 days tax for the island you are standing on
+    permission: islandcraft.command.island.tax
+    usage: /<command>
   island examine:
     description: List information about the island you are standing on
     permission: islandcraft.command.island.examine
@@ -159,6 +163,7 @@ permissions:
     children:
       islandcraft.command.island.purchase: true
       islandcraft.command.island.abandon: true
+      islandcraft.command.island.tax: true
       islandcraft.command.island.examine: true
       islandcraft.command.island.rename: true
   islandcraft.command.waypoint:

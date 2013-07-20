@@ -63,11 +63,25 @@ public class IslandMath {
         return biomes[new Random(seed).nextInt(biomes.length)];
     }
 
-    public static int div(final int x, final int divisor) {
-        return (int) Math.floor((double) x / divisor);
+    public static final int div(final int n, final int d) {
+        if (d >= 0) {
+            return n >= 0 ? n / d : ~(~n / d);
+        }
+        return n <= 0 ? n / d : (n - 1) / d - 1;
     }
 
-    public static int mod(final int x, final int divisor) {
-        return (x % divisor + divisor) % divisor;
+    public static final int mod(final int n, final int d) {
+        if (d >= 0) {
+            return n >= 0 ? n % d : d + ~(~n % d);
+        }
+        return n <= 0 ? n % d : d + 1 + (n - 1) % d;
+    }
+
+    public static final long ldiv(final long n, final long d) {
+        final long q = n / d;
+        if (q * d == n) {
+            return q;
+        }
+        return q - ((n ^ d) >>> (Long.SIZE - 1));
     }
 }

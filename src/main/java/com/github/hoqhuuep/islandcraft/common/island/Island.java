@@ -1,5 +1,7 @@
 package com.github.hoqhuuep.islandcraft.common.island;
 
+import java.util.List;
+
 import com.github.hoqhuuep.islandcraft.common.IslandMath;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
@@ -7,6 +9,9 @@ import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 public class Island {
+    private static final int TAX_MAX = 2016;
+    private static final int TAX_INC = 504;
+    private static final Integer TAX_INITIAL = new Integer(504);
     private final ICDatabase database;
     private final ICProtection protection;
 
@@ -40,6 +45,7 @@ public class Island {
 
         // Success
         database.saveOwnership(islandLocation, null);
+        database.saveTax(islandLocation, null);
         protection.removeRegion(islandMath.visibleRegion(islandLocation));
         protection.removeRegion(islandMath.protectedRegion(islandLocation));
         player.message("island-abandon"); //$NON-NLS-1$
@@ -82,8 +88,8 @@ public class Island {
             // TODO Get real regeneration here
             player.message("island-examine-resource", islandLocation, biome, "<n>"); //$NON-NLS-2$ //$NON-NLS-1$
         } else {
-            // TODO Get real tax paid here
-            player.message("island-examine-private", islandLocation, biome, owner, "<n>"); //$NON-NLS-2$ //$NON-NLS-1$
+            final Integer tax = database.loadTax(islandLocation);
+            player.message("island-examine-private", islandLocation, biome, owner, tax); //$NON-NLS-2$ //$NON-NLS-1$
         }
 
         // TODO Abandoned island
@@ -124,7 +130,7 @@ public class Island {
             return;
         }
 
-        final int cost = calculateCost(name);
+        final int cost = calculatePurchaseCost(name);
 
         if (!player.takeDiamonds(cost)) {
             // Insufficient funds
@@ -134,10 +140,57 @@ public class Island {
 
         // Success
         database.saveOwnership(islandLocation, name);
+        database.saveTax(islandLocation, TAX_INITIAL);
         final String title = name + "'s Island @ " + islandLocation;
         protection.addVisibleRegion(title, islandMath.visibleRegion(islandLocation));
         protection.addProtectedRegion(islandMath.protectedRegion(islandLocation), name);
         player.message("island-purchase"); //$NON-NLS-1$
+    }
+
+    public void onTax(final ICPlayer player) {
+        final IslandMath islandMath = player.getWorld().getIslandMath();
+        if (null == islandMath) {
+            player.message("island-tax-world-error"); //$NON-NLS-1$
+            return;
+        }
+        final ICLocation location = player.getLocation();
+        final ICLocation islandLocation = islandMath.islandAt(location);
+        if (isOcean(islandLocation)) {
+            player.message("island-tax-ocean-error"); //$NON-NLS-1$
+            return;
+        }
+        if (!isOwner(player, islandLocation)) {
+            player.message("island-tax-owner-error"); //$NON-NLS-1$
+            return;
+        }
+
+        final int newTax = database.loadTax(islandLocation).intValue() + TAX_INC;
+        if (newTax > TAX_MAX) {
+            player.message("island-tax-max-error");
+            return;
+        }
+
+        final String name = player.getName();
+        final int cost = calculateTaxCost(name);
+
+        if (!player.takeDiamonds(cost)) {
+            // Insufficient funds
+            player.message("island-tax-funds-error", Integer.toString(cost)); //$NON-NLS-1$
+            return;
+        }
+
+        // Success
+        database.saveTax(islandLocation, new Integer(newTax));
+        player.message("island-tax");
+    }
+
+    public void onDawn(final String world) {
+        final List<ICLocation> islands = database.loadTaxByWorld(world);
+        for (ICLocation island : islands) {
+            final Integer tax = database.loadTax(island);
+            database.saveTax(island, new Integer(tax.intValue() - 1));
+            // TODO handle tax = 0
+        }
     }
 
     /**
@@ -182,7 +235,11 @@ public class Island {
         return true;
     }
 
-    private int calculateCost(final String player) {
+    private int calculatePurchaseCost(final String player) {
         return database.loadOwnershipLocations(player).size() + 1;
+    }
+
+    private int calculateTaxCost(final String player) {
+        return database.loadOwnershipLocations(player).size();
     }
 }
