@@ -30,7 +30,7 @@ import com.github.hoqhuuep.islandcraft.bukkit.database.EbeanServerDatabase;
 import com.github.hoqhuuep.islandcraft.bukkit.event.ClockListener;
 import com.github.hoqhuuep.islandcraft.bukkit.event.CompassListener;
 import com.github.hoqhuuep.islandcraft.bukkit.event.DawnListener;
-import com.github.hoqhuuep.islandcraft.bukkit.event.WorldLoadListener;
+import com.github.hoqhuuep.islandcraft.bukkit.event.WorldInitListener;
 import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.IslandCraftBiomeGenerator;
 import com.github.hoqhuuep.islandcraft.bukkit.worldguard.WorldGuardProtection;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
@@ -80,7 +80,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
         islandCommand.setTabCompleter(islandCommandExecutor);
 
         // Dawn (for tax system)
-        register(new WorldLoadListener(this));
+        register(new WorldInitListener(this));
         register(new DawnListener(island));
 
         // Chat Commands

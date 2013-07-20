@@ -21,6 +21,7 @@ public class EbeanServerDatabase implements ICDatabase {
         list.add(PartyBean.class);
         list.add(SeedBean.class);
         list.add(WaypointBean.class);
+        list.add(TaxBean.class);
         return list;
     }
 

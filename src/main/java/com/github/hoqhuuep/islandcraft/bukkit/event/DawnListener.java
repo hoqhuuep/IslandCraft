@@ -1,5 +1,6 @@
 package com.github.hoqhuuep.islandcraft.bukkit.event;
 
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.github.hoqhuuep.islandcraft.common.island.Island;
@@ -11,6 +12,7 @@ public class DawnListener implements Listener {
         this.island = island;
     }
 
+    @EventHandler
     public final void onDawn(final DawnEvent event) {
         island.onDawn(event.getWorld().getName());
     }

@@ -40,6 +40,13 @@ island-purchase-reserved-error: §7[INFO] You cannot purchase a reserved island
 island-purchase-resource-error: §7[INFO] You cannot purchase a resource island
 island-purchase-funds-error: §7[INFO] You need %s diamonds in your inventory to purchase this island
 
+island-tax: §7[INFO] Tax successfully paid
+island-tax-world-error: §7[INFO] You cannot pay tax for an island from this world
+island-tax-ocean-error: §7[INFO] You cannot pay tax for the ocean
+island-tax-owner-error: §7[INFO] You cannot pay tax for an island you do not own
+island-tax-max-error: §7[INFO] You cannot pay any more tax for this island
+island-tax-funds-error: §7[INFO] You need %s diamonds in your inventory to pay tax for this island
+
 island-rename: §7[INFO] Island successfully renamed
 island-rename-world-error: §7[INFO] You cannot rename an island from this world
 island-rename-ocean-error: §7[INFO] You cannot rename the ocean
