@@ -426,7 +426,6 @@ public class Voronoi {
         return null;
     }
 
-    @SuppressWarnings("null")
     private Halfedge elLeftBnd(final Point p) {
         int i, bucket;
         Halfedge he;
@@ -734,7 +733,6 @@ public class Voronoi {
      * deltay (can all be estimates). Performance suffers if they are wrong;
      * better to make nsites, deltax, and deltay too big than too small. (?)
      */
-    @SuppressWarnings("null")
     private boolean voronoiBd() {
         Site newsite, bot, top, temp, p;
         Site v;

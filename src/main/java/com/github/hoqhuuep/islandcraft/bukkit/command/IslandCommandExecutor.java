@@ -62,6 +62,12 @@ public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
             }
             island.onRename(player, name);
             return true;
+        } else if ("warp".equalsIgnoreCase(args[0])) {
+            if (1 != args.length) {
+                return false;
+            }
+            island.onWarp(player);
+            return true;
         }
         return false;
     }

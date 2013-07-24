@@ -100,6 +100,7 @@ public class WorldGuardProtection implements ICProtection {
     }
 
     private static String regionId(final ICRegion region) {
+        // TODO use player name in region id. For example "Notch:1", "Notch:2", etc.
         final ICLocation min = region.getMin();
         final ICLocation max = region.getMax();
         return min.getX() + ":" + min.getZ() + ":" + max.getX() + ":" + max.getZ();

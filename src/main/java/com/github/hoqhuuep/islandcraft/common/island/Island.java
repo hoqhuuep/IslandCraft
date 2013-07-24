@@ -130,6 +130,8 @@ public class Island {
             return;
         }
 
+        // TODO Check max-islands-per-player from config
+
         final int cost = calculatePurchaseCost(name);
 
         if (!player.takeDiamonds(cost)) {
@@ -222,6 +224,10 @@ public class Island {
         player.message("island-rename"); //$NON-NLS-1$
     }
 
+    public void onWarp(final ICPlayer player) {
+        // TODO Warp player to random available island
+    }
+
     private static boolean isOcean(final ICLocation location) {
         return null == location;
     }
@@ -236,10 +242,12 @@ public class Island {
     }
 
     private int calculatePurchaseCost(final String player) {
+        // TODO Get purchase cost from config
         return database.loadOwnershipLocations(player).size() + 1;
     }
 
     private int calculateTaxCost(final String player) {
+        // TODO Get tax cost from config
         return database.loadOwnershipLocations(player).size();
     }
 }

@@ -148,7 +148,6 @@ public final class IslandCraftPlugin extends JavaPlugin {
         }
         // Look for defaults in the jar
         languageConfig = YamlConfiguration.loadConfiguration(languageConfigFile);
-        @SuppressWarnings("resource")
         final InputStream defConfigStream = getResource("language.yml"); //$NON-NLS-1$
         if (null != defConfigStream) {
             final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);

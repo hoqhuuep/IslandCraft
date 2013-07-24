@@ -36,6 +36,9 @@ public class IslandGenerator {
         final int[] cachedIsland = cache.get(seedKey);
 
         if (null == cachedIsland) {
+            // TODO Reserve spawn island
+            // TODO Make islands adjacent to spawn resource islands
+            // TODO Random chance of resource island 
             final ICBiome islandBiomes = islandMath.biome(seed);
             final int ocean = islandBiomes.getOcean();
             final int shore = islandBiomes.getShore();
