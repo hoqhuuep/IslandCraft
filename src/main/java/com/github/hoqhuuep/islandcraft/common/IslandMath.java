@@ -52,11 +52,11 @@ public class IslandMath {
     }
 
     public final ICRegion visibleRegion(final ICLocation island) {
-        return new ICRegion(island.add(-visibleRadius, -visibleRadius), island.add(visibleRadius, visibleRadius));
+        return new ICRegion(island.moveBy(-visibleRadius, -visibleRadius), island.moveBy(visibleRadius, visibleRadius));
     }
 
     public final ICRegion protectedRegion(final ICLocation island) {
-        return new ICRegion(island.add(-protectionRadius, -protectionRadius), island.add(protectionRadius, protectionRadius));
+        return new ICRegion(island.moveBy(-protectionRadius, -protectionRadius), island.moveBy(protectionRadius, protectionRadius));
     }
 
     public final ICBiome biome(final long seed) {

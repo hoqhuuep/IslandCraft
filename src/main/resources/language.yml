@@ -39,6 +39,7 @@ island-purchase-other-error: §7[INFO] You cannot purchase an island owned by ano
 island-purchase-reserved-error: §7[INFO] You cannot purchase a reserved island
 island-purchase-resource-error: §7[INFO] You cannot purchase a resource island
 island-purchase-funds-error: §7[INFO] You need %s diamonds in your inventory to purchase this island
+island-purchase-max-error: §7[INFO] You cannot purchase any more islands
 
 island-tax: §7[INFO] Tax successfully paid
 island-tax-world-error: §7[INFO] You cannot pay tax for an island from this world

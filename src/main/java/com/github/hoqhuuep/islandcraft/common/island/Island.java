@@ -14,10 +14,12 @@ public class Island {
     private static final Integer TAX_INITIAL = new Integer(504);
     private final ICDatabase database;
     private final ICProtection protection;
+    private final int maxIslands;
 
-    public Island(final ICDatabase database, final ICProtection protection) {
+    public Island(final ICDatabase database, final ICProtection protection, final int maxIslands) {
         this.database = database;
         this.protection = protection;
+        this.maxIslands = maxIslands;
     }
 
     /**
@@ -130,7 +132,10 @@ public class Island {
             return;
         }
 
-        // TODO Check max-islands-per-player from config
+        if (database.loadOwnershipLocations(name).size() >= maxIslands) {
+            player.message("island-purchase-max-error");
+            return;
+        }
 
         final int cost = calculatePurchaseCost(name);
 

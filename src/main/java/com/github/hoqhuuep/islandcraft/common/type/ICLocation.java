@@ -16,13 +16,13 @@ public class ICLocation {
         this.z = z;
     }
 
-    public final int distanceSquared(final ICLocation reference) {
+    public final int quadrance(final ICLocation reference) {
         final int dx = x - reference.x;
         final int dz = z - reference.z;
         return dx * dx + dz * dz;
     }
 
-    public final ICLocation add(final int dx, final int dz) {
+    public final ICLocation moveBy(final int dx, final int dz) {
         return new ICLocation(world, x + dx, z + dz);
     }
 

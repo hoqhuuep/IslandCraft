@@ -12,10 +12,10 @@ import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
  *      wiki</a>
  */
 public class LocalChat {
-    private final int localChatRadiusSquared;
+    private final int maximumQuadrance;
 
     public LocalChat(final int localChatRadius) {
-        localChatRadiusSquared = localChatRadius * localChatRadius;
+        maximumQuadrance = localChatRadius * localChatRadius;
     }
 
     /**
@@ -29,7 +29,7 @@ public class LocalChat {
         final List<ICPlayer> players = from.getWorld().getPlayers();
         for (final ICPlayer to : players) {
             final ICLocation pLocation = to.getLocation();
-            if (pLocation.distanceSquared(location) <= localChatRadiusSquared) {
+            if (pLocation.quadrance(location) <= maximumQuadrance) {
                 to.message("l", from.getName(), message);
             }
         }
