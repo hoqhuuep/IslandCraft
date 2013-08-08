@@ -73,7 +73,8 @@ public final class IslandCraftPlugin extends JavaPlugin {
         TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class); //$NON-NLS-1$
 
         // Island Commands
-        final Island island = new Island(getICDatabase(), protection, config.getMaxIslandsPerPlayer());
+        final Island island = new Island(getICDatabase(), protection, config.getMaxIslandsPerPlayer(), config.getPurchaseCostItem(),
+                config.getPurchaseCostAmount(), config.getPurchaseCostAmount(), config.getTaxCostItem(), config.getTaxCostAmount(), config.getTaxCostIncrease());
         final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(island, server);
         final PluginCommand islandCommand = getCommand("island");
         islandCommand.setExecutor(islandCommandExecutor);

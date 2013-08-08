@@ -15,11 +15,24 @@ public class Island {
     private final ICDatabase database;
     private final ICProtection protection;
     private final int maxIslands;
+    private final String purchaseItem;
+    private final int purchaseCostAmount;
+    private final int purchaseCostIncrease;
+    private final String taxItem;
+    private final int taxCostAmount;
+    private final int taxCostIncrease;
 
-    public Island(final ICDatabase database, final ICProtection protection, final int maxIslands) {
+    public Island(final ICDatabase database, final ICProtection protection, final int maxIslands, final String purchaseItem, final int purchaseCostAmount,
+            final int purchaseCostIncrease, final String taxItem, final int taxCostAmount, final int taxCostIncrease) {
         this.database = database;
         this.protection = protection;
         this.maxIslands = maxIslands;
+        this.purchaseItem = purchaseItem;
+        this.purchaseCostAmount = purchaseCostAmount;
+        this.purchaseCostIncrease = purchaseCostIncrease;
+        this.taxItem = taxItem;
+        this.taxCostAmount = taxCostAmount;
+        this.taxCostIncrease = taxCostIncrease;
     }
 
     /**
@@ -139,7 +152,7 @@ public class Island {
 
         final int cost = calculatePurchaseCost(name);
 
-        if (!player.takeDiamonds(cost)) {
+        if (!player.takeItems(purchaseItem, cost)) {
             // Insufficient funds
             player.message("island-purchase-funds-error", Integer.toString(cost)); //$NON-NLS-1$
             return;
@@ -180,7 +193,7 @@ public class Island {
         final String name = player.getName();
         final int cost = calculateTaxCost(name);
 
-        if (!player.takeDiamonds(cost)) {
+        if (!player.takeItems(taxItem, cost)) {
             // Insufficient funds
             player.message("island-tax-funds-error", Integer.toString(cost)); //$NON-NLS-1$
             return;
@@ -247,12 +260,10 @@ public class Island {
     }
 
     private int calculatePurchaseCost(final String player) {
-        // TODO Get purchase cost from config
-        return database.loadOwnershipLocations(player).size() + 1;
+        return purchaseCostAmount + database.loadOwnershipLocations(player).size() * purchaseCostIncrease;
     }
 
     private int calculateTaxCost(final String player) {
-        // TODO Get tax cost from config
-        return database.loadOwnershipLocations(player).size();
+        return taxCostAmount + (database.loadOwnershipLocations(player).size() - 1) * taxCostIncrease;
     }
 }

@@ -14,11 +14,11 @@ public class IslandCraftConfig {
         return config.getInt("local-chat-radius", 128); //$NON-NLS-1$
     }
 
-    public final Material getPurchaseCostItem() {
+    public final String getPurchaseCostItem() {
         final String value = config.getString("purchase-cost-item");
-        final Material material = materialByNameOrId(value);
+        final String material = materialByNameOrId(value);
         if (null == material) {
-            return Material.DIAMOND;
+            return Material.DIAMOND.name();
         }
         return material;
     }
@@ -31,11 +31,11 @@ public class IslandCraftConfig {
         return config.getInt("purchase-cost-increase");
     }
 
-    public final Material getTaxCostItem() {
+    public final String getTaxCostItem() {
         final String value = config.getString("tax-cost-item");
-        final Material material = materialByNameOrId(value);
+        final String material = materialByNameOrId(value);
         if (null == material) {
-            return Material.DIAMOND;
+            return Material.DIAMOND.name();
         }
         return material;
     }
@@ -60,14 +60,14 @@ public class IslandCraftConfig {
         return config.getInt("resource-island-rarity");
     }
 
-    private final Material materialByNameOrId(final String nameOrId) {
+    private final String materialByNameOrId(final String nameOrId) {
         final Material materialByName = Material.getMaterial(nameOrId);
         if (null != materialByName) {
-            return materialByName;
+            return materialByName.name();
         }
         try {
             final int id = Integer.valueOf(nameOrId);
-            return Material.getMaterial(id);
+            return Material.getMaterial(id).name();
         } catch (final NumberFormatException e) {
             return null;
         }

@@ -70,17 +70,18 @@ public class BukkitPlayer implements ICPlayer {
     private static final Integer FIRST = new Integer(0);
 
     @Override
-    public final boolean takeDiamonds(final int amount) {
+    public final boolean takeItems(final String type, final int amount) {
+        final Material material = Material.getMaterial(type);
         final PlayerInventory inventory = player.getInventory();
-        if (!inventory.containsAtLeast(new ItemStack(Material.DIAMOND), amount)) {
+        if (!inventory.containsAtLeast(new ItemStack(material), amount)) {
             // Not enough
             return false;
         }
-        final Map<Integer, ItemStack> result = inventory.removeItem(new ItemStack(Material.DIAMOND, amount));
+        final Map<Integer, ItemStack> result = inventory.removeItem(new ItemStack(material, amount));
         if (!result.isEmpty()) {
             // Something went wrong, refund
             final int missing = result.get(FIRST).getAmount();
-            inventory.addItem(new ItemStack(Material.DIAMOND, amount - missing));
+            inventory.addItem(new ItemStack(material, amount - missing));
             return false;
         }
         // Success

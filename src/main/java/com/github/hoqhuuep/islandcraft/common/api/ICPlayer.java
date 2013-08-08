@@ -56,7 +56,7 @@ public interface ICPlayer {
      * @return <code>true</code> if the transaction was successful,
      *         <code>false</code> otherwise
      */
-    boolean takeDiamonds(int amount);
+    boolean takeItems(String type, int amount);
 
     void message(String id, Object... args);
 }
