@@ -6,7 +6,7 @@ import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 /**
- * @author Daniel (hoqhuuep) Simmons
+ * @author Daniel Simmons
  * @see <a
  *      href="https://github.com/hoqhuuep/IslandCraft/wiki/Chat#local-chat">IslandCraft
  *      wiki</a>
@@ -20,7 +20,7 @@ public class LocalChat {
 
     /**
      * To be called when a player tries to send a local chat message.
-     * 
+     *
      * @param from
      * @param message
      */

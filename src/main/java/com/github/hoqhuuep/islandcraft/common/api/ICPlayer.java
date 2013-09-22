@@ -4,8 +4,8 @@ import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 /**
  * An interface to abstract a Bukkit player.
- * 
- * @author Daniel (hoqhuuep) Simmons
+ *
+ * @author Daniel Simmons
  */
 public interface ICPlayer {
     /**
@@ -40,7 +40,7 @@ public interface ICPlayer {
 
     /**
      * Set the player's compass target.
-     * 
+     *
      * @param location
      *            the location to make the compass point to from now on
      */
@@ -50,7 +50,7 @@ public interface ICPlayer {
      * Take a number of diamonds from a player's inventory. <i>IMPORTANT</i>: if
      * the player does not have enough diamonds for the full amount, their
      * inventory should be unchanged.
-     * 
+     *
      * @param amount
      *            the number of diamonds to take
      * @return <code>true</code> if the transaction was successful,

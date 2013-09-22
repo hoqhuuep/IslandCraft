@@ -2,8 +2,8 @@ package com.github.hoqhuuep.islandcraft.common.api;
 
 /**
  * An interface to abstract a Bukkit server.
- * 
- * @author Daniel (hoqhuuep) Simmons
+ *
+ * @author Daniel Simmons
  */
 public interface ICServer {
     /**

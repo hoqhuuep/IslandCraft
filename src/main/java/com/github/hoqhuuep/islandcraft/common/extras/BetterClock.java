@@ -3,7 +3,7 @@ package com.github.hoqhuuep.islandcraft.common.extras;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 
 /**
- * @author Daniel (hoqhuuep) Simmons
+ * @author Daniel Simmons
  * @see <a
  *      href="https://github.com/hoqhuuep/IslandCraft/wiki /Useful-Extras#better-clock">IslandCraft
  *      wiki</a>

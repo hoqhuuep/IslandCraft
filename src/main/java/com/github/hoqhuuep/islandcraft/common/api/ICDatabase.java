@@ -6,8 +6,8 @@ import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 /**
  * A method of loading and storing persistent data.
- * 
- * @author Daniel (hoqhuuep) Simmons
+ *
+ * @author Daniel Simmons
  */
 public interface ICDatabase {
     /**
@@ -55,7 +55,7 @@ public interface ICDatabase {
 
     /**
      * Load the player's party from the database.
-     * 
+     *
      * @param player
      *            the name of the player to lookup
      * @return <code>null</code> if the player is not a member of any party,
@@ -65,7 +65,7 @@ public interface ICDatabase {
 
     /**
      * Load the list of all players in a party from the database.
-     * 
+     *
      * @param party
      *            name of the party
      * @return A list containing all members of the party. The list will be
@@ -75,7 +75,7 @@ public interface ICDatabase {
 
     /**
      * Save the player's party to the database
-     * 
+     *
      * @param player
      *            the name of the player
      * @param party
@@ -103,7 +103,7 @@ public interface ICDatabase {
 
     /**
      * Load the location of a compass waypoint.
-     * 
+     *
      * @param player
      *            the name of the owner of the waypoint
      * @param waypoint
@@ -116,7 +116,7 @@ public interface ICDatabase {
     /**
      * Load the list of the names of all compass waypoints configured by a
      * player.
-     * 
+     *
      * @param player
      *            the name of the owner of the waypoints
      * @return A list containing the names of all the waypoints of the player.
@@ -127,7 +127,7 @@ public interface ICDatabase {
     /**
      * Save a waypoint in the database. Removes the waypoint if the location is
      * <code>null</code>.
-     * 
+     *
      * @param player
      *            the name of the owner of the waypoint
      * @param waypoint

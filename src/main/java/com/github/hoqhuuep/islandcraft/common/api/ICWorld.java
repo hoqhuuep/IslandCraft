@@ -7,8 +7,8 @@ import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 /**
  * This is an interface to abstract a Bukkit world.
- * 
- * @author Daniel (hoqhuuep) Simmons
+ *
+ * @author Daniel Simmons
  */
 public interface ICWorld {
     /**

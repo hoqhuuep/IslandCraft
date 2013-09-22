@@ -2,8 +2,8 @@ package com.github.hoqhuuep.islandcraft.common.type;
 
 /**
  * Represents a location in a world. Height is not recorded.
- * 
- * @author Daniel (hoqhuuep) Simmons
+ *
+ * @author Daniel Simmons
  */
 public class ICLocation {
     private final int x;

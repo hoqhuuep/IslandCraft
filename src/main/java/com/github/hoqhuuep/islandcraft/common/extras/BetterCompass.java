@@ -10,7 +10,7 @@ import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 /**
- * @author Daniel (hoqhuuep) Simmons
+ * @author Daniel Simmons
  * @see <a
  *      href="https://github.com/hoqhuuep/IslandCraft/wiki /Useful-Extras#better-compass">IslandCraft
  *      wiki</a>

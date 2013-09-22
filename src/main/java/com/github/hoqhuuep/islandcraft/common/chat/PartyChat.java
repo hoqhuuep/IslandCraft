@@ -8,7 +8,7 @@ import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 
 /**
- * @author Daniel (hoqhuuep) Simmons
+ * @author Daniel Simmons
  * @see <a
  *      href="https://github.com/hoqhuuep/IslandCraft/wiki/Chat#party-chat">IslandCraft
  *      wiki</a>
