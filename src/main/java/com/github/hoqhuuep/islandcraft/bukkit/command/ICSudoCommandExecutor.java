@@ -85,10 +85,11 @@ public class ICSudoCommandExecutor implements CommandExecutor, TabCompleter {
     private static void regenerateRegion(final ICLocation iLocation, final ICDatabase database, final IslandMath islandMath) {
         final Long oldSeed = database.loadSeed(iLocation);
         final ICRegion region = islandMath.visibleRegion(iLocation);
-        final int minX = region.getMin().getX() >> 4;
-        final int minZ = region.getMin().getZ() >> 4;
-        final int maxX = region.getMax().getX() >> 4;
-        final int maxZ = region.getMax().getZ() >> 4;
+        final ICLocation location = region.getLocation();
+        final int minX = location.getX() >> 4;
+        final int minZ = location.getZ() >> 4;
+        final int maxX = minX + (region.getXSize() >> 4);
+        final int maxZ = minZ + (region.getZSize() >> 4);
         if (null != oldSeed) {
             database.saveSeed(iLocation, new Long(new Random(oldSeed.longValue()).nextLong()));
             final World w2 = Bukkit.getWorld(iLocation.getWorld());
