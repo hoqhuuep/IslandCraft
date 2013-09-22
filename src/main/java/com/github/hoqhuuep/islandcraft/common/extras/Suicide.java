@@ -14,7 +14,7 @@ public final class Suicide {
      *
      * @param player
      */
-    public void onSuicide(final ICPlayer player) {
+    public final void onSuicide(final ICPlayer player) {
         player.kill();
     }
 }

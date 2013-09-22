@@ -16,15 +16,11 @@ public final class PrivateMessage {
      * @param to
      * @param message
      */
-    public static void onPrivateMessage(final ICPlayer from, final ICPlayer to, final String message) {
+    public final void onPrivateMessage(final ICPlayer from, final ICPlayer to, final String message) {
         if (null == to) {
             from.message("m-error");
             return;
         }
         to.message("m", from.getName(), to.getName(), message);
-    }
-
-    private PrivateMessage() {
-        // Utility class
     }
 }

@@ -38,6 +38,7 @@ import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.chat.LocalChat;
 import com.github.hoqhuuep.islandcraft.common.chat.PartyChat;
+import com.github.hoqhuuep.islandcraft.common.chat.PrivateMessage;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterClock;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterCompass;
 import com.github.hoqhuuep.islandcraft.common.extras.Suicide;
@@ -87,7 +88,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
         register(new DawnListener(island));
 
         // Chat Commands
-        final PrivateMessageCommandExecutor privateMessageCommandExecutor = new PrivateMessageCommandExecutor(server);
+        final PrivateMessageCommandExecutor privateMessageCommandExecutor = new PrivateMessageCommandExecutor(new PrivateMessage(), server);
         final LocalMessageCommandExecutor localMessageCommandExecutor = new LocalMessageCommandExecutor(new LocalChat(config.getLocalChatRadius()), server);
         final PartyChat partyChat = new PartyChat(getICDatabase());
         final PartyMessageCommandExecutor partyMessageCommandExecutor = new PartyMessageCommandExecutor(partyChat, server);

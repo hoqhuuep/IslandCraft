@@ -13,9 +13,11 @@ import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.chat.PrivateMessage;
 
 public class PrivateMessageCommandExecutor implements CommandExecutor {
+	private final PrivateMessage privateMessage;
     private final ICServer server;
 
-    public PrivateMessageCommandExecutor(final ICServer server) {
+    public PrivateMessageCommandExecutor(final PrivateMessage privateMessage, final ICServer server) {
+    	this.privateMessage = privateMessage;
         this.server = server;
     }
 
@@ -32,7 +34,7 @@ public class PrivateMessageCommandExecutor implements CommandExecutor {
         final ICPlayer from = server.findOnlinePlayer(((Player) sender).getName());
         final String toName = args[0];
         final ICPlayer to = server.findOnlinePlayer(toName);
-        PrivateMessage.onPrivateMessage(from, to, message);
+        privateMessage.onPrivateMessage(from, to, message);
         return true;
     }
 }
