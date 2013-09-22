@@ -37,9 +37,4 @@ public class ICLocation {
     public final String getWorld() {
         return world;
     }
-
-    @Override
-    public final String toString() {
-        return "ICLocation(\"" + getWorld() + "\", " + getX() + ", " + getZ() + ")";
-    }
 }

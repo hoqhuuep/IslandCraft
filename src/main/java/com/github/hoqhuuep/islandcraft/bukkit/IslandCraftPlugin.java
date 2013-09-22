@@ -38,7 +38,9 @@ import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.chat.LocalChat;
 import com.github.hoqhuuep.islandcraft.common.chat.PartyChat;
+import com.github.hoqhuuep.islandcraft.common.extras.BetterClock;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterCompass;
+import com.github.hoqhuuep.islandcraft.common.extras.Suicide;
 import com.github.hoqhuuep.islandcraft.common.island.Island;
 import com.khorn.terraincontrol.TerrainControl;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -106,9 +108,9 @@ public final class IslandCraftPlugin extends JavaPlugin {
         // Extras
         final BetterCompass betterCompass = new BetterCompass(getICDatabase());
         final WaypointCommandExecutor waypointCommandExecutor = new WaypointCommandExecutor(betterCompass, server);
-        final SuicideCommandExecutor suicideCommandExecutor = new SuicideCommandExecutor(server);
+        final SuicideCommandExecutor suicideCommandExecutor = new SuicideCommandExecutor(new Suicide(), server);
         getCommand("suicide").setExecutor(suicideCommandExecutor);
-        register(new ClockListener(server));
+        register(new ClockListener(new BetterClock(), server));
         register(new CompassListener(betterCompass, server));
         final PluginCommand waypointCommand = getCommand("waypoint");
         waypointCommand.setExecutor(waypointCommandExecutor);

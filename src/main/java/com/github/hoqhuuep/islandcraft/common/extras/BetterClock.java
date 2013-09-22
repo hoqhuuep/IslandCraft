@@ -15,15 +15,11 @@ public final class BetterClock {
      *
      * @param player
      */
-    public static void onQuery(final ICPlayer player) {
+    public final void onQuery(final ICPlayer player) {
         if (!player.getWorld().isNormalWorld()) {
             player.message("clock-error");
             return;
         }
         player.message("clock", player.getWorld().getTime());
-    }
-
-    private BetterClock() {
-        // Utility class
     }
 }

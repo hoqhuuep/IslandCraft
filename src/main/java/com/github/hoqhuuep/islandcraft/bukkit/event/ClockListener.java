@@ -12,9 +12,11 @@ import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterClock;
 
 public class ClockListener implements Listener {
+	private final BetterClock betterClock;
     private final ICServer server;
 
-    public ClockListener(final ICServer server) {
+    public ClockListener(final BetterClock betterClock, final ICServer server) {
+    	this.betterClock = betterClock;
         this.server = server;
     }
 
@@ -30,7 +32,7 @@ public class ClockListener implements Listener {
             if (null == player) {
                 return;
             }
-            BetterClock.onQuery(player);
+            betterClock.onQuery(player);
         }
     }
 }
