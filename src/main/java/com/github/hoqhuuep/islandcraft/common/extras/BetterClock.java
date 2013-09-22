@@ -12,15 +12,15 @@ public final class BetterClock {
     /**
      * To be called when a player requests the time (by right-clicking with a
      * clock).
-     * 
+     *
      * @param player
      */
     public static void onQuery(final ICPlayer player) {
         if (!player.getWorld().isNormalWorld()) {
-            player.message("clock-error"); //$NON-NLS-1$
+            player.message("clock-error");
             return;
         }
-        player.message("clock", player.getWorld().getTime()); //$NON-NLS-1$
+        player.message("clock", player.getWorld().getTime());
     }
 
     private BetterClock() {

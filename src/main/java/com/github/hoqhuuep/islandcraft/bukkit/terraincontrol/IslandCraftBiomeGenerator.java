@@ -20,7 +20,7 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         super(world, cache);
 
         // Hacks to get configuration from IslandCraft
-        final Plugin plugin = Bukkit.getPluginManager().getPlugin("IslandCraft"); //$NON-NLS-1$
+        final Plugin plugin = Bukkit.getPluginManager().getPlugin("IslandCraft");
         if (null == plugin || !(plugin instanceof IslandCraftPlugin)) {
             throw new Error("Could not find IslandCraft plugin");
         }

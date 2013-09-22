@@ -50,7 +50,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     private CompassBean loadCompassBean(final String player) {
-        return ebean.find(CompassBean.class).where().ieq("player", player).findUnique(); //$NON-NLS-1$
+        return ebean.find(CompassBean.class).where().ieq("player", player).findUnique();
     }
 
     @Override
@@ -65,7 +65,7 @@ public class EbeanServerDatabase implements ICDatabase {
 
     @Override
     public final List<ICLocation> loadOwnershipLocations(final String player) {
-        final List<OwnershipBean> beans = ebean.find(OwnershipBean.class).where().ieq("player", player).findList(); //$NON-NLS-1$
+        final List<OwnershipBean> beans = ebean.find(OwnershipBean.class).where().ieq("player", player).findList();
         final List<ICLocation> locations = new ArrayList<ICLocation>(beans.size());
         for (final OwnershipBean bean : beans) {
             locations.add(new ICLocation(bean.getWorld(), bean.getX().intValue(), bean.getZ().intValue()));
@@ -107,7 +107,7 @@ public class EbeanServerDatabase implements ICDatabase {
 
     @Override
     public final List<String> loadPartyPlayers(final String party) {
-        final List<PartyBean> beans = ebean.find(PartyBean.class).where().ieq("party", party).findList(); //$NON-NLS-1$
+        final List<PartyBean> beans = ebean.find(PartyBean.class).where().ieq("party", party).findList();
         final List<String> players = new ArrayList<String>(beans.size());
         for (final PartyBean bean : beans) {
             players.add(bean.getPlayer());
@@ -131,7 +131,7 @@ public class EbeanServerDatabase implements ICDatabase {
     }
 
     private PartyBean loadPartyBean(final String player) {
-        return ebean.find(PartyBean.class).where().ieq("player", player).findUnique(); //$NON-NLS-1$
+        return ebean.find(PartyBean.class).where().ieq("player", player).findUnique();
     }
 
     @Override
@@ -179,7 +179,7 @@ public class EbeanServerDatabase implements ICDatabase {
 
     @Override
     public final List<String> loadWaypoints(final String player) {
-        final List<WaypointBean> beans = ebean.find(WaypointBean.class).where().ieq("player", player).findList(); //$NON-NLS-1$
+        final List<WaypointBean> beans = ebean.find(WaypointBean.class).where().ieq("player", player).findList();
         final List<String> waypoints = new ArrayList<String>(beans.size());
         for (final WaypointBean bean : beans) {
             waypoints.add(bean.getWaypoint());
@@ -246,7 +246,7 @@ public class EbeanServerDatabase implements ICDatabase {
 
     @Override
     public List<ICLocation> loadTaxByWorld(String world) {
-        final List<TaxBean> beans = ebean.find(TaxBean.class).where().ieq("world", world).findList(); //$NON-NLS-1$
+        final List<TaxBean> beans = ebean.find(TaxBean.class).where().ieq("world", world).findList();
         final List<ICLocation> islands = new ArrayList<ICLocation>(beans.size());
         for (final TaxBean bean : beans) {
             islands.add(new ICLocation(world, bean.getX().intValue(), bean.getZ().intValue()));

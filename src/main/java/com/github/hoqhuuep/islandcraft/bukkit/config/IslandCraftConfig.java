@@ -11,16 +11,16 @@ public class IslandCraftConfig {
     }
 
     public final int getLocalChatRadius() {
-        return config.getInt("local-chat-radius", 128); //$NON-NLS-1$
+        return config.getInt("local-chat-radius", 128);
     }
 
     public final String getPurchaseCostItem() {
-        final String value = config.getString("purchase-cost-item");
-        final String material = materialByNameOrId(value);
+        final String name = config.getString("purchase-cost-item");
+        final Material material = Material.matchMaterial(name);
         if (null == material) {
             return Material.DIAMOND.name();
         }
-        return material;
+        return material.name();
     }
 
     public final int getPurchaseCostAmount() {
@@ -32,12 +32,12 @@ public class IslandCraftConfig {
     }
 
     public final String getTaxCostItem() {
-        final String value = config.getString("tax-cost-item");
-        final String material = materialByNameOrId(value);
+        final String name = config.getString("tax-cost-item");
+        final Material material = Material.matchMaterial(name);
         if (null == material) {
             return Material.DIAMOND.name();
         }
-        return material;
+        return material.name();
     }
 
     public final int getTaxCostAmount() {
@@ -49,7 +49,7 @@ public class IslandCraftConfig {
     }
 
     public final WorldConfig getWorldConfig(final String world) {
-        return new WorldConfig(config.getConfigurationSection("worlds." + world)); //$NON-NLS-1$
+        return new WorldConfig(config.getConfigurationSection("worlds." + world));
     }
 
     public final int getMaxIslandsPerPlayer() {
@@ -58,18 +58,5 @@ public class IslandCraftConfig {
 
     public final int getResourceIslandRarity() {
         return config.getInt("resource-island-rarity");
-    }
-
-    private final String materialByNameOrId(final String nameOrId) {
-        final Material materialByName = Material.getMaterial(nameOrId);
-        if (null != materialByName) {
-            return materialByName.name();
-        }
-        try {
-            final int id = Integer.valueOf(nameOrId);
-            return Material.getMaterial(id).name();
-        } catch (final NumberFormatException e) {
-            return null;
-        }
     }
 }

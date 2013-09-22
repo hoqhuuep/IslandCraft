@@ -14,19 +14,19 @@ public class WorldConfig {
     }
 
     public final int getIslandSizeChunks() {
-        return config.getInt("island-size-chunks", 16); //$NON-NLS-1$
+        return config.getInt("island-size-chunks", 16);
     }
 
     public final int getIslandGapChunks() {
-        return config.getInt("island-gap-chunks", 4); //$NON-NLS-1$
+        return config.getInt("island-gap-chunks", 4);
     }
 
     public final String getOceanBiome() {
-        return config.getString("ocean-biome"); //$NON-NLS-1$
+        return config.getString("ocean-biome");
     }
 
     public final List<String> getBiomes() {
-        final ConfigurationSection biomesSection = config.getConfigurationSection("biomes"); //$NON-NLS-1$
+        final ConfigurationSection biomesSection = config.getConfigurationSection("biomes");
         if (null == biomesSection) {
             return new ArrayList<String>();
         }
@@ -37,6 +37,6 @@ public class WorldConfig {
     }
 
     public final BiomeConfig getBiome(final String biome) {
-        return new BiomeConfig(config.getConfigurationSection("biomes." + biome)); //$NON-NLS-1$
+        return new BiomeConfig(config.getConfigurationSection("biomes." + biome));
     }
 }

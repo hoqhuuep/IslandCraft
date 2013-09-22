@@ -23,7 +23,7 @@ public class ClockListener implements Listener {
         final Action action = event.getAction();
         if (Material.WATCH == event.getMaterial() && (Action.RIGHT_CLICK_AIR == action || Action.RIGHT_CLICK_BLOCK == action)) {
             final Player bukkitPlayer = event.getPlayer();
-            if (!bukkitPlayer.hasPermission("islandcraft.clock")) { //$NON-NLS-1$
+            if (!bukkitPlayer.hasPermission("islandcraft.clock")) {
                 return;
             }
             final ICPlayer player = server.findOnlinePlayer(bukkitPlayer.getName());

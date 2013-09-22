@@ -74,7 +74,7 @@ public class CompassListener implements Listener {
     }
 
     private ICPlayer getPlayer(final Player player) {
-        if (!player.hasPermission("islandcraft.command.waypoint")) { //$NON-NLS-1$
+        if (!player.hasPermission("islandcraft.command.waypoint")) {
             return null;
         }
         return server.findOnlinePlayer(player.getName());

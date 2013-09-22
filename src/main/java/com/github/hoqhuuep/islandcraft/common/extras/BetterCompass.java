@@ -27,7 +27,7 @@ public class BetterCompass {
 
     /**
      * To be called when a player dies.
-     * 
+     *
      * @param player
      */
     public final void onDeath(final ICPlayer player) {
@@ -42,7 +42,7 @@ public class BetterCompass {
 
     /**
      * To be called when a player uses a bed.
-     * 
+     *
      * @param player
      */
     public final void onUseBed(final ICPlayer player) {
@@ -62,77 +62,77 @@ public class BetterCompass {
     /**
      * To be called when a player sets their compass to point at the next
      * waypoint (by right-clicking with a compass).
-     * 
+     *
      * @param player
      */
     public final void onNextWaypoint(final ICPlayer player, final boolean previous) {
         if (!player.getWorld().isNormalWorld()) {
-            player.message("compass-error"); //$NON-NLS-1$
+            player.message("compass-error");
             return;
         }
         final String name = player.getName();
         final String oldWaypoint = getWaypoint(name);
         final String newWaypoint = getNext(name, oldWaypoint, previous);
         if (setWaypoint(player, newWaypoint)) {
-            player.message("compass", newWaypoint); //$NON-NLS-1$
+            player.message("compass", newWaypoint);
         }
     }
 
     /**
      * To be called when a player requests to set their compass waypoint.
-     * 
+     *
      * @param player
      * @param waypoint
      */
     public final void onWaypointSet(final ICPlayer player, final String waypoint) {
         if (setWaypoint(player, waypoint)) {
-            player.message("compass", waypoint); //$NON-NLS-1$
+            player.message("compass", waypoint);
         }
     }
 
     /**
      * To be called when a player tries to add a compass waypoint.
-     * 
+     *
      * @param player
      * @param waypoint
      */
     public final void onWaypointAdd(final ICPlayer player, final String waypoint) {
         if (!player.getWorld().isNormalWorld()) {
-            player.message("waypoint-add-world-error"); //$NON-NLS-1$
+            player.message("waypoint-add-world-error");
             return;
         }
         if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
-            player.message("waypoint-add-reserved-error"); //$NON-NLS-1$
+            player.message("waypoint-add-reserved-error");
             return;
         }
         database.saveWaypoint(player.getName(), waypoint, player.getLocation());
-        player.message("waypoint-add", waypoint); //$NON-NLS-1$
+        player.message("waypoint-add", waypoint);
     }
 
     /**
      * To be called when a player tries to remove a compass waypoint.
-     * 
+     *
      * @param player
      * @param waypoint
      */
     public final void onWaypointRemove(final ICPlayer player, final String waypoint) {
         if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
-            player.message("waypoint-remove-error"); //$NON-NLS-1$
+            player.message("waypoint-remove-error");
             return;
         }
         database.saveWaypoint(player.getName(), waypoint, null);
-        player.message("waypoint-remove", waypoint); //$NON-NLS-1$
+        player.message("waypoint-remove", waypoint);
     }
 
     /**
      * To be called when a player requests a list of their saved waypoints.
-     * 
+     *
      * @param player
      */
     public final void onWaypointList(final ICPlayer player) {
         final String name = player.getName();
         final List<String> waypoints = getWaypoints(name);
-        player.message("waypoint-list", StringUtils.join(waypoints, ", ")); //$NON-NLS-1$
+        player.message("waypoint-list", StringUtils.join(waypoints, ", "));
     }
 
     private boolean setWaypoint(final ICPlayer player, final String waypoint) {
@@ -142,7 +142,7 @@ public class BetterCompass {
         } else {
             ICLocation location = database.loadWaypoint(name, waypoint);
             if (null == location) {
-                player.message("waypoint-set-error", waypoint); //$NON-NLS-1$
+                player.message("waypoint-set-error", waypoint);
                 return false;
             }
             if (!player.getWorld().getName().equalsIgnoreCase(location.getWorld())) {

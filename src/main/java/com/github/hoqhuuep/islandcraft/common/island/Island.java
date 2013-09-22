@@ -38,23 +38,23 @@ public class Island {
     /**
      * To be called when a player tries to abandon the island at their current
      * location.
-     * 
+     *
      * @param player
      */
     public final void onAbandon(final ICPlayer player) {
         final IslandMath islandMath = player.getWorld().getIslandMath();
         if (null == islandMath) {
-            player.message("island-abandon-world-error"); //$NON-NLS-1$
+            player.message("island-abandon-world-error");
             return;
         }
         final ICLocation location = player.getLocation();
         final ICLocation islandLocation = islandMath.islandAt(location);
         if (isOcean(islandLocation)) {
-            player.message("island-abandon-ocean-error"); //$NON-NLS-1$
+            player.message("island-abandon-ocean-error");
             return;
         }
         if (!isOwner(player, islandLocation)) {
-            player.message("island-abandon-owner-error"); //$NON-NLS-1$
+            player.message("island-abandon-owner-error");
             return;
         }
 
@@ -63,25 +63,25 @@ public class Island {
         database.saveTax(islandLocation, null);
         protection.removeRegion(islandMath.visibleRegion(islandLocation));
         protection.removeRegion(islandMath.protectedRegion(islandLocation));
-        player.message("island-abandon"); //$NON-NLS-1$
+        player.message("island-abandon");
     }
 
     /**
      * To be called when a player tries to examine the island at their current
      * location.
-     * 
+     *
      * @param player
      */
     public final void onExamine(final ICPlayer player) {
         final IslandMath islandMath = player.getWorld().getIslandMath();
         if (null == islandMath) {
-            player.message("island-examine-world-error"); //$NON-NLS-1$
+            player.message("island-examine-world-error");
             return;
         }
         final ICLocation location = player.getLocation();
         final ICLocation islandLocation = islandMath.islandAt(location);
         if (isOcean(islandLocation)) {
-            player.message("island-examine-ocean-error"); //$NON-NLS-1$
+            player.message("island-examine-ocean-error");
             return;
         }
 
@@ -96,15 +96,15 @@ public class Island {
 
         if (null == owner) {
             // TODO Get real regeneration here
-            player.message("island-examine-available", islandLocation, biome, "<n>"); //$NON-NLS-2$ //$NON-NLS-1$
-        } else if (owner.equalsIgnoreCase("<reserved>")) { //$NON-NLS-1$
-            player.message("island-examine-reserved", islandLocation, biome); //$NON-NLS-1$
-        } else if (owner.equalsIgnoreCase("<resource>")) { //$NON-NLS-1$
+            player.message("island-examine-available", islandLocation, biome, "<n>");
+        } else if (owner.equalsIgnoreCase("<reserved>")) {
+            player.message("island-examine-reserved", islandLocation, biome);
+        } else if (owner.equalsIgnoreCase("<resource>")) {
             // TODO Get real regeneration here
-            player.message("island-examine-resource", islandLocation, biome, "<n>"); //$NON-NLS-2$ //$NON-NLS-1$
+            player.message("island-examine-resource", islandLocation, biome, "<n>");
         } else {
             final Integer tax = database.loadTax(islandLocation);
-            player.message("island-examine-private", islandLocation, biome, owner, tax); //$NON-NLS-2$ //$NON-NLS-1$
+            player.message("island-examine-private", islandLocation, biome, owner, tax);
         }
 
         // TODO Abandoned island
@@ -113,19 +113,19 @@ public class Island {
     /**
      * To be called when a player tries to purchase the island at their current
      * location.
-     * 
+     *
      * @param player
      */
     public final void onPurchase(final ICPlayer player) {
         final IslandMath islandMath = player.getWorld().getIslandMath();
         if (null == islandMath) {
-            player.message("island-purchase-world-error"); //$NON-NLS-1$
+            player.message("island-purchase-world-error");
             return;
         }
         final ICLocation location = player.getLocation();
         final ICLocation islandLocation = islandMath.islandAt(location);
         if (isOcean(islandLocation)) {
-            player.message("island-purchase-ocean-error"); //$NON-NLS-1$
+            player.message("island-purchase-ocean-error");
             return;
         }
 
@@ -134,13 +134,13 @@ public class Island {
 
         if (null != owner) {
             if (owner.equalsIgnoreCase(name)) {
-                player.message("island-purchase-self-error"); //$NON-NLS-1$
-            } else if (owner.equalsIgnoreCase("<reserved>")) { //$NON-NLS-1$
-                player.message("island-purchase-reserved-error"); //$NON-NLS-1$
-            } else if (owner.equalsIgnoreCase("<resource>")) { //$NON-NLS-1$
-                player.message("island-purchase-resource-error"); //$NON-NLS-1$
+                player.message("island-purchase-self-error");
+            } else if (owner.equalsIgnoreCase("<reserved>")) {
+                player.message("island-purchase-reserved-error");
+            } else if (owner.equalsIgnoreCase("<resource>")) {
+                player.message("island-purchase-resource-error");
             } else {
-                player.message("island-purchase-other-error"); //$NON-NLS-1$
+                player.message("island-purchase-other-error");
             }
             return;
         }
@@ -154,7 +154,7 @@ public class Island {
 
         if (!player.takeItems(purchaseItem, cost)) {
             // Insufficient funds
-            player.message("island-purchase-funds-error", Integer.toString(cost)); //$NON-NLS-1$
+            player.message("island-purchase-funds-error", Integer.toString(cost));
             return;
         }
 
@@ -164,23 +164,23 @@ public class Island {
         final String title = name + "'s Island @ " + islandLocation;
         protection.addVisibleRegion(title, islandMath.visibleRegion(islandLocation));
         protection.addProtectedRegion(islandMath.protectedRegion(islandLocation), name);
-        player.message("island-purchase"); //$NON-NLS-1$
+        player.message("island-purchase");
     }
 
     public void onTax(final ICPlayer player) {
         final IslandMath islandMath = player.getWorld().getIslandMath();
         if (null == islandMath) {
-            player.message("island-tax-world-error"); //$NON-NLS-1$
+            player.message("island-tax-world-error");
             return;
         }
         final ICLocation location = player.getLocation();
         final ICLocation islandLocation = islandMath.islandAt(location);
         if (isOcean(islandLocation)) {
-            player.message("island-tax-ocean-error"); //$NON-NLS-1$
+            player.message("island-tax-ocean-error");
             return;
         }
         if (!isOwner(player, islandLocation)) {
-            player.message("island-tax-owner-error"); //$NON-NLS-1$
+            player.message("island-tax-owner-error");
             return;
         }
 
@@ -195,7 +195,7 @@ public class Island {
 
         if (!player.takeItems(taxItem, cost)) {
             // Insufficient funds
-            player.message("island-tax-funds-error", Integer.toString(cost)); //$NON-NLS-1$
+            player.message("island-tax-funds-error", Integer.toString(cost));
             return;
         }
 
@@ -216,30 +216,30 @@ public class Island {
     /**
      * To be called when the player tries to rename the island at their current
      * location.
-     * 
+     *
      * @param player
      * @param title
      */
     public final void onRename(final ICPlayer player, final String title) {
         final IslandMath islandMath = player.getWorld().getIslandMath();
         if (null == islandMath) {
-            player.message("island-rename-world-error"); //$NON-NLS-1$
+            player.message("island-rename-world-error");
             return;
         }
         final ICLocation location = player.getLocation();
         final ICLocation islandLocation = islandMath.islandAt(location);
         if (isOcean(islandLocation)) {
-            player.message("island-rename-ocean-error"); //$NON-NLS-1$
+            player.message("island-rename-ocean-error");
             return;
         }
         if (!isOwner(player, islandLocation)) {
-            player.message("island-rename-owner-error"); //$NON-NLS-1$
+            player.message("island-rename-owner-error");
             return;
         }
 
         // Success
         protection.renameRegion(islandMath.visibleRegion(islandLocation), title);
-        player.message("island-rename"); //$NON-NLS-1$
+        player.message("island-rename");
     }
 
     public void onWarp(final ICPlayer player) {

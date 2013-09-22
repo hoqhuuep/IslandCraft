@@ -134,7 +134,7 @@ public final class PerlinIslandGenerator {
     public static void main(final String[] args) {
         final BufferedImage image = renderIsland(256, new Random(), new Color(0x1C6BA0), new Color(0xFBEEC2), new Color(0x758918), new Color(0x49281F));
         try {
-            ImageIO.write(image, "png", new File("test.png")); //$NON-NLS-2$ //$NON-NLS-1$
+            ImageIO.write(image, "png", new File("test.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -70,7 +70,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
         final ICProtection protection = new WorldGuardProtection(getWorldGuard());
 
         // Generator
-        TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class); //$NON-NLS-1$
+        TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
 
         // Island Commands
         final Island island = new Island(getICDatabase(), protection, config.getMaxIslandsPerPlayer(), config.getPurchaseCostItem(),
@@ -130,7 +130,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
 
     private WorldGuardPlugin getWorldGuard() {
         final PluginManager pluginManager = getServer().getPluginManager();
-        final Plugin plugin = pluginManager.getPlugin("WorldGuard"); //$NON-NLS-1$
+        final Plugin plugin = pluginManager.getPlugin("WorldGuard");
 
         // WorldGuard may not be loaded
         if (null == plugin || !(plugin instanceof WorldGuardPlugin)) {
@@ -145,11 +145,11 @@ public final class IslandCraftPlugin extends JavaPlugin {
 
     private void reloadLanguageConfig() {
         if (null == languageConfigFile) {
-            languageConfigFile = new File(getDataFolder(), "language.yml"); //$NON-NLS-1$
+            languageConfigFile = new File(getDataFolder(), "language.yml");
         }
         // Look for defaults in the jar
         languageConfig = YamlConfiguration.loadConfiguration(languageConfigFile);
-        final InputStream defConfigStream = getResource("language.yml"); //$NON-NLS-1$
+        final InputStream defConfigStream = getResource("language.yml");
         if (null != defConfigStream) {
             final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             languageConfig.setDefaults(defConfig);

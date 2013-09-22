@@ -37,26 +37,26 @@ public class ICSudoCommandExecutor implements CommandExecutor, TabCompleter {
         if ("regenerate".equalsIgnoreCase(args[0])) {
             final IslandMath islandMath = player.getWorld().getIslandMath();
             if (null == islandMath) {
-                player.message("icsudo-regenerate-world-error"); //$NON-NLS-1$
+                player.message("icsudo-regenerate-world-error");
                 return true;
             }
             final ICLocation location = islandMath.islandAt(player.getLocation());
             if (null == location) {
-                player.message("icsudo-regenerate-oecan-error"); //$NON-NLS-1$
+                player.message("icsudo-regenerate-oecan-error");
                 return true;
             }
             regenerateRegion(location, database, islandMath);
             return true;
         } else if ("reserved".equalsIgnoreCase(args[0])) {
-            player.message("not-yet-implemented"); //$NON-NLS-1$
+            player.message("not-yet-implemented");
         } else if ("resource".equalsIgnoreCase(args[0])) {
-            player.message("not-yet-implemented"); //$NON-NLS-1$
+            player.message("not-yet-implemented");
         } else if ("available".equalsIgnoreCase(args[0])) {
-            player.message("not-yet-implemented"); //$NON-NLS-1$
+            player.message("not-yet-implemented");
         } else if ("purchase".equalsIgnoreCase(args[0])) {
-            player.message("not-yet-implemented"); //$NON-NLS-1$
+            player.message("not-yet-implemented");
         } else if ("rename".equalsIgnoreCase(args[0])) {
-            player.message("not-yet-implemented"); //$NON-NLS-1$
+            player.message("not-yet-implemented");
         }
         return false;
     }
