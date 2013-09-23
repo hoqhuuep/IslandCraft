@@ -7,36 +7,40 @@ import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class WorldConfig {
-    private final ConfigurationSection config;
+	private final ConfigurationSection config;
 
-    public WorldConfig(final ConfigurationSection config) {
-        this.config = config;
-    }
+	public WorldConfig(final ConfigurationSection config) {
+		this.config = config;
+	}
 
-    public final int getIslandSizeChunks() {
-        return config.getInt("island-size-chunks", 16);
-    }
+	public final int getIslandSizeChunks() {
+		return config.getInt("island-size-chunks", 16);
+	}
 
-    public final int getIslandGapChunks() {
-        return config.getInt("island-gap-chunks", 4);
-    }
+	public final int getIslandGapChunks() {
+		return config.getInt("island-gap-chunks", 4);
+	}
 
-    public final String getOceanBiome() {
-        return config.getString("ocean-biome");
-    }
+	public final int getResourceIslandRarity() {
+		return config.getInt("resource-island-rarity", 20);
+	}
 
-    public final List<String> getBiomes() {
-        final ConfigurationSection biomesSection = config.getConfigurationSection("biomes");
-        if (null == biomesSection) {
-            return new ArrayList<String>();
-        }
-        final Set<String> biomes = biomesSection.getKeys(false);
-        final List<String> result = new ArrayList<String>(biomes.size());
-        result.addAll(biomes);
-        return result;
-    }
+	public final String getOceanBiome() {
+		return config.getString("ocean-biome", "Ocean");
+	}
 
-    public final BiomeConfig getBiome(final String biome) {
-        return new BiomeConfig(config.getConfigurationSection("biomes." + biome));
-    }
+	public final List<String> getBiomes() {
+		final ConfigurationSection biomesSection = config.getConfigurationSection("biomes");
+		if (null == biomesSection) {
+			return new ArrayList<String>();
+		}
+		final Set<String> biomes = biomesSection.getKeys(false);
+		final List<String> result = new ArrayList<String>(biomes.size());
+		result.addAll(biomes);
+		return result;
+	}
+
+	public final BiomeConfig getBiome(final String biome) {
+		return new BiomeConfig(config.getConfigurationSection("biomes." + biome));
+	}
 }

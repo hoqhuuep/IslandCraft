@@ -15,7 +15,7 @@ public class IslandCraftConfig {
     }
 
     public final String getPurchaseCostItem() {
-        final String name = config.getString("purchase-cost-item");
+        final String name = config.getString("purchase-cost-item", "Diamond");
         final Material material = Material.matchMaterial(name);
         if (null == material) {
             return Material.DIAMOND.name();
@@ -24,15 +24,15 @@ public class IslandCraftConfig {
     }
 
     public final int getPurchaseCostAmount() {
-        return config.getInt("purchase-cost-amount");
+        return config.getInt("purchase-cost-amount", 1);
     }
 
     public final int getPurchaseCostIncrease() {
-        return config.getInt("purchase-cost-increase");
+        return config.getInt("purchase-cost-increase", 1);
     }
 
     public final String getTaxCostItem() {
-        final String name = config.getString("tax-cost-item");
+        final String name = config.getString("tax-cost-item", "Diamond");
         final Material material = Material.matchMaterial(name);
         if (null == material) {
             return Material.DIAMOND.name();
@@ -41,11 +41,11 @@ public class IslandCraftConfig {
     }
 
     public final int getTaxCostAmount() {
-        return config.getInt("tax-cost-amount");
+        return config.getInt("tax-cost-amount", 1);
     }
 
     public final int getTaxCostIncrease() {
-        return config.getInt("tax-cost-increase");
+        return config.getInt("tax-cost-increase", 1);
     }
 
     public final WorldConfig getWorldConfig(final String world) {
@@ -53,10 +53,6 @@ public class IslandCraftConfig {
     }
 
     public final int getMaxIslandsPerPlayer() {
-        return config.getInt("max-islands-per-player");
-    }
-
-    public final int getResourceIslandRarity() {
-        return config.getInt("resource-island-rarity");
+        return config.getInt("max-islands-per-player", 7);
     }
 }

@@ -5,12 +5,12 @@ purchase-cost-increase: 1
 tax-cost-item: Diamond
 tax-cost-amount: 1
 tax-cost-increase: 1
-max-islands-per-player: 6
-resource-island-rarity: 20
+max-islands-per-player: 7
 worlds:
   world:
     island-size-chunks: 16
     island-gap-chunks: 4
+    resource-island-rarity: 20
     ocean-biome: Ocean
     biomes:
       Forest Island:

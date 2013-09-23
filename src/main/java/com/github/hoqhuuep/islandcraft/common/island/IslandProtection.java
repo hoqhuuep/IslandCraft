@@ -1,34 +1,25 @@
 package com.github.hoqhuuep.islandcraft.common.island;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageOutputStream;
-
+import com.github.hoqhuuep.islandcraft.bukkit.config.IslandCraftConfig;
+import com.github.hoqhuuep.islandcraft.bukkit.config.WorldConfig;
 import com.github.hoqhuuep.islandcraft.common.IslandMath;
 import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
 
 public class IslandProtection {
-	// TODO load from configuration
-	private static final int RESOURCE_ISLAND_RARITY = 20;
-	private static final int ISLAND_SIZE_BLOCKS = 256;
-	private static final int ISLAND_GAP_BLOCKS = 64;
-	private static final int ISLAND_SEPARATION_BLOCKS = ISLAND_SIZE_BLOCKS + ISLAND_GAP_BLOCKS;
-	private static final int MAGIC_NUMBER = (ISLAND_SIZE_BLOCKS - ISLAND_GAP_BLOCKS) / 2;
+	private static final int BLOCKS_PER_CHUNK = 16;
 
 	private final ICProtection protection;
+	private final IslandCraftConfig config;
 
-	public IslandProtection(final ICProtection protection) {
+	public IslandProtection(final ICProtection protection, final IslandCraftConfig config) {
 		this.protection = protection;
+		this.config = config;
 	}
 
 	/**
@@ -38,14 +29,15 @@ public class IslandProtection {
 	 * @param x
 	 * @param z
 	 */
-	public void onLoad(final int x, final int z, final long worldSeed) {
-		for (final ICRegion region : islandRegions(x, z)) {
-			// TODO cancel if region already exists
-			final int centerX = region.getLocation().getX() + region.getXSize() / 2;
-			final int centerZ = region.getLocation().getZ() + region.getZSize() / 2;
-			if (isSpawn(centerX, centerZ)) {
+	public void onLoad(final ICLocation location, final long worldSeed) {
+		final String world = location.getWorld();
+		for (final ICRegion region : islandRegions(location)) {
+			final int islandX = region.getLocation().getX() + region.getXSize() / 2;
+			final int islandZ = region.getLocation().getZ() + region.getZSize() / 2;
+			final ICLocation island = new ICLocation(world, islandX, islandZ);
+			if (isSpawn(island)) {
 				protection.createReservedRegion(region, "Spawn Island");
-			} else if (isResource(centerX, centerZ, worldSeed)) {
+			} else if (isResource(island, worldSeed)) {
 				protection.createResourceRegion(region, "Resource Island");
 			} else {
 				protection.createReservedRegion(region, "Available Island");
@@ -53,63 +45,74 @@ public class IslandProtection {
 		}
 	}
 
-	private boolean isSpawn(final int x, final int z) {
-		return x == 0 && z == 0;
+	public void onPurchase(final ICLocation island, final String player) {
+		ICRegion region = islandRegion(island);
+		// TODO protection.removeRegion(region);
+		protection.createPrivateRegion(region, player, "Private Island");
+
 	}
 
-	private boolean isResource(final int x, final int z, final long worldSeed) {
-		if (isSpawn(x, z)) {
-			return false;
-		}
-		if (Math.abs(x) <= ISLAND_SEPARATION_BLOCKS * 16 && Math.abs(z) <= ISLAND_SEPARATION_BLOCKS) {
-			// One of the 6 islands adjacent to spawn
-			return true;
-		}
-		return random(x, z, worldSeed) * 100 < RESOURCE_ISLAND_RARITY;
-	}
-
-	private double random(final int x, final int z, final long worldSeed) {
-		final long seed = worldSeed ^ ((((long) z) << 32) | x);
-		final Random random = new Random(seed);
-		return random.nextDouble();
+	public void onAbandon(final ICLocation island) {
+		ICRegion region = islandRegion(island);
+		// TODO protection.removeRegion(region);
+		protection.createReservedRegion(region, "Available Island");
 	}
 
 	// Numbers represent how many island regions a location overlaps.
 	// Arrows point towards the centers of the overlapped regions.
-	// @---+-------+---+-------+
-	// |.^.|...^...|\./|...^...|
-	// |.3.|...2...|.3.|...2...|
-	// |/.\|...v...|.v.|...v...|
-	// +---+-------+---+-------+
-	// |...|...................|
-	// |...|...................|
-	// |...|...................|
-	// |...|...................|
-	// |<2>|.........#.........|
-	// |...|...................|
-	// |...|...................|
-	// |...|...................|
-	// |...|...................|
-	// +---+-------+---+-------+
-	// |\./|...^...|.^.|...^...|
-	// |.3.|...2...|.3.|...2...|
-	// |.v.|...v...|/.\|...v...|
-	// +---+-------+---+-------+
-	// |...........|...|.......|
-	// |...........|...|.......|
-	// |...........|...|.......|
-	// |...........|...|.......|
-	// |.1.........|<2>|.....1>|
-	// |...........|...|.......|
-	// |...........|...|.......|
-	// |...........|...|.......|
-	// |...........|...|.......|
-	// +-----------+---+-------+
-	private static ICRegion[] islandRegions(final int x, final int z) {
-		final int regionPatternXSize = ISLAND_GAP_BLOCKS + ISLAND_SIZE_BLOCKS;
+    // @-------+-----------+-------+-----------+
+    // |...^...|.....^.....|..\./..|.....^.....|
+    // |...3...|.....2.....|...3...|.....2.....|
+    // |../.\..|.....v.....|...v...|.....v.....|
+    // +-------+-----------+-------+-----------+
+    // |.......|...............................|
+    // |.......|...............................|
+    // |.......|...............................|
+    // |.......|...............................|
+    // |.......|...............................|
+    // |.......|...............................|
+    // |..<2>..|...............#...............|
+    // |.......|...............................|
+    // |.......|...............................|
+    // |.......|...............................|
+    // |.......|...............................|
+    // |.......|...............................|
+    // |.......|...............................|
+    // +-------+-----------+-------+-----------+
+    // |..\./..|.....^.....|...^...|.....^.....|
+    // |...3...|.....2.....|...3...|.....2.....|
+    // |...v...|.....v.....|../.\..|.....v.....|
+    // +-------+-----------+-------+-----------+
+    // |...................|.......|...........|
+    // |...................|.......|...........|
+    // |...................|.......|...........|
+    // |...................|.......|...........|
+    // |...................|.......|...........|
+    // |...................|.......|...........|
+    // |...1...............|..<2>..|.......1>..|
+    // |...................|.......|...........|
+    // |...................|.......|...........|
+    // |...................|.......|...........|
+    // |...................|.......|...........|
+    // |...................|.......|...........|
+    // |...................|.......|...........|
+    // +-------------------+-------+-----------+
+	private final ICRegion[] islandRegions(final ICLocation location) {
+		final String world = location.getWorld();
+		final int x = location.getX();
+		final int z = location.getZ();
+
+		// Get parameters from configuration
+		final WorldConfig worldConfig = config.getWorldConfig(world);
+		final int islandGapBlocks = worldConfig.getIslandGapChunks() * BLOCKS_PER_CHUNK;
+		final int islandSizeBlocks = worldConfig.getIslandSizeChunks() * BLOCKS_PER_CHUNK;
+		final int islandSeparationBlocks = islandGapBlocks + islandSizeBlocks;
+		final int magicNumber = (islandSizeBlocks - islandGapBlocks) / 2;
+
+		final int regionPatternXSize = islandGapBlocks + islandSizeBlocks;
 		final int regionPatternZSize = regionPatternXSize * 2;
 		// # relative to @
-		final int relativeHashX = ISLAND_GAP_BLOCKS + ISLAND_SIZE_BLOCKS / 2;
+		final int relativeHashX = islandGapBlocks + islandSizeBlocks / 2;
 		final int relativeHashZ = relativeHashX;
 		// @ relative to world origin
 		final int absoluteAtX = IslandMath.div(x + relativeHashX, regionPatternXSize) * regionPatternXSize - relativeHashX;
@@ -124,34 +127,47 @@ public class IslandProtection {
 		final List<ICRegion> result = new ArrayList<ICRegion>();
 
 		// Top
-		if (relativeZ < ISLAND_GAP_BLOCKS) {
+		if (relativeZ < islandGapBlocks) {
+			final int centerZ = absoluteHashZ - islandSeparationBlocks;
 			// Left
-			if (relativeX < MAGIC_NUMBER + ISLAND_GAP_BLOCKS * 2) {
-				result.add(islandRegion(absoluteHashX - ISLAND_SEPARATION_BLOCKS / 2, absoluteHashZ - ISLAND_SEPARATION_BLOCKS));
+			if (relativeX < magicNumber + islandGapBlocks * 2) {
+				final int centerX = absoluteHashX - islandSeparationBlocks / 2;
+				final ICLocation center = new ICLocation(world, centerX, centerZ);
+				result.add(islandRegion(center));
 			}
 			// Right
-			if (relativeX >= MAGIC_NUMBER + ISLAND_GAP_BLOCKS) {
-				result.add(islandRegion(absoluteHashX + ISLAND_SEPARATION_BLOCKS / 2, absoluteHashZ - ISLAND_SEPARATION_BLOCKS));
+			if (relativeX >= magicNumber + islandGapBlocks) {
+				final int centerX = absoluteHashX + islandSeparationBlocks / 2;
+				final ICLocation center = new ICLocation(world, centerX, centerZ);
+				result.add(islandRegion(center));
 			}
 		}
 		// Middle
-		if (relativeZ < ISLAND_SIZE_BLOCKS + ISLAND_GAP_BLOCKS * 2) {
+		if (relativeZ < islandSizeBlocks + islandGapBlocks * 2) {
 			// Left
-			if (relativeX < ISLAND_GAP_BLOCKS) {
-				result.add(islandRegion(absoluteHashX - ISLAND_SEPARATION_BLOCKS, absoluteHashZ));
+			if (relativeX < islandGapBlocks) {
+				final int centerX = absoluteHashX - islandSeparationBlocks;
+				final ICLocation center = new ICLocation(world, centerX, absoluteHashZ);
+				result.add(islandRegion(center));
 			}
 			// Right
-			result.add(islandRegion(absoluteHashX, absoluteHashZ));
+			final ICLocation center = new ICLocation(world, absoluteHashX, absoluteHashZ);
+			result.add(islandRegion(center));
 		}
 		// Bottom
-		if (relativeZ >= ISLAND_SIZE_BLOCKS + ISLAND_GAP_BLOCKS) {
+		if (relativeZ >= islandSizeBlocks + islandGapBlocks) {
+			final int centerZ = absoluteHashZ + islandSeparationBlocks;
 			// Left
-			if (relativeX < MAGIC_NUMBER + ISLAND_GAP_BLOCKS * 2) {
-				result.add(islandRegion(absoluteHashX - ISLAND_SEPARATION_BLOCKS / 2, absoluteHashZ + ISLAND_SEPARATION_BLOCKS));
+			if (relativeX < magicNumber + islandGapBlocks * 2) {
+				final int centerX = absoluteHashX - islandSeparationBlocks / 2;
+				final ICLocation center = new ICLocation(world, centerX, centerZ);
+				result.add(islandRegion(center));
 			}
 			// Right
-			if (relativeX >= MAGIC_NUMBER + ISLAND_GAP_BLOCKS) {
-				result.add(islandRegion(absoluteHashX + ISLAND_SEPARATION_BLOCKS / 2, absoluteHashZ + ISLAND_SEPARATION_BLOCKS));
+			if (relativeX >= magicNumber + islandGapBlocks) {
+				final int centerX = absoluteHashX + islandSeparationBlocks / 2;
+				final ICLocation center = new ICLocation(world, centerX, centerZ);
+				result.add(islandRegion(center));
 			}
 		}
 
@@ -159,50 +175,46 @@ public class IslandProtection {
 		return result.toArray(array);
 	}
 
-	private static ICRegion islandRegion(final int centerX, final int centerZ) {
-		final int locationX = centerX - ISLAND_SIZE_BLOCKS / 2 - ISLAND_GAP_BLOCKS;
-		final int locationZ = centerZ - ISLAND_SIZE_BLOCKS / 2 - ISLAND_GAP_BLOCKS;
-		final int regionSize = ISLAND_SIZE_BLOCKS + ISLAND_GAP_BLOCKS * 2;
-		final ICLocation location = new ICLocation("world", locationX, locationZ);
-		return new ICRegion(location, regionSize, regionSize);
+	private final ICRegion islandRegion(final ICLocation island) {
+		final String world = island.getWorld();
+
+		// Get parameters from configuration
+		final WorldConfig worldConfig = config.getWorldConfig(world);
+		final int islandGapBlocks = worldConfig.getIslandGapChunks() * BLOCKS_PER_CHUNK;
+		final int islandSizeBlocks = worldConfig.getIslandSizeChunks() * BLOCKS_PER_CHUNK;
+		final int regionSize = islandSizeBlocks + islandGapBlocks * 2;
+
+		final ICLocation min = island.moveBy(-regionSize / 2, -regionSize / 2);
+		return new ICRegion(min, regionSize, regionSize);
 	}
 
-	/**
-	 * Test region overlap code
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		BufferedImage result = new BufferedImage(1024, 1024, BufferedImage.TYPE_4BYTE_ABGR);
-		for (int z = 0; z < 1024; ++z) {
-			for (int x = 0; x < 1024; ++x) {
-				switch (islandRegions(x - 512, z - 512).length) {
-				case 0:
-					result.setRGB(x, z, Color.BLACK.getRGB());
-					break;
-				case 1:
-					result.setRGB(x, z, Color.GREEN.getRGB());
-					break;
-				case 2:
-					result.setRGB(x, z, Color.BLUE.getRGB());
-					break;
-				case 3:
-					result.setRGB(x, z, Color.GRAY.getRGB());
-					break;
-				default:
-					result.setRGB(x, z, Color.WHITE.getRGB());
-					break;
-				}
-			}
+	private static boolean isSpawn(final ICLocation island) {
+		return island.getX() == 0 && island.getZ() == 0;
+	}
+
+	private final boolean isResource(final ICLocation island, final long worldSeed) {
+		if (isSpawn(island)) {
+			return false;
 		}
-		try {
-			ImageIO.write(result, "png", new FileImageOutputStream(new File("test.png")));
-		} catch (FileNotFoundException e) {
-			// Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// Auto-generated catch block
-			e.printStackTrace();
+		final String world = island.getWorld();
+		// Get parameters from configuration
+		final WorldConfig worldConfig = config.getWorldConfig(world);
+		final int resourceIslandRarity = worldConfig.getResourceIslandRarity();
+		final int islandGapBlocks = worldConfig.getIslandGapChunks() * BLOCKS_PER_CHUNK;
+		final int islandSizeBlocks = worldConfig.getIslandSizeChunks() * BLOCKS_PER_CHUNK;
+		final int islandSeparationBlocks = islandSizeBlocks + islandGapBlocks;
+		final int x = island.getX();
+		final int z = island.getZ();
+		if (Math.abs(x) <= islandSeparationBlocks && Math.abs(z) <= islandSeparationBlocks) {
+			// One of the 6 islands adjacent to spawn
+			return true;
 		}
+		return random(x, z, worldSeed) * 100 < resourceIslandRarity;
+	}
+
+	private static double random(final int x, final int z, final long worldSeed) {
+		final long seed = worldSeed ^ ((((long) z) << 32) | x);
+		final Random random = new Random(seed);
+		return random.nextDouble();
 	}
 }
