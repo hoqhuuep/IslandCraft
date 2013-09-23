@@ -92,17 +92,20 @@ public class Island {
 			biome = islandMath.biome(seed.longValue()).getName();
 		}
 
+		final String world = islandLocation.getWorld();
+		final int x = islandLocation.getX();
+		final int z = islandLocation.getZ();
 		if (null == owner) {
 			// TODO Get real regeneration here
-			player.message("island-examine-available", islandLocation, biome, "<n>");
+			player.message("island-examine-available", world, x, z, biome, "<n>");
 		} else if (owner.equalsIgnoreCase("<reserved>")) {
-			player.message("island-examine-reserved", islandLocation, biome);
+			player.message("island-examine-reserved", world, x, z, biome);
 		} else if (owner.equalsIgnoreCase("<resource>")) {
 			// TODO Get real regeneration here
-			player.message("island-examine-resource", islandLocation, biome, "<n>");
+			player.message("island-examine-resource", world, x, z, biome, "<n>");
 		} else {
 			final Integer tax = database.loadTax(islandLocation);
-			player.message("island-examine-private", islandLocation, biome, owner, tax);
+			player.message("island-examine-private", world, x, z, biome, owner, tax);
 		}
 
 		// TODO Abandoned island

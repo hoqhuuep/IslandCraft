@@ -22,5 +22,6 @@ public final class PrivateMessage {
             return;
         }
         to.message("m", from.getName(), to.getName(), message);
+        // TODO sender needs to see message too
     }
 }

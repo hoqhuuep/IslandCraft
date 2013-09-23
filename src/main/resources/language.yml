@@ -55,21 +55,29 @@ island-rename-owner-error: §7[INFO] You cannot rename an island you do not own
 
 island-examine-available: |
   §7[INFO] Available Island:
-  §7[INFO]   Location: %s
+  §7[INFO]   World: %s
+  §7[INFO]   X: %s
+  §7[INFO]   Z: %s
   §7[INFO]   Biome: %s
   §7[INFO]   Regeneration: %s days
 island-examine-reserved: |
   §7[INFO] Reserved Island:
-  §7[INFO]   Location: %s
+  §7[INFO]   World: %s
+  §7[INFO]   X: %s
+  §7[INFO]   Z: %s
   §7[INFO]   Biome: %s
 island-examine-resource: |
   §7[INFO] Resource Island:
-  §7[INFO]   Location: %s
+  §7[INFO]   World: %s
+  §7[INFO]   X: %s
+  §7[INFO]   Z: %s
   §7[INFO]   Biome: %s
   §7[INFO]   Regeneration: %s days
 island-examine-private: |
   §7[INFO] Private Island:
-  §7[INFO]   Location: %s
+  §7[INFO]   World: %s
+  §7[INFO]   X: %s
+  §7[INFO]   Z: %s
   §7[INFO]   Biome: %s
   §7[INFO]   Owner: %s
   §7[INFO]   Tax paid: %s minecraft days

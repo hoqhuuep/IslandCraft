@@ -170,7 +170,6 @@ permissions:
       islandcraft.command.island.tax: true
       islandcraft.command.island.examine: true
       islandcraft.command.island.rename: true
-      islandcraft.command.island.warp: op
   islandcraft.command.waypoint:
     default: true
     children:
