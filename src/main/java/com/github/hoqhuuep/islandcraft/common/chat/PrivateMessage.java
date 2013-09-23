@@ -21,7 +21,7 @@ public final class PrivateMessage {
             from.message("m-error");
             return;
         }
+        from.message("m", from.getName(), to.getName(), message);
         to.message("m", from.getName(), to.getName(), message);
-        // TODO sender needs to see message too
     }
 }
