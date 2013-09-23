@@ -61,8 +61,8 @@ public class Island {
         // Success
         database.saveOwnership(islandLocation, null);
         database.saveTax(islandLocation, null);
-        protection.removeRegion(islandMath.visibleRegion(islandLocation));
-        protection.removeRegion(islandMath.protectedRegion(islandLocation));
+        // TODO protection.removeRegion(islandMath.visibleRegion(islandLocation));
+        // TODO protection.removeRegion(islandMath.protectedRegion(islandLocation));
         player.message("island-abandon");
     }
 
@@ -162,8 +162,8 @@ public class Island {
         database.saveOwnership(islandLocation, name);
         database.saveTax(islandLocation, TAX_INITIAL);
         final String title = name + "'s Island @ " + islandLocation;
-        protection.addVisibleRegion(title, islandMath.visibleRegion(islandLocation));
-        protection.addProtectedRegion(islandMath.protectedRegion(islandLocation), name);
+        // TODO protection.addVisibleRegion(title, islandMath.visibleRegion(islandLocation));
+        // TODO protection.addProtectedRegion(islandMath.protectedRegion(islandLocation), name);
         player.message("island-purchase");
     }
 
@@ -238,7 +238,7 @@ public class Island {
         }
 
         // Success
-        protection.renameRegion(islandMath.visibleRegion(islandLocation), title);
+        // TODO protection.renameRegion(islandMath.visibleRegion(islandLocation), title);
         player.message("island-rename");
     }
 

@@ -3,11 +3,9 @@ package com.github.hoqhuuep.islandcraft.common.api;
 import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
 
 public interface ICProtection {
-    boolean addProtectedRegion(ICRegion region, String owner);
+	void createReservedRegion(ICRegion region, String title);
 
-    boolean addVisibleRegion(String name, ICRegion region);
+	void createResourceRegion(ICRegion region, String title);
 
-    boolean removeRegion(ICRegion region);
-
-    boolean renameRegion(ICRegion region, String title);
+	void createPrivateRegion(ICRegion region, String player, String title);
 }
