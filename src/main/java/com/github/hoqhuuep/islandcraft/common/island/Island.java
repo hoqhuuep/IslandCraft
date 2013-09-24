@@ -6,7 +6,6 @@ import com.github.hoqhuuep.islandcraft.common.IslandMath;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
-import com.github.hoqhuuep.islandcraft.common.type.ICType;
 
 public class Island {
 	private static final int TAX_MAX = 2016;
@@ -53,7 +52,7 @@ public class Island {
 			player.message("island-abandon-ocean-error");
 			return;
 		}
-		if (!isOwner(player, islandLocation)) {
+		if (!protection.hasOwner(islandLocation, player.getName())) {
 			player.message("island-abandon-owner-error");
 			return;
 		}
@@ -82,8 +81,6 @@ public class Island {
 			return;
 		}
 
-		final ICType type = protection.getType(islandLocation);
-
 		final Long seed = database.loadSeed(islandLocation);
 		final String biome;
 		if (null == seed) {
@@ -95,18 +92,20 @@ public class Island {
 		final String world = islandLocation.getWorld();
 		final int x = islandLocation.getX();
 		final int z = islandLocation.getZ();
-		if (type == ICType.AVAILABLE) {
+		final String type = protection.getType(islandLocation);
+		if (type.equals("availble")) {
 			// TODO Get real regeneration here
 			player.message("island-examine-available", world, x, z, biome, "<n>");
-		} else if (type == ICType.RESERVED) {
+		} else if (type.equals("reserved")) {
 			player.message("island-examine-reserved", world, x, z, biome);
-		} else if (type == ICType.RESOURCE) {
+		} else if (type.equals("resource")) {
 			// TODO Get real regeneration here
 			player.message("island-examine-resource", world, x, z, biome, "<n>");
 		} else {
-			final String owner = protection.getOwner(islandLocation);
+			final List<String> owners = protection.getOwners(islandLocation);
 			final int tax = protection.getTax(islandLocation);
-			player.message("island-examine-private", world, x, z, biome, owner, tax);
+			// TODO format owners list as Owner1, Owner2, Owner3
+			player.message("island-examine-private", world, x, z, biome, owners, tax);
 		}
 	}
 
@@ -129,18 +128,17 @@ public class Island {
 			return;
 		}
 
-		final ICType type = protection.getType(islandLocation);
+		final String type = protection.getType(islandLocation);
 		final String name = player.getName();
 
-		if (type == ICType.RESERVED) {
+		if (type.equals("reserved")) {
 			player.message("island-purchase-reserved-error");
 			return;
-		} else if (type == ICType.RESOURCE) {
+		} else if (type.equals("resource")) {
 			player.message("island-purchase-resource-error");
 			return;
-		} else if (type == ICType.PRIVATE) {
-			final String owner = protection.getOwner(islandLocation);
-			if (owner.equalsIgnoreCase(name)) {
+		} else if (type.equals("private")) {
+			if (protection.hasOwner(islandLocation, name)) {
 				player.message("island-purchase-self-error");
 			} else {
 				player.message("island-purchase-other-error");
@@ -178,7 +176,8 @@ public class Island {
 			player.message("island-tax-ocean-error");
 			return;
 		}
-		if (!isOwner(player, islandLocation)) {
+		final String name = player.getName();
+		if (!protection.hasOwner(islandLocation, name)) {
 			player.message("island-tax-owner-error");
 			return;
 		}
@@ -189,7 +188,6 @@ public class Island {
 			return;
 		}
 
-		final String name = player.getName();
 		final int cost = calculateTaxCost(name);
 
 		if (!player.takeItems(taxItem, cost)) {
@@ -231,7 +229,7 @@ public class Island {
 			player.message("island-rename-ocean-error");
 			return;
 		}
-		if (!isOwner(player, islandLocation)) {
+		if (!protection.hasOwner(islandLocation, player.getName())) {
 			player.message("island-rename-owner-error");
 			return;
 		}
@@ -246,18 +244,6 @@ public class Island {
 
 	private static boolean isOcean(final ICLocation location) {
 		return null == location;
-	}
-
-	private boolean isOwner(final ICPlayer player, final ICLocation location) {
-		if (protection.getType(location) != ICType.PRIVATE) {
-			return false;
-		}
-		final String owner = protection.getOwner(location);
-		final String name = player.getName();
-		if (null == owner || !owner.equalsIgnoreCase(name)) {
-			return false;
-		}
-		return true;
 	}
 
 	private int calculatePurchaseCost(final String player) {

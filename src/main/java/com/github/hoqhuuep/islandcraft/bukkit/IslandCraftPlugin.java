@@ -73,7 +73,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
 		database = new EbeanServerDatabase(getDatabase());
 		final Language language = new Language(getLanguageConfig());
 		final ICServer server = new BukkitServer(getServer(), config, language);
-		final ICProtection protection = new WorldGuardProtection(getWorldGuard(), language);
+		final ICProtection protection = new WorldGuardProtection(getWorldGuard(), language, database);
 		final IslandProtection islandProtection = new IslandProtection(protection, config);
 
 		// Generator

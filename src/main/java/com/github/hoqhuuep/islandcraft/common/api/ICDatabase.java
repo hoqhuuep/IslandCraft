@@ -110,4 +110,10 @@ public interface ICDatabase {
 	 *            the location of the new waypoint
 	 */
 	void saveWaypoint(String player, String waypoint, ICLocation location);
+
+	int loadIslandTax(String id);
+
+	void saveIsland(String id, String type, int tax);
+
+	String loadIslandType(String id);
 }

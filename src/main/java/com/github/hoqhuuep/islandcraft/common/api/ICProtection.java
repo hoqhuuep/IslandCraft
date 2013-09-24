@@ -3,20 +3,19 @@ package com.github.hoqhuuep.islandcraft.common.api;
 import java.util.List;
 
 import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
-import com.github.hoqhuuep.islandcraft.common.type.ICType;
 
 public interface ICProtection {
-	void createReservedRegion(ICRegion region, String title);
+	void createReservedRegion(ICRegion outerRegion, ICRegion innerRegion, String title);
 
-	void createResourceRegion(ICRegion region, String title);
+	void createResourceRegion(ICRegion outerRegion, ICRegion innerRegion, String title);
 
-	void createAvailableRegion(ICRegion region, String title);
+	void createAvailableRegion(ICRegion outerRegion, ICRegion innerRegion, String title);
 
-	void createPrivateRegion(ICRegion region, String player, String title, int taxInitial);
+	void createPrivateRegion(ICRegion outerRegion, ICRegion innerRegion, String player, String title, int taxInitial);
 
 	boolean regionExists(ICRegion region);
 
-	String getOwner(ICRegion region);
+	List<String> getOwners(ICRegion region);
 
 	int getTax(ICRegion region);
 
@@ -26,5 +25,7 @@ public interface ICProtection {
 
 	List<ICRegion> getIslands(String player);
 
-	ICType getType(ICRegion region);
+	String getType(ICRegion region);
+
+	boolean hasOwner(ICRegion islandLocation, String player);
 }

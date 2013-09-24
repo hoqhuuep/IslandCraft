@@ -10,7 +10,6 @@ import com.github.hoqhuuep.islandcraft.common.IslandMath;
 import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
-import com.github.hoqhuuep.islandcraft.common.type.ICType;
 
 public class IslandProtection {
 	private static final int BLOCKS_PER_CHUNK = 16;
@@ -42,11 +41,11 @@ public class IslandProtection {
 				final int islandZ = region.getLocation().getZ() + region.getZSize() / 2;
 				final ICLocation island = new ICLocation(world, islandX, islandZ);
 				if (isSpawn(island)) {
-					protection.createReservedRegion(region, "Spawn Island");
+					protection.createReservedRegion(region, innerRegion(region), "Spawn Island");
 				} else if (isResource(island, worldSeed)) {
-					protection.createResourceRegion(region, "Resource Island");
+					protection.createResourceRegion(region, innerRegion(region), "Resource Island");
 				} else {
-					protection.createAvailableRegion(region, "Available Island");
+					protection.createAvailableRegion(region, innerRegion(region), "Available Island");
 				}
 			} catch (Exception e) {
 				// TODO don't just ignore this...
@@ -56,13 +55,13 @@ public class IslandProtection {
 
 	public void onPurchase(final ICLocation island, final String player, final int taxInitial) {
 		ICRegion region = islandRegion(island);
-		protection.createPrivateRegion(region, player, "Private Island", taxInitial);
+		protection.createPrivateRegion(region, innerRegion(region), player, "Private Island", taxInitial);
 
 	}
 
 	public void onAbandon(final ICLocation island) {
 		ICRegion region = islandRegion(island);
-		protection.createAvailableRegion(region, "Available Island");
+		protection.createAvailableRegion(region, innerRegion(region), "Available Island");
 	}
 
 	// Numbers represent how many island regions a location overlaps.
@@ -195,6 +194,14 @@ public class IslandProtection {
 		return new ICRegion(min, regionSize, regionSize);
 	}
 
+	private final ICRegion innerRegion(final ICRegion outterRegion) {
+		final String world = outterRegion.getLocation().getWorld();
+		final WorldConfig worldConfig = config.getWorldConfig(world);
+		final int islandGapBlocks = worldConfig.getIslandGapChunks() * BLOCKS_PER_CHUNK;
+		return new ICRegion(outterRegion.getLocation().moveBy(islandGapBlocks, islandGapBlocks), outterRegion.getXSize() - islandGapBlocks * 2,
+				outterRegion.getZSize() - islandGapBlocks * 2);
+	}
+
 	private static boolean isSpawn(final ICLocation island) {
 		return island.getX() == 0 && island.getZ() == 0;
 	}
@@ -234,9 +241,9 @@ public class IslandProtection {
 		return result;
 	}
 
-	public String getOwner(final ICLocation island) {
+	public List<String> getOwners(final ICLocation island) {
 		ICRegion region = islandRegion(island);
-		return protection.getOwner(region);
+		return protection.getOwners(region);
 	}
 
 	public int getTax(final ICLocation island) {
@@ -262,8 +269,12 @@ public class IslandProtection {
 		return region.getLocation().moveBy(region.getXSize() / 2, region.getZSize() / 2);
 	}
 
-	public ICType getType(final ICLocation island) {
+	public String getType(final ICLocation island) {
 		final ICRegion region = islandRegion(island);
 		return protection.getType(region);
+	}
+
+	public boolean hasOwner(final ICLocation island, final String player) {
+		return protection.hasOwner(islandRegion(island), player);
 	}
 }

@@ -15,17 +15,9 @@ public class WorldInitListener implements Listener {
 
 	@EventHandler
 	public final void onWorldInit(final WorldInitEvent event) {
-		if (event == null) {
-			System.out.println("DEBUG: event is null");
-			return;
-		}
 		final World world = event.getWorld();
-		if (world == null) {
-			System.out.println("DEBUG: world is null");
-			return;
-		}
 
-		// Set spawn to 0,highest,0
+		// Set spawn to (0,top,0)
 		if (isIslandCraftWorld(world.getName())) {
 			world.setSpawnLocation(0, world.getHighestBlockYAt(0, 0), 0);
 		}
