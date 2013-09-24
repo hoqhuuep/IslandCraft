@@ -7,5 +7,9 @@ public interface ICProtection {
 
 	void createResourceRegion(ICRegion region, String title);
 
+	void createAvailableRegion(ICRegion region, String title);
+
 	void createPrivateRegion(ICRegion region, String player, String title);
+
+	boolean regionExists(ICRegion region);
 }

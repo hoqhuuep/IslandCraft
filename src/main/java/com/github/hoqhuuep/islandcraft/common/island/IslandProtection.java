@@ -32,71 +32,77 @@ public class IslandProtection {
 	public void onLoad(final ICLocation location, final long worldSeed) {
 		final String world = location.getWorld();
 		for (final ICRegion region : islandRegions(location)) {
-			final int islandX = region.getLocation().getX() + region.getXSize() / 2;
-			final int islandZ = region.getLocation().getZ() + region.getZSize() / 2;
-			final ICLocation island = new ICLocation(world, islandX, islandZ);
-			if (isSpawn(island)) {
-				protection.createReservedRegion(region, "Spawn Island");
-			} else if (isResource(island, worldSeed)) {
-				protection.createResourceRegion(region, "Resource Island");
-			} else {
-				protection.createReservedRegion(region, "Available Island");
+			try {
+				if (protection.regionExists(region)) {
+					// Do not override
+					continue;
+				}
+				final int islandX = region.getLocation().getX() + region.getXSize() / 2;
+				final int islandZ = region.getLocation().getZ() + region.getZSize() / 2;
+				final ICLocation island = new ICLocation(world, islandX, islandZ);
+				if (isSpawn(island)) {
+					protection.createReservedRegion(region, "Spawn Island");
+				} else if (isResource(island, worldSeed)) {
+					protection.createResourceRegion(region, "Resource Island");
+				} else {
+					protection.createAvailableRegion(region, "Available Island");
+				}
+			} catch (Exception e) {
+				// TODO don't just ignore this...
 			}
 		}
 	}
 
 	public void onPurchase(final ICLocation island, final String player) {
 		ICRegion region = islandRegion(island);
-		// TODO protection.removeRegion(region);
 		protection.createPrivateRegion(region, player, "Private Island");
 
 	}
 
 	public void onAbandon(final ICLocation island) {
 		ICRegion region = islandRegion(island);
-		// TODO protection.removeRegion(region);
-		protection.createReservedRegion(region, "Available Island");
+		protection.createAvailableRegion(region, "Available Island");
 	}
 
 	// Numbers represent how many island regions a location overlaps.
 	// Arrows point towards the centers of the overlapped regions.
-    // @-------+-----------+-------+-----------+
-    // |...^...|.....^.....|..\./..|.....^.....|
-    // |...3...|.....2.....|...3...|.....2.....|
-    // |../.\..|.....v.....|...v...|.....v.....|
-    // +-------+-----------+-------+-----------+
-    // |.......|...............................|
-    // |.......|...............................|
-    // |.......|...............................|
-    // |.......|...............................|
-    // |.......|...............................|
-    // |.......|...............................|
-    // |..<2>..|...............#...............|
-    // |.......|...............................|
-    // |.......|...............................|
-    // |.......|...............................|
-    // |.......|...............................|
-    // |.......|...............................|
-    // |.......|...............................|
-    // +-------+-----------+-------+-----------+
-    // |..\./..|.....^.....|...^...|.....^.....|
-    // |...3...|.....2.....|...3...|.....2.....|
-    // |...v...|.....v.....|../.\..|.....v.....|
-    // +-------+-----------+-------+-----------+
-    // |...................|.......|...........|
-    // |...................|.......|...........|
-    // |...................|.......|...........|
-    // |...................|.......|...........|
-    // |...................|.......|...........|
-    // |...................|.......|...........|
-    // |...1...............|..<2>..|.......1>..|
-    // |...................|.......|...........|
-    // |...................|.......|...........|
-    // |...................|.......|...........|
-    // |...................|.......|...........|
-    // |...................|.......|...........|
-    // |...................|.......|...........|
-    // +-------------------+-------+-----------+
+	// @-------+-----------+-------+-----------+
+	// |...^...|.....^.....|..\./..|.....^.....|
+	// |...3...|.....2.....|...3...|.....2.....|
+	// |../.\..|.....v.....|...v...|.....v.....|
+	// +-------+-----------+-------+-----------+
+	// |.......|...............................|
+	// |.......|...............................|
+	// |.......|...............................|
+	// |.......|...............................|
+	// |.......|...............................|
+	// |.......|...............................|
+	// |..<2>..|...............#...............|
+	// |.......|...............................|
+	// |.......|...............................|
+	// |.......|...............................|
+	// |.......|...............................|
+	// |.......|...............................|
+	// |.......|...............................|
+	// +-------+-----------+-------+-----------+
+	// |..\./..|.....^.....|...^...|.....^.....|
+	// |...3...|.....2.....|...3...|.....2.....|
+	// |...v...|.....v.....|../.\..|.....v.....|
+	// +-------+-----------+-------+-----------+
+	// |...................|.......|...........|
+	// |...................|.......|...........|
+	// |...................|.......|...........|
+	// |...................|.......|...........|
+	// |...................|.......|...........|
+	// |...................|.......|...........|
+	// |...1...............|..<2>..|.......1>..|
+	// |...................|.......|...........|
+	// |...................|.......|...........|
+	// |...................|.......|...........|
+	// |...................|.......|...........|
+	// |...................|.......|...........|
+	// |...................|.......|...........|
+	// +-------------------+-------+-----------+
 	private final ICRegion[] islandRegions(final ICLocation location) {
 		final String world = location.getWorld();
 		final int x = location.getX();

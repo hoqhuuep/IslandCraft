@@ -9,45 +9,42 @@ import com.github.hoqhuuep.islandcraft.common.generator.wip.PerlinIslandGenerato
 import com.github.hoqhuuep.islandcraft.common.type.ICBiome;
 
 public class IslandGenerator {
-    private final Map<Long, int[]> cache = new HashMap<Long, int[]>();
-    private final int islandSize;
-    private final IslandMath islandMath;
+	private final Map<Long, int[]> cache = new HashMap<Long, int[]>();
+	private final int islandSize;
+	private final IslandMath islandMath;
 
-    public IslandGenerator(final int islandSize, final IslandMath islandMath) {
-        this.islandSize = islandSize;
-        this.islandMath = islandMath;
-    }
+	public IslandGenerator(final int islandSize, final IslandMath islandMath) {
+		this.islandSize = islandSize;
+		this.islandMath = islandMath;
+	}
 
-    public final int biomeAt(final long seed, final int rx, final int rz) {
-        final int[] island = biomeIsland(seed);
-        return island[rx + rz * islandSize];
-    }
+	public final int biomeAt(final long seed, final int rx, final int rz) {
+		final int[] island = biomeIsland(seed);
+		return island[rx + rz * islandSize];
+	}
 
-    public final int[] biomeChunk(final long seed, final int rx, final int rz, final int[] result) {
-        final int[] island = biomeIsland(seed);
-        for (int z = 0; z < 16; ++z) {
-            System.arraycopy(island, islandSize * (z + rz) + rx, result, z << 4, 16);
-        }
-        return result;
-    }
+	public final int[] biomeChunk(final long seed, final int rx, final int rz, final int[] result) {
+		final int[] island = biomeIsland(seed);
+		for (int z = 0; z < 16; ++z) {
+			System.arraycopy(island, islandSize * (z + rz) + rx, result, z << 4, 16);
+		}
+		return result;
+	}
 
-    private int[] biomeIsland(final long seed) {
-        final Long seedKey = new Long(seed);
-        final int[] cachedIsland = cache.get(seedKey);
+	private int[] biomeIsland(final long seed) {
+		final Long seedKey = new Long(seed);
+		final int[] cachedIsland = cache.get(seedKey);
 
-        if (null == cachedIsland) {
-            // TODO Reserve spawn island
-            // TODO Make islands adjacent to spawn resource islands
-            // TODO Random chance of resource island 
-            final ICBiome islandBiomes = islandMath.biome(seed);
-            final int ocean = islandBiomes.getOcean();
-            final int shore = islandBiomes.getShore();
-            final int flats = islandBiomes.getFlats();
-            final int hills = islandBiomes.getHills();
-            final int[] newIsland = PerlinIslandGenerator.getIsland(islandSize, new Random(seed), ocean, shore, flats, hills);
-            cache.put(seedKey, newIsland);
-            return newIsland;
-        }
-        return cachedIsland;
-    }
+		if (null == cachedIsland) {
+			final ICBiome islandBiomes = islandMath.biome(seed);
+			final int ocean = islandBiomes.getOcean();
+			final int shore = islandBiomes.getShore();
+			final int flats = islandBiomes.getFlats();
+			final int hills = islandBiomes.getHills();
+			final int[] newIsland = PerlinIslandGenerator.getIsland(islandSize, new Random(seed), ocean, shore, flats, hills);
+			cache.put(seedKey, newIsland);
+			return newIsland;
+		}
+		return cachedIsland;
+	}
 }

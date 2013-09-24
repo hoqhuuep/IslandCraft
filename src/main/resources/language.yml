@@ -87,8 +87,13 @@ island-examine-ocean-error: §7[INFO] You cannot examine the ocean
 icsudo-regenerate-world-error: §7[INFO] You cannot regenerate an island from this world
 icsudo-regenerate-ocean-error: §7[INFO] You cannot regenerate the ocean
 
-welcome-reserved: §7[INFO] Welcome to §a%s
-welcome-resource: §7[INFO] Welcome to §a%s
-welcome-private: §7[INFO] Welcome to §a%s§7 by §a%s§7
+greet-reserved: "&2[INFO] Welcome to &g%s"
+greet-resource: "&2[INFO] Welcome to &g%s"
+greet-available: "&2[INFO] Welcome to &g%s"
+greet-private: "&2[INFO] Welcome to &g%s&2 by &g%s"
+farewell-reserved: "&2[INFO] Now leaving &g%s"
+farewell-resource: "&2[INFO] Now leaving &g%s"
+farewell-available: "&2[INFO] Now leaving &g%s"
+farewell-private: "&2[INFO] Now leaving &g%s&2 by &g%s"
 
 not-yet-implemented: §7[INFO] Not yet implemented

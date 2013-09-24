@@ -27,6 +27,7 @@ import com.github.hoqhuuep.islandcraft.bukkit.command.WaypointCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.config.IslandCraftConfig;
 import com.github.hoqhuuep.islandcraft.bukkit.database.CompassBean;
 import com.github.hoqhuuep.islandcraft.bukkit.database.EbeanServerDatabase;
+import com.github.hoqhuuep.islandcraft.bukkit.event.ChunkLoadListener;
 import com.github.hoqhuuep.islandcraft.bukkit.event.ClockListener;
 import com.github.hoqhuuep.islandcraft.bukkit.event.CompassListener;
 import com.github.hoqhuuep.islandcraft.bukkit.event.DawnListener;
@@ -70,16 +71,17 @@ public final class IslandCraftPlugin extends JavaPlugin {
 
 		config = new IslandCraftConfig(getConfig());
 		database = new EbeanServerDatabase(getDatabase());
-		final ICServer server = new BukkitServer(getServer(), config, new Language(getLanguageConfig()));
-		final ICProtection protection = new WorldGuardProtection(getWorldGuard());
+		final Language language = new Language(getLanguageConfig());
+		final ICServer server = new BukkitServer(getServer(), config, language);
+		final ICProtection protection = new WorldGuardProtection(getWorldGuard(), language);
+		final IslandProtection islandProtection = new IslandProtection(protection, config);
 
 		// Generator
 		TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
 
 		// Island Commands
-		final Island island = new Island(getICDatabase(), new IslandProtection(protection, config), config.getMaxIslandsPerPlayer(),
-				config.getPurchaseCostItem(), config.getPurchaseCostAmount(), config.getPurchaseCostAmount(), config.getTaxCostItem(),
-				config.getTaxCostAmount(), config.getTaxCostIncrease());
+		final Island island = new Island(getICDatabase(), islandProtection, config.getMaxIslandsPerPlayer(), config.getPurchaseCostItem(),
+				config.getPurchaseCostAmount(), config.getPurchaseCostAmount(), config.getTaxCostItem(), config.getTaxCostAmount(), config.getTaxCostIncrease());
 		final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(island, server);
 		final PluginCommand islandCommand = getCommand("island");
 		islandCommand.setExecutor(islandCommandExecutor);
@@ -88,6 +90,8 @@ public final class IslandCraftPlugin extends JavaPlugin {
 		// Dawn (for tax system)
 		register(new WorldInitListener(this));
 		register(new DawnListener(island));
+
+		register(new ChunkLoadListener(islandProtection));
 
 		// Chat Commands
 		final PrivateMessageCommandExecutor privateMessageCommandExecutor = new PrivateMessageCommandExecutor(new PrivateMessage(), server);

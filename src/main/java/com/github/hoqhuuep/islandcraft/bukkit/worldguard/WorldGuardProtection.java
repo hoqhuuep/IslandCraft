@@ -1,5 +1,6 @@
 package com.github.hoqhuuep.islandcraft.bukkit.worldguard;
 
+import com.github.hoqhuuep.islandcraft.bukkit.Language;
 import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
@@ -8,89 +9,33 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.EnumFlag;
+import com.sk89q.worldguard.protection.flags.IntegerFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class WorldGuardProtection implements ICProtection {
+	private enum Type {
+		RESERVED, RESOURCE, AVAILABLE, PRIVATE
+	}
+
 	private final WorldGuardPlugin worldGuard;
+	private final Language language;
+	private static final EnumFlag<Type> TYPE_FLAG = new EnumFlag<Type>("ic-type", Type.class);
+	private static final IntegerFlag TAX_FLAG = new IntegerFlag("ic-tax");
 
-	public WorldGuardProtection(final WorldGuardPlugin worldGuard) {
+	public WorldGuardProtection(final WorldGuardPlugin worldGuard, final Language language) {
 		this.worldGuard = worldGuard;
-	}
-/*
-	public final boolean addProtectedRegion(final ICRegion region, final String owner) {
-		final ProtectedRegion protectedRegion = createRegion(region);
-
-		// Set protected region flags
-		final DefaultDomain owners = new DefaultDomain();
-		owners.addPlayer(owner);
-		protectedRegion.setOwners(owners);
-
-		return addRegion(protectedRegion, worldGuard.getServer().getWorld(region.getLocation().getWorld()));
+		this.language = language;
 	}
 
-	private boolean addRegion(final ProtectedRegion region, final World world) {
-		final RegionManager regionManager = worldGuard.getRegionManager(world);
-		regionManager.addRegion(region);
-		try {
-			regionManager.save();
-		} catch (ProtectionDatabaseException e) {
-			// Undo
-			regionManager.removeRegion(region.getId());
-			return false;
-		}
-		return true;
-	}
-
-	public final boolean addVisibleRegion(final String name, final ICRegion region) {
-		final ProtectedRegion visibleRegion = createRegion(region);
-
-		// Set visible region flags
-		visibleRegion.setFlag(DefaultFlag.GREET_MESSAGE, "Welcome to " + name);
-		visibleRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, "Now leaving " + name);
-
-		return addRegion(visibleRegion, worldGuard.getServer().getWorld(region.getLocation().getWorld()));
-	}
-
-	public final boolean removeRegion(final ICRegion region) {
-		final RegionManager regionManager = worldGuard.getRegionManager(worldGuard.getServer().getWorld(region.getLocation().getWorld()));
-		final ProtectedRegion protectedRegion = regionManager.getRegion(regionId(region));
-		regionManager.removeRegion(protectedRegion.getId());
-		try {
-			regionManager.save();
-		} catch (ProtectionDatabaseException e) {
-			// Undo
-			regionManager.addRegion(protectedRegion);
-			return false;
-		}
-		return true;
-	}
-
-	public final boolean renameRegion(final ICRegion region, final String title) {
-		final RegionManager regionManager = worldGuard.getRegionManager(worldGuard.getServer().getWorld(region.getLocation().getWorld()));
-		final ProtectedRegion visibleRegion = regionManager.getRegion(regionId(region));
-		final String oldGreetMessage = visibleRegion.getFlag(DefaultFlag.GREET_MESSAGE);
-		final String oldFarewellMessage = visibleRegion.getFlag(DefaultFlag.FAREWELL_MESSAGE);
-		visibleRegion.setFlag(DefaultFlag.GREET_MESSAGE, "Welcome to " + title);
-		visibleRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, "Now leaving " + title);
-		try {
-			regionManager.save();
-		} catch (ProtectionDatabaseException e) {
-			// Undo
-			visibleRegion.setFlag(DefaultFlag.GREET_MESSAGE, oldGreetMessage);
-			visibleRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, oldFarewellMessage);
-			return false;
-		}
-		return true;
-	}
-*/
 	private static String regionId(final ICRegion region) {
 		// TODO use player name in region id. For example "Notch'1",
 		// "Notch'2", etc.
 		final ICLocation location = region.getLocation();
-		return location.getWorld() + "'" + location.getX() + "'" + location.getZ();
+		return "ic'" + location.getWorld() + "'" + location.getX() + "'" + location.getZ();
 	}
 
 	private static ProtectedRegion createRegion(final ICRegion region, final String regionId) {
@@ -107,15 +52,16 @@ public class WorldGuardProtection implements ICProtection {
 	@Override
 	public void createReservedRegion(ICRegion region, String title) {
 		final ProtectedRegion protectedRegion = createRegion(region, regionId(region));
+		protectedRegion.setFlag(TYPE_FLAG, Type.RESERVED);
 
 		// Set flags
-		protectedRegion.setFlag(DefaultFlag.GREET_MESSAGE, "Welcome to " + title);
-		protectedRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, "Now leaving " + title);
+		protectedRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-reserved", title));
+		protectedRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-reserved", title));
 		protectedRegion.setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
 
 		final RegionManager regionManager = worldGuard.getRegionManager(worldGuard.getServer().getWorld(region.getLocation().getWorld()));
 		regionManager.addRegion(protectedRegion);
-		
+
 		try {
 			regionManager.save();
 		} catch (ProtectionDatabaseException e) {
@@ -127,10 +73,11 @@ public class WorldGuardProtection implements ICProtection {
 	@Override
 	public void createResourceRegion(ICRegion region, String title) {
 		final ProtectedRegion protectedRegion = createRegion(region, regionId(region));
+		protectedRegion.setFlag(TYPE_FLAG, Type.RESOURCE);
 
 		// Set flags
-		protectedRegion.setFlag(DefaultFlag.GREET_MESSAGE, "Welcome to " + title);
-		protectedRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, "Now leaving " + title);
+		protectedRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-resource", title));
+		protectedRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-resource", title));
 		protectedRegion.setFlag(DefaultFlag.BUILD, StateFlag.State.ALLOW);
 
 		final RegionManager regionManager = worldGuard.getRegionManager(worldGuard.getServer().getWorld(region.getLocation().getWorld()));
@@ -142,24 +89,58 @@ public class WorldGuardProtection implements ICProtection {
 			regionManager.removeRegion(protectedRegion.getId());
 		}
 	}
-
+	
 	@Override
-	public void createPrivateRegion(ICRegion region, String player, String title) {
+	public void createAvailableRegion(ICRegion region, String title) {
 		final ProtectedRegion protectedRegion = createRegion(region, regionId(region));
+		protectedRegion.setFlag(TYPE_FLAG, Type.AVAILABLE);
 
-		// Set owner
-		final DefaultDomain owners = new DefaultDomain();
-		owners.addPlayer(player);
-		protectedRegion.setOwners(owners);
+		// Set flags
+		protectedRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-available", title));
+		protectedRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-available", title));
+		protectedRegion.setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
 
 		final RegionManager regionManager = worldGuard.getRegionManager(worldGuard.getServer().getWorld(region.getLocation().getWorld()));
 		regionManager.addRegion(protectedRegion);
-		
+
 		try {
 			regionManager.save();
 		} catch (ProtectionDatabaseException e) {
 			// TODO make sure this is handled better higher up!
 			regionManager.removeRegion(protectedRegion.getId());
 		}
+	}
+
+	@Override
+	public void createPrivateRegion(ICRegion region, String player, String title) {
+		final ProtectedRegion protectedRegion = createRegion(region, regionId(region));
+		protectedRegion.setFlag(TYPE_FLAG, Type.PRIVATE);
+
+		// Set owner
+		final DefaultDomain owners = new DefaultDomain();
+		owners.addPlayer(player);
+		protectedRegion.setOwners(owners);
+
+		protectedRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-private", title, player));
+		protectedRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-private", title, player));
+
+		protectedRegion.setFlag(TAX_FLAG, 123);
+
+		final RegionManager regionManager = worldGuard.getRegionManager(worldGuard.getServer().getWorld(region.getLocation().getWorld()));
+		regionManager.addRegion(protectedRegion);
+
+		try {
+			regionManager.save();
+		} catch (ProtectionDatabaseException e) {
+			// TODO make sure this is handled better higher up!
+			regionManager.removeRegion(protectedRegion.getId());
+		}
+	}
+
+	@Override
+	public boolean regionExists(ICRegion region) {
+		final RegionManager regionManager = worldGuard.getRegionManager(worldGuard.getServer().getWorld(region.getLocation().getWorld()));
+		ProtectedRegion protectedRegion = regionManager.getRegionExact(regionId(region));
+		return protectedRegion != null;
 	}
 }
