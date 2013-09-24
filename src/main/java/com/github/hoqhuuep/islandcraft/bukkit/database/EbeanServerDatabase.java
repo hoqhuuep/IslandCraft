@@ -17,11 +17,9 @@ public class EbeanServerDatabase implements ICDatabase {
     public static List<Class<?>> getDatabaseClasses() {
         final List<Class<?>> list = new ArrayList<Class<?>>();
         list.add(CompassBean.class);
-        list.add(OwnershipBean.class);
         list.add(PartyBean.class);
         list.add(SeedBean.class);
         list.add(WaypointBean.class);
-        list.add(TaxBean.class);
         return list;
     }
 
@@ -51,49 +49,6 @@ public class EbeanServerDatabase implements ICDatabase {
 
     private CompassBean loadCompassBean(final String player) {
         return ebean.find(CompassBean.class).where().ieq("player", player).findUnique();
-    }
-
-    @Override
-    public final String loadOwnership(final ICLocation location) {
-        final String id = location.getWorld() + ":" + location.getX() + ":" + location.getZ();
-        final OwnershipBean bean = loadOwnershipBean(id);
-        if (null == bean) {
-            return null;
-        }
-        return bean.getPlayer();
-    }
-
-    @Override
-    public final List<ICLocation> loadOwnershipLocations(final String player) {
-        final List<OwnershipBean> beans = ebean.find(OwnershipBean.class).where().ieq("player", player).findList();
-        final List<ICLocation> locations = new ArrayList<ICLocation>(beans.size());
-        for (final OwnershipBean bean : beans) {
-            locations.add(new ICLocation(bean.getWorld(), bean.getX().intValue(), bean.getZ().intValue()));
-        }
-        return locations;
-    }
-
-    @Override
-    public final void saveOwnership(final ICLocation location, final String player) {
-        final String id = location.getWorld() + ":" + location.getX() + ":" + location.getZ();
-        OwnershipBean bean = loadOwnershipBean(id);
-        if (null == player) {
-            ebean.delete(bean);
-            return;
-        }
-        if (null == bean) {
-            bean = new OwnershipBean();
-            bean.setId(id);
-            bean.setWorld(location.getWorld());
-            bean.setX(new Integer(location.getX()));
-            bean.setZ(new Integer(location.getZ()));
-        }
-        bean.setPlayer(player);
-        ebean.save(bean);
-    }
-
-    private OwnershipBean loadOwnershipBean(final String id) {
-        return ebean.find(OwnershipBean.class).where().ieq("id", id).findUnique();
     }
 
     @Override
@@ -209,48 +164,5 @@ public class EbeanServerDatabase implements ICDatabase {
 
     private WaypointBean loadWaypointBean(final String id) {
         return ebean.find(WaypointBean.class).where().ieq("id", id).findUnique();
-    }
-
-    @Override
-    public Integer loadTax(ICLocation location) {
-        final String id = location.getWorld() + ":" + location.getX() + ":" + location.getZ();
-        final TaxBean bean = loadTaxBean(id);
-        if (null == bean) {
-            return null;
-        }
-        return bean.getTax();
-    }
-
-    @Override
-    public void saveTax(ICLocation location, Integer tax) {
-        final String id = location.getWorld() + ":" + location.getX() + ":" + location.getZ();
-        TaxBean bean = loadTaxBean(id);
-        if (null == tax) {
-            ebean.delete(bean);
-            return;
-        }
-        if (null == bean) {
-            bean = new TaxBean();
-            bean.setId(id);
-            bean.setWorld(location.getWorld());
-            bean.setX(new Integer(location.getX()));
-            bean.setZ(new Integer(location.getZ()));
-        }
-        bean.setTax(tax);
-        ebean.save(bean);
-    }
-
-    private TaxBean loadTaxBean(final String id) {
-        return ebean.find(TaxBean.class).where().ieq("id", id).findUnique();
-    }
-
-    @Override
-    public List<ICLocation> loadTaxByWorld(String world) {
-        final List<TaxBean> beans = ebean.find(TaxBean.class).where().ieq("world", world).findList();
-        final List<ICLocation> islands = new ArrayList<ICLocation>(beans.size());
-        for (final TaxBean bean : beans) {
-            islands.add(new ICLocation(world, bean.getX().intValue(), bean.getZ().intValue()));
-        }
-        return islands;
     }
 }

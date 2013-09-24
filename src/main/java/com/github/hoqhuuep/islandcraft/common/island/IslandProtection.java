@@ -10,6 +10,7 @@ import com.github.hoqhuuep.islandcraft.common.IslandMath;
 import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
+import com.github.hoqhuuep.islandcraft.common.type.ICType;
 
 public class IslandProtection {
 	private static final int BLOCKS_PER_CHUNK = 16;
@@ -53,9 +54,9 @@ public class IslandProtection {
 		}
 	}
 
-	public void onPurchase(final ICLocation island, final String player) {
+	public void onPurchase(final ICLocation island, final String player, final int taxInitial) {
 		ICRegion region = islandRegion(island);
-		protection.createPrivateRegion(region, player, "Private Island");
+		protection.createPrivateRegion(region, player, "Private Island", taxInitial);
 
 	}
 
@@ -222,5 +223,47 @@ public class IslandProtection {
 		final long seed = worldSeed ^ ((((long) z) << 32) | x);
 		final Random random = new Random(seed);
 		return random.nextDouble();
+	}
+
+	public List<ICLocation> getIslands(final String player) {
+		final List<ICRegion> privateIslands = protection.getIslands(player);
+		final List<ICLocation> result = new ArrayList<ICLocation>();
+		for (final ICRegion region : privateIslands) {
+			result.add(islandLocation(region));
+		}
+		return result;
+	}
+
+	public String getOwner(final ICLocation island) {
+		ICRegion region = islandRegion(island);
+		return protection.getOwner(region);
+	}
+
+	public int getTax(final ICLocation island) {
+		ICRegion region = islandRegion(island);
+		return protection.getTax(region);
+	}
+
+	public void setTax(final ICLocation island, final int tax) {
+		ICRegion region = islandRegion(island);
+		protection.setTax(region, tax);
+	}
+
+	public List<ICLocation> getPrivateIslands(final String world) {
+		final List<ICRegion> privateIslands = protection.getPrivateIslands(world);
+		final List<ICLocation> result = new ArrayList<ICLocation>();
+		for (final ICRegion region : privateIslands) {
+			result.add(islandLocation(region));
+		}
+		return result;
+	}
+
+	private ICLocation islandLocation(final ICRegion region) {
+		return region.getLocation().moveBy(region.getXSize() / 2, region.getZSize() / 2);
+	}
+
+	public ICType getType(final ICLocation island) {
+		final ICRegion region = islandRegion(island);
+		return protection.getType(region);
 	}
 }
