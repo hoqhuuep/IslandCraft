@@ -93,7 +93,7 @@ public class Island {
 		final int x = islandLocation.getX();
 		final int z = islandLocation.getZ();
 		final String type = protection.getType(islandLocation);
-		if (type.equals("availble")) {
+		if (type.equals("available")) {
 			// TODO Get real regeneration here
 			player.message("island-examine-available", world, x, z, biome, "<n>");
 		} else if (type.equals("reserved")) {

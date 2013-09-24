@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
+// TODO exception when removing non-existing waypoint
 
 /**
  * @author Daniel Simmons

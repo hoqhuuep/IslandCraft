@@ -55,6 +55,7 @@ public class BukkitWorld implements ICWorld {
 
     @Override
     public final String getTime() {
+    	// TODO seems to be 63 minutes in an hour???
         final long time = world.getTime();
         final long hour = ((time + HOUR_ORIGIN) / ONE_HOUR) % HOURS_PER_DAY;
         final long minute = ((time + HOUR_ORIGIN) % ONE_HOUR) / ONE_MINUTE;
