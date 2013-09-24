@@ -36,7 +36,7 @@ public class EbeanServerDatabase implements ICDatabase {
 	@Override
 	public final void saveCompass(final String player, final String waypoint) {
 		CompassBean bean = loadCompassBean(player);
-		if (null == waypoint) {
+		if (null == waypoint && null != bean) {
 			ebean.delete(bean);
 			return;
 		}
@@ -74,7 +74,7 @@ public class EbeanServerDatabase implements ICDatabase {
 	@Override
 	public final void saveParty(final String player, final String party) {
 		PartyBean bean = loadPartyBean(player);
-		if (null == party) {
+		if (null == party && null != bean) {
 			ebean.delete(bean);
 			return;
 		}
@@ -104,7 +104,7 @@ public class EbeanServerDatabase implements ICDatabase {
 	public final void saveSeed(final ICLocation location, final Long seed) {
 		final String id = location.getWorld() + ":" + location.getX() + ":" + location.getZ();
 		SeedBean bean = loadSeedBean(id);
-		if (null == seed) {
+		if (null == seed && null != bean) {
 			ebean.delete(bean);
 			return;
 		}
@@ -147,7 +147,7 @@ public class EbeanServerDatabase implements ICDatabase {
 	public final void saveWaypoint(final String player, final String waypoint, final ICLocation location) {
 		final String id = player + ":" + waypoint;
 		WaypointBean bean = loadWaypointBean(id);
-		if (null == location) {
+		if (null == location && null != bean) {
 			ebean.delete(bean);
 			return;
 		}

@@ -5,25 +5,26 @@ p: "[%s->§a%s§f] %s"
 p-error: §7[INFO] You are not a member of any party
 
 party-join: §7[INFO] You are now a member of §a%s
-party-join-notify: §7[INFO] %s has joined your party
+party-join-notify: §7[INFO] §a%s§7 has joined your party
 party-leave: §7[INFO] You are no longer a member of §a%s
-party-leave-notify: §7[INFO] %s has left your party
+party-leave-notify: §7[INFO] §a%s§7 has left your party
 party-leave-error: §7[INFO] You are not a member of any party
-party-members: "§7[INFO] Members: %s"
+party-members: "§7[INFO] Members: §a%s"
 party-members-error: §7[INFO] You are not a member of any party
 
-clock: §7[INFO] The time is %s
+clock: §7[INFO] The time is §a%s
 clock-error: §7[INFO] The time is §k03:14
 
-compass: §7[INFO] Compass now pointing to %s
+compass: §7[INFO] Compass now pointing to §a%s
 compass-error: §7[INFO] Compass now pointing to §knowhere
 
-waypoint-add: §7[INFO] Added waypoint %s
+waypoint-add: §7[INFO] Added waypoint §a%s
 waypoint-add-world-error: §7[INFO] You cannot set a waypoint from this world
 waypoint-add-reserved-error: §7[INFO] You cannot override that waypoint
-waypoint-remove: §7[INFO] Removed waypoint %s
+waypoint-remove: §7[INFO] Removed waypoint §a%s
+waypoint-exists-error: §7[INFO] That waypoint does not exist
 waypoint-remove-error: §7[INFO] You cannot remove that waypoint
-waypoint-list: "§7[INFO] Waypoints: %s"
+waypoint-list: "§7[INFO] Waypoints: §a%s"
 waypoint-set-error: §7[INFO] Waypoint not defined
 
 island-abandon: §7[INFO] Island successfully abandoned
