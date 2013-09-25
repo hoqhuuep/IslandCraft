@@ -73,14 +73,13 @@ public final class IslandCraftPlugin extends JavaPlugin {
 		database = new EbeanServerDatabase(getDatabase());
 		final Language language = new Language(getLanguageConfig());
 		final ICServer server = new BukkitServer(getServer(), config, language);
-		final ICProtection protection = new WorldGuardProtection(getWorldGuard(), language, database);
-		final IslandProtection islandProtection = new IslandProtection(protection, config);
+		final ICProtection protection = new WorldGuardProtection(getWorldGuard(), language, database, config);
 
 		// Generator
 		TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
 
 		// Island Commands
-		final Island island = new Island(getICDatabase(), islandProtection, config.getMaxIslandsPerPlayer(), config.getPurchaseCostItem(),
+		final Island island = new Island(getICDatabase(), protection, config.getMaxIslandsPerPlayer(), config.getPurchaseCostItem(),
 				config.getPurchaseCostAmount(), config.getPurchaseCostAmount(), config.getTaxCostItem(), config.getTaxCostAmount(), config.getTaxCostIncrease());
 		final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(island, server);
 		final PluginCommand islandCommand = getCommand("island");
@@ -91,7 +90,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
 		register(new WorldInitListener(this));
 		register(new DawnListener(island));
 
-		register(new ChunkLoadListener(islandProtection));
+		register(new ChunkLoadListener(new IslandProtection(protection, config)));
 
 		// Chat Commands
 		final PrivateMessageCommandExecutor privateMessageCommandExecutor = new PrivateMessageCommandExecutor(new PrivateMessage(), server);

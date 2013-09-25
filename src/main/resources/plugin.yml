@@ -53,6 +53,7 @@ commands:
       /<command> abandon - Abandon an island
       /<command> examine - List information about an island
       /<command> rename - Give a new name to an island
+      /<command> tax - Pay tax for an island
   island purchase:
     description: Purchase the island you are standing on
     permission: islandcraft.command.island.purchase

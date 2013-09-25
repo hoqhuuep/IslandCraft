@@ -172,32 +172,67 @@ public class EbeanServerDatabase implements ICDatabase {
 	}
 
 	@Override
-	public int loadIslandTax(String id) {
+	public int loadIslandTax(final ICLocation island) {
+		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
 		IslandBean bean = loadIslandBean(id);
 		if (null == bean) {
-			return 0;
+			return -1;
 		}
 		return bean.getTax();
 	}
 
 	@Override
-	public void saveIsland(String id, String type, int tax) {
+	public void saveIslandTax(final ICLocation island, final int tax) {
+		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
 		IslandBean bean = loadIslandBean(id);
-		if (null == bean) {
-			bean = new IslandBean();
-			bean.setId(id);
-		}
-		bean.setType(type);
 		bean.setTax(tax);
 		ebean.save(bean);
 	}
 
 	@Override
-	public String loadIslandType(String id) {
+	public String loadIslandOuterId(final ICLocation island) {
+		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
 		IslandBean bean = loadIslandBean(id);
 		if (null == bean) {
-			return "available";
+			return null;
 		}
-		return bean.getType();
+		return bean.getOuterId();
+	}
+
+	@Override
+	public String loadIslandInnerId(final ICLocation island) {
+		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
+		IslandBean bean = loadIslandBean(id);
+		if (null == bean) {
+			return null;
+		}
+		return bean.getInnerId();
+	}
+
+	@Override
+	public void saveIsland(final ICLocation island, final String outerId, final String innerId, final int tax) {
+		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
+		IslandBean bean = loadIslandBean(id);
+		if (null == bean) {
+			bean = new IslandBean();
+			bean.setId(id);
+			bean.setWorld(island.getWorld());
+			bean.setX(new Integer(island.getX()));
+			bean.setZ(new Integer(island.getZ()));
+		}
+		bean.setOuterId(outerId);
+		bean.setInnerId(innerId);
+		bean.setTax(tax);
+		ebean.save(bean);
+	}
+
+	@Override
+	public List<ICLocation> loadIslands() {
+		List<IslandBean> beans = ebean.find(IslandBean.class).findList();
+		List<ICLocation> result = new ArrayList<ICLocation>(beans.size());
+		for (IslandBean bean : beans) {
+			result.add(new ICLocation(bean.getWorld(), bean.getX().intValue(), bean.getZ().intValue()));
+		}
+		return result;
 	}
 }

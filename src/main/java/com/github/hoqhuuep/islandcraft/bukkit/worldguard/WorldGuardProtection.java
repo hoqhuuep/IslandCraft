@@ -1,23 +1,24 @@
 package com.github.hoqhuuep.islandcraft.bukkit.worldguard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.bukkit.World;
 
 import com.github.hoqhuuep.islandcraft.bukkit.Language;
+import com.github.hoqhuuep.islandcraft.bukkit.config.IslandCraftConfig;
+import com.github.hoqhuuep.islandcraft.bukkit.config.WorldConfig;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
-import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
+import com.github.hoqhuuep.islandcraft.common.type.ICType;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -27,228 +28,262 @@ public class WorldGuardProtection implements ICProtection {
 	private final WorldGuardPlugin worldGuard;
 	private final Language language;
 	private final ICDatabase database;
+	private final IslandCraftConfig config;
 
-	public WorldGuardProtection(final WorldGuardPlugin worldGuard, final Language language, final ICDatabase database) {
+	private static final int MIN_Y = 0;
+	private static final int MAX_Y = 255;
+
+	public WorldGuardProtection(final WorldGuardPlugin worldGuard, final Language language, final ICDatabase database, final IslandCraftConfig config) {
 		this.worldGuard = worldGuard;
 		this.language = language;
 		this.database = database;
+		this.config = config;
 	}
 
-	private static String regionId(final ICRegion region) {
-		// TODO use player name in region id. For example "Notch'1",
-		// "Notch'2", etc.
-		final ICLocation location = region.getLocation();
-		return "ic'" + location.getWorld() + "'" + location.getX() + "'" + location.getZ() + "'" + region.getXSize() + "'" + region.getZSize();
+	@Override
+	public int islandCount(final String player) {
+		int count = 0;
+		for (final ICLocation island : database.loadIslands()) {
+			final ProtectedRegion outerRegion = getOuterRegion(island);
+			if (outerRegion != null && outerRegion.isOwner(player)) {
+				++count;
+			}
+		}
+		return count;
 	}
 
-	private static ProtectedRegion createRegion(final ICRegion region, final String regionId) {
-		final ICLocation location = region.getLocation();
-		final int minX = location.getX();
-		final int minZ = location.getZ();
-		final int maxX = minX + region.getXSize();
-		final int maxZ = minZ + region.getZSize();
-		final BlockVector bv1 = new BlockVector(minX, 0, minZ);
-		final BlockVector bv2 = new BlockVector(maxX, 255, maxZ);
-		return new ProtectedCuboidRegion(regionId, bv1, bv2);
+	@Override
+	public boolean hasOwner(final ICLocation island, final String player) {
+		final ProtectedRegion protectedRegion = getOuterRegion(island);
+		if (protectedRegion == null) {
+			return false;
+		}
+		return protectedRegion.isOwner(player);
+	}
+
+	@Override
+	public ICType getType(final ICLocation island) {
+		final ProtectedRegion protectedRegion = getOuterRegion(island);
+		if (protectedRegion == null) {
+			return ICType.PRIVATE;
+		}
+		final State build = protectedRegion.getFlag(DefaultFlag.BUILD);
+		if (build == State.ALLOW) {
+			return ICType.PUBLIC;
+		}
+		if (build == State.DENY) {
+			return ICType.RESERVED;
+		}
+		return ICType.PRIVATE;
+	}
+
+	@Override
+	public List<String> getOwners(final ICLocation island) {
+		final ProtectedRegion protectedRegion = getOuterRegion(island);
+		if (protectedRegion == null) {
+			return Collections.<String> emptyList();
+		}
+		return new ArrayList<String>(protectedRegion.getOwners().getPlayers());
+	}
+
+	@Override
+	public void createReservedIsland(final ICLocation island, final String title) {
+		final String outerId = "ic'" + island.getWorld() + "'" + island.getX() + "'" + island.getZ();
+		final String innerId = outerId + "'";
+		final WorldConfig worldConfig = config.getWorldConfig(island.getWorld());
+		final int innerRadius = worldConfig.getIslandSizeChunks() * 8;
+		final int outerRadius = innerRadius + worldConfig.getIslandGapChunks();
+		final ProtectedRegion outerRegion = createProtectedRegion(island, outerId, outerRadius);
+		final ProtectedRegion innerRegion = createProtectedRegion(island, innerId, innerRadius);
+		outerRegion.setFlag(DefaultFlag.BUILD, State.DENY);
+		innerRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-reserved", title));
+		innerRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-reserved", title));
+		try {
+			innerRegion.setParent(outerRegion);
+		} catch (CircularInheritanceException e) {
+			// Will never happen (TM)
+			e.printStackTrace();
+		}
+
+		// Remove old regions
+		final String world = island.getWorld();
+		removeRegion(world, database.loadIslandOuterId(island));
+		removeRegion(world, database.loadIslandInnerId(island));
+
+		addRegion(world, outerRegion);
+		addRegion(world, innerRegion);
+
+		database.saveIsland(island, outerId, innerId, -1);
+	}
+
+	@Override
+	public void createPublicIsland(final ICLocation island, final String title, final int tax) {
+		final String outerId = "ic'" + island.getWorld() + "'" + island.getX() + "'" + island.getZ();
+		final String innerId = outerId + "'";
+		final WorldConfig worldConfig = config.getWorldConfig(island.getWorld());
+		final int innerRadius = worldConfig.getIslandSizeChunks() * 8;
+		final int outerRadius = innerRadius + worldConfig.getIslandGapChunks();
+		final ProtectedRegion outerRegion = createProtectedRegion(island, outerId, outerRadius);
+		final ProtectedRegion innerRegion = createProtectedRegion(island, innerId, innerRadius);
+		outerRegion.setFlag(DefaultFlag.BUILD, State.ALLOW);
+		innerRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-resource", title));
+		innerRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-resource", title));
+		try {
+			innerRegion.setParent(outerRegion);
+		} catch (CircularInheritanceException e) {
+			// Will never happen (TM)
+			e.printStackTrace();
+		}
+
+		// Remove old regions
+		final String world = island.getWorld();
+		removeRegion(world, database.loadIslandOuterId(island));
+		removeRegion(world, database.loadIslandInnerId(island));
+
+		addRegion(world, outerRegion);
+		addRegion(world, innerRegion);
+
+		database.saveIsland(island, outerId, innerId, tax);
+	}
+
+	@Override
+	public void createPrivateIsland(final ICLocation island, final String title, final int tax, final List<String> owners) {
+		final String outerId = "ic'" + island.getWorld() + "'" + island.getX() + "'" + island.getZ();
+		final String innerId = outerId + "'";
+		final WorldConfig worldConfig = config.getWorldConfig(island.getWorld());
+		final int innerRadius = worldConfig.getIslandSizeChunks() * 8;
+		final int outerRadius = innerRadius + worldConfig.getIslandGapChunks();
+		final ProtectedRegion outerRegion = createProtectedRegion(island, outerId, outerRadius);
+		final ProtectedRegion innerRegion = createProtectedRegion(island, innerId, innerRadius);
+		if (owners.isEmpty()) {
+			innerRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-available", title));
+			innerRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-available", title));
+		} else {
+			final String firstOwner = owners.get(0);
+			innerRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-private", title, firstOwner));
+			innerRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-private", title, firstOwner));
+		}
+		try {
+			innerRegion.setParent(outerRegion);
+		} catch (CircularInheritanceException e) {
+			// Will never happen (TM)
+			e.printStackTrace();
+		}
+
+		// Set owners
+		if (owners != null && !owners.isEmpty()) {
+			final DefaultDomain defaultDomain = new DefaultDomain();
+			for (final String owner : owners) {
+				defaultDomain.addPlayer(owner);
+			}
+			outerRegion.setOwners(defaultDomain);
+		}
+
+		// Remove old regions
+		final String world = island.getWorld();
+		removeRegion(world, database.loadIslandOuterId(island));
+		removeRegion(world, database.loadIslandInnerId(island));
+
+		addRegion(world, outerRegion);
+		addRegion(world, innerRegion);
+
+		database.saveIsland(island, outerId, innerId, tax);
+	}
+
+	private ProtectedRegion getOuterRegion(final ICLocation island) {
+		final RegionManager regionManager = getRegionManager(island.getWorld());
+		if (null == regionManager) {
+			return null;
+		}
+		final String outerId = database.loadIslandOuterId(island);
+		if (outerId == null || !regionManager.hasRegion(outerId)) {
+			return null;
+		}
+		return regionManager.getRegionExact(outerId);
+	}
+
+	private ProtectedRegion getInnerRegion(final ICLocation island) {
+		final RegionManager regionManager = getRegionManager(island.getWorld());
+		if (null == regionManager) {
+			return null;
+		}
+		final String innerId = database.loadIslandInnerId(island);
+		if (innerId == null || !regionManager.hasRegion(innerId)) {
+			return null;
+		}
+		return regionManager.getRegionExact(innerId);
+	}
+
+	private ProtectedRegion createProtectedRegion(final ICLocation island, final String id, final int radius) {
+		final int centerX = island.getX();
+		final int centerZ = island.getZ();
+		final int minX = centerX - radius;
+		final int minZ = centerZ - radius;
+		final int maxX = centerX + radius;
+		final int maxZ = centerZ + radius;
+		final BlockVector min = new BlockVector(minX, MIN_Y, minZ);
+		final BlockVector max = new BlockVector(maxX, MAX_Y, maxZ);
+		return new ProtectedCuboidRegion(id, min, max);
 	}
 
 	private void addRegion(final String world, final ProtectedRegion protectedRegion) {
+		final RegionManager regionManager = getRegionManager(world);
+		if (regionManager == null) {
+			// TODO handle this
+			return;
+		}
+		regionManager.addRegion(protectedRegion);
 		try {
-			final RegionManager regionManager = worldGuard.getRegionManager(worldGuard.getServer().getWorld(world));
-			regionManager.addRegion(protectedRegion);
-			try {
-				regionManager.save();
-			} catch (ProtectionDatabaseException e) {
-				// TODO make sure this is handled better higher up!
-				regionManager.removeRegion(protectedRegion.getId());
-			}
-		} catch (Exception e) {
-			// TODO make sure this is handled better later!
+			regionManager.save();
+		} catch (ProtectionDatabaseException e) {
+			// TODO handle this
 		}
 	}
 
-	private ProtectedRegion getRegion(final ICRegion region) {
+	private void removeRegion(final String world, final String id) {
+		if (id != null) {
+			final RegionManager regionManager = getRegionManager(world);
+			if (null == regionManager) {
+				// TODO handle this
+				return;
+			}
+			regionManager.removeRegion(id);
+			try {
+				regionManager.save();
+			} catch (ProtectionDatabaseException e) {
+				// TODO handle this
+			}
+		}
+	}
+
+	private RegionManager getRegionManager(final String world) {
+		final World bukkitWorld = worldGuard.getServer().getWorld(world);
 		try {
-			final RegionManager regionManager = worldGuard.getRegionManager(worldGuard.getServer().getWorld(region.getLocation().getWorld()));
-			final ProtectedRegion protectedRegion = regionManager.getRegionExact(regionId(region));
-			return protectedRegion;
+			return worldGuard.getRegionManager(bukkitWorld);
 		} catch (Exception e) {
-			// TODO make sure this is handled better later!
+			// TODO return deferred region manager???
 			return null;
 		}
 	}
 
 	@Override
-	public void createReservedRegion(final ICRegion outerRegion, final ICRegion innerRegion, final String title) {
-		final ProtectedRegion protectedRegion = createRegion(outerRegion, regionId(outerRegion));
-		final ProtectedRegion visibleRegion = createRegion(innerRegion, regionId(innerRegion) + "'inner");
-
-		// Set flags
-		database.saveIsland(regionId(outerRegion), "reserved", 0);
-		protectedRegion.setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
-		visibleRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-reserved", title));
-		visibleRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-reserved", title));
-		try {
-			visibleRegion.setParent(protectedRegion);
-		} catch (CircularInheritanceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public void renameIsland(final ICLocation island, final String title) {
+		final ProtectedRegion innerRegion = getInnerRegion(island);
+		final List<String> owners = getOwners(island);
+		if (owners.isEmpty()) {
+			innerRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-available", title));
+			innerRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-available", title));
+		} else {
+			final String firstOwner = owners.get(0);
+			innerRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-private", title, firstOwner));
+			innerRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-private", title, firstOwner));
 		}
-
-		addRegion(outerRegion.getLocation().getWorld(), protectedRegion);
-		addRegion(innerRegion.getLocation().getWorld(), visibleRegion);
+		addRegion(island.getWorld(), innerRegion);
 	}
 
 	@Override
-	public void createResourceRegion(final ICRegion outerRegion, final ICRegion innerRegion, final String title) {
-		final ProtectedRegion protectedRegion = createRegion(outerRegion, regionId(outerRegion));
-		final ProtectedRegion visibleRegion = createRegion(innerRegion, regionId(innerRegion) + "'inner");
-
-		// Set flags
-		database.saveIsland(regionId(outerRegion), "resource", 0);
-		protectedRegion.setFlag(DefaultFlag.BUILD, StateFlag.State.ALLOW);
-		visibleRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-resource", title));
-		visibleRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-resource", title));
-		try {
-			visibleRegion.setParent(protectedRegion);
-		} catch (CircularInheritanceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		addRegion(outerRegion.getLocation().getWorld(), protectedRegion);
-		addRegion(innerRegion.getLocation().getWorld(), visibleRegion);
-	}
-
-	@Override
-	public void createAvailableRegion(final ICRegion outerRegion, final ICRegion innerRegion, final String title) {
-		final ProtectedRegion protectedRegion = createRegion(outerRegion, regionId(outerRegion));
-		final ProtectedRegion visibleRegion = createRegion(innerRegion, regionId(innerRegion) + "'inner");
-
-		// Set flags
-		database.saveIsland(regionId(outerRegion), "available", 0);
-		protectedRegion.setFlag(DefaultFlag.BUILD, StateFlag.State.DENY);
-		visibleRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-available", title));
-		visibleRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-available", title));
-		try {
-			visibleRegion.setParent(protectedRegion);
-		} catch (CircularInheritanceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		addRegion(outerRegion.getLocation().getWorld(), protectedRegion);
-		addRegion(innerRegion.getLocation().getWorld(), visibleRegion);
-	}
-
-	@Override
-	public void createPrivateRegion(final ICRegion outerRegion, final ICRegion innerRegion, final String player, final String title, final int taxInitial) {
-		final ProtectedRegion protectedRegion = createRegion(outerRegion, regionId(outerRegion));
-		final ProtectedRegion visibleRegion = createRegion(innerRegion, regionId(innerRegion) + "'inner");
-
-		// Set flags
-		database.saveIsland(regionId(outerRegion), "private", taxInitial);
-		visibleRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("greet-private", title, player));
-		visibleRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("farewell-private", title, player));
-		try {
-			visibleRegion.setParent(protectedRegion);
-		} catch (CircularInheritanceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// Set owners
-		final DefaultDomain owners = new DefaultDomain();
-		owners.addPlayer(player);
-		protectedRegion.setOwners(owners);
-
-		addRegion(outerRegion.getLocation().getWorld(), protectedRegion);
-		addRegion(innerRegion.getLocation().getWorld(), visibleRegion);
-	}
-
-	@Override
-	public boolean regionExists(final ICRegion region) {
-		return getRegion(region) != null;
-	}
-
-	@Override
-	public List<String> getOwners(final ICRegion region) {
-		final ProtectedRegion protectedRegion = getRegion(region);
-		if (protectedRegion == null) {
-			return new ArrayList<String>();
-		}
-		Set<String> owners = protectedRegion.getOwners().getPlayers();
-		return new ArrayList<String>(owners);
-	}
-
-	@Override
-	public int getTax(final ICRegion region) {
-		return database.loadIslandTax(regionId(region));
-	}
-
-	@Override
-	public void setTax(final ICRegion region, final int tax) {
-		final String regionId = regionId(region);
-		final String type = database.loadIslandType(regionId);
-		database.saveIsland(regionId, type, tax);
-	}
-
-	@Override
-	public String getType(final ICRegion region) {
-		return database.loadIslandType(regionId(region));
-	}
-
-	@Override
-	public List<ICRegion> getPrivateIslands(final String world) {
-		try {
-			final RegionManager regionManager = worldGuard.getRegionManager(worldGuard.getServer().getWorld(world));
-			final Map<String, ProtectedRegion> regions = regionManager.getRegions();
-			final List<ICRegion> result = new ArrayList<ICRegion>();
-			for (ProtectedRegion protectedRegion : regions.values()) {
-				BlockVector min = protectedRegion.getMinimumPoint();
-				BlockVector max = protectedRegion.getMaximumPoint();
-				ICLocation location = new ICLocation(world, min.getBlockX(), min.getBlockZ());
-				ICRegion region = new ICRegion(location, max.getBlockX() - min.getBlockX(), max.getBlockZ() - min.getBlockZ());
-				if (getType(region).equals("private")) {
-					result.add(region);
-				}
-			}
-			return result;
-		} catch (Exception e) {
-			// TODO handle this better
-			return new ArrayList<ICRegion>();
-		}
-	}
-
-	@Override
-	public List<ICRegion> getIslands(final String player) {
-		try {
-			final List<ICRegion> result = new ArrayList<ICRegion>();
-			for (World world : worldGuard.getServer().getWorlds()) {
-				final RegionManager regionManager = worldGuard.getRegionManager(world);
-				final Map<String, ProtectedRegion> regions = regionManager.getRegions();
-				for (ProtectedRegion region : regions.values()) {
-					if (region.getOwners().contains(player)) {
-						BlockVector min = region.getMinimumPoint();
-						BlockVector max = region.getMaximumPoint();
-						ICLocation location = new ICLocation(world.getName(), min.getBlockX(), min.getBlockZ());
-						result.add(new ICRegion(location, max.getBlockX() - min.getBlockX(), max.getBlockZ() - min.getBlockZ()));
-					}
-				}
-			}
-			return result;
-		} catch (Exception e) {
-			// TODO handle this better
-			return new ArrayList<ICRegion>();
-		}
-	}
-
-	@Override
-	public boolean hasOwner(ICRegion region, String player) {
-		final ProtectedRegion protectedRegion = getRegion(region);
-		if (protectedRegion == null) {
-			return false;
-		}
-		return protectedRegion.getOwners().contains(player);
+	public boolean islandExists(final ICLocation island) {
+		final ProtectedRegion outerRegion = getOuterRegion(island);
+		return null != outerRegion;
 	}
 }

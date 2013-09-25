@@ -2,30 +2,25 @@ package com.github.hoqhuuep.islandcraft.common.api;
 
 import java.util.List;
 
-import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
+import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICType;
 
 public interface ICProtection {
-	void createReservedRegion(ICRegion outerRegion, ICRegion innerRegion, String title);
+	void createReservedIsland(ICLocation island, String title);
 
-	void createResourceRegion(ICRegion outerRegion, ICRegion innerRegion, String title);
+	void createPublicIsland(ICLocation island, String title, int tax);
 
-	void createAvailableRegion(ICRegion outerRegion, ICRegion innerRegion, String title);
+	void createPrivateIsland(ICLocation island, String title, int tax, List<String> owners);
 
-	void createPrivateRegion(ICRegion outerRegion, ICRegion innerRegion, String player, String title, int taxInitial);
+	boolean hasOwner(ICLocation island, String player);
 
-	boolean regionExists(ICRegion region);
+	ICType getType(ICLocation island);
 
-	List<String> getOwners(ICRegion region);
+	List<String> getOwners(ICLocation island);
 
-	int getTax(ICRegion region);
+	int islandCount(String player);
 
-	void setTax(ICRegion region, int tax);
+	void renameIsland(ICLocation island, String title);
 
-	List<ICRegion> getPrivateIslands(String world);
-
-	List<ICRegion> getIslands(String player);
-
-	String getType(ICRegion region);
-
-	boolean hasOwner(ICRegion islandLocation, String player);
+	boolean islandExists(ICLocation island);
 }

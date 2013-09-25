@@ -1,18 +1,21 @@
 package com.github.hoqhuuep.islandcraft.common.island;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.github.hoqhuuep.islandcraft.common.IslandMath;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
+import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICType;
 
 public class Island {
 	private static final int TAX_MAX = 2016;
 	private static final int TAX_INC = 504;
 	private static final int TAX_INITIAL = 504;
 	private final ICDatabase database;
-	private final IslandProtection protection;
+	private final ICProtection protection;
 	private final int maxIslands;
 	private final String purchaseItem;
 	private final int purchaseCostAmount;
@@ -21,7 +24,7 @@ public class Island {
 	private final int taxCostAmount;
 	private final int taxCostIncrease;
 
-	public Island(final ICDatabase database, final IslandProtection protection, final int maxIslands, final String purchaseItem, final int purchaseCostAmount,
+	public Island(final ICDatabase database, final ICProtection protection, final int maxIslands, final String purchaseItem, final int purchaseCostAmount,
 			final int purchaseCostIncrease, final String taxItem, final int taxCostAmount, final int taxCostIncrease) {
 		this.database = database;
 		this.protection = protection;
@@ -58,7 +61,7 @@ public class Island {
 		}
 
 		// Success
-		protection.onAbandon(islandLocation);
+		protection.createPrivateIsland(islandLocation, "Available Island", -1, Collections.<String> emptyList());
 		player.message("island-abandon");
 	}
 
@@ -92,20 +95,22 @@ public class Island {
 		final String world = islandLocation.getWorld();
 		final int x = islandLocation.getX();
 		final int z = islandLocation.getZ();
-		final String type = protection.getType(islandLocation);
-		if (type.equals("available")) {
-			// TODO Get real regeneration here
-			player.message("island-examine-available", world, x, z, biome, "<n>");
-		} else if (type.equals("reserved")) {
-			player.message("island-examine-reserved", world, x, z, biome);
-		} else if (type.equals("resource")) {
+		final ICType type = protection.getType(islandLocation);
+		if (ICType.PUBLIC == type) {
 			// TODO Get real regeneration here
 			player.message("island-examine-resource", world, x, z, biome, "<n>");
+		} else if (ICType.RESERVED == type) {
+			player.message("island-examine-reserved", world, x, z, biome);
 		} else {
 			final List<String> owners = protection.getOwners(islandLocation);
-			final int tax = protection.getTax(islandLocation);
-			// TODO format owners list as Owner1, Owner2, Owner3
-			player.message("island-examine-private", world, x, z, biome, owners, tax);
+			if (owners.isEmpty()) {
+				// TODO Get real regeneration here
+				player.message("island-examine-available", world, x, z, biome, "<n>");
+			} else {
+				final int tax = database.loadIslandTax(islandLocation);
+				// TODO format owners list as Owner1, Owner2, Owner3
+				player.message("island-examine-private", world, x, z, biome, owners, tax);
+			}
 		}
 	}
 
@@ -128,25 +133,26 @@ public class Island {
 			return;
 		}
 
-		final String type = protection.getType(islandLocation);
+		final ICType type = protection.getType(islandLocation);
 		final String name = player.getName();
 
-		if (type.equals("reserved")) {
+		if (ICType.RESERVED == type) {
 			player.message("island-purchase-reserved-error");
 			return;
-		} else if (type.equals("resource")) {
+		}
+		if (ICType.PUBLIC == type) {
 			player.message("island-purchase-resource-error");
 			return;
-		} else if (type.equals("private")) {
-			if (protection.hasOwner(islandLocation, name)) {
-				player.message("island-purchase-self-error");
-			} else {
-				player.message("island-purchase-other-error");
-			}
+		}
+		if (protection.hasOwner(islandLocation, name)) {
+			player.message("island-purchase-self-error");
 			return;
 		}
-
-		if (protection.getIslands(name).size() >= maxIslands) {
+		if (!protection.getOwners(islandLocation).isEmpty()) {
+			player.message("island-purchase-other-error");
+			return;
+		}
+		if (protection.islandCount(name) >= maxIslands) {
 			player.message("island-purchase-max-error");
 			return;
 		}
@@ -160,7 +166,7 @@ public class Island {
 		}
 
 		// Success
-		protection.onPurchase(islandLocation, name, TAX_INITIAL);
+		protection.createPrivateIsland(islandLocation, "Private Island", TAX_INITIAL, Collections.singletonList(name));
 		player.message("island-purchase");
 	}
 
@@ -182,7 +188,7 @@ public class Island {
 			return;
 		}
 
-		final int newTax = protection.getTax(islandLocation) + TAX_INC;
+		final int newTax = database.loadIslandTax(islandLocation) + TAX_INC;
 		if (newTax > TAX_MAX) {
 			player.message("island-tax-max-error");
 			return;
@@ -197,16 +203,24 @@ public class Island {
 		}
 
 		// Success
-		protection.setTax(islandLocation, newTax);
+		database.saveIslandTax(islandLocation, newTax);
 		player.message("island-tax");
 	}
 
 	public void onDawn(final String world) {
-		final List<ICLocation> islands = protection.getPrivateIslands(world);
-		for (ICLocation island : islands) {
-			final int tax = protection.getTax(island);
-			protection.setTax(island, tax - 1);
-			// TODO handle tax = 0
+		final List<ICLocation> islands = database.loadIslands();
+		for (ICLocation islandLocation : islands) {
+			if (islandLocation.getWorld().equals(world)) {
+				final int tax = database.loadIslandTax(islandLocation);
+				if (tax > 0) {
+					database.saveIslandTax(islandLocation, tax - 1);
+				} else if (tax == 0) {
+					// Revoke island
+					// TODO handle resource islands differently
+					protection.createPrivateIsland(islandLocation, "Available Island", -1, Collections.<String> emptyList());
+				}
+				// tax < 0 == infinite
+			}
 		}
 	}
 
@@ -234,7 +248,7 @@ public class Island {
 			return;
 		}
 
-		// TODO make this do something
+		protection.renameIsland(islandLocation, title);
 		player.message("island-rename");
 	}
 
@@ -247,10 +261,10 @@ public class Island {
 	}
 
 	private int calculatePurchaseCost(final String player) {
-		return purchaseCostAmount + protection.getIslands(player).size() * purchaseCostIncrease;
+		return purchaseCostAmount + protection.islandCount(player) * purchaseCostIncrease;
 	}
 
 	private int calculateTaxCost(final String player) {
-		return taxCostAmount + (protection.getIslands(player).size() - 1) * taxCostIncrease;
+		return taxCostAmount + (protection.islandCount(player) - 1) * taxCostIncrease;
 	}
 }

@@ -12,7 +12,19 @@ public class IslandBean {
 	private String id;
 
 	@Column
-	private String type;
+	private String world;
+
+	@Column
+	private Integer x;
+
+	@Column
+	private Integer z;
+
+	@Column
+	private String outerId;
+
+	@Column
+	private String innerId;
 
 	@Column
 	private Integer tax;
@@ -21,8 +33,24 @@ public class IslandBean {
 		return id;
 	}
 
-	public String getType() {
-		return type;
+	public String getWorld() {
+		return world;
+	}
+
+	public Integer getX() {
+		return x;
+	}
+
+	public Integer getZ() {
+		return z;
+	}
+
+	public String getOuterId() {
+		return outerId;
+	}
+
+	public String getInnerId() {
+		return innerId;
 	}
 
 	public Integer getTax() {
@@ -33,8 +61,24 @@ public class IslandBean {
 		this.id = id;
 	}
 
-	public void setType(final String type) {
-		this.type = type;
+	public void setWorld(final String world) {
+		this.world = world;
+	}
+
+	public void setX(final Integer x) {
+		this.x = x;
+	}
+
+	public void setZ(final Integer z) {
+		this.z = z;
+	}
+
+	public void setOuterId(final String outerId) {
+		this.outerId = outerId;
+	}
+
+	public void setInnerId(final String innerId) {
+		this.innerId = innerId;
 	}
 
 	public void setTax(final Integer tax) {
