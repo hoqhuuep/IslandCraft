@@ -5,7 +5,7 @@ import org.bukkit.plugin.Plugin;
 
 import com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin;
 import com.github.hoqhuuep.islandcraft.bukkit.config.WorldConfig;
-import com.github.hoqhuuep.islandcraft.common.IslandMath;
+import com.github.hoqhuuep.islandcraft.common.Geometry;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.generator.IslandGenerator;
 import com.github.hoqhuuep.islandcraft.common.generator.WorldGenerator;
@@ -31,8 +31,8 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
 		final int oceanBiome = BiomeIndex.biomeId(world, config.getOceanBiome());
 		final int islandSize = config.getIslandSizeChunks() << 4;
 		final int islandGap = config.getIslandGapChunks() << 4;
-		final IslandMath islandMath = new IslandMath(config.getIslandSizeChunks(), config.getIslandGapChunks(), BiomeIndex.getBiomes(world, config));
-		final IslandGenerator islandGenerator = new IslandGenerator(islandSize, islandMath);
+		final Geometry geometry = new Geometry(config.getIslandSizeChunks(), config.getIslandGapChunks(), config.getResourceIslandRarity(), BiomeIndex.getBiomes(world, config));
+		final IslandGenerator islandGenerator = new IslandGenerator(islandSize, geometry);
 		generator = new WorldGenerator(islandSize, islandGap, oceanBiome, database, world.getSeed(), world.getName(), islandGenerator);
 	}
 

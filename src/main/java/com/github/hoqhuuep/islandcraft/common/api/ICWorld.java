@@ -2,7 +2,7 @@ package com.github.hoqhuuep.islandcraft.common.api;
 
 import java.util.List;
 
-import com.github.hoqhuuep.islandcraft.common.IslandMath;
+import com.github.hoqhuuep.islandcraft.common.Geometry;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 
 /**
@@ -44,5 +44,5 @@ public interface ICWorld {
      */
     boolean isNormalWorld();
 
-    IslandMath getIslandMath();
+    Geometry getGeometry();
 }

@@ -3,6 +3,7 @@ package com.github.hoqhuuep.islandcraft.common.api;
 import java.util.List;
 
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICType;
 
 /**
  * A method of loading and storing persistent data.
@@ -119,7 +120,11 @@ public interface ICDatabase {
 
 	String loadIslandInnerId(ICLocation island);
 
-	void saveIsland(ICLocation island, String outerId, String innerId, int timeToLive);
+	void saveIsland(ICLocation island, ICType type, String title, String outerId, String innerId, int tax);
 
 	List<ICLocation> loadIslands();
+
+	ICType loadIslandType(ICLocation island);
+
+	String loadIslandTitle(ICLocation island);
 }

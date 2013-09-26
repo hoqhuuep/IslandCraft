@@ -6,6 +6,7 @@ import java.util.List;
 import com.avaje.ebean.EbeanServer;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICType;
 
 public class EbeanServerDatabase implements ICDatabase {
 	private final EbeanServer ebean;
@@ -190,6 +191,26 @@ public class EbeanServerDatabase implements ICDatabase {
 	}
 
 	@Override
+	public ICType loadIslandType(ICLocation island) {
+		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
+		IslandBean bean = loadIslandBean(id);
+		if (null == bean) {
+			return null;
+		}
+		return bean.getType();
+	}
+
+	@Override
+	public String loadIslandTitle(ICLocation island) {
+		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
+		IslandBean bean = loadIslandBean(id);
+		if (null == bean) {
+			return null;
+		}
+		return bean.getTitle();
+	}
+
+	@Override
 	public String loadIslandOuterId(final ICLocation island) {
 		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
 		IslandBean bean = loadIslandBean(id);
@@ -210,7 +231,7 @@ public class EbeanServerDatabase implements ICDatabase {
 	}
 
 	@Override
-	public void saveIsland(final ICLocation island, final String outerId, final String innerId, final int tax) {
+	public void saveIsland(final ICLocation island, final ICType type, final String title, final String outerId, final String innerId, final int tax) {
 		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
 		IslandBean bean = loadIslandBean(id);
 		if (null == bean) {
@@ -220,6 +241,8 @@ public class EbeanServerDatabase implements ICDatabase {
 			bean.setX(new Integer(island.getX()));
 			bean.setZ(new Integer(island.getZ()));
 		}
+		bean.setType(type);
+		bean.setTitle(title);
 		bean.setOuterId(outerId);
 		bean.setInnerId(innerId);
 		bean.setTax(tax);

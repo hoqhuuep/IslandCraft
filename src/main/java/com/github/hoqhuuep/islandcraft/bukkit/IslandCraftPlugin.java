@@ -23,6 +23,7 @@ import com.github.hoqhuuep.islandcraft.bukkit.command.PartyCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.command.PartyMessageCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.command.PrivateMessageCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.command.SuicideCommandExecutor;
+import com.github.hoqhuuep.islandcraft.bukkit.command.WarpCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.command.WaypointCommandExecutor;
 import com.github.hoqhuuep.islandcraft.bukkit.config.IslandCraftConfig;
 import com.github.hoqhuuep.islandcraft.bukkit.database.CompassBean;
@@ -44,7 +45,6 @@ import com.github.hoqhuuep.islandcraft.common.extras.BetterClock;
 import com.github.hoqhuuep.islandcraft.common.extras.BetterCompass;
 import com.github.hoqhuuep.islandcraft.common.extras.Suicide;
 import com.github.hoqhuuep.islandcraft.common.island.Island;
-import com.github.hoqhuuep.islandcraft.common.island.IslandProtection;
 import com.khorn.terraincontrol.TerrainControl;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
@@ -79,18 +79,20 @@ public final class IslandCraftPlugin extends JavaPlugin {
 		TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
 
 		// Island Commands
-		final Island island = new Island(getICDatabase(), protection, config.getMaxIslandsPerPlayer(), config.getPurchaseCostItem(),
+		final Island island = new Island(getICDatabase(), protection, server, config.getMaxIslandsPerPlayer(), config.getPurchaseCostItem(),
 				config.getPurchaseCostAmount(), config.getPurchaseCostAmount(), config.getTaxCostItem(), config.getTaxCostAmount(), config.getTaxCostIncrease());
 		final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(island, server);
 		final PluginCommand islandCommand = getCommand("island");
 		islandCommand.setExecutor(islandCommandExecutor);
 		islandCommand.setTabCompleter(islandCommandExecutor);
 
+		getCommand("warp").setExecutor(new WarpCommandExecutor(island, server));
+
 		// Dawn (for tax system)
 		register(new WorldInitListener(this));
 		register(new DawnListener(island));
 
-		register(new ChunkLoadListener(new IslandProtection(protection, config)));
+		register(new ChunkLoadListener(island));
 
 		// Chat Commands
 		final PrivateMessageCommandExecutor privateMessageCommandExecutor = new PrivateMessageCommandExecutor(new PrivateMessage(), server);

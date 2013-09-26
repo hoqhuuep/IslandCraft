@@ -4,18 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import com.github.hoqhuuep.islandcraft.common.IslandMath;
+import com.github.hoqhuuep.islandcraft.common.Geometry;
 import com.github.hoqhuuep.islandcraft.common.generator.wip.PerlinIslandGenerator;
 import com.github.hoqhuuep.islandcraft.common.type.ICBiome;
 
 public class IslandGenerator {
 	private final Map<Long, int[]> cache = new HashMap<Long, int[]>();
 	private final int islandSize;
-	private final IslandMath islandMath;
+	private final Geometry geometry;
 
-	public IslandGenerator(final int islandSize, final IslandMath islandMath) {
+	public IslandGenerator(final int islandSize, final Geometry geometry) {
 		this.islandSize = islandSize;
-		this.islandMath = islandMath;
+		this.geometry = geometry;
 	}
 
 	public final int biomeAt(final long seed, final int rx, final int rz) {
@@ -36,7 +36,7 @@ public class IslandGenerator {
 		final int[] cachedIsland = cache.get(seedKey);
 
 		if (null == cachedIsland) {
-			final ICBiome islandBiomes = islandMath.biome(seed);
+			final ICBiome islandBiomes = geometry.biome(seed);
 			final int ocean = islandBiomes.getOcean();
 			final int shore = islandBiomes.getShore();
 			final int flats = islandBiomes.getFlats();

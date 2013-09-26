@@ -74,9 +74,9 @@ commands:
     description: Give a new name to the island you are standing on (used in greeting and farewell messages)
     permission: islandcraft.command.island.rename
     usage: /<command> <name...>
-  island warp:
+  warp:
     description: Warp to a random available island
-    permission: islandcraft.command.island.warp
+    permission: islandcraft.command.warp
     usage: /<command>
   waypoint:
     description: Commands to manage your compass waypoints
@@ -171,6 +171,8 @@ permissions:
       islandcraft.command.island.tax: true
       islandcraft.command.island.examine: true
       islandcraft.command.island.rename: true
+  islandcraft.command.warp:
+    default: op
   islandcraft.command.waypoint:
     default: true
     children:

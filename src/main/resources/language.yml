@@ -54,6 +54,9 @@ island-rename-world-error: §7[INFO] You cannot rename an island from this world
 island-rename-ocean-error: §7[INFO] You cannot rename the ocean
 island-rename-owner-error: §7[INFO] You cannot rename an island you do not own
 
+island-warp: §7[INFO] Warp successful
+island-warp-error: §7[INFO] Cannot find available island to warp to
+
 island-examine-available: |
   §7[INFO] Available Island:
   §7[INFO]   World: %s
@@ -88,13 +91,17 @@ island-examine-ocean-error: §7[INFO] You cannot examine the ocean
 icsudo-regenerate-world-error: §7[INFO] You cannot regenerate an island from this world
 icsudo-regenerate-ocean-error: §7[INFO] You cannot regenerate the ocean
 
-greet-reserved: "&2[INFO] Welcome to &g%s"
-greet-resource: "&2[INFO] Welcome to &g%s"
-greet-available: "&2[INFO] Welcome to &g%s"
-greet-private: "&2[INFO] Welcome to &g%s&2 by &g%s"
-farewell-reserved: "&2[INFO] Now leaving &g%s"
-farewell-resource: "&2[INFO] Now leaving &g%s"
-farewell-available: "&2[INFO] Now leaving &g%s"
-farewell-private: "&2[INFO] Now leaving &g%s&2 by &g%s"
+reserved-enter: "&2[INFO] Welcome to &g%s"
+reserved-leave: "&2[INFO] Now leaving &g%s"
+resource-enter: "&2[INFO] Welcome to &g%s"
+resource-leave: "&2[INFO] Now leaving &g%s"
+new-enter: "&2[INFO] Welcome to &g%s"
+new-leave: "&2[INFO] Now leaving &g%s"
+abandoned-enter: "&2[INFO] Welcome to &g%s&2, abandoned by &g%s"
+abandoned-leave: "&2[INFO] Now leaving &g%s&2, abandoned by &g%s"
+repossessed-enter: "&2[INFO] Welcome to &g%s&2, repossessed from &g%s"
+repossessed-leave: "&2[INFO] Now leaving &g%s&2, repossessed from &g%s"
+private-enter: "&2[INFO] Welcome to &g%s&2 by &g%s"
+private-leave: "&2[INFO] Now leaving &g%s&2 by &g%s"
 
 not-yet-implemented: §7[INFO] Not yet implemented

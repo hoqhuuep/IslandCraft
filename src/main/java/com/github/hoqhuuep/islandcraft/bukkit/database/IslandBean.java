@@ -2,8 +2,11 @@ package com.github.hoqhuuep.islandcraft.bukkit.database;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import com.github.hoqhuuep.islandcraft.common.type.ICType;
 
 @Entity
 @Table(name = "island")
@@ -19,6 +22,13 @@ public class IslandBean {
 
 	@Column
 	private Integer z;
+
+	@Column
+	@Enumerated(EnumType.STRING)
+	private ICType type;
+
+	@Column
+	private String title;
 
 	@Column
 	private String outerId;
@@ -43,6 +53,14 @@ public class IslandBean {
 
 	public Integer getZ() {
 		return z;
+	}
+
+	public ICType getType() {
+		return type;
+	}
+
+	public String getTitle() {
+		return title;
 	}
 
 	public String getOuterId() {
@@ -71,6 +89,14 @@ public class IslandBean {
 
 	public void setZ(final Integer z) {
 		this.z = z;
+	}
+
+	public void setType(final ICType type) {
+		this.type = type;
+	}
+
+	public void setTitle(final String title) {
+		this.title = title;
 	}
 
 	public void setOuterId(final String outerId) {

@@ -59,4 +59,6 @@ public interface ICPlayer {
     boolean takeItems(String type, int amount);
 
     void message(String id, Object... args);
+
+	void warpTo(ICLocation island);
 }

@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import com.github.hoqhuuep.islandcraft.common.IslandMath;
+import com.github.hoqhuuep.islandcraft.common.Geometry;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
 import com.github.hoqhuuep.islandcraft.common.api.ICServer;
@@ -35,12 +35,12 @@ public class ICSudoCommandExecutor implements CommandExecutor, TabCompleter {
         }
         final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
         if ("regenerate".equalsIgnoreCase(args[0])) {
-            final IslandMath islandMath = player.getWorld().getIslandMath();
+            final Geometry islandMath = player.getWorld().getGeometry();
             if (null == islandMath) {
                 player.message("icsudo-regenerate-world-error");
                 return true;
             }
-            final ICLocation location = islandMath.islandAt(player.getLocation());
+            final ICLocation location = islandMath.getInnerIsland(player.getLocation());
             if (null == location) {
                 player.message("icsudo-regenerate-oecan-error");
                 return true;
@@ -82,9 +82,9 @@ public class ICSudoCommandExecutor implements CommandExecutor, TabCompleter {
         return completions;
     }
 
-    private static void regenerateRegion(final ICLocation iLocation, final ICDatabase database, final IslandMath islandMath) {
+    private static void regenerateRegion(final ICLocation iLocation, final ICDatabase database, final Geometry geometry) {
         final Long oldSeed = database.loadSeed(iLocation);
-        final ICRegion region = islandMath.visibleRegion(iLocation);
+        final ICRegion region = geometry.visibleRegion(iLocation);
         final ICLocation location = region.getLocation();
         final int minX = location.getX() >> 4;
         final int minZ = location.getZ() >> 4;
