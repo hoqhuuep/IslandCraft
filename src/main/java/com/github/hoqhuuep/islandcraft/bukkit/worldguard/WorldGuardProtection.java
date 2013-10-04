@@ -8,11 +8,12 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.World;
 
 import com.github.hoqhuuep.islandcraft.bukkit.Language;
-import com.github.hoqhuuep.islandcraft.bukkit.config.IslandCraftConfig;
-import com.github.hoqhuuep.islandcraft.bukkit.config.WorldConfig;
+import com.github.hoqhuuep.islandcraft.common.Geometry;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
 import com.github.hoqhuuep.islandcraft.common.api.ICProtection;
+import com.github.hoqhuuep.islandcraft.common.api.ICServer;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
 import com.github.hoqhuuep.islandcraft.common.type.ICType;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -29,16 +30,16 @@ public class WorldGuardProtection implements ICProtection {
 	private final WorldGuardPlugin worldGuard;
 	private final Language language;
 	private final ICDatabase database;
-	private final IslandCraftConfig config;
+	private final ICServer server;
 
 	private static final int MIN_Y = 0;
 	private static final int MAX_Y = 255;
 
-	public WorldGuardProtection(final WorldGuardPlugin worldGuard, final Language language, final ICDatabase database, final IslandCraftConfig config) {
+	public WorldGuardProtection(final WorldGuardPlugin worldGuard, final Language language, final ICDatabase database, final ICServer server) {
 		this.worldGuard = worldGuard;
 		this.language = language;
 		this.database = database;
-		this.config = config;
+		this.server = server;
 	}
 
 	@Override
@@ -55,6 +56,7 @@ public class WorldGuardProtection implements ICProtection {
 
 	@Override
 	public boolean hasOwner(final ICLocation island, final String player) {
+		// TODO handle owners in IslandCraft database
 		final ProtectedRegion protectedRegion = getOuterRegion(island);
 		if (protectedRegion == null) {
 			return false;
@@ -75,11 +77,9 @@ public class WorldGuardProtection implements ICProtection {
 	public void createReservedIsland(final ICLocation island, final String title) {
 		final String outerId = "ic'" + island.getWorld() + "'" + island.getX() + "'" + island.getZ();
 		final String innerId = outerId + "'";
-		final WorldConfig worldConfig = config.getWorldConfig(island.getWorld());
-		final int innerRadius = worldConfig.getIslandSizeChunks() * 8;
-		final int outerRadius = innerRadius + worldConfig.getIslandGapChunks() * 16;
-		final ProtectedRegion outerRegion = createProtectedRegion(island, outerId, outerRadius);
-		final ProtectedRegion innerRegion = createProtectedRegion(island, innerId, innerRadius);
+		final Geometry geometry = server.findOnlineWorld(island.getWorld()).getGeometry();
+		final ProtectedRegion outerRegion = createProtectedRegion(outerId, geometry.outerRegion(island));
+		final ProtectedRegion innerRegion = createProtectedRegion(innerId, geometry.innerRegion(island));
 		outerRegion.setFlag(DefaultFlag.BUILD, State.DENY);
 		innerRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("reserved-enter", title));
 		innerRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("reserved-leave", title));
@@ -105,11 +105,9 @@ public class WorldGuardProtection implements ICProtection {
 	public void createResourceIsland(final ICLocation island, final String title, final int tax) {
 		final String outerId = "ic'" + island.getWorld() + "'" + island.getX() + "'" + island.getZ();
 		final String innerId = outerId + "'";
-		final WorldConfig worldConfig = config.getWorldConfig(island.getWorld());
-		final int innerRadius = worldConfig.getIslandSizeChunks() * 8;
-		final int outerRadius = innerRadius + worldConfig.getIslandGapChunks() * 16;
-		final ProtectedRegion outerRegion = createProtectedRegion(island, outerId, outerRadius);
-		final ProtectedRegion innerRegion = createProtectedRegion(island, innerId, innerRadius);
+		final Geometry geometry = server.findOnlineWorld(island.getWorld()).getGeometry();
+		final ProtectedRegion outerRegion = createProtectedRegion(outerId, geometry.outerRegion(island));
+		final ProtectedRegion innerRegion = createProtectedRegion(innerId, geometry.innerRegion(island));
 		outerRegion.setFlag(DefaultFlag.BUILD, State.ALLOW);
 		innerRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("resource-enter", title));
 		innerRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("resource-leave", title));
@@ -135,11 +133,9 @@ public class WorldGuardProtection implements ICProtection {
 	public void createNewIsland(ICLocation island, String title, int tax) {
 		final String outerId = "ic'" + island.getWorld() + "'" + island.getX() + "'" + island.getZ();
 		final String innerId = outerId + "'";
-		final WorldConfig worldConfig = config.getWorldConfig(island.getWorld());
-		final int innerRadius = worldConfig.getIslandSizeChunks() * 8;
-		final int outerRadius = innerRadius + worldConfig.getIslandGapChunks() * 16;
-		final ProtectedRegion outerRegion = createProtectedRegion(island, outerId, outerRadius);
-		final ProtectedRegion innerRegion = createProtectedRegion(island, innerId, innerRadius);
+		final Geometry geometry = server.findOnlineWorld(island.getWorld()).getGeometry();
+		final ProtectedRegion outerRegion = createProtectedRegion(outerId, geometry.outerRegion(island));
+		final ProtectedRegion innerRegion = createProtectedRegion(innerId, geometry.innerRegion(island));
 		outerRegion.setFlag(DefaultFlag.BUILD, State.DENY);
 		innerRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("new-enter", title));
 		innerRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("new-leave", title));
@@ -165,11 +161,9 @@ public class WorldGuardProtection implements ICProtection {
 	public void createAbandonedIsland(ICLocation island, String title, int tax, final List<String> pastOwners) {
 		final String outerId = "ic'" + island.getWorld() + "'" + island.getX() + "'" + island.getZ();
 		final String innerId = outerId + "'";
-		final WorldConfig worldConfig = config.getWorldConfig(island.getWorld());
-		final int innerRadius = worldConfig.getIslandSizeChunks() * 8;
-		final int outerRadius = innerRadius + worldConfig.getIslandGapChunks() * 16;
-		final ProtectedRegion outerRegion = createProtectedRegion(island, outerId, outerRadius);
-		final ProtectedRegion innerRegion = createProtectedRegion(island, innerId, innerRadius);
+		final Geometry geometry = server.findOnlineWorld(island.getWorld()).getGeometry();
+		final ProtectedRegion outerRegion = createProtectedRegion(outerId, geometry.outerRegion(island));
+		final ProtectedRegion innerRegion = createProtectedRegion(innerId, geometry.innerRegion(island));
 		outerRegion.setFlag(DefaultFlag.BUILD, State.DENY);
 		final String ownersList = StringUtils.join(pastOwners, ", ");
 		innerRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("abandoned-enter", title, ownersList));
@@ -196,11 +190,9 @@ public class WorldGuardProtection implements ICProtection {
 	public void createRepossessedIsland(ICLocation island, String title, int tax, final List<String> pastOwners) {
 		final String outerId = "ic'" + island.getWorld() + "'" + island.getX() + "'" + island.getZ();
 		final String innerId = outerId + "'";
-		final WorldConfig worldConfig = config.getWorldConfig(island.getWorld());
-		final int innerRadius = worldConfig.getIslandSizeChunks() * 8;
-		final int outerRadius = innerRadius + worldConfig.getIslandGapChunks() * 16;
-		final ProtectedRegion outerRegion = createProtectedRegion(island, outerId, outerRadius);
-		final ProtectedRegion innerRegion = createProtectedRegion(island, innerId, innerRadius);
+		final Geometry geometry = server.findOnlineWorld(island.getWorld()).getGeometry();
+		final ProtectedRegion outerRegion = createProtectedRegion(outerId, geometry.outerRegion(island));
+		final ProtectedRegion innerRegion = createProtectedRegion(innerId, geometry.innerRegion(island));
 		outerRegion.setFlag(DefaultFlag.BUILD, State.DENY);
 		final String ownersList = StringUtils.join(pastOwners, ", ");
 		innerRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("repossessed-enter", title, ownersList));
@@ -227,11 +219,9 @@ public class WorldGuardProtection implements ICProtection {
 	public void createPrivateIsland(final ICLocation island, final String title, final int tax, final List<String> owners) {
 		final String outerId = "ic'" + island.getWorld() + "'" + island.getX() + "'" + island.getZ();
 		final String innerId = outerId + "'";
-		final WorldConfig worldConfig = config.getWorldConfig(island.getWorld());
-		final int innerRadius = worldConfig.getIslandSizeChunks() * 8;
-		final int outerRadius = innerRadius + worldConfig.getIslandGapChunks() * 16;
-		final ProtectedRegion outerRegion = createProtectedRegion(island, outerId, outerRadius);
-		final ProtectedRegion innerRegion = createProtectedRegion(island, innerId, innerRadius);
+		final Geometry geometry = server.findOnlineWorld(island.getWorld()).getGeometry();
+		final ProtectedRegion outerRegion = createProtectedRegion(outerId, geometry.outerRegion(island));
+		final ProtectedRegion innerRegion = createProtectedRegion(innerId, geometry.innerRegion(island));
 		final String ownersList = StringUtils.join(owners, ", ");
 		innerRegion.setFlag(DefaultFlag.GREET_MESSAGE, language.get("private-enter", title, ownersList));
 		innerRegion.setFlag(DefaultFlag.FAREWELL_MESSAGE, language.get("private-leave", title, ownersList));
@@ -272,13 +262,12 @@ public class WorldGuardProtection implements ICProtection {
 		return regionManager.getRegionExact(outerId);
 	}
 
-	private ProtectedRegion createProtectedRegion(final ICLocation island, final String id, final int radius) {
-		final int centerX = island.getX();
-		final int centerZ = island.getZ();
-		final int minX = centerX - radius;
-		final int minZ = centerZ - radius;
-		final int maxX = centerX + radius;
-		final int maxZ = centerZ + radius;
+	private ProtectedRegion createProtectedRegion(final String id, final ICRegion region) {
+		final ICLocation location = region.getLocation();
+		final int minX = location.getX();
+		final int minZ = location.getZ();
+		final int maxX = minX + region.getXSize() - 1;
+		final int maxZ = minZ + region.getZSize() - 1;
 		final BlockVector min = new BlockVector(minX, MIN_Y, minZ);
 		final BlockVector max = new BlockVector(maxX, MAX_Y, maxZ);
 		return new ProtectedCuboidRegion(id, min, max);

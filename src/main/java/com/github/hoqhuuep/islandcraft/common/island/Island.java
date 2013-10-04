@@ -15,9 +15,6 @@ import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.type.ICType;
 
 public class Island {
-	private static final int TAX_MAX = 2016;
-	private static final int TAX_INC = 504;
-	private static final int TAX_INITIAL = 504;
 	private final ICDatabase database;
 	private final ICProtection protection;
 	private final ICServer server;
@@ -28,6 +25,9 @@ public class Island {
 	private final String taxItem;
 	private final int taxCostAmount;
 	private final int taxCostIncrease;
+	private final int taxInitial;
+	private final int taxIncrease;
+	private final int taxMax;
 
 	public Island(final ICDatabase database, final ICProtection protection, final ICServer server, final int maxIslands, final String purchaseItem,
 			final int purchaseCostAmount, final int purchaseCostIncrease, final String taxItem, final int taxCostAmount, final int taxCostIncrease) {
@@ -41,6 +41,10 @@ public class Island {
 		this.taxItem = taxItem;
 		this.taxCostAmount = taxCostAmount;
 		this.taxCostIncrease = taxCostIncrease;
+		// TODO load from configuration
+		taxInitial = 500;
+		taxIncrease = 500;
+		taxMax = 2000;
 	}
 
 	/**
@@ -88,7 +92,7 @@ public class Island {
 		}
 		final ICLocation location = player.getLocation();
 		final ICLocation island = geometry.getInnerIsland(location);
-		if (isOcean(island)) {
+		if (geometry.isOcean(island)) {
 			player.message("island-abandon-ocean-error");
 			return;
 		}
@@ -118,7 +122,7 @@ public class Island {
 		}
 		final ICLocation location = player.getLocation();
 		final ICLocation islandLocation = geometry.getInnerIsland(location);
-		if (isOcean(islandLocation)) {
+		if (geometry.isOcean(islandLocation)) {
 			player.message("island-examine-ocean-error");
 			return;
 		}
@@ -148,10 +152,13 @@ public class Island {
 			player.message("island-examine-reserved", world, x, z, biome);
 		} else if (ICType.NEW == type) {
 			// TODO
+			player.message("island-examine-new", world, x, z, biome);
 		} else if (ICType.ABANDONED == type) {
 			// TODO
+			player.message("island-examine-abandoned", world, x, z, biome);
 		} else if (ICType.REPOSSESSED == type) {
 			// TODO
+			player.message("island-examine-repossessed", world, x, z, biome);
 		} else {
 			final List<String> owners = protection.getOwners(islandLocation);
 			final String ownersList = StringUtils.join(owners, ", ");
@@ -173,7 +180,7 @@ public class Island {
 		}
 		final ICLocation location = player.getLocation();
 		final ICLocation island = geometry.getInnerIsland(location);
-		if (isOcean(island)) {
+		if (geometry.isOcean(island)) {
 			player.message("island-purchase-ocean-error");
 			return;
 		}
@@ -211,7 +218,7 @@ public class Island {
 		}
 
 		// Success
-		protection.createPrivateIsland(island, "Private Island", TAX_INITIAL, Collections.singletonList(name));
+		protection.createPrivateIsland(island, "Private Island", taxInitial, Collections.singletonList(name));
 		player.message("island-purchase");
 	}
 
@@ -223,7 +230,7 @@ public class Island {
 		}
 		final ICLocation location = player.getLocation();
 		final ICLocation island = geometry.getInnerIsland(location);
-		if (isOcean(island)) {
+		if (geometry.isOcean(island)) {
 			player.message("island-tax-ocean-error");
 			return;
 		}
@@ -233,8 +240,8 @@ public class Island {
 			return;
 		}
 
-		final int newTax = database.loadIslandTax(island) + TAX_INC;
-		if (newTax > TAX_MAX) {
+		final int newTax = database.loadIslandTax(island) + taxIncrease;
+		if (newTax > taxMax) {
 			player.message("island-tax-max-error");
 			return;
 		}
@@ -293,7 +300,7 @@ public class Island {
 		}
 		final ICLocation location = player.getLocation();
 		final ICLocation island = geometry.getInnerIsland(location);
-		if (isOcean(island)) {
+		if (geometry.isOcean(island)) {
 			player.message("island-rename-ocean-error");
 			return;
 		}
@@ -320,10 +327,6 @@ public class Island {
 			}
 		}
 		player.message("island-warp-error");
-	}
-
-	private static boolean isOcean(final ICLocation island) {
-		return null == island;
 	}
 
 	private int calculatePurchaseCost(final String player) {

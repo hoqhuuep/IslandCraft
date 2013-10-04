@@ -73,7 +73,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
 		database = new EbeanServerDatabase(getDatabase());
 		final Language language = new Language(getLanguageConfig());
 		final ICServer server = new BukkitServer(getServer(), config, language);
-		final ICProtection protection = new WorldGuardProtection(getWorldGuard(), language, database, config);
+		final ICProtection protection = new WorldGuardProtection(getWorldGuard(), language, database, server);
 
 		// Generator
 		TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
@@ -89,7 +89,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
 		getCommand("warp").setExecutor(new WarpCommandExecutor(island, server));
 
 		// Dawn (for tax system)
-		register(new WorldInitListener(this));
+		register(new WorldInitListener(this, config));
 		register(new DawnListener(island));
 
 		register(new ChunkLoadListener(island));

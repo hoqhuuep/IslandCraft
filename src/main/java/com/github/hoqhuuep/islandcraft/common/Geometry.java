@@ -108,8 +108,8 @@ public class Geometry {
 		final int relativeHashX = outerRadius;
 		final int relativeHashZ = outerRadius;
 		// @ relative to world origin
-		final int absoluteAtX = Geometry.div(x + relativeHashX, regionPatternXSize) * regionPatternXSize - relativeHashX;
-		final int absoluteAtZ = Geometry.div(z + relativeHashZ, regionPatternZSize) * regionPatternZSize - relativeHashZ;
+		final int absoluteAtX = div(x + relativeHashX, regionPatternXSize) * regionPatternXSize - relativeHashX;
+		final int absoluteAtZ = div(z + relativeHashZ, regionPatternZSize) * regionPatternZSize - relativeHashZ;
 		// # relative to world origin
 		final int absoluteHashX = absoluteAtX + relativeHashX;
 		final int absoluteHashZ = absoluteAtZ + relativeHashZ;
@@ -161,16 +161,20 @@ public class Geometry {
 		return result;
 	}
 
-	public final ICRegion visibleRegion(final ICLocation island) {
+	public final ICRegion innerRegion(final ICLocation island) {
 		return new ICRegion(island.moveBy(-innerRadius, -innerRadius), innerRadius * 2, innerRadius * 2);
 	}
 
-	public final ICRegion protectedRegion(final ICLocation island) {
+	public final ICRegion outerRegion(final ICLocation island) {
 		return new ICRegion(island.moveBy(-outerRadius, -outerRadius), outerRadius * 2, outerRadius * 2);
 	}
 
 	public final ICBiome biome(final long seed) {
 		return biomes[new Random(seed).nextInt(biomes.length)];
+	}
+
+	public final boolean isOcean(final ICLocation island) {
+		return island == null;
 	}
 
 	public final boolean isSpawn(final ICLocation island) {
@@ -181,7 +185,6 @@ public class Geometry {
 		if (isSpawn(island)) {
 			return false;
 		}
-		// Get parameters from configuration
 		final int x = island.getX();
 		final int z = island.getZ();
 		if (Math.abs(x) <= islandSeparation && Math.abs(z) <= islandSeparation) {
@@ -209,13 +212,5 @@ public class Geometry {
 			return n >= 0 ? n % d : d + ~(~n % d);
 		}
 		return n <= 0 ? n % d : d + 1 + (n - 1) % d;
-	}
-
-	public static final long ldiv(final long n, final long d) {
-		final long q = n / d;
-		if (q * d == n) {
-			return q;
-		}
-		return q - ((n ^ d) >>> (Long.SIZE - 1));
 	}
 }

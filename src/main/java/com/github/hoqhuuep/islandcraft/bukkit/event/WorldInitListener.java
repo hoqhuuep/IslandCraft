@@ -6,11 +6,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class WorldInitListener implements Listener {
-	public final JavaPlugin plugin;
+import com.github.hoqhuuep.islandcraft.bukkit.config.IslandCraftConfig;
 
-	public WorldInitListener(final JavaPlugin plugin) {
+public class WorldInitListener implements Listener {
+	private final JavaPlugin plugin;
+	private final IslandCraftConfig config;
+
+	public WorldInitListener(final JavaPlugin plugin, final IslandCraftConfig config) {
 		this.plugin = plugin;
+		this.config = config;
 	}
 
 	@EventHandler
@@ -27,7 +31,6 @@ public class WorldInitListener implements Listener {
 	}
 
 	private boolean isIslandCraftWorld(String world) {
-		// TODO fix this assumption
-		return world.equals("world");
+		return config.getWorldConfig(world) != null;
 	}
 }
