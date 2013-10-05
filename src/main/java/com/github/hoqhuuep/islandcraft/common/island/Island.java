@@ -336,4 +336,19 @@ public class Island {
 	private int calculateTaxCost(final String player) {
 		return taxCostAmount + (protection.islandCount(player) - 1) * taxCostIncrease;
 	}
+
+	public void onMove(final ICPlayer player, final ICLocation from, final ICLocation to) {
+		final Geometry geometry = player.getWorld().getGeometry();
+		final ICLocation fromIsland = geometry.getInnerIsland(from);
+		final ICLocation toIsland = geometry.getInnerIsland(from);
+		if (fromIsland.equals(toIsland)) {
+			return;
+		}
+		if (fromIsland != null) {
+			player.message("leave-island", fromIsland);
+		}
+		if (toIsland != null) {
+			player.message("enter-island", toIsland);
+		}
+	}
 }

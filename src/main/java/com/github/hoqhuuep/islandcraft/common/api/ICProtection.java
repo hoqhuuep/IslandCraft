@@ -1,27 +1,11 @@
 package com.github.hoqhuuep.islandcraft.common.api;
 
-import java.util.List;
-
-import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
+import com.github.hoqhuuep.islandcraft.common.type.ICRegion;
 
 public interface ICProtection {
-	void createReservedIsland(ICLocation island, String title);
+	void setPrivate(ICRegion region, String player);
 
-	void createResourceIsland(ICLocation island, String title, int tax);
+	void setReserved(ICRegion region);
 
-	void createNewIsland(ICLocation island, String title, int tax);
-
-	void createAbandonedIsland(ICLocation island, String title, int tax, List<String> pastOwners);
-
-	void createRepossessedIsland(ICLocation island, String title, int tax, List<String> pastOwners);
-
-	void createPrivateIsland(ICLocation island, String title, int tax, List<String> owners);
-
-	boolean hasOwner(ICLocation island, String player);
-
-	List<String> getOwners(ICLocation island);
-
-	int islandCount(String player);
-
-	boolean islandExists(ICLocation island);
+	void setPublic(ICRegion region);
 }

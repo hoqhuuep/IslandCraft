@@ -2,9 +2,7 @@ package com.github.hoqhuuep.islandcraft.bukkit;
 
 import java.util.Map;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -27,17 +25,12 @@ public class BukkitPlayer implements ICPlayer {
 
 	@Override
 	public final ICLocation getBedLocation() {
-		final Location location = player.getBedSpawnLocation();
-		if (null == location) {
-			return null;
-		}
-		return new ICLocation(location.getWorld().getName(), location.getBlockX(), location.getBlockZ());
+		return BukkitUtils.convertLocation(player.getBedSpawnLocation());
 	}
 
 	@Override
 	public final ICLocation getLocation() {
-		final Location location = player.getLocation();
-		return new ICLocation(location.getWorld().getName(), location.getBlockX(), location.getBlockZ());
+		return BukkitUtils.convertLocation(player.getLocation());
 	}
 
 	@Override
@@ -62,9 +55,7 @@ public class BukkitPlayer implements ICPlayer {
 
 	@Override
 	public final void setCompassTarget(final ICLocation location) {
-		final World world = player.getServer().getWorld(location.getWorld());
-		final Location bukkitLocation = new Location(world, location.getX(), 64, location.getZ());
-		player.setCompassTarget(bukkitLocation);
+		player.setCompassTarget(BukkitUtils.convertLocation(location));
 	}
 
 	private static final Integer FIRST = new Integer(0);
@@ -94,8 +85,7 @@ public class BukkitPlayer implements ICPlayer {
 	}
 
 	@Override
-	public void warpTo(ICLocation island) {
-		World world = player.getServer().getWorld(island.getWorld());
-		player.teleport(new Location(world, island.getX(), world.getHighestBlockYAt(island.getX(), island.getZ()), island.getZ()));
+	public void warpTo(final ICLocation island) {
+		player.teleport(BukkitUtils.convertLocation(island));
 	}
 }

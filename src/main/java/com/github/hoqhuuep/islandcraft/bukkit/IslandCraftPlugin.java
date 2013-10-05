@@ -72,8 +72,8 @@ public final class IslandCraftPlugin extends JavaPlugin {
 		config = new IslandCraftConfig(getConfig());
 		database = new EbeanServerDatabase(getDatabase());
 		final Language language = new Language(getLanguageConfig());
-		final ICServer server = new BukkitServer(getServer(), config, language);
-		final ICProtection protection = new WorldGuardProtection(getWorldGuard(), language, database, server);
+		final ICServer server = new BukkitServer(config, language);
+		final ICProtection protection = new WorldGuardProtection(getWorldGuard());
 
 		// Generator
 		TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);

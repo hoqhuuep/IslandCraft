@@ -3,7 +3,6 @@ package com.github.hoqhuuep.islandcraft.bukkit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -49,8 +48,7 @@ public class BukkitWorld implements ICWorld {
 
 	@Override
 	public final ICLocation getSpawnLocation() {
-		final Location location = world.getSpawnLocation();
-		return new ICLocation(getName(), location.getBlockX(), location.getBlockZ());
+		return BukkitUtils.convertLocation(world.getSpawnLocation());
 	}
 
 	@Override
@@ -65,10 +63,6 @@ public class BukkitWorld implements ICWorld {
 	@Override
 	public final String getName() {
 		return world.getName();
-	}
-
-	public final World getBukkitWorld() {
-		return world;
 	}
 
 	@Override
@@ -89,5 +83,10 @@ public class BukkitWorld implements ICWorld {
 		}
 		final ICBiome[] biomes = BiomeIndex.getBiomes(tcWorld, config);
 		return new Geometry(config.getIslandSizeChunks(), config.getIslandGapChunks(), config.getResourceIslandRarity(), biomes);
+	}
+
+	public final World getBukkitWorld() {
+		// TODO check again if this is needed
+		return world;
 	}
 }
