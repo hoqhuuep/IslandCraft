@@ -172,6 +172,9 @@ public class Island {
 			final String owner = database.loadIslandOwner(island);
 			player.message("island-examine-private", world, x, z, biome, owner, taxString);
 		}
+		player.message("raw", "type: " + type);
+		player.message("raw", "x: " + island.getX());
+		player.message("raw", "z: " + island.getZ());
 	}
 
 	/**
@@ -358,12 +361,15 @@ public class Island {
 
 	public void onMove(final ICPlayer player, final ICLocation from, final ICLocation to) {
 		final Geometry geometry = player.getWorld().getGeometry();
+		// TODO use geometry of from and to (in case they can be in different
+		// worlds)
 		final ICLocation fromIsland = geometry.getInnerIsland(from);
-		final ICLocation toIsland = geometry.getInnerIsland(from);
-		if (fromIsland.equals(toIsland)) {
-			return;
-		}
+		final ICLocation toIsland = geometry.getInnerIsland(to);
 		if (fromIsland != null) {
+			if (toIsland != null && fromIsland.getX() == toIsland.getX() && fromIsland.getZ() == toIsland.getZ()
+					&& fromIsland.getWorld().equals(toIsland.getWorld())) {
+				return;
+			}
 			leaveIsland(player, fromIsland);
 		}
 		if (toIsland != null) {

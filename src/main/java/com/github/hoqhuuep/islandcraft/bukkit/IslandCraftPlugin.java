@@ -32,6 +32,7 @@ import com.github.hoqhuuep.islandcraft.bukkit.event.ChunkLoadListener;
 import com.github.hoqhuuep.islandcraft.bukkit.event.ClockListener;
 import com.github.hoqhuuep.islandcraft.bukkit.event.CompassListener;
 import com.github.hoqhuuep.islandcraft.bukkit.event.DawnListener;
+import com.github.hoqhuuep.islandcraft.bukkit.event.PlayerMoveListener;
 import com.github.hoqhuuep.islandcraft.bukkit.event.WorldInitListener;
 import com.github.hoqhuuep.islandcraft.bukkit.terraincontrol.IslandCraftBiomeGenerator;
 import com.github.hoqhuuep.islandcraft.bukkit.worldguard.WorldGuardProtection;
@@ -81,6 +82,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
 		// Island Commands
 		final Island island = new Island(getICDatabase(), protection, server, config.getMaxIslandsPerPlayer(), config.getPurchaseCostItem(),
 				config.getPurchaseCostAmount(), config.getPurchaseCostAmount(), config.getTaxCostItem(), config.getTaxCostAmount(), config.getTaxCostIncrease());
+		register(new PlayerMoveListener(island, server));
 		final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(island, server);
 		final PluginCommand islandCommand = getCommand("island");
 		islandCommand.setExecutor(islandCommandExecutor);

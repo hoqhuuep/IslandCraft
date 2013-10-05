@@ -11,7 +11,7 @@ public class BukkitUtils {
 		if (location == null) {
 			return null;
 		}
-		return new ICLocation(location.getWorld().getName(), location.getBlockX(), location.getBlockY());
+		return new ICLocation(location.getWorld().getName(), location.getBlockX(), location.getBlockZ());
 	}
 
 	public static Location convertLocation(final ICLocation location) {

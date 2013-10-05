@@ -91,17 +91,18 @@ island-examine-ocean-error: §7[INFO] You cannot examine the ocean
 icsudo-regenerate-world-error: §7[INFO] You cannot regenerate an island from this world
 icsudo-regenerate-ocean-error: §7[INFO] You cannot regenerate the ocean
 
-island-enter-reserved: "&2[INFO] Welcome to &g%s"
-island-leave-reserved: "&2[INFO] Now leaving &g%s"
-island-enter-resource: "&2[INFO] Welcome to &g%s"
-island-leave-resource: "&2[INFO] Now leaving &g%s"
-island-enter-new: "&2[INFO] Welcome to &g%s"
-island-leave-new: "&2[INFO] Now leaving &g%s"
-island-enter-abandoned: "&2[INFO] Welcome to &g%s&2, abandoned by &g%s"
-island-leave-abandoned: "&2[INFO] Now leaving &g%s&2, abandoned by &g%s"
-island-enter-repossessed: "&2[INFO] Welcome to &g%s&2, repossessed from &g%s"
-island-leave-repossessed: "&2[INFO] Now leaving &g%s&2, repossessed from &g%s"
-island-enter-private: "&2[INFO] Welcome to &g%s&2 by &g%s"
-island-leave-private: "&2[INFO] Now leaving &g%s&2 by &g%s"
+island-enter-reserved: "§7[INFO] Welcome to §a%s"
+island-leave-reserved: "§7[INFO] Now leaving §a%s"
+island-enter-resource: "§7[INFO] Welcome to §a%s"
+island-leave-resource: "§7[INFO] Now leaving §a%s"
+island-enter-new: "§7[INFO] Welcome to §a%s"
+island-leave-new: "§7[INFO] Now leaving §a%s"
+island-enter-abandoned: "§7[INFO] Welcome to §a%s§7, abandoned by §a%s"
+island-leave-abandoned: "§7[INFO] Now leaving §a%s§7, abandoned by §a%s"
+island-enter-repossessed: "§7[INFO] Welcome to §a%s§7, repossessed from §a%s"
+island-leave-repossessed: "§7[INFO] Now leaving §a%s§7, repossessed from §a%s"
+island-enter-private: "§7[INFO] Welcome to §a%s§7 by §a%s"
+island-leave-private: "§7[INFO] Now leaving §a%s§7 by §a%s"
 
 not-yet-implemented: §7[INFO] Not yet implemented
+raw: "%s"
