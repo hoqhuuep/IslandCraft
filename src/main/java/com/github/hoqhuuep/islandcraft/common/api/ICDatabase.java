@@ -112,19 +112,19 @@ public interface ICDatabase {
 	 */
 	void saveWaypoint(String player, String waypoint, ICLocation location);
 
-	int loadIslandTax(ICLocation islandLocation);
-
-	void saveIslandTax(ICLocation islandLocation, int newTax);
-
-	String loadIslandOuterId(ICLocation island);
-
-	String loadIslandInnerId(ICLocation island);
-
-	void saveIsland(ICLocation island, ICType type, String title, String outerId, String innerId, int tax);
-
-	List<ICLocation> loadIslands();
+	void saveIsland(ICLocation island, ICType type, String owner, String title, int tax);
 
 	ICType loadIslandType(ICLocation island);
 
+	String loadIslandOwner(ICLocation island);
+
 	String loadIslandTitle(ICLocation island);
+
+	int loadIslandTax(ICLocation island);
+
+	List<ICLocation> loadIslands();
+
+	List<ICLocation> loadIslandsByWorld(String world);
+
+	List<ICLocation> loadIslandsByOwner(String owner);
 }

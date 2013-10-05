@@ -28,13 +28,10 @@ public class IslandBean {
 	private ICType type;
 
 	@Column
+	private String owner;
+
+	@Column
 	private String title;
-
-	@Column
-	private String outerId;
-
-	@Column
-	private String innerId;
 
 	@Column
 	private Integer tax;
@@ -59,16 +56,12 @@ public class IslandBean {
 		return type;
 	}
 
+	public String getOwner() {
+		return owner;
+	}
+
 	public String getTitle() {
 		return title;
-	}
-
-	public String getOuterId() {
-		return outerId;
-	}
-
-	public String getInnerId() {
-		return innerId;
 	}
 
 	public Integer getTax() {
@@ -95,16 +88,12 @@ public class IslandBean {
 		this.type = type;
 	}
 
+	public void setOwner(final String owner) {
+		this.owner = owner;
+	}
+
 	public void setTitle(final String title) {
 		this.title = title;
-	}
-
-	public void setOuterId(final String outerId) {
-		this.outerId = outerId;
-	}
-
-	public void setInnerId(final String innerId) {
-		this.innerId = innerId;
 	}
 
 	public void setTax(final Integer tax) {

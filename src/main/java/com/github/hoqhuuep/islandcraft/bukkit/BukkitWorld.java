@@ -84,9 +84,4 @@ public class BukkitWorld implements ICWorld {
 		final ICBiome[] biomes = BiomeIndex.getBiomes(tcWorld, config);
 		return new Geometry(config.getIslandSizeChunks(), config.getIslandGapChunks(), config.getResourceIslandRarity(), biomes);
 	}
-
-	public final World getBukkitWorld() {
-		// TODO check again if this is needed
-		return world;
-	}
 }
