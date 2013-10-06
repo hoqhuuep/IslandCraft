@@ -38,15 +38,13 @@ public class PlayerMoveListener implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerJoin(final PlayerJoinEvent event) {
-		// TODO this causes null pointer exception
+	public void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
 		final ICPlayer player = server.findOnlinePlayer(event.getPlayer().getName());
 		island.onMove(player, player.getLocation());
 	}
 
 	@EventHandler
-	public void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
-		// TODO doesn't work
+	public void onPlayerJoin(final PlayerJoinEvent event) {
 		final ICPlayer player = server.findOnlinePlayer(event.getPlayer().getName());
 		island.onMove(player, player.getLocation());
 	}

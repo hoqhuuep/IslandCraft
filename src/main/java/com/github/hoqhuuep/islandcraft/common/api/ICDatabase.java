@@ -2,6 +2,7 @@ package com.github.hoqhuuep.islandcraft.common.api;
 
 import java.util.List;
 
+import com.github.hoqhuuep.islandcraft.common.type.ICIsland;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.type.ICType;
 
@@ -114,17 +115,11 @@ public interface ICDatabase {
 
 	void saveIsland(ICLocation island, ICType type, String owner, String title, int tax);
 
-	ICType loadIslandType(ICLocation island);
+	ICIsland loadIsland(ICLocation island);
 
-	String loadIslandOwner(ICLocation island);
+	List<ICIsland> loadIslands();
 
-	String loadIslandTitle(ICLocation island);
+	List<ICIsland> loadIslandsByWorld(String world);
 
-	int loadIslandTax(ICLocation island);
-
-	List<ICLocation> loadIslands();
-
-	List<ICLocation> loadIslandsByWorld(String world);
-
-	List<ICLocation> loadIslandsByOwner(String owner);
+	List<ICIsland> loadIslandsByOwner(String owner);
 }

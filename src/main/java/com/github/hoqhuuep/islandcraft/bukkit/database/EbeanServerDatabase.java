@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.avaje.ebean.EbeanServer;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
+import com.github.hoqhuuep.islandcraft.common.type.ICIsland;
 import com.github.hoqhuuep.islandcraft.common.type.ICLocation;
 import com.github.hoqhuuep.islandcraft.common.type.ICType;
 
@@ -173,46 +174,6 @@ public class EbeanServerDatabase implements ICDatabase {
 	}
 
 	@Override
-	public int loadIslandTax(final ICLocation island) {
-		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
-		IslandBean bean = loadIslandBean(id);
-		if (null == bean) {
-			return -1;
-		}
-		return bean.getTax();
-	}
-
-	@Override
-	public ICType loadIslandType(ICLocation island) {
-		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
-		IslandBean bean = loadIslandBean(id);
-		if (null == bean) {
-			return null;
-		}
-		return bean.getType();
-	}
-
-	@Override
-	public String loadIslandOwner(ICLocation island) {
-		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
-		IslandBean bean = loadIslandBean(id);
-		if (null == bean) {
-			return null;
-		}
-		return bean.getOwner();
-	}
-
-	@Override
-	public String loadIslandTitle(ICLocation island) {
-		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
-		IslandBean bean = loadIslandBean(id);
-		if (null == bean) {
-			return null;
-		}
-		return bean.getTitle();
-	}
-
-	@Override
 	public void saveIsland(final ICLocation island, final ICType type, final String owner, final String title, final int tax) {
 		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
 		IslandBean bean = loadIslandBean(id);
@@ -231,32 +192,42 @@ public class EbeanServerDatabase implements ICDatabase {
 	}
 
 	@Override
-	public List<ICLocation> loadIslands() {
+	public List<ICIsland> loadIslands() {
 		List<IslandBean> beans = ebean.find(IslandBean.class).findList();
-		List<ICLocation> result = new ArrayList<ICLocation>(beans.size());
+		List<ICIsland> result = new ArrayList<ICIsland>(beans.size());
 		for (IslandBean bean : beans) {
-			result.add(new ICLocation(bean.getWorld(), bean.getX().intValue(), bean.getZ().intValue()));
+			result.add(new ICIsland(new ICLocation(bean.getWorld(), bean.getX(), bean.getZ()), bean.getType(), bean.getOwner(), bean.getTitle(), bean.getTax()));
 		}
 		return result;
 	}
 
 	@Override
-	public List<ICLocation> loadIslandsByWorld(String world) {
+	public List<ICIsland> loadIslandsByWorld(String world) {
 		List<IslandBean> beans = ebean.find(IslandBean.class).where().ieq("world", world).findList();
-		List<ICLocation> result = new ArrayList<ICLocation>(beans.size());
+		List<ICIsland> result = new ArrayList<ICIsland>(beans.size());
 		for (IslandBean bean : beans) {
-			result.add(new ICLocation(bean.getWorld(), bean.getX().intValue(), bean.getZ().intValue()));
+			result.add(new ICIsland(new ICLocation(bean.getWorld(), bean.getX(), bean.getZ()), bean.getType(), bean.getOwner(), bean.getTitle(), bean.getTax()));
 		}
 		return result;
 	}
 
 	@Override
-	public List<ICLocation> loadIslandsByOwner(String owner) {
+	public List<ICIsland> loadIslandsByOwner(String owner) {
 		List<IslandBean> beans = ebean.find(IslandBean.class).where().ieq("owner", owner).findList();
-		List<ICLocation> result = new ArrayList<ICLocation>(beans.size());
+		List<ICIsland> result = new ArrayList<ICIsland>(beans.size());
 		for (IslandBean bean : beans) {
-			result.add(new ICLocation(bean.getWorld(), bean.getX().intValue(), bean.getZ().intValue()));
+			result.add(new ICIsland(new ICLocation(bean.getWorld(), bean.getX(), bean.getZ()), bean.getType(), bean.getOwner(), bean.getTitle(), bean.getTax()));
 		}
 		return result;
+	}
+
+	@Override
+	public ICIsland loadIsland(ICLocation island) {
+		final String id = island.getWorld() + ":" + island.getX() + ":" + island.getZ();
+		IslandBean bean = loadIslandBean(id);
+		if (null == bean) {
+			return null;
+		}
+		return new ICIsland(new ICLocation(bean.getWorld(), bean.getX(), bean.getZ()), bean.getType(), bean.getOwner(), bean.getTitle(), bean.getTax());
 	}
 }

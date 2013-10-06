@@ -5,6 +5,9 @@ purchase-cost-increase: 1
 tax-cost-item: Diamond
 tax-cost-amount: 1
 tax-cost-increase: 1
+tax-days-initial: 500
+tax-days-increase: 500
+tax-days-max: 2000
 max-islands-per-player: 7
 worlds:
   world:

@@ -37,7 +37,7 @@ public class BukkitPlayer implements ICPlayer {
 	@Override
 	public final ICLocation getCrosshairLocation() {
 		// TODO seems to return a block if it hits the top of the world
-		final Block block = player.getTargetBlock(null, 256);
+		final Block block = player.getTargetBlock(null, 320);
 		if (block == null) {
 			return null;
 		}
