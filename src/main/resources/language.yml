@@ -57,36 +57,55 @@ island-rename-owner-error: §7[INFO] You cannot rename an island you do not own
 island-warp: §7[INFO] Warp successful
 island-warp-error: §7[INFO] Cannot find available island to warp to
 
-island-examine-available: |
-  §7[INFO] Available Island:
-  §7[INFO]   World: %s
-  §7[INFO]   X: %s
-  §7[INFO]   Z: %s
-  §7[INFO]   Biome: %s
-  §7[INFO]   Regeneration: %s days
-island-examine-reserved: |
-  §7[INFO] Reserved Island:
-  §7[INFO]   World: %s
-  §7[INFO]   X: %s
-  §7[INFO]   Z: %s
-  §7[INFO]   Biome: %s
 island-examine-resource: |
-  §7[INFO] Resource Island:
-  §7[INFO]   World: %s
-  §7[INFO]   X: %s
-  §7[INFO]   Z: %s
-  §7[INFO]   Biome: %s
-  §7[INFO]   Regeneration: %s days
+  §7[INFO] You see a §a%s§7:
+  §7[INFO]   Type: §aResource
+  §7[INFO]   Title: §a%s
+  §7[INFO]   World: §a%s
+  §7[INFO]   X: §a%s
+  §7[INFO]   Z: §a%s
+island-examine-reserved: |
+  §7[INFO] You see a §a%s§7:
+  §7[INFO]   Type: §aReserved
+  §7[INFO]   Title: §a%s
+  §7[INFO]   World: §a%s
+  §7[INFO]   X: §a%s
+  §7[INFO]   Z: §a%s
+island-examine-new: |
+  §7[INFO] You see a §a%s§7:
+  §7[INFO]   Type: §aNew
+  §7[INFO]   Title: §a%s
+  §7[INFO]   World: §a%s
+  §7[INFO]   X: §a%s
+  §7[INFO]   Z: §a%s
+island-examine-abandoned: |
+  §7[INFO] You see a §a%s§7:
+  §7[INFO]   Type: §aAbandoned
+  §7[INFO]   Previous Owner: §a%s
+  §7[INFO]   Title: §a%s
+  §7[INFO]   World: §a%s
+  §7[INFO]   X: §a%s
+  §7[INFO]   Z: §a%s
+island-examine-repossessed: |
+  §7[INFO] You see a §a%s§7:
+  §7[INFO]   Type: §aRepossessed
+  §7[INFO]   Previous Owner: §a%s
+  §7[INFO]   Title: §a%s
+  §7[INFO]   World: §a%s
+  §7[INFO]   X: §a%s
+  §7[INFO]   Z: §a%s
 island-examine-private: |
-  §7[INFO] Private Island:
-  §7[INFO]   World: %s
-  §7[INFO]   X: %s
-  §7[INFO]   Z: %s
-  §7[INFO]   Biome: %s
-  §7[INFO]   Owner: %s
-  §7[INFO]   Tax paid: %s minecraft days
+  §7[INFO] You see a §a%s§7:
+  §7[INFO]   Type: §aPrivate
+  §7[INFO]   Owner: §a%s
+  §7[INFO]   Title: §a%s
+  §7[INFO]   Tax paid: §a%s minecraft days
+  §7[INFO]   World: §a%s
+  §7[INFO]   X: §a%s
+  §7[INFO]   Z: §a%s
 island-examine-world-error: §7[INFO] You cannot examine an island from this world
-island-examine-ocean-error: §7[INFO] You cannot examine the ocean
+island-examine-range-error: §7[INFO] You cannot make out any islands in the distance
+island-examine-ocean-error: §7[INFO] You see the ocean
 
 icsudo-regenerate-world-error: §7[INFO] You cannot regenerate an island from this world
 icsudo-regenerate-ocean-error: §7[INFO] You cannot regenerate the ocean

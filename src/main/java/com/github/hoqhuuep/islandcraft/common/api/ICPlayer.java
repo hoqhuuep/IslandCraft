@@ -61,4 +61,6 @@ public interface ICPlayer {
     void message(String id, Object... args);
 
 	void warpTo(ICLocation island);
+
+	ICLocation getCrosshairLocation();
 }

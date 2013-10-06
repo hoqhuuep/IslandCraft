@@ -1,6 +1,7 @@
 package com.github.hoqhuuep.islandcraft.common;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -30,6 +31,9 @@ public class Geometry {
 	}
 
 	public final ICLocation getInnerIsland(final ICLocation location) {
+		if (location == null) {
+			return null;
+		}
 		final int zz = location.getZ() + (islandSize >> 1);
 		final int rz = mod(zz, islandSeparation);
 		if (rz >= islandSize) {
@@ -98,6 +102,9 @@ public class Geometry {
 	// |...................|.......|...........|
 	// +-------------------+-------+-----------+
 	public final List<ICLocation> getOuterIslands(final ICLocation location) {
+		if (location == null) {
+			return Collections.emptyList();
+		}
 		final String world = location.getWorld();
 		final int x = location.getX();
 		final int z = location.getZ();

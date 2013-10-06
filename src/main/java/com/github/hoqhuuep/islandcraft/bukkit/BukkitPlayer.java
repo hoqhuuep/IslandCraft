@@ -3,6 +3,7 @@ package com.github.hoqhuuep.islandcraft.bukkit;
 import java.util.Map;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -31,6 +32,16 @@ public class BukkitPlayer implements ICPlayer {
 	@Override
 	public final ICLocation getLocation() {
 		return BukkitUtils.convertLocation(player.getLocation());
+	}
+
+	@Override
+	public final ICLocation getCrosshairLocation() {
+		// TODO seems to return a block if it hits the top of the world
+		final Block block = player.getTargetBlock(null, 256);
+		if (block == null) {
+			return null;
+		}
+		return BukkitUtils.convertLocation(block.getLocation());
 	}
 
 	@Override

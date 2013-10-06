@@ -1,7 +1,9 @@
 package com.github.hoqhuuep.islandcraft.common.island;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.github.hoqhuuep.islandcraft.common.Geometry;
 import com.github.hoqhuuep.islandcraft.common.api.ICDatabase;
@@ -27,6 +29,7 @@ public class Island {
 	private final int taxIncrease;
 	private final int taxMax;
 	private final ICProtection protection;
+	private final Map<String, ICLocation> playerIsland;
 
 	public Island(final ICDatabase database, final ICProtection protection, final ICServer server, final int maxIslands, final String purchaseItem,
 			final int purchaseCostAmount, final int purchaseCostIncrease, final String taxItem, final int taxCostAmount, final int taxCostIncrease) {
@@ -44,6 +47,7 @@ public class Island {
 		taxInitial = 500;
 		taxIncrease = 500;
 		taxMax = 2000;
+		playerIsland = new HashMap<String, ICLocation>();
 	}
 
 	/**
@@ -129,7 +133,11 @@ public class Island {
 			player.message("island-examine-world-error");
 			return;
 		}
-		final ICLocation location = player.getLocation();
+		final ICLocation location = player.getCrosshairLocation();
+		if (location == null) {
+			player.message("island-examine-range-error");
+			return;
+		}
 		final ICLocation island = geometry.getInnerIsland(location);
 		if (geometry.isOcean(island)) {
 			player.message("island-examine-ocean-error");
@@ -148,6 +156,8 @@ public class Island {
 		final int x = island.getX();
 		final int z = island.getZ();
 		final ICType type = database.loadIslandType(island);
+		final String title = database.loadIslandTitle(island);
+		final String owner = database.loadIslandOwner(island);
 		final int tax = database.loadIslandTax(island);
 		final String taxString;
 		if (tax < 0) {
@@ -156,25 +166,21 @@ public class Island {
 			taxString = String.valueOf(tax);
 		}
 		if (ICType.RESOURCE == type) {
-			player.message("island-examine-resource", world, x, z, biome, taxString);
+			player.message("island-examine-resource", biome, title, world, x, z);
 		} else if (ICType.RESERVED == type) {
-			player.message("island-examine-reserved", world, x, z, biome);
+			player.message("island-examine-reserved", biome, title, world, x, z);
 		} else if (ICType.NEW == type) {
 			// TODO
-			player.message("island-examine-new", world, x, z, biome);
+			player.message("island-examine-new", biome, title, world, x, z);
 		} else if (ICType.ABANDONED == type) {
 			// TODO
-			player.message("island-examine-abandoned", world, x, z, biome);
+			player.message("island-examine-abandoned", biome, owner, title, world, x, z);
 		} else if (ICType.REPOSSESSED == type) {
 			// TODO
-			player.message("island-examine-repossessed", world, x, z, biome);
+			player.message("island-examine-repossessed", biome, owner, title, world, x, z);
 		} else if (ICType.PRIVATE == type) {
-			final String owner = database.loadIslandOwner(island);
-			player.message("island-examine-private", world, x, z, biome, owner, taxString);
+			player.message("island-examine-private", biome, owner, title, taxString, world, x, z);
 		}
-		player.message("raw", "type: " + type);
-		player.message("raw", "x: " + island.getX());
-		player.message("raw", "z: " + island.getZ());
 	}
 
 	/**
@@ -359,23 +365,32 @@ public class Island {
 		return taxCostAmount + (islandCount(player) - 1) * taxCostIncrease;
 	}
 
-	public void onMove(final ICPlayer player, final ICLocation from, final ICLocation to) {
-		final Geometry geometry = player.getWorld().getGeometry();
-		// TODO use geometry of from and to (in case they can be in different
-		// worlds)
-		final ICLocation fromIsland = geometry.getInnerIsland(from);
-		final ICLocation toIsland = geometry.getInnerIsland(to);
+	public void onMove(final ICPlayer player, final ICLocation to) {
+		final String name = player.getName();
+		if (to == null) {
+			playerIsland.remove(name);
+			return;
+		}
+		final Geometry geometry = player.getServer().findOnlineWorld(to.getWorld()).getGeometry();
+		final ICLocation toIsland;
+		if (geometry != null) {
+			toIsland = geometry.getInnerIsland(to);
+		} else {
+			toIsland = null;
+		}
+		final ICLocation fromIsland = playerIsland.get(name);
 		if (fromIsland != null) {
-			if (toIsland != null && fromIsland.getX() == toIsland.getX() && fromIsland.getZ() == toIsland.getZ()
-					&& fromIsland.getWorld().equals(toIsland.getWorld())) {
-				return;
+			if (toIsland == null || fromIsland.getX() != toIsland.getX() || fromIsland.getZ() != toIsland.getZ()
+					|| !fromIsland.getWorld().equals(toIsland.getWorld())) {
+				leaveIsland(player, fromIsland);
 			}
-			leaveIsland(player, fromIsland);
+		} else {
+			if (toIsland != null) {
+				enterIsland(player, toIsland);
+			}
 		}
-		if (toIsland != null) {
-			enterIsland(player, toIsland);
-		}
-		// TODO also send message on log-in, rename, purchase, repossess, etc.
+		playerIsland.put(name, toIsland);
+		// TODO also send message on rename, purchase, repossess, etc.
 	}
 
 	private void enterIsland(final ICPlayer player, final ICLocation island) {

@@ -10,7 +10,7 @@ worlds:
   world:
     island-size-chunks: 16
     island-gap-chunks: 4
-    resource-island-rarity: 20
+    resource-island-rarity: 30
     ocean-biome: Ocean
     biomes:
       Forest Island:
