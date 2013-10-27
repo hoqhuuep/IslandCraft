@@ -1,65 +1,32 @@
 package com.github.hoqhuuep.islandcraft.bukkit.database;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "seed")
 public class SeedBean {
-    @Id
-    private String id;
+	@EmbeddedId
+	private LocationPK id;
 
-    @Column
-    private String world;
+	@Column
+	private Long seed;
 
-    @Column
-    private Integer x;
+	public LocationPK getId() {
+		return id;
+	}
 
-    @Column
-    private Integer z;
+	public Long getSeed() {
+		return seed;
+	}
 
-    @Column
-    private Long seed;
+	public void setId(final LocationPK id) {
+		this.id = id;
+	}
 
-    public String getId() {
-        return id;
-    }
-
-    public String getWorld() {
-        return world;
-    }
-
-    public Integer getX() {
-        return x;
-    }
-
-    public Integer getZ() {
-        return z;
-    }
-
-    public Long getSeed() {
-        return seed;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    public void setWorld(final String world) {
-        this.world = world;
-    }
-
-    public void setX(final Integer x) {
-        this.x = x;
-    }
-
-    public void setZ(final Integer z) {
-        this.z = z;
-    }
-
-    public void setSeed(final Long seed) {
-        this.seed = seed;
-    }
+	public void setSeed(final Long seed) {
+		this.seed = seed;
+	}
 }

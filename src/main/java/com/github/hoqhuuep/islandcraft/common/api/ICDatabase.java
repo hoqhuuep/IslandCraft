@@ -113,8 +113,6 @@ public interface ICDatabase {
 	 */
 	void saveWaypoint(String player, String waypoint, ICLocation location);
 
-	void saveIsland(ICLocation island, ICType type, String owner, String title, int tax);
-
 	ICIsland loadIsland(ICLocation island);
 
 	List<ICIsland> loadIslands();
@@ -122,4 +120,6 @@ public interface ICDatabase {
 	List<ICIsland> loadIslandsByWorld(String world);
 
 	List<ICIsland> loadIslandsByOwner(String owner);
+
+	void saveIsland(ICLocation island, ICType type, String owner, String title, int tax);
 }
