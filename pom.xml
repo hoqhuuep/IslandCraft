@@ -3,7 +3,7 @@
   <groupId>com.githup.hoqhuuep</groupId>
   <artifactId>IslandCraft</artifactId>
   <version>0.0.2-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   
   <!-- Project information -->
   <name>IslandCraft</name>
@@ -73,4 +73,18 @@
   <properties>
     <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
   </properties>
+  <modules>
+  	<module>IslandCraft-TerrainControl</module>
+  	<module>IslandCraft-LocalChat</module>
+  	<module>IslandCraft-PartyChat</module>
+  	<module>IslandCraft-PrivateMessage</module>
+  	
+  	<module>IslandCraft-DigitalClock</module>
+  	<module>IslandCraft-CompassWaypoints</module>
+  	<module>IslandCraft-WorldGuard</module>
+  	<module>IslandCraft-Dynmap</module>
+
+
+  	<module>IslandCraft-ExplicitSuicide</module>
+  </modules>
 </project>

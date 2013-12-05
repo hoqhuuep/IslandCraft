@@ -1,0 +1,14 @@
+name: IslandCraft-ExplicitSuicide
+version: 0.0.2
+description: A more explicit command for suicide
+author: hoqhuuep
+website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
+main: com.github.hoqhuuep.islandcraft.explicitsuicide.ExplicitSuicidePlugin
+commands:
+  suicide:
+    description: Kill yourself
+    permission: islandcraft.command.suicide
+    usage: "\u00a7cUsage: /<command>"
+permissions:
+  islandcraft.command.suicide:
+    default: true

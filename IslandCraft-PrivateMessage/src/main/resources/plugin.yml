@@ -1,0 +1,14 @@
+name: IslandCraft-PrivateMessage
+version: 0.0.2
+description: Allows players to send private messages to other players
+author: hoqhuuep
+website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
+main: com.github.hoqhuuep.islandcraft.privatemessage.PrivateMessagePlugin
+commands:
+  m:
+    description: Send a private message to another player
+    permission: islandcraft.command.m
+    usage: "\u00a7cUsage: /<command> <player> <message>"
+permissions:
+  islandcraft.command.m:
+    default: true
