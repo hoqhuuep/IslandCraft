@@ -1,0 +1,7 @@
+name: IslandCraft-CustomWorldChunkManager
+version: 0.0.2
+description: Allows injection of a custom WorldChunkManager to change biome distribution
+author: hoqhuuep
+website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
+main: com.github.hoqhuuep.islandcraft.customworldchunkmanager.CustomWorldChunkManagerPlugin
+load: STARTUP

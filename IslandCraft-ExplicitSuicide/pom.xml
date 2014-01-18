@@ -6,21 +6,4 @@
     <version>0.0.2-SNAPSHOT</version>
   </parent>
   <artifactId>IslandCraft-ExplicitSuicide</artifactId>
-  
-  <repositories>
-    <repository>
-      <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/content/groups/public/</url>
-    </repository>
-  </repositories>
-  
-  <dependencies>
-    <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.7.2-R0.1-SNAPSHOT</version>
-      <scope>compile</scope>
-      <type>jar</type>
-    </dependency>
-  </dependencies>
 </project>

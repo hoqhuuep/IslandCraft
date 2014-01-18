@@ -31,41 +31,15 @@
       <id>bukkit-repo</id>
       <url>http://repo.bukkit.org/content/groups/public/</url>
     </repository>
-    <repository>
-      <id>sk89q-repo</id>
-      <url>http://maven.sk89q.com/repo/</url>
-    </repository>
   </repositories>
   
   <dependencies>
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.6.4-R0.1-SNAPSHOT</version>
+      <version>1.7.2-R0.3-SNAPSHOT</version>
       <scope>compile</scope>
       <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>com.sk89q</groupId>
-      <artifactId>worldedit</artifactId>
-      <version>5.5.8-SNAPSHOT</version>
-      <scope>compile</scope>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>com.sk89q</groupId>
-      <artifactId>worldguard</artifactId>
-      <version>5.8.1-SNAPSHOT</version>
-      <scope>compile</scope>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>com.khorn</groupId>
-      <artifactId>terraincontrol</artifactId>
-      <version>2.5</version>
-      <scope>system</scope>
-      <!-- http://dev.bukkit.org/bukkit-mods/terrain-control/ -->
-      <systemPath>C:\Users\Daniel\Downloads\eclipse-standard-kepler-R-win32\dependencies\TerrainControl.jar</systemPath>
     </dependency>
   </dependencies>
   
@@ -74,17 +48,16 @@
     <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
   </properties>
   <modules>
-  	<module>IslandCraft-TerrainControl</module>
   	<module>IslandCraft-LocalChat</module>
   	<module>IslandCraft-PartyChat</module>
   	<module>IslandCraft-PrivateMessage</module>
-  	
   	<module>IslandCraft-DigitalClock</module>
   	<module>IslandCraft-CompassWaypoints</module>
   	<module>IslandCraft-WorldGuard</module>
   	<module>IslandCraft-Dynmap</module>
-
-
   	<module>IslandCraft-ExplicitSuicide</module>
+  	<module>IslandCraft-WorldGenerator</module>
+  	<module>IslandCraft-IslandGenerator</module>
+  	<module>IslandCraft-CustomWorldChunkManager</module>
   </modules>
 </project>
