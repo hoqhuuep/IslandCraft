@@ -32,7 +32,7 @@ public class MCommandExecutor implements CommandExecutor {
 			sender.sendMessage("There's no player by that name online.");
 			return true;
 		}
-		privateMessageManager.sendPrivateMessage(sender, to, message);
+		privateMessageManager.sendMessage(sender, to, message);
 		return true;
 	}
 }
