@@ -1,63 +1,90 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.githup.hoqhuuep</groupId>
-  <artifactId>IslandCraft</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  
-  <!-- Project information -->
-  <name>IslandCraft</name>
-  <inceptionYear>2013</inceptionYear>
-  <url>http://dev.bukkit.org/bukkit-plugins/islandcraft/</url>
-  <description>Modifies the terrain generation of Minecraft to create an ocean with many islands.</description>
-  
-  <!-- Use Java 6 -->
-  <build>
-    <plugins>
-       <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-compiler-plugin</artifactId>
-         <version>3.1</version>
-         <configuration>
-           <source>1.6</source>
-           <target>1.6</target>
-         </configuration>
-       </plugin>
-    </plugins>
-  </build>
-  
-  <repositories>
-    <repository>
-      <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/content/groups/public/</url>
-    </repository>
-  </repositories>
-  
-  <dependencies>
-    <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.7.2-R0.3-SNAPSHOT</version>
-      <scope>compile</scope>
-      <type>jar</type>
-    </dependency>
-  </dependencies>
-  
-  <!-- Fix encoding warnings -->
-  <properties>
-    <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
-  </properties>
-  <modules>
-  	<module>IslandCraft-LocalChat</module>
-  	<module>IslandCraft-PartyChat</module>
-  	<module>IslandCraft-PrivateMessage</module>
-  	<module>IslandCraft-DigitalClock</module>
-  	<module>IslandCraft-CompassWaypoints</module>
-  	<module>IslandCraft-WorldGuard</module>
-  	<module>IslandCraft-Dynmap</module>
-  	<module>IslandCraft-ExplicitSuicide</module>
-  	<module>IslandCraft-WorldGenerator</module>
-  	<module>IslandCraft-IslandGenerator</module>
-  	<module>IslandCraft-CustomWorldChunkManager</module>
-  </modules>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.githup.hoqhuuep</groupId>
+	<artifactId>IslandCraft</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<!-- Project information -->
+	<name>IslandCraft</name>
+	<inceptionYear>2013</inceptionYear>
+	<url>http://dev.bukkit.org/bukkit-plugins/islandcraft/</url>
+	<description>Modifies the terrain generation of Minecraft to create an ocean with many islands.</description>
+
+	<!-- Fix encoding warnings -->
+	<properties>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+	</properties>
+
+	<modules>
+		<module>IslandCraft-LocalChat</module>
+		<module>IslandCraft-PartyChat</module>
+		<module>IslandCraft-PrivateMessage</module>
+		<module>IslandCraft-DigitalClock</module>
+		<module>IslandCraft-CompassWaypoints</module>
+		<module>IslandCraft-WorldGuard</module>
+		<module>IslandCraft-Dynmap</module>
+		<module>IslandCraft-ExplicitSuicide</module>
+		<module>IslandCraft-WorldGenerator</module>
+		<module>IslandCraft-IslandGenerator</module>
+		<module>IslandCraft-CustomWorldChunkManager</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<!-- Use Java 6 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<!-- Copy all JAR files to server's plugins directory -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-artifact</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${project.artifactId}</artifactId>
+									<version>${project.version}</version>
+									<type>${project.packaging}</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>../../../server/plugins</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>bukkit-repo</id>
+			<url>http://repo.bukkit.org/content/groups/public/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>1.7.2-R0.3-SNAPSHOT</version>
+			<scope>compile</scope>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
 </project>
