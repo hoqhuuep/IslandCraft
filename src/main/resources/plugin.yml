@@ -8,42 +8,6 @@ main: com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin
 database: true
 depend: [TerrainControl, WorldEdit, WorldGuard]
 commands:
-  m:
-    description: Send a private message to another player
-    permission: islandcraft.command.m
-    usage: /<command> <player> <message...>
-  l:
-    description: Send a message to nearby players
-    permission: islandcraft.command.l
-    usage: /<command> <message...>
-  p:
-    description: Send a message to members of your party
-    permission: islandcraft.command.p
-    usage: /<command> <message...>
-  party:
-    description: Commands to manage your party
-    permission: islandcraft.command.party
-    usage: |
-      Use /help <command> [subcommand] for more information
-      /<command> join - Join a party
-      /<command> leave - Leave your party
-      /<command> members - List the members of your party
-  party join:
-    description: Join a party
-    permission: islandcraft.command.party.join
-    usage: /<command> <party...>
-  party leave:
-    description: Leave your party
-    permission: islandcraft.command.party.leave
-    usage: /<command>
-  party members:
-    description: List the members of your party
-    permission: islandcraft.command.party.members
-    usage: /<command>
-  suicide:
-    description: Kill yourself
-    permission: islandcraft.command.suicide
-    usage: /<command>
   island:
     description: Commands for managing islands
     permission: islandcraft.command.island
@@ -149,20 +113,6 @@ commands:
     permission: islandcraft.command.icsudo.rename
     usage: /<command> <name...>
 permissions:
-  islandcraft.command.m:
-    default: true
-  islandcraft.command.l:
-    default: true
-  islandcraft.command.p:
-    default: true
-  islandcraft.command.party:
-    default: true
-    children:
-      islandcraft.command.party.join: true
-      islandcraft.command.party.leave: true
-      islandcraft.command.party.members: true
-  islandcraft.command.suicide:
-    default: true
   islandcraft.command.island:
     default: true
     children:
@@ -189,5 +139,3 @@ permissions:
       islandcraft.command.icsudo.available: true
       islandcraft.command.icsudo.purchase: true
       islandcraft.command.icsudo.rename: true
-  islandcraft.clock:
-    default: true

@@ -3,6 +3,9 @@ package com.github.hoqhuuep.islandcraft.worldgenerator;
 import com.github.hoqhuuep.islandcraft.customworldchunkmanager.BiomeGenerator;
 
 public class WorldGenerator implements BiomeGenerator {
+
+	private static final int CHUNK_SIZE = 16;
+
 	@Override
 	public int[] validSpawnBiomes() {
 		final int[] result = { 14 };
@@ -10,46 +13,27 @@ public class WorldGenerator implements BiomeGenerator {
 	}
 
 	@Override
-	public int[] generateZoomed(final int x, final int z, final int xSize,
-			final int zSize) {
-		final int[] result = new int[xSize * zSize];
-		for (int j = 0; j < zSize; ++j) {
-			final int zz = z + j;
-			for (int i = 0; i < xSize; ++i) {
-				final int xx = x + i;
-				final int r = xx * xx + zz * zz;
-				if (r < 15 * 15) {
-					result[j * xSize + i] = 14; // MushroomIsland
-				} else if (r < 16 * 16) {
-					result[j * xSize + i] = 15; // MushroomIslandShore
-				} else if (Math.abs(xx) < 20 && Math.abs(zz) < 20) {
-					result[j * xSize + i] = 0; // Ocean
-				} else {
-					result[j * xSize + i] = 24; // DeepOcean
-				}
-			}
+	public int biomeAt(int x, int z) {
+		final int r = x * x + z * z;
+		if (r < 60 * 60) {
+			return 14; // MushroomIsland
+		} else if (r < 64 * 64) {
+			return 15; // MushroomIslandShore
+		} else if (Math.abs(x) < 80 && Math.abs(z) < 80) {
+			return 1; // Ocean
+		} else {
+			return 24; // DeepOcean
 		}
-		return result;
 	}
 
 	@Override
-	public int[] generateUnzoomed(final int x, final int z, final int xSize,
-			final int zSize) {
-		final int[] result = new int[xSize * zSize];
-		for (int j = 0; j < zSize; ++j) {
-			final int zz = z + j;
-			for (int i = 0; i < xSize; ++i) {
-				final int xx = x + i;
-				final int r = xx * xx + zz * zz;
-				if (r < 60 * 60) {
-					result[j * xSize + i] = 14; // MushroomIsland
-				} else if (r < 64 * 64) {
-					result[j * xSize + i] = 15; // MushroomIslandShore
-				} else if (Math.abs(xx) < 80 && Math.abs(zz) < 80) {
-					result[j * xSize + i] = 0; // Ocean
-				} else {
-					result[j * xSize + i] = 24; // DeepOcean
-				}
+	public int[] biomeChunk(int xMin, int zMin) {
+		final int[] result = new int[CHUNK_SIZE * CHUNK_SIZE];
+		for (int j = 0; j < CHUNK_SIZE; ++j) {
+			final int z = zMin + j;
+			final int offset = j * CHUNK_SIZE;
+			for (int i = 0; i < CHUNK_SIZE; ++i) {
+				result[offset + i] = biomeAt(xMin + i, z);
 			}
 		}
 		return result;

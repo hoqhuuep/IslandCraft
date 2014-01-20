@@ -89,15 +89,6 @@ public final class IslandCraftPlugin extends JavaPlugin {
 
 		register(new ChunkLoadListener(island));
 
-		// Chat Commands
-		final PartyChat partyChat = new PartyChat(getICDatabase());
-		final PartyMessageCommandExecutor partyMessageCommandExecutor = new PartyMessageCommandExecutor(partyChat, server);
-		final PartyCommandExecutor partyCommandExecutor = new PartyCommandExecutor(partyChat, server);
-		getCommand("p").setExecutor(partyMessageCommandExecutor);
-		final PluginCommand partyCommand = getCommand("party");
-		partyCommand.setExecutor(partyCommandExecutor);
-		partyCommand.setTabCompleter(partyCommandExecutor);
-
 		// Administrative commands
 		final ICSudoCommandExecutor icsudoCommandExecutor = new ICSudoCommandExecutor(server, database);
 		final PluginCommand icsudoCommand = getCommand("icsudo");
