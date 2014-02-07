@@ -26,8 +26,6 @@
 		<module>IslandCraft-WorldGuard</module>
 		<module>IslandCraft-Dynmap</module>
 		<module>IslandCraft-ExplicitSuicide</module>
-		<module>IslandCraft-WorldGenerator</module>
-		<module>IslandCraft-IslandGenerator</module>
 		<module>IslandCraft-CustomWorldChunkManager</module>
 	</modules>
 

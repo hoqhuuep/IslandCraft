@@ -1,9 +1,11 @@
 package com.github.hoqhuuep.islandcraft.customworldchunkmanager;
 
 public interface BiomeGenerator {
-	int[] validSpawnBiomes();
+    int[] validSpawnBiomes();
 
-	int biomeAt(int x, int z);
+    int biomeAt(int x, int z);
 
-	int[] biomeChunk(int xMin, int zMin);
+    int[] biomeChunk(int xMin, int zMin);
+
+    void cleanupCache();
 }
