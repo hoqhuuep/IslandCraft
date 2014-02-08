@@ -1,9 +1,9 @@
-name: IslandCraft-CompassWaypoints
+name: IslandCraft-Compass
 version: 0.0.2
 description: Create waypoints which can be followed with your compass
 author: hoqhuuep
 website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
-main: com.github.hoqhuuep.islandcraft.compasswaypoints.CompassWaypointsPlugin
+main: com.github.hoqhuuep.islandcraft.compass.CompassPlugin
 database: true
 commands:
   waypoint:

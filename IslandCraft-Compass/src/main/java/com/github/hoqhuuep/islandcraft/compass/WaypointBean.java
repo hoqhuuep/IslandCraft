@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.bukkit.database;
+package com.github.hoqhuuep.islandcraft.compass;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,10 +21,13 @@ public class WaypointBean {
     private String world;
 
     @Column
-    private Integer x;
+    private Double x;
 
     @Column
-    private Integer z;
+    private Double y;
+
+    @Column
+    private Double z;
 
     public String getId() {
         return id;
@@ -38,11 +41,15 @@ public class WaypointBean {
         return waypoint;
     }
 
-    public Integer getX() {
+    public Double getX() {
         return x;
     }
 
-    public Integer getZ() {
+    public Double getY() {
+        return y;
+    }
+
+    public Double getZ() {
         return z;
     }
 
@@ -62,11 +69,15 @@ public class WaypointBean {
         this.waypoint = waypoint;
     }
 
-    public void setX(final Integer x) {
+    public void setX(final Double x) {
         this.x = x;
     }
 
-    public void setZ(final Integer z) {
+    public void setY(final Double y) {
+        this.y = y;
+    }
+
+    public void setZ(final Double z) {
         this.z = z;
     }
 

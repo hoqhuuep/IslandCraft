@@ -42,124 +42,113 @@ import com.khorn.terraincontrol.TerrainControl;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public final class IslandCraftPlugin extends JavaPlugin {
-	private IslandCraftConfig config;
-	private ICDatabase database;
+    private IslandCraftConfig config;
+    private ICDatabase database;
 
-	@Override
-	public List<Class<?>> getDatabaseClasses() {
-		return EbeanServerDatabase.getDatabaseClasses();
-	}
+    @Override
+    public List<Class<?>> getDatabaseClasses() {
+        return EbeanServerDatabase.getDatabaseClasses();
+    }
 
-	@Override
-	public void onEnable() {
-		getConfig().options().copyDefaults(true);
-		saveConfig();
-		getLanguageConfig().options().copyDefaults(true);
-		saveLanguageConfig();
-		try {
-			getDatabase().find(CompassBean.class).findRowCount();
-		} catch (PersistenceException e) {
-			installDDL();
-		}
+    @Override
+    public void onEnable() {
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+        getLanguageConfig().options().copyDefaults(true);
+        saveLanguageConfig();
+        try {
+            getDatabase().find(CompassBean.class).findRowCount();
+        } catch (PersistenceException e) {
+            installDDL();
+        }
 
-		config = new IslandCraftConfig(getConfig());
-		database = new EbeanServerDatabase(getDatabase());
-		final Language language = new Language(getLanguageConfig());
-		final ICServer server = new BukkitServer(config, language);
-		final ICProtection protection = new WorldGuardProtection(getWorldGuard());
+        config = new IslandCraftConfig(getConfig());
+        database = new EbeanServerDatabase(getDatabase());
+        final Language language = new Language(getLanguageConfig());
+        final ICServer server = new BukkitServer(config, language);
+        final ICProtection protection = new WorldGuardProtection(getWorldGuard());
 
-		// Generator
-		TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
+        // Island Commands
+        final Island island = new Island(getICDatabase(), protection, server, config.getMaxIslandsPerPlayer(), config.getPurchaseCostItem(),
+                config.getPurchaseCostAmount(), config.getPurchaseCostAmount(), config.getTaxCostItem(), config.getTaxCostAmount(),
+                config.getTaxCostIncrease(), config.getTaxDaysInitial(), config.getTaxDaysIncrease(), config.getTaxDaysMax());
+        register(new PlayerMoveListener(island, server));
+        final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(island, server);
+        final PluginCommand islandCommand = getCommand("island");
+        islandCommand.setExecutor(islandCommandExecutor);
+        islandCommand.setTabCompleter(islandCommandExecutor);
 
-		// Island Commands
-		final Island island = new Island(getICDatabase(), protection, server, config.getMaxIslandsPerPlayer(), config.getPurchaseCostItem(),
-				config.getPurchaseCostAmount(), config.getPurchaseCostAmount(), config.getTaxCostItem(), config.getTaxCostAmount(),
-				config.getTaxCostIncrease(), config.getTaxDaysInitial(), config.getTaxDaysIncrease(), config.getTaxDaysMax());
-		register(new PlayerMoveListener(island, server));
-		final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(island, server);
-		final PluginCommand islandCommand = getCommand("island");
-		islandCommand.setExecutor(islandCommandExecutor);
-		islandCommand.setTabCompleter(islandCommandExecutor);
+        getCommand("warp").setExecutor(new WarpCommandExecutor(island, server));
 
-		getCommand("warp").setExecutor(new WarpCommandExecutor(island, server));
+        // Dawn (for tax system)
+        register(new WorldInitListener(this, config));
+        register(new DawnListener(island));
 
-		// Dawn (for tax system)
-		register(new WorldInitListener(this, config));
-		register(new DawnListener(island));
+        register(new ChunkLoadListener(island));
 
-		register(new ChunkLoadListener(island));
+        // Administrative commands
+        final ICSudoCommandExecutor icsudoCommandExecutor = new ICSudoCommandExecutor(server, database);
+        final PluginCommand icsudoCommand = getCommand("icsudo");
+        icsudoCommand.setExecutor(icsudoCommandExecutor);
+        icsudoCommand.setTabCompleter(icsudoCommandExecutor);
+    }
 
-		// Administrative commands
-		final ICSudoCommandExecutor icsudoCommandExecutor = new ICSudoCommandExecutor(server, database);
-		final PluginCommand icsudoCommand = getCommand("icsudo");
-		icsudoCommand.setExecutor(icsudoCommandExecutor);
-		icsudoCommand.setTabCompleter(icsudoCommandExecutor);
+    public IslandCraftConfig getICConfig() {
+        return config;
+    }
 
-		// Extras
-		final BetterCompass betterCompass = new BetterCompass(getICDatabase());
-		final WaypointCommandExecutor waypointCommandExecutor = new WaypointCommandExecutor(betterCompass, server);
-		register(new CompassListener(betterCompass, server));
-		final PluginCommand waypointCommand = getCommand("waypoint");
-		waypointCommand.setExecutor(waypointCommandExecutor);
-		waypointCommand.setTabCompleter(waypointCommandExecutor);
-	}
+    public ICDatabase getICDatabase() {
+        return database;
+    }
 
-	public IslandCraftConfig getICConfig() {
-		return config;
-	}
+    private void register(final Listener listener) {
+        final PluginManager pluginManager = getServer().getPluginManager();
+        pluginManager.registerEvents(listener, this);
+    }
 
-	public ICDatabase getICDatabase() {
-		return database;
-	}
+    private WorldGuardPlugin getWorldGuard() {
+        final PluginManager pluginManager = getServer().getPluginManager();
+        final Plugin plugin = pluginManager.getPlugin("WorldGuard");
 
-	private void register(final Listener listener) {
-		final PluginManager pluginManager = getServer().getPluginManager();
-		pluginManager.registerEvents(listener, this);
-	}
+        // WorldGuard may not be loaded
+        if (null == plugin || !(plugin instanceof WorldGuardPlugin)) {
+            return null;
+        }
 
-	private WorldGuardPlugin getWorldGuard() {
-		final PluginManager pluginManager = getServer().getPluginManager();
-		final Plugin plugin = pluginManager.getPlugin("WorldGuard");
+        return (WorldGuardPlugin) plugin;
+    }
 
-		// WorldGuard may not be loaded
-		if (null == plugin || !(plugin instanceof WorldGuardPlugin)) {
-			return null;
-		}
+    private File languageConfigFile;
+    private FileConfiguration languageConfig;
 
-		return (WorldGuardPlugin) plugin;
-	}
+    private void reloadLanguageConfig() {
+        if (null == languageConfigFile) {
+            languageConfigFile = new File(getDataFolder(), "language.yml");
+        }
+        // Look for defaults in the jar
+        languageConfig = YamlConfiguration.loadConfiguration(languageConfigFile);
+        final InputStream defConfigStream = getResource("language.yml");
+        if (null != defConfigStream) {
+            final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            languageConfig.setDefaults(defConfig);
+        }
+    }
 
-	private File languageConfigFile;
-	private FileConfiguration languageConfig;
+    private FileConfiguration getLanguageConfig() {
+        if (null == languageConfig) {
+            reloadLanguageConfig();
+        }
+        return languageConfig;
+    }
 
-	private void reloadLanguageConfig() {
-		if (null == languageConfigFile) {
-			languageConfigFile = new File(getDataFolder(), "language.yml");
-		}
-		// Look for defaults in the jar
-		languageConfig = YamlConfiguration.loadConfiguration(languageConfigFile);
-		final InputStream defConfigStream = getResource("language.yml");
-		if (null != defConfigStream) {
-			final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			languageConfig.setDefaults(defConfig);
-		}
-	}
-
-	private FileConfiguration getLanguageConfig() {
-		if (null == languageConfig) {
-			reloadLanguageConfig();
-		}
-		return languageConfig;
-	}
-
-	private void saveLanguageConfig() {
-		if (null == languageConfig || null == languageConfigFile) {
-			return;
-		}
-		try {
-			getLanguageConfig().save(languageConfigFile);
-		} catch (IOException ex) {
-			this.getLogger().log(Level.SEVERE, "Could not save config to " + languageConfigFile, ex);
-		}
-	}
+    private void saveLanguageConfig() {
+        if (null == languageConfig || null == languageConfigFile) {
+            return;
+        }
+        try {
+            getLanguageConfig().save(languageConfigFile);
+        } catch (IOException ex) {
+            this.getLogger().log(Level.SEVERE, "Could not save config to " + languageConfigFile, ex);
+        }
+    }
 }

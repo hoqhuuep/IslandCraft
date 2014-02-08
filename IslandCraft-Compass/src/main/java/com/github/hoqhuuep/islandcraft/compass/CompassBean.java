@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.bukkit.database;
+package com.github.hoqhuuep.islandcraft.compass;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

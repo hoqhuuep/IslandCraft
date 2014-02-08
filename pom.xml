@@ -22,7 +22,7 @@
 		<module>IslandCraft-PartyChat</module>
 		<module>IslandCraft-PrivateMessage</module>
 		<module>IslandCraft-DigitalClock</module>
-		<module>IslandCraft-CompassWaypoints</module>
+		<module>IslandCraft-Compass</module>
 		<module>IslandCraft-WorldGuard</module>
 		<module>IslandCraft-Dynmap</module>
 		<module>IslandCraft-ExplicitSuicide</module>

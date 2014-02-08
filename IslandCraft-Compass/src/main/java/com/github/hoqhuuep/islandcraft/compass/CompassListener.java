@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.bukkit.event;
+package com.github.hoqhuuep.islandcraft.compass;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,72 +11,58 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
-import com.github.hoqhuuep.islandcraft.common.api.ICServer;
-import com.github.hoqhuuep.islandcraft.common.extras.BetterCompass;
-
 public class CompassListener implements Listener {
-    private final BetterCompass betterCompass;
-    private final ICServer server;
+    private final CompassManager compassManager;
 
-    public CompassListener(final BetterCompass betterCompass, final ICServer server) {
-        this.betterCompass = betterCompass;
-        this.server = server;
+    public CompassListener(final CompassManager compassManager) {
+        this.compassManager = compassManager;
     }
 
     @EventHandler
     public final void onPlayerDeath(final PlayerDeathEvent event) {
-        final ICPlayer player = getPlayer(event.getEntity());
+        final Player player = event.getEntity();
         if (null == player) {
             return;
         }
-        betterCompass.onDeath(player);
+        compassManager.onDeath(player);
     }
 
     @EventHandler
     public final void onPlayerBedEnter(final PlayerBedEnterEvent event) {
-        final ICPlayer player = getPlayer(event.getPlayer());
+        final Player player = event.getPlayer();
         if (null == player) {
             return;
         }
-        betterCompass.onUseBed(player);
+        compassManager.onUseBed(player);
     }
 
     @EventHandler
     public final void onPlayerInteract(final PlayerInteractEvent event) {
         final Action action = event.getAction();
         if (Material.COMPASS == event.getMaterial() && (Action.RIGHT_CLICK_AIR == action || Action.RIGHT_CLICK_BLOCK == action)) {
-            final Player bukkitPlayer = event.getPlayer();
-            final ICPlayer player = getPlayer(bukkitPlayer);
+            final Player player = event.getPlayer();
             if (null == player) {
                 return;
             }
-            betterCompass.onNextWaypoint(player, bukkitPlayer.isSneaking());
+            compassManager.onNextWaypoint(player, player.isSneaking());
         }
     }
 
     @EventHandler
     public final void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
-        final ICPlayer player = getPlayer(event.getPlayer());
+        final Player player = event.getPlayer();
         if (null == player) {
             return;
         }
-        betterCompass.onRespawn(player);
+        compassManager.onRespawn(player);
     }
 
     @EventHandler
     public final void onPlayerRespawn(final PlayerRespawnEvent event) {
-        final ICPlayer player = getPlayer(event.getPlayer());
+        final Player player = event.getPlayer();
         if (null == player) {
             return;
         }
-        betterCompass.onRespawn(player);
-    }
-
-    private ICPlayer getPlayer(final Player player) {
-        if (!player.hasPermission("islandcraft.command.waypoint")) {
-            return null;
-        }
-        return server.findOnlinePlayer(player.getName());
+        compassManager.onRespawn(player);
     }
 }

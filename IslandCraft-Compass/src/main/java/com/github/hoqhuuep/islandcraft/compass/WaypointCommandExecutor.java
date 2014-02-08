@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.bukkit.command;
+package com.github.hoqhuuep.islandcraft.compass;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,17 +11,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
-import com.github.hoqhuuep.islandcraft.common.api.ICServer;
-import com.github.hoqhuuep.islandcraft.common.extras.BetterCompass;
-
 public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
-    private final ICServer server;
-    private final BetterCompass betterCompass;
+    private final CompassManager compassManager;
 
-    public WaypointCommandExecutor(final BetterCompass betterCompass, final ICServer server) {
-        this.betterCompass = betterCompass;
-        this.server = server;
+    public WaypointCommandExecutor(final CompassManager compassManager) {
+        this.compassManager = compassManager;
     }
 
     @Override
@@ -29,14 +23,14 @@ public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
         if (null == sender || !(sender instanceof Player) || args.length < 1) {
             return false;
         }
-        final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
+        final Player player = (Player) sender;
         if ("add".equalsIgnoreCase(args[0])) {
             final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
             final String name = StringUtils.join(nameArray, " ");
             if (name.isEmpty()) {
                 return false;
             }
-            betterCompass.onWaypointAdd(player, name);
+            compassManager.onWaypointAdd(player, name);
             return true;
         } else if ("remove".equalsIgnoreCase(args[0])) {
             final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
@@ -44,7 +38,7 @@ public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
             if (name.isEmpty()) {
                 return false;
             }
-            betterCompass.onWaypointRemove(player, name);
+            compassManager.onWaypointRemove(player, name);
             return true;
         } else if ("set".equalsIgnoreCase(args[0])) {
             final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
@@ -52,13 +46,13 @@ public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
             if (name.isEmpty()) {
                 return false;
             }
-            betterCompass.onWaypointSet(player, name);
+            compassManager.onWaypointSet(player, name);
             return true;
         } else if ("list".equalsIgnoreCase(args[0])) {
             if (1 != args.length) {
                 return false;
             }
-            betterCompass.onWaypointList(player);
+            compassManager.onWaypointList(player);
             return true;
         }
         return false;
