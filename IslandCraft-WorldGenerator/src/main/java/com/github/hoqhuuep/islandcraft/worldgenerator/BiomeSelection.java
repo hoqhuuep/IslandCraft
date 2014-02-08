@@ -26,8 +26,8 @@ public class BiomeSelection {
         instances.add(new BiomeSelection(Biome.SWAMPLAND, Biome.SWAMPLAND, Biome.SWAMPLAND, Biome.OCEAN));
         instances.add(new BiomeSelection(Biome.TAIGA, Biome.TAIGA_HILLS, Biome.BEACH, Biome.OCEAN));
         instances.add(new BiomeSelection(Biome.FOREST, Biome.FOREST_HILLS, Biome.BEACH, Biome.OCEAN));
-        instances.add(new BiomeSelection(Biome.ICE_PLAINS, Biome.ICE_MOUNTAINS, Biome.COLD_BEACH, Biome.OCEAN));
-        instances.add(new BiomeSelection(Biome.PLAINS, Biome.FOREST_HILLS, Biome.COLD_BEACH, Biome.OCEAN));
+        instances.add(new BiomeSelection(Biome.ICE_PLAINS, Biome.ICE_MOUNTAINS, Biome.FROZEN_OCEAN, Biome.OCEAN));
+        instances.add(new BiomeSelection(Biome.PLAINS, Biome.FOREST_HILLS, Biome.BEACH, Biome.OCEAN));
     }
 
     private BiomeSelection(Biome normal, Biome hills, Biome beach, Biome ocean) {

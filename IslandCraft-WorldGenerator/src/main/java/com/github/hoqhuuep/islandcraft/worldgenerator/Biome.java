@@ -16,7 +16,7 @@ public enum Biome {
     TAIGA_M(133, "Taiga M", new Color(51, 142, 129)),
     JUNGLE_M(149, "Jungle M", new Color(123, 163, 49)),
     MEGA_SPRUCE_TAIGA_HILLS(161, "Mega Spruce Taiga (Hills)", new Color(109, 119, 102)),
-    SAVANNA(25, "Savanna", new Color(189, 178, 95)),
+    SAVANNA(35, "Savanna", new Color(189, 178, 95)),
     ROOFED_FOREST_M(157, "Roofed Forest M", new Color(104, 121, 66)),
     MESA_PLATEAU_F(38, "Mesa Plateau F", new Color(176, 151, 101)),
     MESA_PLATEAU_F_M(167, "Mesa Plateau F M", new Color(216, 191, 141)),
@@ -67,6 +67,12 @@ public enum Biome {
 
     private final Color color;
     private final int id;
+    public static final Biome[] fromId = new Biome[256];
+    static {
+        for (Biome biome : values()) {
+            fromId[biome.getId()] = biome;
+        }
+    }
 
     private Biome(int id, String name, Color color) {
         this.id = id;

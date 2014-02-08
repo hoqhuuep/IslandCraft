@@ -4,6 +4,7 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -31,7 +32,7 @@ public class IslandGenerator {
         // Find borders
         final Queue<Site> floodFillOcean = new LinkedList<Site>();
         for (final Site p : sites) {
-            if (p.x < minDistance * 2 || p.x >= xSize - minDistance * 2 || p.z < minDistance * 2 || p.z >= zSize - minDistance * 2) {
+            if (p.x < minDistance || p.x >= xSize - minDistance || p.z < minDistance || p.z >= zSize - minDistance) {
                 p.border = true;
                 p.ocean = true;
                 floodFillOcean.add(p);
@@ -42,7 +43,8 @@ public class IslandGenerator {
             }
         }
 
-        final Queue<Site> coastQueue = new LinkedList<Site>();
+        final List<Site> coastQueue1 = new ArrayList<Site>();
+        final List<Site> coastQueue2 = new ArrayList<Site>();
 
         // Find oceans and coasts
         while (!floodFillOcean.isEmpty()) {
@@ -57,33 +59,46 @@ public class IslandGenerator {
                     }
                 } else {
                     q.coast = true;
-                    coastQueue.add(q);
+                    coastQueue1.add(q);
                 }
             }
         }
 
         // Remove derpy coasts
-        queue2: while (!coastQueue.isEmpty()) {
-            final Site polygon = coastQueue.remove();
-            for (final Site q : polygon.neighbors) {
+        A: for (final Site p : coastQueue1) {
+            for (final Site q : p.neighbors) {
                 if (!q.ocean && !q.coast) {
-                    continue queue2;
+                    coastQueue2.add(p);
+                    continue A;
                 }
             }
-            polygon.ocean = true;
+            p.ocean = true;
+        }
+
+        // Create shallow ocean
+        for (final Site p : coastQueue2) {
+            for (final Site q : p.neighbors) {
+                if (q.ocean && !q.border) {
+                    q.shallow = true;
+                }
+            }
         }
 
         // Create blank image
         final BufferedImage image = new BufferedImage(xSize, zSize, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D graphics = image.createGraphics();
         graphics.setComposite(AlphaComposite.Src);
-        graphics.setBackground(new Color(biomeSelection.ocean, true));
+        graphics.setBackground(new Color(Biome.DEEP_OCEAN.getId(), true));
         graphics.clearRect(0, 0, xSize, zSize);
 
         // Render island
         for (Site p : sites) {
             if (p.ocean) {
-                continue;
+                if (p.shallow) {
+                    graphics.setColor(new Color(biomeSelection.ocean, true));
+                } else {
+                    continue;
+                }
             } else if (p.coast) {
                 graphics.setColor(new Color(biomeSelection.beach, true));
             } else if (p.mountain) {

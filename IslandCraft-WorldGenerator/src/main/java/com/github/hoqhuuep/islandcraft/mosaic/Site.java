@@ -15,6 +15,7 @@ public final class Site {
     public boolean border;
     public boolean mountain;
     public boolean coast;
+    public boolean shallow;
 
     public Site(final double x, final double z) {
         this.x = x;

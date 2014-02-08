@@ -18,13 +18,14 @@ public class CustomWorldChunkManagerListener implements Listener {
 
     @EventHandler
     public void onWorldInit(final WorldInitEvent event) {
+        final World world = event.getWorld();
+        world.setSpawnLocation(0, world.getHighestBlockYAt(0, 0), 0);
         if (beforeHack) {
-            final World world = event.getWorld();
             if (world.getName().equals("world")) {
                 final CraftWorld craftWorld = (CraftWorld) world;
                 final WorldProvider worldProvider = craftWorld.getHandle().worldProvider;
                 if (!(worldProvider.e instanceof CustomWorldChunkManager)) {
-                    final BiomeGenerator biomeGenerator = new WorldGenerator(world.getSeed(), 256, 288, Biome.DEEP_OCEAN.getId());
+                    final BiomeGenerator biomeGenerator = new WorldGenerator(world.getSeed(), 288, 320, Biome.DEEP_OCEAN.getId());
                     worldProvider.e = new CustomWorldChunkManager(biomeGenerator);
                 }
                 beforeHack = false;
@@ -44,7 +45,7 @@ public class CustomWorldChunkManagerListener implements Listener {
                 final CraftWorld craftWorld = (CraftWorld) world;
                 final WorldProvider worldProvider = craftWorld.getHandle().worldProvider;
                 if (!(worldProvider.e instanceof CustomWorldChunkManager)) {
-                    final BiomeGenerator biomeGenerator = new WorldGenerator(world.getSeed(), 256, 288, Biome.DEEP_OCEAN.getId());
+                    final BiomeGenerator biomeGenerator = new WorldGenerator(world.getSeed(), 288, 320, Biome.DEEP_OCEAN.getId());
                     worldProvider.e = new CustomWorldChunkManager(biomeGenerator);
                     final Chunk chunk = event.getChunk();
                     world.regenerateChunk(chunk.getX(), chunk.getZ());

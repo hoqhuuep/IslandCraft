@@ -12,20 +12,21 @@ import net.minecraft.server.v1_7_R1.WorldChunkManager;
 public class CustomWorldChunkManager extends WorldChunkManager {
     private final BiomeCache biomeCache;
     private final BiomeGenerator biomeGenerator;
+    private final List<BiomeBase> validSpawnBiomes;
 
     public CustomWorldChunkManager(final BiomeGenerator biomeGenerator) {
         this.biomeGenerator = biomeGenerator;
         this.biomeCache = new BiomeCache(this);
+        validSpawnBiomes = new ArrayList<BiomeBase>();
+        for (final int i : biomeGenerator.validSpawnBiomes()) {
+            validSpawnBiomes.add(BiomeBase.getBiome(i));
+        }
     }
 
     /** Returns a list of biome's which are valid for spawn */
     @Override
     @SuppressWarnings("rawtypes")
     public List a() {
-        final List<BiomeBase> validSpawnBiomes = new ArrayList<BiomeBase>();
-        for (final int i : biomeGenerator.validSpawnBiomes()) {
-            validSpawnBiomes.add(BiomeBase.getBiome(i));
-        }
         return validSpawnBiomes;
     }
 
@@ -119,8 +120,8 @@ public class CustomWorldChunkManager extends WorldChunkManager {
     }
 
     /**
-     * Returns true if all biome's in area are in allowedBiomes. x and z are in 4-block size, radius is in 1-block size.
-     * Used for checking where a village can go.
+     * Returns true if all biome's in area are in allowedBiomes. x, z and radius are in blocks. Used for checking where
+     * a village can go.
      */
     @Override
     public boolean a(final int x, final int z, final int radius, @SuppressWarnings("rawtypes") final List allowedBiomes) {

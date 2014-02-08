@@ -6,7 +6,7 @@
 		<artifactId>IslandCraft</artifactId>
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>IslandCraft-CustomWorldChunkManager</artifactId>
+	<artifactId>IslandCraft-WorldGenerator</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>org.bukkit</groupId>

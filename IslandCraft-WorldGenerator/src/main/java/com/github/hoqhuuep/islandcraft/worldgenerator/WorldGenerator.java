@@ -90,12 +90,12 @@ public class WorldGenerator implements BiomeGenerator {
 
     @Override
     public int[] validSpawnBiomes() {
-        final int[] biomes = {0};
+        final int[] biomes = {biomeAt(0, 0)};
         return biomes;
     }
 
     @Override
-    public int[] biomeChunk(int xMin, int zMin) {
+    public int[] biomeChunk(final int xMin, final int zMin) {
         return biomeChunk(xMin, zMin, new int[256]);
     }
 }
