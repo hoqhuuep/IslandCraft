@@ -8,65 +8,10 @@ main: com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin
 database: true
 depend: [TerrainControl, WorldEdit, WorldGuard]
 commands:
-  island:
-    description: Commands for managing islands
-    permission: islandcraft.command.island
-    usage: |
-      Use /help <command> [subcommand] for more information
-      /<command> purchase - Purchase an island
-      /<command> abandon - Abandon an island
-      /<command> examine - List information about an island
-      /<command> rename - Give a new name to an island
-      /<command> tax - Pay tax for an island
-  island purchase:
-    description: Purchase the island you are standing on
-    permission: islandcraft.command.island.purchase
-    usage: /<command>
-  island abandon:
-    description: Abandon the island you are standing on
-    permission: islandcraft.command.island.abandon
-    usage: /<command>
-  island tax:
-    description: Pay 500 days tax for the island you are standing on
-    permission: islandcraft.command.island.tax
-    usage: /<command>
-  island examine:
-    description: List information about the island you are standing on
-    permission: islandcraft.command.island.examine
-    usage: /<command>
-  island rename:
-    description: Give a new name to the island you are standing on (used in greeting and farewell messages)
-    permission: islandcraft.command.island.rename
-    usage: /<command> <name...>
   warp:
     description: Warp to a random available island
     permission: islandcraft.command.warp
     usage: /<command>
-  waypoint:
-    description: Commands to manage your compass waypoints
-    permission: islandcraft.command.waypoint
-    usage: |
-      Use /help <command> [subcommand] for more information
-      /<command> add - Add a waypoint at your current location
-      /<command> remove - Remove a waypoint
-      /<command> list - List your waypoints
-      /<command> set - Make your compass point towards a waypoint
-  waypoint add:
-    description: Add a waypoint at your current location
-    permission: islandcraft.command.waypoint.add
-    usage: /<command> <waypoint...>
-  waypoint remove:
-    description: Remove a waypoint
-    permission: islandcraft.command.waypoint.remove
-    usage: /<command> <waypoint...>
-  waypoint list:
-    description: List your waypoints
-    permission: islandcraft.command.waypoint.list
-    usage: /<command>
-  waypoint set:
-    description: Make your compass point towards a waypoint
-    permission: islandcraft.command.waypoint.set
-    usage: /<command> <waypoint...>
   icsudo:
     description: Dangerous commands for IslandCraft
     permission: islandcraft.command.icsudo
@@ -113,23 +58,8 @@ commands:
     permission: islandcraft.command.icsudo.rename
     usage: /<command> <name...>
 permissions:
-  islandcraft.command.island:
-    default: true
-    children:
-      islandcraft.command.island.purchase: true
-      islandcraft.command.island.abandon: true
-      islandcraft.command.island.tax: true
-      islandcraft.command.island.examine: true
-      islandcraft.command.island.rename: true
   islandcraft.command.warp:
     default: op
-  islandcraft.command.waypoint:
-    default: true
-    children:
-      islandcraft.command.waypoint.add: true
-      islandcraft.command.waypoint.remove: true
-      islandcraft.command.waypoint.list: true
-      islandcraft.command.waypoint.set: true
   islandcraft.command.icsudo:
     default: op
     children:

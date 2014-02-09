@@ -68,23 +68,7 @@ public final class IslandCraftPlugin extends JavaPlugin {
         final ICServer server = new BukkitServer(config, language);
         final ICProtection protection = new WorldGuardProtection(getWorldGuard());
 
-        // Island Commands
-        final Island island = new Island(getICDatabase(), protection, server, config.getMaxIslandsPerPlayer(), config.getPurchaseCostItem(),
-                config.getPurchaseCostAmount(), config.getPurchaseCostAmount(), config.getTaxCostItem(), config.getTaxCostAmount(),
-                config.getTaxCostIncrease(), config.getTaxDaysInitial(), config.getTaxDaysIncrease(), config.getTaxDaysMax());
-        register(new PlayerMoveListener(island, server));
-        final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(island, server);
-        final PluginCommand islandCommand = getCommand("island");
-        islandCommand.setExecutor(islandCommandExecutor);
-        islandCommand.setTabCompleter(islandCommandExecutor);
-
         getCommand("warp").setExecutor(new WarpCommandExecutor(island, server));
-
-        // Dawn (for tax system)
-        register(new WorldInitListener(this, config));
-        register(new DawnListener(island));
-
-        register(new ChunkLoadListener(island));
 
         // Administrative commands
         final ICSudoCommandExecutor icsudoCommandExecutor = new ICSudoCommandExecutor(server, database);

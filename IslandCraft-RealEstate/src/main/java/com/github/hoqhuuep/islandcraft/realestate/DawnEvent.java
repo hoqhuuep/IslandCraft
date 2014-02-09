@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.bukkit.event;
+package com.github.hoqhuuep.islandcraft.realestate;
 
 import org.bukkit.World;
 import org.bukkit.event.Event;

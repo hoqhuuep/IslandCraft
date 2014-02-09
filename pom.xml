@@ -27,6 +27,7 @@
 		<module>IslandCraft-Dynmap</module>
 		<module>IslandCraft-ExplicitSuicide</module>
 		<module>IslandCraft-WorldGenerator</module>
+		<module>IslandCraft-RealEstate</module>
 	</modules>
 
 	<build>

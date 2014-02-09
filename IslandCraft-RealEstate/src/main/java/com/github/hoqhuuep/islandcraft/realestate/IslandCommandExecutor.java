@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.bukkit.command;
+package com.github.hoqhuuep.islandcraft.realestate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,48 +11,42 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import com.github.hoqhuuep.islandcraft.common.api.ICPlayer;
-import com.github.hoqhuuep.islandcraft.common.api.ICServer;
-import com.github.hoqhuuep.islandcraft.common.island.Island;
-
 public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
-    private final ICServer server;
-    private final Island island;
+    private final RealEstateManager realEstateManager;
 
-    public IslandCommandExecutor(final Island island, final ICServer server) {
-        this.server = server;
-        this.island = island;
+    public IslandCommandExecutor(final RealEstateManager realEstateManager) {
+        this.realEstateManager = realEstateManager;
     }
 
     @Override
     public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (null == sender  || !(sender instanceof Player) || args.length < 1) {
+        if (null == sender || !(sender instanceof Player) || args.length < 1) {
             return false;
         }
-        final ICPlayer player = server.findOnlinePlayer(((Player) sender).getName());
+        final Player player = (Player) sender;
         if ("purchase".equalsIgnoreCase(args[0])) {
             if (1 != args.length) {
                 return false;
             }
-            island.onPurchase(player);
+            realEstateManager.onPurchase(player);
             return true;
         } else if ("abandon".equalsIgnoreCase(args[0])) {
             if (1 != args.length) {
                 return false;
             }
-            island.onAbandon(player);
+            realEstateManager.onAbandon(player);
             return true;
         } else if ("tax".equalsIgnoreCase(args[0])) {
             if (1 != args.length) {
                 return false;
             }
-            island.onTax(player);
+            realEstateManager.onTax(player);
             return true;
         } else if ("examine".equalsIgnoreCase(args[0])) {
             if (1 != args.length) {
                 return false;
             }
-            island.onExamine(player);
+            realEstateManager.onExamine(player);
             return true;
         } else if ("rename".equalsIgnoreCase(args[0])) {
             final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
@@ -60,7 +54,7 @@ public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
             if (name.isEmpty()) {
                 return false;
             }
-            island.onRename(player, name);
+            realEstateManager.onRename(player, name);
             return true;
         }
         return false;
