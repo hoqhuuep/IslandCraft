@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandAbandonEvent;
+import com.github.hoqhuuep.islandcraft.realestate.event.IslandLoadEvent;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandPurchaseEvent;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandRegenerateEvent;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandRenameEvent;
@@ -68,8 +69,8 @@ public class RealEstateManager {
             return;
         }
         for (final Location islandLocation : geometry.getOuterIslands(location)) {
-            IslandInfo island = database.loadIsland(islandLocation);
-            if (island == null) {
+            IslandInfo info = database.loadIsland(islandLocation);
+            if (info == null) {
                 if (geometry.isSpawn(islandLocation)) {
                     database.saveIsland(islandLocation, IslandStatus.RESERVED, null, "Spawn Island", -1);
                 } else if (geometry.isResource(islandLocation, worldSeed)) {
@@ -77,7 +78,7 @@ public class RealEstateManager {
                 } else {
                     database.saveIsland(islandLocation, IslandStatus.NEW, null, "New Island", -1);
                 }
-                island = database.loadIsland(islandLocation);
+                Bukkit.getPluginManager().callEvent(new IslandLoadEvent(info));
             }
         }
     }

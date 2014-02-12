@@ -66,7 +66,6 @@ public final class IslandCraftPlugin extends JavaPlugin {
         database = new EbeanServerDatabase(getDatabase());
         final Language language = new Language(getLanguageConfig());
         final ICServer server = new BukkitServer(config, language);
-        final ICProtection protection = new WorldGuardProtection(getWorldGuard());
 
         getCommand("warp").setExecutor(new WarpCommandExecutor(island, server));
 
@@ -81,25 +80,9 @@ public final class IslandCraftPlugin extends JavaPlugin {
         return config;
     }
 
-    public ICDatabase getICDatabase() {
-        return database;
-    }
-
     private void register(final Listener listener) {
         final PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(listener, this);
-    }
-
-    private WorldGuardPlugin getWorldGuard() {
-        final PluginManager pluginManager = getServer().getPluginManager();
-        final Plugin plugin = pluginManager.getPlugin("WorldGuard");
-
-        // WorldGuard may not be loaded
-        if (null == plugin || !(plugin instanceof WorldGuardPlugin)) {
-            return null;
-        }
-
-        return (WorldGuardPlugin) plugin;
     }
 
     private File languageConfigFile;

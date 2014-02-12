@@ -30,5 +30,12 @@
 			<scope>compile</scope>
 			<type>jar</type>
 		</dependency>
+		<dependency>
+			<groupId>com.githup.hoqhuuep</groupId>
+			<artifactId>IslandCraft-RealEstate</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+			<scope>compile</scope>
+			<type>jar</type>
+		</dependency>
 	</dependencies>
 </project>
