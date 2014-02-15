@@ -14,7 +14,7 @@ import com.avaje.ebean.EbeanServer;
 
 public class RealEstatePlugin extends JavaPlugin {
     public void onEnable() {
-        final EbeanServer database = super.getDatabase();
+        final EbeanServer database = getDatabase();
         // Hack to ensure database exists
         try {
             database.find(IslandDeed.class).findRowCount();
@@ -33,7 +33,8 @@ public class RealEstatePlugin extends JavaPlugin {
 
         // Events
         final PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(new WorldInitListener(this, realEstateManager), this);
+        pluginManager.registerEvents(new WorldLoadListener(realEstateManager), this);
+        pluginManager.registerEvents(new WorldInitListener(this), this);
         pluginManager.registerEvents(new DawnListener(realEstateManager), this);
         pluginManager.registerEvents(new ChunkLoadListener(realEstateManager), this);
         pluginManager.registerEvents(new PlayerMoveListener(realEstateManager), this);

@@ -1,0 +1,10 @@
+message:
+  p: "[%s->§a%s§f] %s"
+  p-error: §7[INFO] You are not a member of any party
+  party-join: §7[INFO] You are now a member of §a%s
+  party-join-notify: §7[INFO] §a%s§7 has joined your party
+  party-leave: §7[INFO] You are no longer a member of §a%s
+  party-leave-notify: §7[INFO] §a%s§7 has left your party
+  party-leave-error: §7[INFO] You are not a member of any party
+  party-members: "§7[INFO] Members: §a%s"
+  party-members-error: §7[INFO] You are not a member of any party

@@ -2,26 +2,29 @@ package com.github.hoqhuuep.islandcraft.localchat;
 
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 public class LocalChatManager {
-	private static final double RADIUS_SQUARED = 128.0 * 128.0;
-	private static final String FORMAT = "[%s->" + ChatColor.DARK_PURPLE
-			+ "Local" + ChatColor.WHITE + "] %s";
+    final ConfigurationSection config;
 
-	public void sendLocalMessage(final Player from, final String message) {
-		final String fromName = from.getName();
-		final String formattedMessage = String
-				.format(FORMAT, fromName, message);
-		final Location fromLocation = from.getLocation();
-		final List<Player> players = from.getWorld().getPlayers();
-		for (final Player to : players) {
-			final Location toLocation = to.getLocation();
-			if (fromLocation.distanceSquared(toLocation) <= RADIUS_SQUARED) {
-				to.sendMessage(formattedMessage);
-			}
-		}
-	}
+    public LocalChatManager(final ConfigurationSection config) {
+        this.config = config;
+    }
+
+    public void sendLocalMessage(final Player from, final String message) {
+        final String fromName = from.getName();
+        final String format = config.getString("message.l");
+        final String formattedMessage = String.format(format, fromName, message);
+        final Location fromLocation = from.getLocation();
+        final List<Player> players = from.getWorld().getPlayers();
+        for (final Player to : players) {
+            final Location toLocation = to.getLocation();
+            final double radius = config.getDouble("local-chat-radius");
+            if (fromLocation.distanceSquared(toLocation) <= radius * radius) {
+                to.sendMessage(formattedMessage);
+            }
+        }
+    }
 }

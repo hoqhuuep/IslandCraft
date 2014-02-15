@@ -4,20 +4,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class LocalChatPlugin extends JavaPlugin {
-	private final LocalChatManager localChatManager;
+    @Override
+    public void onEnable() {
+        saveDefaultConfig();
 
-	public LocalChatPlugin() {
-		localChatManager = new LocalChatManager();
-	}
+        final LocalChatManager localChatManager = new LocalChatManager(getConfig());
 
-	public LocalChatManager getLocalChatManager() {
-		return localChatManager;
-	}
-
-	@Override
-	public void onEnable() {
-		final CommandExecutor lCommandExecutor = new LCommandExecutor(
-				localChatManager);
-		getCommand("l").setExecutor(lCommandExecutor);
-	}
+        final CommandExecutor lCommandExecutor = new LCommandExecutor(localChatManager);
+        getCommand("l").setExecutor(lCommandExecutor);
+    }
 }

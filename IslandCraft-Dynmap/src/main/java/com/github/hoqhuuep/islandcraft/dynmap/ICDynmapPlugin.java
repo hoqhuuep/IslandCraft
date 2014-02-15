@@ -13,7 +13,7 @@ public class ICDynmapPlugin extends JavaPlugin {
         final MarkerAPI markerApi = dynmapCommonApi.getMarkerAPI();
         MarkerSet markerSet = markerApi.getMarkerSet("islandcraft.markerset");
         if (markerSet == null) {
-            markerSet = markerApi.createMarkerSet("islandcraft.markerset", "IslandCraft", null, false);
+            markerSet = markerApi.createMarkerSet("islandcraft.markerset", "IslandCraft", null, true);
         } else {
             markerSet.setMarkerSetLabel("IslandCraft");
         }

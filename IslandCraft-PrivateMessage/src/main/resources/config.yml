@@ -1,0 +1,3 @@
+message:
+  m: "[%s->%s] %s"
+  m-error: §7[INFO] No such player

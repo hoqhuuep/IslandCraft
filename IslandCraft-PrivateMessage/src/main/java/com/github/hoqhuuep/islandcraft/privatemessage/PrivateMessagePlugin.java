@@ -4,20 +4,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class PrivateMessagePlugin extends JavaPlugin {
-	private final PrivateMessageManager privateMessageManager;
+    @Override
+    public void onEnable() {
+        saveDefaultConfig();
 
-	public PrivateMessagePlugin() {
-		privateMessageManager = new PrivateMessageManager();
-	}
-
-	public PrivateMessageManager getPrivateMessageManager() {
-		return privateMessageManager;
-	}
-
-	@Override
-	public void onEnable() {
-		final CommandExecutor mCommandExecutor = new MCommandExecutor(
-				privateMessageManager);
-		getCommand("m").setExecutor(mCommandExecutor);
-	}
+        final PrivateMessageManager privateMessageManager = new PrivateMessageManager(getConfig());
+        final CommandExecutor mCommandExecutor = new MCommandExecutor(privateMessageManager, getConfig());
+        getCommand("m").setExecutor(mCommandExecutor);
+    }
 }
