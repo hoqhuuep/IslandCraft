@@ -1,8 +1,9 @@
 package com.github.hoqhuuep.islandcraft.worldguard;
 
-import org.bukkit.Location;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 
+import com.github.hoqhuuep.islandcraft.realestate.SerializableRegion;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
@@ -20,41 +21,46 @@ public class WorldGuardManager {
         this.worldGuard = worldGuard;
     }
 
-    public void setPrivate(final Location p1, final Location p2, final String player) {
-        final ProtectedRegion protectedRegion = createProtectedRegion(p1, p2);
+    public void setPrivate(final SerializableRegion region, final String player) {
+        final ProtectedRegion protectedRegion = createProtectedRegion(region);
         final DefaultDomain owners = new DefaultDomain();
         owners.addPlayer(player);
         protectedRegion.setOwners(owners);
-        addProtectedRegion(p1.getWorld(), protectedRegion);
+        addProtectedRegion(region.getWorld(), protectedRegion);
     }
 
-    public void setReserved(final Location p1, final Location p2) {
-        final ProtectedRegion protectedRegion = createProtectedRegion(p1, p2);
+    public void setReserved(final SerializableRegion region) {
+        final ProtectedRegion protectedRegion = createProtectedRegion(region);
         protectedRegion.setFlag(DefaultFlag.BUILD, State.DENY);
-        addProtectedRegion(p1.getWorld(), protectedRegion);
+        addProtectedRegion(region.getWorld(), protectedRegion);
     }
 
-    public void setPublic(final Location p1, final Location p2) {
-        final ProtectedRegion protectedRegion = createProtectedRegion(p1, p2);
+    public void setPublic(final SerializableRegion region) {
+        final ProtectedRegion protectedRegion = createProtectedRegion(region);
         protectedRegion.setFlag(DefaultFlag.BUILD, State.ALLOW);
-        addProtectedRegion(p1.getWorld(), protectedRegion);
+        addProtectedRegion(region.getWorld(), protectedRegion);
     }
 
-    private ProtectedRegion createProtectedRegion(final Location p1, final Location p2) {
-        final int minX = p1.getBlockX();
-        final int minY = p1.getBlockY();
-        final int minZ = p1.getBlockZ();
-        final int maxX = p2.getBlockX();
-        final int maxY = p2.getBlockY();
-        final int maxZ = p2.getBlockZ();
+    private ProtectedRegion createProtectedRegion(final SerializableRegion region) {
+        final int minX = region.getMinX();
+        final int minY = region.getMinY();
+        final int minZ = region.getMinZ();
+        final int maxX = region.getMaxX();
+        final int maxY = region.getMaxY();
+        final int maxZ = region.getMaxZ();
         // TODO allow for different id's
-        final String id = "ic'" + p1.getWorld().getName() + "'" + minX + "'" + minY + "'" + minZ + "'" + maxX + "'" + maxY + "'" + maxZ;
-        final BlockVector min = new BlockVector(minX, minY, minZ);
-        final BlockVector max = new BlockVector(maxX, maxY, maxZ);
-        return new ProtectedCuboidRegion(id, min, max);
+        final String id = "ic'" + region.getWorld() + "'" + minX + "'" + minY + "'" + minZ + "'" + maxX + "'" + maxY + "'" + maxZ;
+        final BlockVector p1 = new BlockVector(minX, minY, minZ);
+        final BlockVector p2 = new BlockVector(maxX, maxY, maxZ);
+        return new ProtectedCuboidRegion(id, p1, p2);
     }
 
-    private void addProtectedRegion(final World world, final ProtectedRegion protectedRegion) {
+    private void addProtectedRegion(final String worldName, final ProtectedRegion protectedRegion) {
+        final World world = Bukkit.getWorld(worldName);
+        if (world == null) {
+            // TODO handle this
+            return;
+        }
         final RegionManager regionManager = worldGuard.getRegionManager(world);
         if (regionManager == null) {
             // TODO handle this

@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 
 public class Geometry {
     private final int islandGap;
@@ -27,7 +27,7 @@ public class Geometry {
         this.resourceIslandRarity = resourceIslandRarity;
     }
 
-    public final Location getInnerIsland(final Location location) {
+    public final SerializableLocation getInnerIsland(final Location location) {
         if (location == null) {
             return null;
         }
@@ -56,7 +56,7 @@ public class Geometry {
         } else {
             cx = col * islandSeparation - (islandSeparation >> 1);
         }
-        return new Location(location.getWorld(), cx, 0, cz);
+        return new SerializableLocation(location.getWorld().getName(), cx, 0, cz);
     }
 
     // Numbers represent how many island regions a location overlaps.
@@ -98,11 +98,11 @@ public class Geometry {
     // |...................|.......|...........|
     // |...................|.......|...........|
     // +-------------------+-------+-----------+
-    public final List<Location> getOuterIslands(final Location location) {
+    public final List<SerializableLocation> getOuterIslands(final Location location) {
         if (location == null) {
             return Collections.emptyList();
         }
-        final World world = location.getWorld();
+        final String world = location.getWorld().getName();
         final int x = location.getBlockX();
         final int z = location.getBlockZ();
 
@@ -121,7 +121,7 @@ public class Geometry {
         final int relativeX = x - absoluteAtX;
         final int relativeZ = z - absoluteAtZ;
 
-        final List<Location> result = new ArrayList<Location>();
+        final List<SerializableLocation> result = new ArrayList<SerializableLocation>();
 
         // Top
         if (relativeZ < islandGap) {
@@ -129,12 +129,12 @@ public class Geometry {
             // Left
             if (relativeX < magicNumber + islandGap * 2) {
                 final int centerX = absoluteHashX - islandSeparation / 2;
-                result.add(new Location(world, centerX, 0, centerZ));
+                result.add(new SerializableLocation(world, centerX, 0, centerZ));
             }
             // Right
             if (relativeX >= magicNumber + islandGap) {
                 final int centerX = absoluteHashX + islandSeparation / 2;
-                result.add(new Location(world, centerX, 0, centerZ));
+                result.add(new SerializableLocation(world, centerX, 0, centerZ));
             }
         }
         // Middle
@@ -142,10 +142,10 @@ public class Geometry {
             // Left
             if (relativeX < islandGap) {
                 final int centerX = absoluteHashX - islandSeparation;
-                result.add(new Location(world, centerX, 0, absoluteHashZ));
+                result.add(new SerializableLocation(world, centerX, 0, absoluteHashZ));
             }
             // Right
-            result.add(new Location(world, absoluteHashX, 0, absoluteHashZ));
+            result.add(new SerializableLocation(world, absoluteHashX, 0, absoluteHashZ));
         }
         // Bottom
         if (relativeZ >= islandSize + islandGap) {
@@ -153,32 +153,48 @@ public class Geometry {
             // Left
             if (relativeX < magicNumber + islandGap * 2) {
                 final int centerX = absoluteHashX - islandSeparation / 2;
-                result.add(new Location(world, centerX, 0, centerZ));
+                result.add(new SerializableLocation(world, centerX, 0, centerZ));
             }
             // Right
             if (relativeX >= magicNumber + islandGap) {
                 final int centerX = absoluteHashX + islandSeparation / 2;
-                result.add(new Location(world, centerX, 0, centerZ));
+                result.add(new SerializableLocation(world, centerX, 0, centerZ));
             }
         }
 
         return result;
     }
 
-    public final boolean isOcean(final Location island) {
+    public final SerializableRegion getInnerRegion(final SerializableLocation island) {
+        final String world = island.getWorld();
+        final int xMid = island.getX();
+        final int zMid = island.getZ();
+        return new SerializableRegion(world, xMid - innerRadius, 0, zMid - innerRadius, xMid + innerRadius, Bukkit.getWorld(world).getMaxHeight(), zMid
+                + innerRadius);
+    }
+
+    public final SerializableRegion getOuterRegion(final SerializableLocation island) {
+        final String world = island.getWorld();
+        final int xMid = island.getX();
+        final int zMid = island.getZ();
+        return new SerializableRegion(world, xMid - outerRadius, 0, zMid - outerRadius, xMid + outerRadius, Bukkit.getWorld(world).getMaxHeight(), zMid
+                + outerRadius);
+    }
+
+    public final boolean isOcean(final SerializableLocation island) {
         return island == null;
     }
 
-    public final boolean isSpawn(final Location island) {
+    public final boolean isSpawn(final SerializableLocation island) {
         return island.getX() == 0 && island.getZ() == 0;
     }
 
-    public final boolean isResource(final Location island, final long worldSeed) {
+    public final boolean isResource(final SerializableLocation island, final long worldSeed) {
         if (isSpawn(island)) {
             return false;
         }
-        final int x = island.getBlockX();
-        final int z = island.getBlockZ();
+        final int x = island.getX();
+        final int z = island.getZ();
         if (Math.abs(x) <= islandSeparation && Math.abs(z) <= islandSeparation) {
             // One of the 6 islands adjacent to spawn
             return true;

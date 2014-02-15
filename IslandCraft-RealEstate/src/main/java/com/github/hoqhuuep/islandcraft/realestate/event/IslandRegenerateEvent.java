@@ -1,9 +1,9 @@
 package com.github.hoqhuuep.islandcraft.realestate.event;
 
-import com.github.hoqhuuep.islandcraft.realestate.IslandInfo;
+import com.github.hoqhuuep.islandcraft.realestate.IslandDeed;
 
 public class IslandRegenerateEvent extends IslandEvent {
-    public IslandRegenerateEvent(final IslandInfo info) {
-        super(info);
+    public IslandRegenerateEvent(final IslandDeed deed) {
+        super(deed);
     }
 }

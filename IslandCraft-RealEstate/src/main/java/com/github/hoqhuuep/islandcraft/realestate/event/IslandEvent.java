@@ -3,18 +3,18 @@ package com.github.hoqhuuep.islandcraft.realestate.event;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.github.hoqhuuep.islandcraft.realestate.IslandInfo;
+import com.github.hoqhuuep.islandcraft.realestate.IslandDeed;
 
 public class IslandEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-    private final IslandInfo info;
+    private final IslandDeed deed;
 
-    public IslandEvent(final IslandInfo info) {
-        this.info = info;
+    public IslandEvent(final IslandDeed deed) {
+        this.deed = deed;
     }
 
-    public final IslandInfo getInfo() {
-        return info;
+    public final IslandDeed getInfo() {
+        return deed;
     }
 
     @Override

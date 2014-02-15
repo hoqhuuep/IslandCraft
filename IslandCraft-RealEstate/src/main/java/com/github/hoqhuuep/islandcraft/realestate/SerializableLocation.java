@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class LocationPK implements Serializable {
+public class SerializableLocation implements Serializable {
     private static final long serialVersionUID = -4967255498948204773L;
 
     private String world;
@@ -13,15 +13,29 @@ public class LocationPK implements Serializable {
     private int y;
     private int z;
 
-    public LocationPK() {
+    public SerializableLocation() {
         // Default constructor
     }
 
-    public LocationPK(final String world, final int x, final int y, final int z) {
+    public SerializableLocation(final String world, final int x, final int y, final int z) {
         this.world = world;
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    @Override
+    public int hashCode() {
+        return (x << 16) | z;
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (!(object instanceof SerializableLocation)) {
+            return false;
+        }
+        final SerializableLocation other = (SerializableLocation) object;
+        return other.x == x && other.y == y && other.z == z;
     }
 
     public String getWorld() {

@@ -3,7 +3,7 @@ package com.github.hoqhuuep.islandcraft.worldguard;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import com.github.hoqhuuep.islandcraft.realestate.IslandInfo;
+import com.github.hoqhuuep.islandcraft.realestate.IslandDeed;
 import com.github.hoqhuuep.islandcraft.realestate.IslandStatus;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandAbandonEvent;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandLoadEvent;
@@ -19,30 +19,32 @@ public class IslandListener implements Listener {
 
     @EventHandler
     public void onIslandLoad(final IslandLoadEvent event) {
-        final IslandInfo info = event.getInfo();
-        final IslandStatus status = info.getStatus();
+        final IslandDeed deed = event.getInfo();
+        final IslandStatus status = deed.getStatus();
         if (status == IslandStatus.RESOURCE) {
-            worldGuardManager.setPublic(info.getMin(), info.getMax());
+            worldGuardManager.setPublic(deed.getOuterRegion());
+        } else if (status == IslandStatus.PRIVATE) {
+            worldGuardManager.setPrivate(deed.getOuterRegion(), deed.getOwner());
         } else {
-            worldGuardManager.setReserved(info.getMin(), info.getMax());
+            worldGuardManager.setReserved(deed.getOuterRegion());
         }
     }
 
     @EventHandler
     public void onIslandPurchase(final IslandPurchaseEvent event) {
-        final IslandInfo info = event.getInfo();
-        worldGuardManager.setPrivate(info.getMin(), info.getMax(), event.getPurchaser());
+        final IslandDeed deed = event.getInfo();
+        worldGuardManager.setPrivate(deed.getOuterRegion(), deed.getOwner());
     }
 
     @EventHandler
     public void onIslandAbandon(final IslandAbandonEvent event) {
-        final IslandInfo info = event.getInfo();
-        worldGuardManager.setReserved(info.getMin(), info.getMax());
+        final IslandDeed deed = event.getInfo();
+        worldGuardManager.setReserved(deed.getOuterRegion());
     }
 
     @EventHandler
     public void onIslandRepossess(final IslandRepossessEvent event) {
-        final IslandInfo info = event.getInfo();
-        worldGuardManager.setReserved(info.getMin(), info.getMax());
+        final IslandDeed deed = event.getInfo();
+        worldGuardManager.setReserved(deed.getOuterRegion());
     }
 }
