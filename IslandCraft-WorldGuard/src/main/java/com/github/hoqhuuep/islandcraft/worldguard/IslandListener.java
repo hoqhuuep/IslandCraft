@@ -19,7 +19,7 @@ public class IslandListener implements Listener {
 
     @EventHandler
     public void onIslandLoad(final IslandLoadEvent event) {
-        final IslandDeed deed = event.getInfo();
+        final IslandDeed deed = event.getDeed();
         final IslandStatus status = deed.getStatus();
         if (status == IslandStatus.RESOURCE) {
             worldGuardManager.setPublic(deed.getOuterRegion());
@@ -32,19 +32,19 @@ public class IslandListener implements Listener {
 
     @EventHandler
     public void onIslandPurchase(final IslandPurchaseEvent event) {
-        final IslandDeed deed = event.getInfo();
+        final IslandDeed deed = event.getDeed();
         worldGuardManager.setPrivate(deed.getOuterRegion(), deed.getOwner());
     }
 
     @EventHandler
     public void onIslandAbandon(final IslandAbandonEvent event) {
-        final IslandDeed deed = event.getInfo();
+        final IslandDeed deed = event.getDeed();
         worldGuardManager.setReserved(deed.getOuterRegion());
     }
 
     @EventHandler
     public void onIslandRepossess(final IslandRepossessEvent event) {
-        final IslandDeed deed = event.getInfo();
+        final IslandDeed deed = event.getDeed();
         worldGuardManager.setReserved(deed.getOuterRegion());
     }
 }

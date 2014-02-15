@@ -12,6 +12,6 @@ public class DawnListener implements Listener {
 
     @EventHandler
     public final void onDawn(final DawnEvent event) {
-        realEstateManager.onDawn(event.getWorld());
+        realEstateManager.onDawn(event.getWorld().getName());
     }
 }

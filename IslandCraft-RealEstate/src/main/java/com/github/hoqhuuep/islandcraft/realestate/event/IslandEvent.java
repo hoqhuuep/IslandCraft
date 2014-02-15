@@ -13,7 +13,7 @@ public class IslandEvent extends Event {
         this.deed = deed;
     }
 
-    public final IslandDeed getInfo() {
+    public final IslandDeed getDeed() {
         return deed;
     }
 

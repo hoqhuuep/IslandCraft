@@ -7,4 +7,30 @@
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>IslandCraft-Dynmap</artifactId>
+
+	<repositories>
+		<repository>
+			<releases>
+			</releases>
+			<snapshots>
+			</snapshots>
+			<id>dynmap-repo</id>
+			<url>http://repo.mikeprimm.com/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.dynmap</groupId>
+			<artifactId>dynmap</artifactId>
+			<version>1.9</version>
+		</dependency>
+		<dependency>
+			<groupId>com.githup.hoqhuuep</groupId>
+			<artifactId>IslandCraft-RealEstate</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+			<scope>compile</scope>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
 </project>

@@ -26,11 +26,13 @@ public class RealEstateManager {
     private final RealEstateDatabase database;
     private final ConfigurationSection config;
     private final Map<String, IslandDeed> lastIsland;
+    private final Map<String, Geometry> geometryMap;
 
     public RealEstateManager(final RealEstateDatabase database, final ConfigurationSection config) {
         this.database = database;
         this.config = config;
         lastIsland = new HashMap<String, IslandDeed>();
+        geometryMap = new HashMap<String, Geometry>();
     }
 
     /**
@@ -45,7 +47,7 @@ public class RealEstateManager {
             // Not ready
             return;
         }
-        final Geometry geometry = getGeometry(world);
+        final Geometry geometry = getGeometry(world.getName());
         if (geometry == null) {
             // Not an IslandCraft world
             return;
@@ -81,7 +83,7 @@ public class RealEstateManager {
      * @param player
      */
     public final void onAbandon(final Player player) {
-        final Geometry geometry = getGeometry(player.getWorld());
+        final Geometry geometry = getGeometry(player.getWorld().getName());
         if (geometry == null) {
             message(player, "island-abandon-world-error");
             return;
@@ -112,7 +114,7 @@ public class RealEstateManager {
      * @param player
      */
     public final void onExamine(final Player player) {
-        final Geometry geometry = getGeometry(player.getWorld());
+        final Geometry geometry = getGeometry(player.getWorld().getName());
         if (geometry == null) {
             message(player, "island-examine-world-error");
             return;
@@ -159,7 +161,7 @@ public class RealEstateManager {
      * @param player
      */
     public final void onPurchase(final Player player) {
-        final Geometry geometry = getGeometry(player.getWorld());
+        final Geometry geometry = getGeometry(player.getWorld().getName());
         if (geometry == null) {
             message(player, "island-purchase-world-error");
             return;
@@ -216,7 +218,7 @@ public class RealEstateManager {
     }
 
     public void onTax(final Player player) {
-        final Geometry geometry = getGeometry(player.getWorld());
+        final Geometry geometry = getGeometry(player.getWorld().getName());
         if (geometry == null) {
             message(player, "island-tax-world-error");
             return;
@@ -254,13 +256,13 @@ public class RealEstateManager {
         message(player, "island-tax");
     }
 
-    public void onDawn(final World world) {
+    public void onDawn(final String world) {
         final Geometry geometry = getGeometry(world);
         if (geometry == null) {
             // Not an IslandCraft world
             return;
         }
-        final List<IslandDeed> deeds = database.loadIslandsByWorld(world.getName());
+        final List<IslandDeed> deeds = database.loadIslandsByWorld(world);
         for (IslandDeed deed : deeds) {
             final int tax = deed.getTax();
             if (tax > 0) {
@@ -298,7 +300,7 @@ public class RealEstateManager {
      * @param title
      */
     public final void onRename(final Player player, final String title) {
-        final Geometry geometry = getGeometry(player.getWorld());
+        final Geometry geometry = getGeometry(player.getWorld().getName());
         if (geometry == null) {
             message(player, "island-rename-world-error");
             return;
@@ -356,14 +358,6 @@ public class RealEstateManager {
         return count;
     }
 
-    private Geometry getGeometry(final World world) {
-        // TODO
-        if ("world".equals(world.getName())) {
-            return new Geometry(18, 2, 20);
-        }
-        return null;
-    }
-
     private static final Integer FIRST = new Integer(0);
 
     public boolean takeItems(final Player player, final String item, final int amount) {
@@ -390,7 +384,7 @@ public class RealEstateManager {
             lastIsland.remove(name);
             return;
         }
-        final Geometry geometry = getGeometry(to.getWorld());
+        final Geometry geometry = getGeometry(to.getWorld().getName());
         final IslandDeed toIsland;
         if (geometry != null) {
             final SerializableLocation toIslandLocation = geometry.getInnerIsland(to);
@@ -466,5 +460,13 @@ public class RealEstateManager {
             to.sendMessage("  " + arg.toString());
         }
         to.sendMessage("</" + id + ">");
+    }
+
+    public void addGeometry(final String world, final Geometry geometry) {
+        geometryMap.put(world, geometry);
+    }
+
+    private Geometry getGeometry(final String world) {
+        return geometryMap.get(world);
     }
 }
