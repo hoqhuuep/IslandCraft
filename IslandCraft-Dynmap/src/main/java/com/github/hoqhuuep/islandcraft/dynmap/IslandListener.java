@@ -48,14 +48,16 @@ public class IslandListener implements Listener {
         final SerializableRegion region = deed.getInnerRegion();
         final double[] xs = {region.getMinX(), region.getMinX(), region.getMaxX(), region.getMaxX()};
         final double[] zs = {region.getMinZ(), region.getMaxZ(), region.getMaxZ(), region.getMinZ()};
-        final String label = "<strong>" + deed.getTitle() + "</strong>\n<br />\nStatus: " + status + "\n<br />\nOwner: " + deed.getOwner() + "\n<br />\nTax: "
+        final String label = deed.getTitle();
+        final String description = "<strong>" + deed.getTitle() + "</strong><br />Status: " + status + "<br />Owner: " + deed.getOwner() + "<br />Tax: "
                 + deed.getTax();
         AreaMarker areaMarker = markerSet.findAreaMarker(id);
         if (areaMarker == null) {
-            areaMarker = markerSet.createAreaMarker(id, label, true, island.getWorld(), xs, zs, true);
+            areaMarker = markerSet.createAreaMarker(id, label, false, island.getWorld(), xs, zs, true);
         } else {
-            areaMarker.setLabel(label, true);
+            areaMarker.setLabel(label, false);
         }
+        areaMarker.setDescription(description);
         if (status == IslandStatus.PRIVATE) {
             areaMarker.setFillStyle(0.25, 0x0000FF);
             areaMarker.setLineStyle(2, 0.5, 0x0000FF);
