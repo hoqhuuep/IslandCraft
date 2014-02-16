@@ -21,7 +21,7 @@
 		<module>IslandCraft-LocalChat</module>
 		<module>IslandCraft-PartyChat</module>
 		<module>IslandCraft-PrivateMessage</module>
-		<module>IslandCraft-DigitalClock</module>
+		<module>IslandCraft-Clock</module>
 		<module>IslandCraft-Compass</module>
 		<module>IslandCraft-WorldGuard</module>
 		<module>IslandCraft-Dynmap</module>

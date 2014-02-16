@@ -1,9 +1,9 @@
-name: IslandCraft-DigitalClock
+name: IslandCraft-Clock
 version: 0.0.2
 description: Right click with a clock to check the time
 author: hoqhuuep
 website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
-main: com.github.hoqhuuep.islandcraft.digitalclock.DigitalClockPlugin
+main: com.github.hoqhuuep.islandcraft.clock.ClockPlugin
 permissions:
   islandcraft.clock:
     default: true

@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.digitalclock;
+package com.github.hoqhuuep.islandcraft.clock;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -8,19 +8,20 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class ClockListener implements Listener {
-    private final DigitalClockManager digitalClockManager;
+    private final ClockManager manager;
 
-    public ClockListener(final DigitalClockManager digitalClockManager) {
-        this.digitalClockManager = digitalClockManager;
+    public ClockListener(final ClockManager manager) {
+        this.manager = manager;
     }
 
     @EventHandler
     public void onPlayerInteract(final PlayerInteractEvent event) {
         final Action action = event.getAction();
-        if (event.getMaterial() == Material.WATCH && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) {
+        final Material material = event.getMaterial();
+        if (material == Material.WATCH && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) {
             final Player player = event.getPlayer();
             if (player.hasPermission("islandcraft.clock")) {
-                digitalClockManager.displayTime(player);
+                manager.displayTime(player);
             }
         }
     }

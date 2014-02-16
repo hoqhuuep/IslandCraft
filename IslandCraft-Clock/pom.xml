@@ -6,5 +6,5 @@
 		<artifactId>IslandCraft</artifactId>
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>IslandCraft-DigitalClock</artifactId>
+	<artifactId>IslandCraft-Clock</artifactId>
 </project>
