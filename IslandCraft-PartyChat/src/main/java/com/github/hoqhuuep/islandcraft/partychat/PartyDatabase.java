@@ -1,7 +1,6 @@
 package com.github.hoqhuuep.islandcraft.partychat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import com.avaje.ebean.EbeanServer;
 
@@ -10,11 +9,6 @@ public class PartyDatabase {
 
     public PartyDatabase(final EbeanServer ebean) {
         this.ebean = ebean;
-    }
-
-    public static List<Class<?>> getDatabaseClasses() {
-        final Class<?>[] classes = {PartyBean.class};
-        return Arrays.asList(classes);
     }
 
     public final String loadParty(final String player) {

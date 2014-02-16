@@ -1,26 +1,21 @@
 package com.github.hoqhuuep.islandcraft.partychat;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.avaje.ebean.EbeanServer;
 
 public class PartyChatPlugin extends JavaPlugin {
-    private PartyChatManager partyChatManager;
-
-    public PartyChatManager getPartyChatManager() {
-        return partyChatManager;
-    }
-
     @Override
     public void onEnable() {
         saveDefaultConfig();
-
         // Hack to ensure database exists
         try {
             getDatabase().find(PartyBean.class).findRowCount();
@@ -29,12 +24,13 @@ public class PartyChatPlugin extends JavaPlugin {
         }
         final EbeanServer ebean = getDatabase();
         final PartyDatabase database = new PartyDatabase(ebean);
-        partyChatManager = new PartyChatManager(database, getConfig());
+        final ConfigurationSection config = getConfig();
+        final PartyChatManager manager = new PartyChatManager(database, config);
 
-        final CommandExecutor pCommandExecutor = new PCommandExecutor(partyChatManager);
+        final CommandExecutor pCommandExecutor = new PCommandExecutor(manager);
         getCommand("p").setExecutor(pCommandExecutor);
 
-        final PartyCommandExecutor partyCommandExecutor = new PartyCommandExecutor(partyChatManager);
+        final PartyCommandExecutor partyCommandExecutor = new PartyCommandExecutor(manager);
         final PluginCommand partyCommand = getCommand("party");
         partyCommand.setExecutor(partyCommandExecutor);
         partyCommand.setTabCompleter(partyCommandExecutor);
@@ -42,6 +38,7 @@ public class PartyChatPlugin extends JavaPlugin {
 
     @Override
     public List<Class<?>> getDatabaseClasses() {
-        return PartyDatabase.getDatabaseClasses();
+        final Class<?>[] classes = {PartyBean.class};
+        return Arrays.asList(classes);
     }
 }
