@@ -12,19 +12,19 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class CompassListener implements Listener {
-    private final CompassManager compassManager;
+    private final CompassManager manager;
 
-    public CompassListener(final CompassManager compassManager) {
-        this.compassManager = compassManager;
+    public CompassListener(final CompassManager manager) {
+        this.manager = manager;
     }
 
     @EventHandler
     public final void onPlayerDeath(final PlayerDeathEvent event) {
         final Player player = event.getEntity();
-        if (null == player) {
+        if (player == null) {
             return;
         }
-        compassManager.onDeath(player);
+        manager.onDeath(player);
     }
 
     @EventHandler
@@ -33,36 +33,37 @@ public class CompassListener implements Listener {
         if (null == player) {
             return;
         }
-        compassManager.onUseBed(player);
+        manager.onUseBed(player);
     }
 
     @EventHandler
     public final void onPlayerInteract(final PlayerInteractEvent event) {
         final Action action = event.getAction();
-        if (Material.COMPASS == event.getMaterial() && (Action.RIGHT_CLICK_AIR == action || Action.RIGHT_CLICK_BLOCK == action)) {
+        final Material material = event.getMaterial();
+        if (material == Material.COMPASS && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) {
             final Player player = event.getPlayer();
-            if (null == player) {
+            if (player == null) {
                 return;
             }
-            compassManager.onNextWaypoint(player, player.isSneaking());
+            manager.onNextWaypoint(player, player.isSneaking());
         }
     }
 
     @EventHandler
     public final void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
         final Player player = event.getPlayer();
-        if (null == player) {
+        if (player == null) {
             return;
         }
-        compassManager.onRespawn(player);
+        manager.onRespawn(player);
     }
 
     @EventHandler
     public final void onPlayerRespawn(final PlayerRespawnEvent event) {
         final Player player = event.getPlayer();
-        if (null == player) {
+        if (player == null) {
             return;
         }
-        compassManager.onRespawn(player);
+        manager.onRespawn(player);
     }
 }

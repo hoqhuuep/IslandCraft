@@ -12,10 +12,10 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
-    private final CompassManager compassManager;
+    private final CompassManager manager;
 
-    public WaypointCommandExecutor(final CompassManager compassManager) {
-        this.compassManager = compassManager;
+    public WaypointCommandExecutor(final CompassManager manager) {
+        this.manager = manager;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
             if (name.isEmpty()) {
                 return false;
             }
-            compassManager.onWaypointAdd(player, name);
+            manager.onWaypointAdd(player, name);
             return true;
         } else if ("remove".equalsIgnoreCase(args[0])) {
             final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
@@ -38,7 +38,7 @@ public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
             if (name.isEmpty()) {
                 return false;
             }
-            compassManager.onWaypointRemove(player, name);
+            manager.onWaypointRemove(player, name);
             return true;
         } else if ("set".equalsIgnoreCase(args[0])) {
             final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
@@ -46,13 +46,13 @@ public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
             if (name.isEmpty()) {
                 return false;
             }
-            compassManager.onWaypointSet(player, name);
+            manager.onWaypointSet(player, name);
             return true;
         } else if ("list".equalsIgnoreCase(args[0])) {
             if (1 != args.length) {
                 return false;
             }
-            compassManager.onWaypointList(player);
+            manager.onWaypointList(player);
             return true;
         }
         return false;

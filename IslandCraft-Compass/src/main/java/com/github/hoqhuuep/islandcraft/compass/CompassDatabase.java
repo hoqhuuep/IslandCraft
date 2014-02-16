@@ -1,7 +1,6 @@
 package com.github.hoqhuuep.islandcraft.compass;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -14,11 +13,6 @@ public class CompassDatabase {
 
     public CompassDatabase(final EbeanServer ebean) {
         this.ebean = ebean;
-    }
-
-    public static List<Class<?>> getDatabaseClasses() {
-        final Class<?>[] classes = {CompassBean.class, WaypointBean.class};
-        return Arrays.asList(classes);
     }
 
     public final String loadCompass(final String player) {
