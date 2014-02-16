@@ -7,14 +7,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 public class MCommandExecutor implements CommandExecutor {
-    private final PrivateMessageManager privateMessageManager;
+    private final PrivateMessageManager manager;
     private final ConfigurationSection config;
 
-    public MCommandExecutor(final PrivateMessageManager privateMessageManager, final ConfigurationSection config) {
-        this.privateMessageManager = privateMessageManager;
+    public MCommandExecutor(final PrivateMessageManager manager, final ConfigurationSection config) {
+        this.manager = manager;
         this.config = config;
     }
 
@@ -29,12 +28,12 @@ public class MCommandExecutor implements CommandExecutor {
             return false;
         }
         final String toName = args[0];
-        final Player to = sender.getServer().getPlayerExact(toName);
+        final CommandSender to = sender.getServer().getPlayerExact(toName);
         if (to == null) {
             sender.sendMessage(String.format(config.getString("message.m-error")));
             return true;
         }
-        privateMessageManager.sendMessage(sender, to, message);
+        manager.sendMessage(sender, to, message);
         return true;
     }
 }
