@@ -25,7 +25,7 @@
 		<module>IslandCraft-Compass</module>
 		<module>IslandCraft-WorldGuard</module>
 		<module>IslandCraft-Dynmap</module>
-		<module>IslandCraft-ExplicitSuicide</module>
+		<module>IslandCraft-Suicide</module>
 		<module>IslandCraft-WorldGenerator</module>
 		<module>IslandCraft-RealEstate</module>
 	</modules>
