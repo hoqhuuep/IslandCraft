@@ -1,0 +1,11 @@
+message:
+  compass: §7[INFO] Compass now pointing to §a%s
+  compass-error: §7[INFO] Compass now pointing to §knowhere
+  waypoint-add: §7[INFO] Added waypoint §a%s
+  waypoint-add-world-error: §7[INFO] You cannot set a waypoint from this world
+  waypoint-add-reserved-error: §7[INFO] You cannot override that waypoint
+  waypoint-remove: §7[INFO] Removed waypoint §a%s
+  waypoint-exists-error: §7[INFO] That waypoint does not exist
+  waypoint-remove-error: §7[INFO] You cannot remove that waypoint
+  waypoint-list: "§7[INFO] Waypoints: §a%s"
+  waypoint-set-error: §7[INFO] Waypoint not defined

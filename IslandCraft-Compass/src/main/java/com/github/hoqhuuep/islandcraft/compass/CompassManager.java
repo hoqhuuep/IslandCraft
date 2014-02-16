@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 /**
@@ -14,13 +15,15 @@ import org.bukkit.entity.Player;
  * @see <a href="https://github.com/hoqhuuep/IslandCraft/wiki /Useful-Extras#better-compass">IslandCraft wiki</a>
  */
 public class CompassManager {
-    private final CompassDatabase database;
     private static final String BED = "Bed";
     private static final String DEATH_POINT = "DeathPoint";
     private static final String SPAWN = "Spawn";
+    private final CompassDatabase database;
+    private final ConfigurationSection config;
 
-    public CompassManager(final CompassDatabase database) {
+    public CompassManager(final CompassDatabase database, final ConfigurationSection config) {
         this.database = database;
+        this.config = config;
     }
 
     /**
@@ -188,12 +191,7 @@ public class CompassManager {
         return waypoints.get(index + 1);
     }
 
-    // TODO move this to central location and make it actually work
-    public final void message(CommandSender to, String id, Object... args) {
-        to.sendMessage("<" + id + ">");
-        for (final Object arg : args) {
-            to.sendMessage("  " + arg.toString());
-        }
-        to.sendMessage("</" + id + ">");
+    private final void message(final CommandSender to, final String id, final Object... args) {
+        to.sendMessage(String.format(config.getString("message." + id), args));
     }
 }

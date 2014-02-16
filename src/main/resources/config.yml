@@ -1,4 +1,3 @@
-local-chat-radius: 128
 worlds:
   world:
     island-size-chunks: 16

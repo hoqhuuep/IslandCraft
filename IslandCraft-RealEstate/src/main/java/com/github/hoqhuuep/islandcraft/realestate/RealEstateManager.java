@@ -453,13 +453,8 @@ public class RealEstateManager {
         return (a == null && b == null) || (a != null && b != null && a.equals(b));
     }
 
-    // TODO move this to central location and make it actually work
-    public final void message(CommandSender to, String id, Object... args) {
-        to.sendMessage("<" + id + ">");
-        for (final Object arg : args) {
-            to.sendMessage("  " + arg.toString());
-        }
-        to.sendMessage("</" + id + ">");
+    public final void message(final CommandSender to, final String id, final Object... args) {
+        to.sendMessage(String.format(config.getString("message." + id), args));
     }
 
     public void addGeometry(final String world, final Geometry geometry) {

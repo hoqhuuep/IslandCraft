@@ -1,0 +1,3 @@
+message:
+  clock: §7[INFO] The time is §a%s
+  clock-error: §7[INFO] The time is §k22§7:§k55

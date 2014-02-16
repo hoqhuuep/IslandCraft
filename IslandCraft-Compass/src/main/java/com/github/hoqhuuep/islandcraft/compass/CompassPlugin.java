@@ -10,6 +10,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class CompassPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+
         // Hack to ensure database exists
         try {
             getDatabase().find(CompassBean.class).findRowCount();
@@ -17,7 +19,8 @@ public class CompassPlugin extends JavaPlugin {
             installDDL();
         }
 
-        final CompassManager compassManager = new CompassManager(new CompassDatabase(getDatabase()));
+        final CompassDatabase database = new CompassDatabase(getDatabase());
+        final CompassManager compassManager = new CompassManager(database, getConfig());
         final WaypointCommandExecutor waypointCommandExecutor = new WaypointCommandExecutor(compassManager);
         getServer().getPluginManager().registerEvents(new CompassListener(compassManager), this);
         final PluginCommand waypointCommand = getCommand("waypoint");

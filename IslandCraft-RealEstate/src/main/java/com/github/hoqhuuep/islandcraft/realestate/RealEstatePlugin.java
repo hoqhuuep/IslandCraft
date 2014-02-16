@@ -6,7 +6,6 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 
 import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,6 +13,7 @@ import com.avaje.ebean.EbeanServer;
 
 public class RealEstatePlugin extends JavaPlugin {
     public void onEnable() {
+        saveDefaultConfig();
         final EbeanServer database = getDatabase();
         // Hack to ensure database exists
         try {
@@ -38,21 +38,6 @@ public class RealEstatePlugin extends JavaPlugin {
         pluginManager.registerEvents(new DawnListener(realEstateManager), this);
         pluginManager.registerEvents(new ChunkLoadListener(realEstateManager), this);
         pluginManager.registerEvents(new PlayerMoveListener(realEstateManager), this);
-    }
-
-    @Override
-    public FileConfiguration getConfig() {
-        final FileConfiguration config = super.getConfig();
-        config.addDefault("purchase-cost-item", "DIAMOND");
-        config.addDefault("purchase-cost-amount", 1);
-        config.addDefault("purchase-cost-increase", 1);
-        config.addDefault("tax-cost-item", "DIAMOND");
-        config.addDefault("tax-cost-amount", 1);
-        config.addDefault("tax-cost-increase", 1);
-        config.addDefault("tax-days-initial", 500);
-        config.addDefault("tax-days-increase", 500);
-        config.addDefault("max-islands-per-player", 7);
-        return config;
     }
 
     @Override

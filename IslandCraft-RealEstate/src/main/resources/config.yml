@@ -1,0 +1,87 @@
+purchase-cost-item: DIAMOND
+purchase-cost-amount: 1
+purchase-cost-increase: 1
+tax-cost-item: DIAMOND
+tax-cost-amount: 1
+tax-cost-increase: 1
+tax-days-initial: 500
+tax-days-increase: 500
+max-islands-per-player: 7
+message:
+  island-abandon: §7[INFO] Island successfully abandoned
+  island-abandon-world-error: §7[INFO] You cannot abandon an island from this world
+  island-abandon-ocean-error: §7[INFO] You cannot abandon the ocean
+  island-abandon-owner-error: §7[INFO] You cannot abandon an island you do not own
+  island-purchase: §7[INFO] Island successfully purchased
+  island-purchase-world-error: §7[INFO] You cannot purchase an island from this world
+  island-purchase-ocean-error: §7[INFO] You cannot purchase the ocean
+  island-purchase-self-error: §7[INFO] You cannot purchase an island you already own
+  island-purchase-other-error: §7[INFO] You cannot purchase an island owned by another player
+  island-purchase-reserved-error: §7[INFO] You cannot purchase a reserved island
+  island-purchase-resource-error: §7[INFO] You cannot purchase a resource island
+  island-purchase-funds-error: §7[INFO] You need %s diamonds in your inventory to purchase this island
+  island-purchase-max-error: §7[INFO] You cannot purchase any more islands
+  island-tax: §7[INFO] Tax successfully paid
+  island-tax-world-error: §7[INFO] You cannot pay tax for an island from this world
+  island-tax-ocean-error: §7[INFO] You cannot pay tax for the ocean
+  island-tax-owner-error: §7[INFO] You cannot pay tax for an island you do not own
+  island-tax-max-error: §7[INFO] You cannot pay any more tax for this island
+  island-tax-funds-error: §7[INFO] You need %s diamonds in your inventory to pay tax for this island
+  island-rename: §7[INFO] Island successfully renamed
+  island-rename-world-error: §7[INFO] You cannot rename an island from this world
+  island-rename-ocean-error: §7[INFO] You cannot rename the ocean
+  island-rename-owner-error: §7[INFO] You cannot rename an island you do not own
+  island-examine-resource: |
+    §7[INFO] You are on a §aResource§7 island:
+    §7[INFO]   Title: §a%s
+    §7[INFO]   World: §a%s
+    §7[INFO]   X: §a%s
+    §7[INFO]   Z: §a%s
+  island-examine-reserved: |
+    §7[INFO] You are on a §aReserved§7 island:
+    §7[INFO]   Title: §a%s
+    §7[INFO]   World: §a%s
+    §7[INFO]   X: §a%s
+    §7[INFO]   Z: §a%s
+  island-examine-new: |
+    §7[INFO] You are on a §aNew§7 island:
+    §7[INFO]   Title: §a%s
+    §7[INFO]   World: §a%s
+    §7[INFO]   X: §a%s
+    §7[INFO]   Z: §a%s
+  island-examine-abandoned: |
+    §7[INFO] You are on an §aAbandoned§7 island:
+    §7[INFO]   Previous Owner: §a%s
+    §7[INFO]   Title: §a%s
+    §7[INFO]   World: §a%s
+    §7[INFO]   X: §a%s
+    §7[INFO]   Z: §a%s
+  island-examine-repossessed: |
+    §7[INFO] You are on a §aRepossessed§7 island:
+    §7[INFO]   Previous Owner: §a%s
+    §7[INFO]   Title: §a%s
+    §7[INFO]   World: §a%s
+    §7[INFO]   X: §a%s
+    §7[INFO]   Z: §a%s
+  island-examine-private: |
+    §7[INFO] You are on a §aPrivate§7 island:
+    §7[INFO]   Owner: §a%s
+    §7[INFO]   Title: §a%s
+    §7[INFO]   Tax paid: §a%s minecraft days
+    §7[INFO]   World: §a%s
+    §7[INFO]   X: §a%s
+    §7[INFO]   Z: §a%s
+  island-examine-world-error: §7[INFO] You cannot examine an island in this world
+  island-examine-ocean-error: §7[INFO] You are in the ocean
+  island-enter-reserved: "§7[INFO] Welcome to §a%s"
+  island-leave-reserved: "§7[INFO] Now leaving §a%s"
+  island-enter-resource: "§7[INFO] Welcome to §a%s"
+  island-leave-resource: "§7[INFO] Now leaving §a%s"
+  island-enter-new: "§7[INFO] Welcome to §a%s"
+  island-leave-new: "§7[INFO] Now leaving §a%s"
+  island-enter-abandoned: "§7[INFO] Welcome to §a%s§7, abandoned by §a%s"
+  island-leave-abandoned: "§7[INFO] Now leaving §a%s§7, abandoned by §a%s"
+  island-enter-repossessed: "§7[INFO] Welcome to §a%s§7, repossessed from §a%s"
+  island-leave-repossessed: "§7[INFO] Now leaving §a%s§7, repossessed from §a%s"
+  island-enter-private: "§7[INFO] Welcome to §a%s§7 by §a%s"
+  island-leave-private: "§7[INFO] Now leaving §a%s§7 by §a%s"
