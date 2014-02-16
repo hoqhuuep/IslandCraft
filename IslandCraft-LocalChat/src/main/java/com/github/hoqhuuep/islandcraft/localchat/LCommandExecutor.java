@@ -7,25 +7,24 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class LCommandExecutor implements CommandExecutor {
-	private final LocalChatManager localChatManager;
+    private final LocalChatManager manager;
 
-	public LCommandExecutor(final LocalChatManager localChatManager) {
-		this.localChatManager = localChatManager;
-	}
+    public LCommandExecutor(final LocalChatManager manager) {
+        this.manager = manager;
+    }
 
-	@Override
-	public boolean onCommand(final CommandSender sender, final Command command,
-			final String label, final String[] args) {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage("You can only perform this command as a player");
-			return true;
-		}
-		final String message = StringUtils.join(args, " ");
-		if (message.isEmpty()) {
-			return false;
-		}
-		final Player from = (Player) sender;
-		localChatManager.sendLocalMessage(from, message);
-		return true;
-	}
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("You can only perform this command as a player");
+            return true;
+        }
+        final String message = StringUtils.join(args, " ");
+        if (message.isEmpty()) {
+            return false;
+        }
+        final Player from = (Player) sender;
+        manager.sendLocalMessage(from, message);
+        return true;
+    }
 }
