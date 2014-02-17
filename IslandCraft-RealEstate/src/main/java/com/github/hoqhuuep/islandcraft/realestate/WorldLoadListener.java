@@ -14,7 +14,7 @@ public class WorldLoadListener implements Listener {
     @EventHandler
     public final void onWorldInit(final WorldLoadEvent event) {
         if ("world".equals(event.getWorld().getName())) {
-            realEstateManager.addGeometry("world", new Geometry(18, 2, 20));
+            realEstateManager.addGeometry("world", new Geometry(18, 2, 25));
         }
     }
 }

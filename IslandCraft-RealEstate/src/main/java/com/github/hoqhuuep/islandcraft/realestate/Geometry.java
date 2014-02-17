@@ -203,9 +203,8 @@ public class Geometry {
     }
 
     public final int random(final int x, final int z, final long worldSeed) {
-        final long seed = worldSeed ^ ((((long) z) << 32) | x);
+        final long seed = worldSeed ^ (((long) z << 32) | x & 0xFFFFFFFFL);
         final Random random = new Random(seed);
-        random.nextBoolean(); // Skip one, seems to be some patterns otherwise
         return random.nextInt(100);
     }
 
