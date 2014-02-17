@@ -67,8 +67,7 @@ public class IslandListener implements Listener {
         final double[] xs = {region.getMinX(), region.getMinX(), region.getMaxX(), region.getMaxX()};
         final double[] zs = {region.getMinZ(), region.getMaxZ(), region.getMaxZ(), region.getMinZ()};
         final String label = deed.getTitle();
-        final String description = "<strong>" + deed.getTitle() + "</strong><br />Status: " + status + "<br />Owner: " + deed.getOwner() + "<br />Tax: "
-                + deed.getTax();
+        final String description = makeDescription(deed);
         AreaMarker areaMarker = markerSet.findAreaMarker(id);
         if (areaMarker == null) {
             areaMarker = markerSet.createAreaMarker(id, label, false, island.getWorld(), xs, zs, true);
@@ -89,6 +88,32 @@ public class IslandListener implements Listener {
             areaMarker.setFillStyle(0.25, 0xFF0000);
             areaMarker.setLineStyle(2, 0.5, 0xFF0000);
         }
+    }
 
+    private String makeDescription(final IslandDeed deed) {
+        final StringBuilder description = new StringBuilder();
+        final IslandStatus status = deed.getStatus();
+        final String owner = deed.getOwner();
+        final String title = deed.getTitle();
+        final int tax = deed.getTax();
+
+        description.append("<strong>").append(title).append("</strong>").append("<br />");
+        description.append("Status: ").append(status.toString().toLowerCase()).append("<br />");
+        if (status == IslandStatus.PRIVATE) {
+            description.append("Owner: ").append(owner).append("<br />");
+        } else if (status == IslandStatus.ABANDONED || status == IslandStatus.REPOSSESSED) {
+            description.append("Previous Owner: ").append(owner).append("<br />");
+        }
+        if (status == IslandStatus.PRIVATE || tax >= 0) {
+            final String taxString;
+            if (tax < 0) {
+                taxString = "infinite";
+            } else {
+                taxString = String.valueOf(tax) + " minecraft days";
+            }
+            description.append("Tax paid: ").append(taxString).append("<br />");
+        }
+
+        return description.toString();
     }
 }

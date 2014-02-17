@@ -139,7 +139,7 @@ public class RealEstateManager {
         if (tax < 0) {
             taxString = "infinite";
         } else {
-            taxString = String.valueOf(tax);
+            taxString = String.valueOf(tax) + " minecraft days";
         }
         if (status == IslandStatus.RESOURCE) {
             message(player, "island-examine-resource", title, world, x, z);
