@@ -39,6 +39,7 @@ public class BiomeSelection {
 
     public static BiomeSelection select(final long islandSeed) {
         final Random random = new Random(islandSeed + 1);
+        random.nextBoolean(); // Skip one, seems to be some patterns otherwise
         final int index = random.nextInt(instances.size());
         return instances.get(index);
     }

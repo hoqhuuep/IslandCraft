@@ -199,13 +199,14 @@ public class Geometry {
             // One of the 6 islands adjacent to spawn
             return true;
         }
-        return random(x, z, worldSeed) * 100 < resourceIslandRarity;
+        return random(x, z, worldSeed) < resourceIslandRarity;
     }
 
-    public final double random(final int x, final int z, final long worldSeed) {
+    public final int random(final int x, final int z, final long worldSeed) {
         final long seed = worldSeed ^ ((((long) z) << 32) | x);
         final Random random = new Random(seed);
-        return random.nextDouble();
+        random.nextBoolean(); // Skip one, seems to be some patterns otherwise
+        return random.nextInt(100);
     }
 
     public static int ifloordiv(int n, int d) {
