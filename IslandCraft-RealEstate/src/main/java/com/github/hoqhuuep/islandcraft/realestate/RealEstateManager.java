@@ -21,6 +21,7 @@ import com.github.hoqhuuep.islandcraft.realestate.event.IslandPurchaseEvent;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandRegenerateEvent;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandRenameEvent;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandRepossessEvent;
+import com.github.hoqhuuep.islandcraft.realestate.event.IslandTaxEvent;
 
 public class RealEstateManager {
     private final RealEstateDatabase database;
@@ -254,6 +255,7 @@ public class RealEstateManager {
         deed.setTax(newTax);
         database.saveIsland(deed);
         message(player, "island-tax");
+        Bukkit.getPluginManager().callEvent(new IslandTaxEvent(deed));
     }
 
     public void onDawn(final String world) {
@@ -269,6 +271,7 @@ public class RealEstateManager {
                 // Decrement tax
                 deed.setTax(tax - 1);
                 database.saveIsland(deed);
+                Bukkit.getPluginManager().callEvent(new IslandTaxEvent(deed));
             } else if (tax == 0) {
                 final IslandStatus status = deed.getStatus();
                 if (status == IslandStatus.PRIVATE) {

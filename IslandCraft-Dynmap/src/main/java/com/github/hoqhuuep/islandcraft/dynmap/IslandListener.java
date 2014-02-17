@@ -12,7 +12,10 @@ import com.github.hoqhuuep.islandcraft.realestate.SerializableRegion;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandAbandonEvent;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandLoadEvent;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandPurchaseEvent;
+import com.github.hoqhuuep.islandcraft.realestate.event.IslandRegenerateEvent;
+import com.github.hoqhuuep.islandcraft.realestate.event.IslandRenameEvent;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandRepossessEvent;
+import com.github.hoqhuuep.islandcraft.realestate.event.IslandTaxEvent;
 
 public class IslandListener implements Listener {
     final MarkerSet markerSet;
@@ -38,6 +41,21 @@ public class IslandListener implements Listener {
 
     @EventHandler
     public void onIslandRepossess(final IslandRepossessEvent event) {
+        updateMarker(event.getDeed());
+    }
+
+    @EventHandler
+    public void onIslandRegenerate(final IslandRegenerateEvent event) {
+        updateMarker(event.getDeed());
+    }
+
+    @EventHandler
+    public void onIslandRename(final IslandRenameEvent event) {
+        updateMarker(event.getDeed());
+    }
+
+    @EventHandler
+    public void onIslandTax(final IslandTaxEvent event) {
         updateMarker(event.getDeed());
     }
 
