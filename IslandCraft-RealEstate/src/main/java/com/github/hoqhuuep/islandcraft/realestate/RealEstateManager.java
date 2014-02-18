@@ -1,8 +1,10 @@
 package com.github.hoqhuuep.islandcraft.realestate;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -28,12 +30,14 @@ public class RealEstateManager {
     private final ConfigurationSection config;
     private final Map<String, IslandDeed> lastIsland;
     private final Map<String, Geometry> geometryMap;
+    private final Set<SerializableLocation> loadedIslands;
 
     public RealEstateManager(final RealEstateDatabase database, final ConfigurationSection config) {
         this.database = database;
         this.config = config;
         lastIsland = new HashMap<String, IslandDeed>();
         geometryMap = new HashMap<String, Geometry>();
+        loadedIslands = new HashSet<SerializableLocation>();
     }
 
     /**
@@ -54,6 +58,10 @@ public class RealEstateManager {
             return;
         }
         for (final SerializableLocation island : geometry.getOuterIslands(location)) {
+            if (loadedIslands.contains(island)) {
+                // Only load once, until server is rebooted
+                continue;
+            }
             IslandDeed deed = database.loadIsland(island);
             if (deed == null) {
                 deed = new IslandDeed();
@@ -74,6 +82,7 @@ public class RealEstateManager {
                 }
                 database.saveIsland(deed);
             }
+            loadedIslands.add(island);
             Bukkit.getPluginManager().callEvent(new IslandLoadEvent(deed));
         }
     }
