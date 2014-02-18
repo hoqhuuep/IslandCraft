@@ -34,7 +34,7 @@ public class RealEstatePlugin extends JavaPlugin {
         // Events
         final PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new WorldLoadListener(realEstateManager), this);
-        pluginManager.registerEvents(new WorldInitListener(this), this);
+        new DawnScheduler(this).run();
         pluginManager.registerEvents(new DawnListener(realEstateManager), this);
         pluginManager.registerEvents(new ChunkLoadListener(realEstateManager), this);
         pluginManager.registerEvents(new PlayerMoveListener(realEstateManager), this);
