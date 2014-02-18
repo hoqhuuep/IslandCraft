@@ -50,16 +50,21 @@ public class IslandGenerator {
         while (!floodFillOcean.isEmpty()) {
             final Site polygon = floodFillOcean.remove();
             for (final Site q : polygon.neighbors) {
-                final double dx = (double) (q.x - (xSize / 2)) / (double) (xSize / 2);
-                final double dz = (double) (q.z - (zSize / 2)) / (double) (zSize / 2);
-                if (NOISE * (simplexOctaveGenerator.noise(dx, dz, 2, 0.5, true) / 2 + 0.5) + CIRCLE * circle(dx, dz) + SQUARE * square(dx, dz) > THRESHOLD) {
-                    if (!q.ocean) {
-                        q.ocean = true;
-                        floodFillOcean.add(q);
-                    }
+                if (polygon.border && !q.ocean) {
+                    q.ocean = true;
+                    floodFillOcean.add(q);
                 } else {
-                    q.coast = true;
-                    coastQueue1.add(q);
+                    final double dx = (double) (q.x - (xSize / 2)) / (double) (xSize / 2);
+                    final double dz = (double) (q.z - (zSize / 2)) / (double) (zSize / 2);
+                    if (NOISE * (simplexOctaveGenerator.noise(dx, dz, 2, 0.5, true) / 2 + 0.5) + CIRCLE * circle(dx, dz) + SQUARE * square(dx, dz) > THRESHOLD) {
+                        if (!q.ocean) {
+                            q.ocean = true;
+                            floodFillOcean.add(q);
+                        }
+                    } else {
+                        q.coast = true;
+                        coastQueue1.add(q);
+                    }
                 }
             }
         }
