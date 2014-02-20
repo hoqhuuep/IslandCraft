@@ -6,6 +6,7 @@ tax-cost-amount: 1
 tax-cost-increase: 1
 tax-days-initial: 500
 tax-days-increase: 500
+tax-days-max: 2000
 max-islands-per-player: 7
 message:
   island-abandon: §7[INFO] Island successfully abandoned

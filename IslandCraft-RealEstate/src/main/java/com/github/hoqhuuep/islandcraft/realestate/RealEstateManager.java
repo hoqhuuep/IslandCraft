@@ -11,8 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -27,12 +25,12 @@ import com.github.hoqhuuep.islandcraft.realestate.event.IslandTaxEvent;
 
 public class RealEstateManager {
     private final RealEstateDatabase database;
-    private final ConfigurationSection config;
+    private final RealEstateConfig config;
     private final Map<String, IslandDeed> lastIsland;
     private final Map<String, Geometry> geometryMap;
     private final Set<SerializableLocation> loadedIslands;
 
-    public RealEstateManager(final RealEstateDatabase database, final ConfigurationSection config) {
+    public RealEstateManager(final RealEstateDatabase database, final RealEstateConfig config) {
         this.database = database;
         this.config = config;
         lastIsland = new HashMap<String, IslandDeed>();
@@ -95,18 +93,18 @@ public class RealEstateManager {
     public final void onAbandon(final Player player) {
         final Geometry geometry = getGeometry(player.getWorld().getName());
         if (geometry == null) {
-            message(player, "island-abandon-world-error");
+            config.M_ISLAND_ABANDON_WORLD_ERROR.send(player);
             return;
         }
         final Location location = player.getLocation();
         final SerializableLocation island = geometry.getInnerIsland(location);
         if (geometry.isOcean(island)) {
-            message(player, "island-abandon-ocean-error");
+            config.M_ISLAND_ABANDON_OCEAN_ERROR.send(player);
             return;
         }
         final IslandDeed deed = database.loadIsland(island);
         if (deed.getStatus() != IslandStatus.PRIVATE || !StringUtils.equals(deed.getOwner(), player.getName())) {
-            message(player, "island-abandon-owner-error");
+            config.M_ISLAND_ABANDON_OWNER_ERROR.send(player);
             return;
         }
 
@@ -114,7 +112,7 @@ public class RealEstateManager {
         deed.setStatus(IslandStatus.ABANDONED);
         deed.setTax(-1);
         database.saveIsland(deed);
-        message(player, "island-abandon");
+        config.M_ISLAND_ABANDON.send(player);
         Bukkit.getPluginManager().callEvent(new IslandAbandonEvent(deed));
     }
 
@@ -126,13 +124,13 @@ public class RealEstateManager {
     public final void onExamine(final Player player) {
         final Geometry geometry = getGeometry(player.getWorld().getName());
         if (geometry == null) {
-            message(player, "island-examine-world-error");
+            config.M_ISLAND_EXAMINE_WORLD_ERROR.send(player);
             return;
         }
         final Location location = player.getLocation();
         final SerializableLocation island = geometry.getInnerIsland(location);
         if (geometry.isOcean(island)) {
-            message(player, "island-examine-ocean-error");
+            config.M_ISLAND_EXAMINE_OCEAN_ERROR.send(player);
             return;
         }
 
@@ -151,17 +149,17 @@ public class RealEstateManager {
             taxString = String.valueOf(tax) + " minecraft days";
         }
         if (status == IslandStatus.RESOURCE) {
-            message(player, "island-examine-resource", title, world, x, z);
+            config.M_ISLAND_EXAMINE_RESOURCE.send(player, title, world, x, z);
         } else if (status == IslandStatus.RESERVED) {
-            message(player, "island-examine-reserved", title, world, x, z);
+            config.M_ISLAND_EXAMINE_RESERVED.send(player, title, world, x, z);
         } else if (status == IslandStatus.NEW) {
-            message(player, "island-examine-new", title, world, x, z);
+            config.M_ISLAND_EXAMINE_NEW.send(player, title, world, x, z);
         } else if (status == IslandStatus.ABANDONED) {
-            message(player, "island-examine-abandoned", owner, title, world, x, z);
+            config.M_ISLAND_EXAMINE_ABANDONED.send(player, owner, title, world, x, z);
         } else if (status == IslandStatus.REPOSSESSED) {
-            message(player, "island-examine-repossessed", owner, title, world, x, z);
+            config.M_ISLAND_EXAMINE_REPOSSESSED.send(player, owner, title, world, x, z);
         } else if (status == IslandStatus.PRIVATE) {
-            message(player, "island-examine-private", owner, title, taxString, world, x, z);
+            config.M_ISLAND_EXAMINE_PRIVATE.send(player, owner, title, taxString, world, x, z);
         }
     }
 
@@ -173,13 +171,13 @@ public class RealEstateManager {
     public final void onPurchase(final Player player) {
         final Geometry geometry = getGeometry(player.getWorld().getName());
         if (geometry == null) {
-            message(player, "island-purchase-world-error");
+            config.M_ISLAND_PURCHASE_WORLD_ERROR.send(player);
             return;
         }
         final Location location = player.getLocation();
         final SerializableLocation island = geometry.getInnerIsland(location);
         if (geometry.isOcean(island)) {
-            message(player, "island-purchase-ocean-error");
+            config.M_ISLAND_PURCHASE_OCEAN_ERROR.send(player);
             return;
         }
 
@@ -188,32 +186,32 @@ public class RealEstateManager {
         final String name = player.getName();
 
         if (IslandStatus.RESERVED == status) {
-            message(player, "island-purchase-reserved-error");
+            config.M_ISLAND_PURCHASE_RESERVED_ERROR.send(player);
             return;
         }
         if (IslandStatus.RESOURCE == status) {
-            message(player, "island-purchase-resource-error");
+            config.M_ISLAND_PURCHASE_RESOURCE_ERROR.send(player);
             return;
         }
         if (IslandStatus.PRIVATE == status) {
             final String owner = deed.getOwner();
             if (StringUtils.equals(owner, name)) {
-                message(player, "island-purchase-self-error");
+                config.M_ISLAND_PURCHASE_SELF_ERROR.send(player);
             } else {
-                message(player, "island-purchase-other-error");
+                config.M_ISLAND_PURCHASE_OTHER_ERROR.send(player);
             }
             return;
         }
-        if (islandCount(name) >= config.getInt("max-islands-per-player")) {
-            message(player, "island-purchase-max-error");
+        if (islandCount(name) >= config.MAX_ISLANDS_PER_PLAYER) {
+            config.M_ISLAND_PURCHASE_MAX_ERROR.send(player);
             return;
         }
 
         final int cost = calculatePurchaseCost(name);
 
-        if (!takeItems(player, config.getString("purchase-cost-item"), cost)) {
+        if (!takeItems(player, config.PURCHASE_COST_ITEM, cost)) {
             // Insufficient funds
-            message(player, "island-purchase-funds-error", Integer.toString(cost));
+            config.M_ISLAND_PURCHASE_FUNDS_ERROR.send(player, Integer.toString(cost));
             return;
         }
 
@@ -221,49 +219,49 @@ public class RealEstateManager {
         deed.setStatus(IslandStatus.PRIVATE);
         deed.setOwner(name);
         deed.setTitle("Private Island");
-        deed.setTax(config.getInt("tax-days-initial"));
+        deed.setTax(config.TAX_DAYS_INITIAL);
         database.saveIsland(deed);
-        message(player, "island-purchase");
+        config.M_ISLAND_PURCHASE.send(player);
         Bukkit.getPluginManager().callEvent(new IslandPurchaseEvent(deed));
     }
 
     public void onTax(final Player player) {
         final Geometry geometry = getGeometry(player.getWorld().getName());
         if (geometry == null) {
-            message(player, "island-tax-world-error");
+            config.M_ISLAND_TAX_WORLD_ERROR.send(player);
             return;
         }
         final Location location = player.getLocation();
         final SerializableLocation island = geometry.getInnerIsland(location);
         if (geometry.isOcean(island)) {
-            message(player, "island-tax-ocean-error");
+            config.M_ISLAND_TAX_OCEAN_ERROR.send(player);
             return;
         }
         final String name = player.getName();
         final IslandDeed deed = database.loadIsland(island);
         if (deed.getStatus() != IslandStatus.PRIVATE || !deed.getOwner().equals(name)) {
-            message(player, "island-tax-owner-error");
+            config.M_ISLAND_TAX_OWNER_ERROR.send(player);
             return;
         }
 
-        final int newTax = deed.getTax() + config.getInt("tax-days-increase");
-        if (newTax > config.getInt("tax-days-max")) {
-            message(player, "island-tax-max-error");
+        final int newTax = deed.getTax() + config.TAX_DAYS_INCREASE;
+        if (newTax > config.TAX_DAYS_MAX) {
+            config.M_ISLAND_TAX_MAX_ERROR.send(player);
             return;
         }
 
         final int cost = calculateTaxCost(name);
 
-        if (!takeItems(player, config.getString("tax-cost-item"), cost)) {
+        if (!takeItems(player, config.TAX_COST_ITEM, cost)) {
             // Insufficient funds
-            message(player, "island-tax-funds-error", Integer.toString(cost));
+            config.M_ISLAND_TAX_FUNDS_ERROR.send(player, Integer.toString(cost));
             return;
         }
 
         // Success
         deed.setTax(newTax);
         database.saveIsland(deed);
-        message(player, "island-tax");
+        config.M_ISLAND_TAX.send(player);
         Bukkit.getPluginManager().callEvent(new IslandTaxEvent(deed));
     }
 
@@ -314,25 +312,25 @@ public class RealEstateManager {
     public final void onRename(final Player player, final String title) {
         final Geometry geometry = getGeometry(player.getWorld().getName());
         if (geometry == null) {
-            message(player, "island-rename-world-error");
+            config.M_ISLAND_RENAME_WORLD_ERROR.send(player);
             return;
         }
         final Location location = player.getLocation();
         final SerializableLocation island = geometry.getInnerIsland(location);
         if (geometry.isOcean(island)) {
-            message(player, "island-rename-ocean-error");
+            config.M_ISLAND_RENAME_OCEAN_ERROR.send(player);
             return;
         }
         final IslandDeed deed = database.loadIsland(island);
         if (deed.getStatus() != IslandStatus.PRIVATE || !StringUtils.equals(deed.getOwner(), player.getName())) {
-            message(player, "island-rename-owner-error");
+            config.M_ISLAND_RENAME_OWNER_ERROR.send(player);
             return;
         }
 
         // Success
         deed.setTitle(title);
         database.saveIsland(deed);
-        message(player, "island-rename");
+        config.M_ISLAND_RENAME.send(player);
         Bukkit.getPluginManager().callEvent(new IslandRenameEvent(deed));
     }
 
@@ -344,19 +342,19 @@ public class RealEstateManager {
     // if (type == IslandStatus.NEW || type == IslandStatus.ABANDONED || type == IslandStatus.REPOSSESSED) {
     // final Location islandLocation = island.getLocation();
     // player.teleport(islandLocation);
-    // message(player, "island-warp");
+    // config.M_ISLAND_WARP.send(player);
     // return;
     // }
     // }
-    // message(player, "island-warp-error");
+    // config.M_ISLAND_WARP_ERROR.send(player);
     // }
 
     private int calculatePurchaseCost(final String player) {
-        return config.getInt("purchase-cost-amount") + islandCount(player) * config.getInt("purchase-cost-increase");
+        return config.PURCHASE_COST_AMOUNT + islandCount(player) * config.PURCHASE_COST_INCREASE;
     }
 
     private int calculateTaxCost(final String player) {
-        return config.getInt("tax-cost-amount") + (islandCount(player) - 1) * config.getInt("tax-cost-increase");
+        return config.TAX_COST_AMOUNT + (islandCount(player) - 1) * config.TAX_COST_INCREASE;
     }
 
     private int islandCount(final String player) {
@@ -372,18 +370,17 @@ public class RealEstateManager {
 
     private static final Integer FIRST = new Integer(0);
 
-    public boolean takeItems(final Player player, final String item, final int amount) {
-        final Material material = Material.getMaterial(item);
+    public boolean takeItems(final Player player, final Material item, final int amount) {
         final PlayerInventory inventory = player.getInventory();
-        if (!inventory.containsAtLeast(new ItemStack(material), amount)) {
+        if (!inventory.containsAtLeast(new ItemStack(item), amount)) {
             // Not enough
             return false;
         }
-        final Map<Integer, ItemStack> result = inventory.removeItem(new ItemStack(material, amount));
+        final Map<Integer, ItemStack> result = inventory.removeItem(new ItemStack(item, amount));
         if (!result.isEmpty()) {
             // Something went wrong, refund
             final int missing = result.get(FIRST).getAmount();
-            inventory.addItem(new ItemStack(material, amount - missing));
+            inventory.addItem(new ItemStack(item, amount - missing));
             return false;
         }
         // Success
@@ -428,17 +425,17 @@ public class RealEstateManager {
         final String title = deed.getTitle();
         final String owner = deed.getOwner();
         if (status == IslandStatus.RESOURCE) {
-            message(player, "island-enter-resource", title);
+            config.M_ISLAND_ENTER_RESOURCE.send(player, title);
         } else if (status == IslandStatus.RESERVED) {
-            message(player, "island-enter-reserved", title);
+            config.M_ISLAND_ENTER_RESERVED.send(player, title);
         } else if (status == IslandStatus.NEW) {
-            message(player, "island-enter-new", title);
+            config.M_ISLAND_ENTER_NEW.send(player, title);
         } else if (status == IslandStatus.ABANDONED) {
-            message(player, "island-enter-abandoned", title, owner);
+            config.M_ISLAND_ENTER_ABANDONED.send(player, title, owner);
         } else if (status == IslandStatus.REPOSSESSED) {
-            message(player, "island-enter-repossessed", title, owner);
+            config.M_ISLAND_ENTER_REPOSSESSED.send(player, title, owner);
         } else if (status == IslandStatus.PRIVATE) {
-            message(player, "island-enter-private", title, owner);
+            config.M_ISLAND_ENTER_PRIVATE.send(player, title, owner);
         }
     }
 
@@ -447,26 +444,22 @@ public class RealEstateManager {
         final String title = deed.getTitle();
         final String owner = deed.getOwner();
         if (status == IslandStatus.RESOURCE) {
-            message(player, "island-leave-resource", title);
+            config.M_ISLAND_LEAVE_RESOURCE.send(player, title);
         } else if (status == IslandStatus.RESERVED) {
-            message(player, "island-leave-reserved", title);
+            config.M_ISLAND_LEAVE_RESERVED.send(player, title);
         } else if (status == IslandStatus.NEW) {
-            message(player, "island-leave-new", title);
+            config.M_ISLAND_LEAVE_NEW.send(player, title);
         } else if (status == IslandStatus.ABANDONED) {
-            message(player, "island-leave-abandoned", title, owner);
+            config.M_ISLAND_LEAVE_ABANDONED.send(player, title, owner);
         } else if (status == IslandStatus.REPOSSESSED) {
-            message(player, "island-leave-repossessed", title, owner);
+            config.M_ISLAND_LEAVE_REPOSSESSED.send(player, title, owner);
         } else if (status == IslandStatus.PRIVATE) {
-            message(player, "island-leave-private", title, owner);
+            config.M_ISLAND_LEAVE_PRIVATE.send(player, title, owner);
         }
     }
 
     private boolean equals(final Object a, final Object b) {
         return (a == null && b == null) || (a != null && b != null && a.equals(b));
-    }
-
-    public final void message(final CommandSender to, final String id, final Object... args) {
-        to.sendMessage(String.format(config.getString("message." + id), args));
     }
 
     public void addGeometry(final String world, final Geometry geometry) {

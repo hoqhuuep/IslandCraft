@@ -22,8 +22,10 @@ public class RealEstatePlugin extends JavaPlugin {
             installDDL();
         }
 
+        final RealEstateConfig config = new RealEstateConfig(getConfig());
+
         // Manager
-        final RealEstateManager realEstateManager = new RealEstateManager(new RealEstateDatabase(getDatabase()), getConfig());
+        final RealEstateManager realEstateManager = new RealEstateManager(new RealEstateDatabase(getDatabase()), config);
 
         // Commands
         final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(realEstateManager);
