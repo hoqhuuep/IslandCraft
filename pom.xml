@@ -28,6 +28,7 @@
 		<module>IslandCraft-Suicide</module>
 		<module>IslandCraft-WorldGenerator</module>
 		<module>IslandCraft-RealEstate</module>
+		<module>IslandCraft-Boat</module>
 	</modules>
 
 	<build>

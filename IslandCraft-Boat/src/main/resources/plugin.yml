@@ -1,0 +1,14 @@
+name: IslandCraft-Boat
+version: 0.0.2
+description: Allows players to summon temporary boats
+author: hoqhuuep
+website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
+main: com.github.hoqhuuep.islandcraft.boat.BoatPlugin
+commands:
+  boat:
+    description: Summon a temporary boat
+    permission: islandcraft.command.boat
+    usage: "\u00a7cUsage: /<command>"
+permissions:
+  islandcraft.command.boat:
+    default: true
