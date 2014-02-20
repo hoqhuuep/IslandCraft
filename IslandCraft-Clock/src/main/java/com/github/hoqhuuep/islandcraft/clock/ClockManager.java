@@ -2,7 +2,6 @@ package com.github.hoqhuuep.islandcraft.clock;
 
 import org.bukkit.World;
 import org.bukkit.World.Environment;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 public class ClockManager {
@@ -11,9 +10,9 @@ public class ClockManager {
     private static final long MINUTES_PER_HOUR = 60;
     private static final long ONE_HOUR = ONE_DAY / HOURS_PER_DAY;
     private static final long OFFSET = 6 * ONE_HOUR;
-    private final ConfigurationSection config;
+    private final ClockConfig config;
 
-    public ClockManager(final ConfigurationSection config) {
+    public ClockManager(final ClockConfig config) {
         this.config = config;
     }
 
@@ -22,11 +21,11 @@ public class ClockManager {
         final Environment environment = world.getEnvironment();
         if (environment == Environment.NORMAL) {
             final long time = world.getTime();
-            final long hour = ((time + OFFSET) % ONE_DAY) / ONE_HOUR;
-            final long minute = (((time + OFFSET) % ONE_HOUR) * MINUTES_PER_HOUR) / ONE_HOUR;
-            to.sendMessage(String.format(config.getString("message.clock"), hour, minute));
+            final int hour = (int) (((time + OFFSET) % ONE_DAY) / ONE_HOUR);
+            final int minute = (int) ((((time + OFFSET) % ONE_HOUR) * MINUTES_PER_HOUR) / ONE_HOUR);
+            config.M_CLOCK.send(to, hour, minute);
         } else {
-            to.sendMessage(String.format(config.getString("message.clock-error")));
+            config.M_CLOCK_ERROR.send(to);
         }
     }
 }

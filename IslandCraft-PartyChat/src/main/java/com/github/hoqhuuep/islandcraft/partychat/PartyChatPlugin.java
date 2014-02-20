@@ -7,7 +7,6 @@ import javax.persistence.PersistenceException;
 
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.avaje.ebean.EbeanServer;
@@ -24,7 +23,7 @@ public class PartyChatPlugin extends JavaPlugin {
         }
         final EbeanServer ebean = getDatabase();
         final PartyDatabase database = new PartyDatabase(ebean);
-        final ConfigurationSection config = getConfig();
+        final PartyChatConfig config = new PartyChatConfig(getConfig());
         final PartyChatManager manager = new PartyChatManager(database, config);
 
         final CommandExecutor pCommandExecutor = new PCommandExecutor(manager);

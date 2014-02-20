@@ -4,85 +4,80 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 public class PartyChatManager {
     private final PartyDatabase database;
-    private final ConfigurationSection config;
+    private final PartyChatConfig config;
 
-    public PartyChatManager(final PartyDatabase database, final ConfigurationSection config) {
+    public PartyChatManager(final PartyDatabase database, final PartyChatConfig config) {
         this.database = database;
         this.config = config;
     }
 
-    public final void joinParty(final Player player, final String party) {
-        final String name = player.getName();
+    public final void joinParty(final CommandSender sender, final String party) {
+        final String name = sender.getName();
         final String oldParty = database.loadParty(name);
         if (oldParty != null) {
-            message(player, "party-leave", oldParty);
+            config.M_PARTY_LEAVE.send(sender, oldParty);
         }
         database.saveParty(name, party);
-        message(player, "party-join", party);
+        config.M_PARTY_JOIN.send(sender, party);
 
         // Notify members that player has joined
         final List<String> memberNames = database.loadMembers(party);
         for (final String memberName : memberNames) {
-            final Player member = player.getServer().getPlayer(memberName);
+            final Player member = sender.getServer().getPlayer(memberName);
             if (member != null && !member.getName().equalsIgnoreCase(name)) {
-                message(member, "party-join-notify", name);
+                config.M_PARTY_JOIN_NOTIFY.send(member, name);
             }
         }
     }
 
-    public final void leaveParty(final Player player) {
-        final String name = player.getName();
+    public final void leaveParty(final CommandSender sender) {
+        final String name = sender.getName();
         final String party = database.loadParty(name);
         if (party == null) {
-            message(player, "party-leave-error");
+            config.M_PARTY_NONE.send(sender);
             return;
         }
         database.saveParty(name, null);
-        message(player, "party-leave", party);
+        config.M_PARTY_LEAVE.send(sender, party);
 
         // Notify members that player has left
         final List<String> memberNames = database.loadMembers(party);
         for (final String memberName : memberNames) {
-            final Player member = player.getServer().getPlayer(memberName);
+            final Player member = sender.getServer().getPlayer(memberName);
             if (member != null && !member.getName().equalsIgnoreCase(name)) {
-                message(member, "party-leave-notify", name);
+                config.M_PARTY_LEAVE_NOTIFY.send(member, name);
             }
         }
     }
 
-    public final void displayMembers(final Player player) {
-        final String party = database.loadParty(player.getName());
+    public final void displayMembers(final CommandSender sender) {
+        final String party = database.loadParty(sender.getName());
         if (party == null) {
-            message(player, "party-members-error");
+            config.M_PARTY_NONE.send(sender);
             return;
         }
         final List<String> members = database.loadMembers(party);
         final String formattedMembers = StringUtils.join(members, ", ");
-        message(player, "party-members", formattedMembers);
+        config.M_PARTY_MEMBERS.send(sender, formattedMembers);
     }
 
-    public final void sendMessage(final Player from, final String message) {
-        final String name = from.getName();
+    public final void sendMessage(final CommandSender sender, final String message) {
+        final String name = sender.getName();
         final String party = database.loadParty(name);
         if (party == null) {
-            message(from, "p-error");
+            config.M_P_ERROR.send(sender);
             return;
         }
         final List<String> memberNames = database.loadMembers(party);
         for (final String memberName : memberNames) {
-            final Player member = from.getServer().getPlayer(memberName);
+            final Player member = sender.getServer().getPlayer(memberName);
             if (member != null) {
-                message(member, "p", name, party, message);
+                config.M_P.send(member, name, party, message);
             }
         }
-    }
-
-    public final void message(CommandSender to, String id, Object... args) {
-        to.sendMessage(String.format(config.getString("message." + id), args));
     }
 }

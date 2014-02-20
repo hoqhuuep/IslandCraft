@@ -8,7 +8,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 
 public class PartyCommandExecutor implements CommandExecutor, TabCompleter {
     private final PartyChatManager manager;
@@ -19,33 +18,28 @@ public class PartyCommandExecutor implements CommandExecutor, TabCompleter {
 
     @Override
     public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("You can only perform this command as a player");
-            return true;
-        }
         if (args.length < 1) {
             return false;
         }
-        final Player player = (Player) sender;
         if ("join".equalsIgnoreCase(args[0])) {
             final String[] partyArray = Arrays.copyOfRange(args, 1, args.length);
             final String party = StringUtils.join(partyArray, " ");
             if (party.isEmpty()) {
                 return false;
             }
-            manager.joinParty(player, party);
+            manager.joinParty(sender, party);
             return true;
         } else if ("leave".equalsIgnoreCase(args[0])) {
             if (1 != args.length) {
                 return false;
             }
-            manager.leaveParty(player);
+            manager.leaveParty(sender);
             return true;
         } else if ("members".equalsIgnoreCase(args[0])) {
             if (1 != args.length) {
                 return false;
             }
-            manager.displayMembers(player);
+            manager.displayMembers(sender);
             return true;
         }
         return false;
