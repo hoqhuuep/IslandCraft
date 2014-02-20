@@ -4,6 +4,7 @@ description: Allows players to summon temporary boats
 author: hoqhuuep
 website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
 main: com.github.hoqhuuep.islandcraft.boat.BoatPlugin
+database: true
 commands:
   boat:
     description: Summon a temporary boat
