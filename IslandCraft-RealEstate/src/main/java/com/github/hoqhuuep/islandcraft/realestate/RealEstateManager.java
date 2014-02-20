@@ -113,6 +113,7 @@ public class RealEstateManager {
         deed.setTax(-1);
         database.saveIsland(deed);
         config.M_ISLAND_ABANDON.send(player);
+        onMove(player, player.getLocation());
         Bukkit.getPluginManager().callEvent(new IslandAbandonEvent(deed));
     }
 
@@ -222,6 +223,7 @@ public class RealEstateManager {
         deed.setTax(config.TAX_DAYS_INITIAL);
         database.saveIsland(deed);
         config.M_ISLAND_PURCHASE.send(player);
+        onMove(player, player.getLocation());
         Bukkit.getPluginManager().callEvent(new IslandPurchaseEvent(deed));
     }
 
@@ -331,6 +333,7 @@ public class RealEstateManager {
         deed.setTitle(title);
         database.saveIsland(deed);
         config.M_ISLAND_RENAME.send(player);
+        onMove(player, player.getLocation());
         Bukkit.getPluginManager().callEvent(new IslandRenameEvent(deed));
     }
 
@@ -410,14 +413,13 @@ public class RealEstateManager {
             if (toIsland == null || !equals(toIsland.getTitle(), fromIsland.getTitle()) || !equals(toIsland.getOwner(), fromIsland.getOwner())) {
                 leaveIsland(player, fromIsland);
             }
-        } else {
-            if (toIsland != null) {
+        }
+        if (toIsland != null) {
+            if (fromIsland == null || !equals(toIsland.getTitle(), fromIsland.getTitle()) || !equals(toIsland.getOwner(), fromIsland.getOwner())) {
                 enterIsland(player, toIsland);
             }
         }
         lastIsland.put(name, toIsland);
-        // TODO also send greeting/farewell message on rename, purchase, repossess, etc.
-        // TODO renaming causes leave message but not enter
     }
 
     private void enterIsland(final Player player, final IslandDeed deed) {
