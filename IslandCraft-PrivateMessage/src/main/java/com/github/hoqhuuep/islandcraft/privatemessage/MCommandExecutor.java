@@ -3,16 +3,16 @@ package com.github.hoqhuuep.islandcraft.privatemessage;
 import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 
 public class MCommandExecutor implements CommandExecutor {
     private final PrivateMessageManager manager;
-    private final ConfigurationSection config;
+    private final PrivateMessageConfig config;
 
-    public MCommandExecutor(final PrivateMessageManager manager, final ConfigurationSection config) {
+    public MCommandExecutor(final PrivateMessageManager manager, final PrivateMessageConfig config) {
         this.manager = manager;
         this.config = config;
     }
@@ -28,9 +28,17 @@ public class MCommandExecutor implements CommandExecutor {
             return false;
         }
         final String toName = args[0];
-        final CommandSender to = sender.getServer().getPlayerExact(toName);
+        final Server server = sender.getServer();
+        final CommandSender to;
+        final CommandSender console = server.getConsoleSender();
+        if (toName == console.getName()) {
+            to = console;
+        } else {
+            to = server.getPlayerExact(toName);
+        }
+
         if (to == null) {
-            sender.sendMessage(String.format(config.getString("message.m-error")));
+            config.M_M_ERROR.send(sender);
             return true;
         }
         manager.sendMessage(sender, to, message);
