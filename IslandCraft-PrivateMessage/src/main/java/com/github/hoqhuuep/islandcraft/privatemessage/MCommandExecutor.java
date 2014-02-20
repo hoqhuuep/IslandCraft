@@ -28,20 +28,21 @@ public class MCommandExecutor implements CommandExecutor {
             return false;
         }
         final String toName = args[0];
-        final Server server = sender.getServer();
-        final CommandSender to;
-        final CommandSender console = server.getConsoleSender();
-        if (toName == console.getName()) {
-            to = console;
-        } else {
-            to = server.getPlayerExact(toName);
-        }
-
+        final CommandSender to = getCommandSender(sender.getServer(), toName);
         if (to == null) {
             config.M_M_ERROR.send(sender);
             return true;
         }
         manager.sendMessage(sender, to, message);
         return true;
+    }
+
+    private CommandSender getCommandSender(final Server server, final String name) {
+        final CommandSender console = server.getConsoleSender();
+        if (name.equals(console.getName())) {
+            return console;
+        } else {
+            return server.getPlayerExact(name);
+        }
     }
 }

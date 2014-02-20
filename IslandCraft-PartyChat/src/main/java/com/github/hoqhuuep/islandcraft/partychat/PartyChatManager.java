@@ -3,8 +3,8 @@ package com.github.hoqhuuep.islandcraft.partychat;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class PartyChatManager {
     private final PartyDatabase database;
@@ -20,6 +20,15 @@ public class PartyChatManager {
         final String oldParty = database.loadParty(name);
         if (oldParty != null) {
             config.M_PARTY_LEAVE.send(sender, oldParty);
+
+            // Notify members that player has left
+            final List<String> memberNames = database.loadMembers(oldParty);
+            for (final String memberName : memberNames) {
+                final CommandSender member = getCommandSender(sender.getServer(), memberName);
+                if (member != null && !member.getName().equalsIgnoreCase(name)) {
+                    config.M_PARTY_LEAVE_NOTIFY.send(member, name);
+                }
+            }
         }
         database.saveParty(name, party);
         config.M_PARTY_JOIN.send(sender, party);
@@ -27,7 +36,7 @@ public class PartyChatManager {
         // Notify members that player has joined
         final List<String> memberNames = database.loadMembers(party);
         for (final String memberName : memberNames) {
-            final Player member = sender.getServer().getPlayer(memberName);
+            final CommandSender member = getCommandSender(sender.getServer(), memberName);
             if (member != null && !member.getName().equalsIgnoreCase(name)) {
                 config.M_PARTY_JOIN_NOTIFY.send(member, name);
             }
@@ -47,7 +56,7 @@ public class PartyChatManager {
         // Notify members that player has left
         final List<String> memberNames = database.loadMembers(party);
         for (final String memberName : memberNames) {
-            final Player member = sender.getServer().getPlayer(memberName);
+            final CommandSender member = getCommandSender(sender.getServer(), memberName);
             if (member != null && !member.getName().equalsIgnoreCase(name)) {
                 config.M_PARTY_LEAVE_NOTIFY.send(member, name);
             }
@@ -74,10 +83,19 @@ public class PartyChatManager {
         }
         final List<String> memberNames = database.loadMembers(party);
         for (final String memberName : memberNames) {
-            final Player member = sender.getServer().getPlayer(memberName);
+            final CommandSender member = getCommandSender(sender.getServer(), memberName);
             if (member != null) {
                 config.M_P.send(member, name, party, message);
             }
+        }
+    }
+
+    private CommandSender getCommandSender(final Server server, final String name) {
+        final CommandSender console = server.getConsoleSender();
+        if (name.equals(console.getName())) {
+            return console;
+        } else {
+            return server.getPlayerExact(name);
         }
     }
 }
