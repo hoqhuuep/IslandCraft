@@ -18,7 +18,7 @@ public class ICDynmapPlugin extends JavaPlugin {
             markerSet.setMarkerSetLabel("IslandCraft");
         }
         if (markerSet == null) {
-            // TODO handle error
+            // TODO handle this
             return;
         }
 

@@ -69,7 +69,7 @@ public class WorldGuardManager {
         regionManager.addRegion(protectedRegion);
         try {
             regionManager.save();
-        } catch (ProtectionDatabaseException e) {
+        } catch (final ProtectionDatabaseException e) {
             // TODO handle this
         }
     }
