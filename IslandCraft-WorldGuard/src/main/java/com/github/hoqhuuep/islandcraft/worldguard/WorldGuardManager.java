@@ -51,7 +51,7 @@ public class WorldGuardManager {
         // TODO allow for different id's
         final String id = "ic'" + region.getWorld() + "'" + minX + "'" + minY + "'" + minZ + "'" + maxX + "'" + maxY + "'" + maxZ;
         final BlockVector p1 = new BlockVector(minX, minY, minZ);
-        final BlockVector p2 = new BlockVector(maxX, maxY, maxZ);
+        final BlockVector p2 = new BlockVector(maxX - 1, maxY - 1, maxZ - 1);
         return new ProtectedCuboidRegion(id, p1, p2);
     }
 
