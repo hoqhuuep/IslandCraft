@@ -15,15 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import com.github.hoqhuuep.islandcraft.realestate.event.IslandAbandonEvent;
-import com.github.hoqhuuep.islandcraft.realestate.event.IslandEvent;
-import com.github.hoqhuuep.islandcraft.realestate.event.IslandLoadEvent;
-import com.github.hoqhuuep.islandcraft.realestate.event.IslandPurchaseEvent;
-import com.github.hoqhuuep.islandcraft.realestate.event.IslandRegenerateEvent;
-import com.github.hoqhuuep.islandcraft.realestate.event.IslandRenameEvent;
-import com.github.hoqhuuep.islandcraft.realestate.event.IslandRepossessEvent;
-import com.github.hoqhuuep.islandcraft.realestate.event.IslandTaxEvent;
-
 public class RealEstateManager {
 	private final RealEstateDatabase database;
 	private final RealEstateConfig config;
@@ -83,7 +74,7 @@ public class RealEstateManager {
 				database.saveIsland(deed);
 			}
 			loadedIslands.add(island);
-			Bukkit.getPluginManager().callEvent(new IslandLoadEvent(deed));
+			Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
 		}
 	}
 
@@ -117,7 +108,7 @@ public class RealEstateManager {
 		database.saveIsland(deed);
 		config.M_ISLAND_ABANDON.send(player);
 		onMove(player, player.getLocation());
-		Bukkit.getPluginManager().callEvent(new IslandAbandonEvent(deed));
+		Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
 	}
 
 	/**
@@ -229,7 +220,7 @@ public class RealEstateManager {
 		database.saveIsland(deed);
 		config.M_ISLAND_PURCHASE.send(player);
 		onMove(player, player.getLocation());
-		Bukkit.getPluginManager().callEvent(new IslandPurchaseEvent(deed));
+		Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
 	}
 
 	public void onTax(final Player player) {
@@ -269,7 +260,7 @@ public class RealEstateManager {
 		deed.setTax(newTax);
 		database.saveIsland(deed);
 		config.M_ISLAND_TAX.send(player);
-		Bukkit.getPluginManager().callEvent(new IslandTaxEvent(deed));
+		Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
 	}
 
 	public void onDawn(final String world) {
@@ -285,7 +276,7 @@ public class RealEstateManager {
 				// Decrement tax
 				deed.setTax(tax - 1);
 				database.saveIsland(deed);
-				Bukkit.getPluginManager().callEvent(new IslandTaxEvent(deed));
+				Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
 			} else if (tax == 0) {
 				final IslandStatus status = deed.getStatus();
 				if (status == IslandStatus.PRIVATE) {
@@ -293,7 +284,7 @@ public class RealEstateManager {
 					deed.setStatus(IslandStatus.REPOSSESSED);
 					deed.setTax(-1);
 					database.saveIsland(deed);
-					Bukkit.getPluginManager().callEvent(new IslandRepossessEvent(deed));
+					Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
 				} else {
 					// TODO regenerate island
 					if (status == IslandStatus.REPOSSESSED || status == IslandStatus.ABANDONED) {
@@ -302,7 +293,7 @@ public class RealEstateManager {
 						deed.setTitle("New Island");
 						deed.setTax(-1);
 						database.saveIsland(deed);
-						Bukkit.getPluginManager().callEvent(new IslandRegenerateEvent(deed));
+						Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
 					}
 				}
 			}
@@ -340,7 +331,7 @@ public class RealEstateManager {
 		database.saveIsland(deed);
 		config.M_ISLAND_RENAME.send(player);
 		onMove(player, player.getLocation());
-		Bukkit.getPluginManager().callEvent(new IslandRenameEvent(deed));
+		Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
 	}
 
 	// public void onWarp(final Player player) {

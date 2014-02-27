@@ -10,59 +10,59 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 public class PartyCommandExecutor implements CommandExecutor, TabCompleter {
-    private final PartyChatManager manager;
+	private final PartyChatManager manager;
 
-    public PartyCommandExecutor(final PartyChatManager manager) {
-        this.manager = manager;
-    }
+	public PartyCommandExecutor(final PartyChatManager manager) {
+		this.manager = manager;
+	}
 
-    @Override
-    public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (args.length < 1) {
-            return false;
-        }
-        if ("join".equalsIgnoreCase(args[0])) {
-            final String[] partyArray = Arrays.copyOfRange(args, 1, args.length);
-            final String party = StringUtils.join(partyArray, " ");
-            if (party.isEmpty()) {
-                return false;
-            }
-            manager.joinParty(sender, party);
-            return true;
-        } else if ("leave".equalsIgnoreCase(args[0])) {
-            if (1 != args.length) {
-                return false;
-            }
-            manager.leaveParty(sender);
-            return true;
-        } else if ("members".equalsIgnoreCase(args[0])) {
-            if (1 != args.length) {
-                return false;
-            }
-            manager.displayMembers(sender);
-            return true;
-        }
-        return false;
-    }
+	@Override
+	public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+		if (args.length < 1) {
+			return false;
+		}
+		if ("join".equalsIgnoreCase(args[0])) {
+			final String[] partyArray = Arrays.copyOfRange(args, 1, args.length);
+			final String party = StringUtils.join(partyArray, " ");
+			if (party.isEmpty()) {
+				return false;
+			}
+			manager.joinParty(sender, party);
+			return true;
+		} else if ("leave".equalsIgnoreCase(args[0])) {
+			if (1 != args.length) {
+				return false;
+			}
+			manager.leaveParty(sender);
+			return true;
+		} else if ("members".equalsIgnoreCase(args[0])) {
+			if (1 != args.length) {
+				return false;
+			}
+			manager.displayMembers(sender);
+			return true;
+		}
+		return false;
+	}
 
-    private static final String[] OPTIONS = {"join", "leave", "members"};
+	private static final String[] OPTIONS = { "join", "leave", "members" };
 
-    @Override
-    public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
-        final String partialArg;
-        final List<String> completions = new ArrayList<String>();
-        if (0 == args.length) {
-            partialArg = "";
-        } else if (1 == args.length) {
-            partialArg = args[0].toLowerCase();
-        } else {
-            return null;
-        }
-        for (final String option : OPTIONS) {
-            if (option.startsWith(partialArg)) {
-                completions.add(option);
-            }
-        }
-        return completions;
-    }
+	@Override
+	public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
+		final String partialArg;
+		final List<String> completions = new ArrayList<String>();
+		if (args.length == 0) {
+			partialArg = "";
+		} else if (args.length == 1) {
+			partialArg = args[0].toLowerCase();
+		} else {
+			return null;
+		}
+		for (final String option : OPTIONS) {
+			if (option.startsWith(partialArg)) {
+				completions.add(option);
+			}
+		}
+		return completions;
+	}
 }
