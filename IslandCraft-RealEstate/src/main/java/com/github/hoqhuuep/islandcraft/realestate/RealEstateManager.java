@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandAbandonEvent;
+import com.github.hoqhuuep.islandcraft.realestate.event.IslandEvent;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandLoadEvent;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandPurchaseEvent;
 import com.github.hoqhuuep.islandcraft.realestate.event.IslandRegenerateEvent;
@@ -470,5 +471,93 @@ public class RealEstateManager {
 
     private Geometry getGeometry(final String world) {
         return geometryMap.get(world);
+    }
+
+    public void setTax(final Player player, final int tax) {
+        final Geometry geometry = getGeometry(player.getWorld().getName());
+        if (geometry == null) {
+            config.M_ISLAND_ADMIN_WORLD_ERROR.send(player);
+            return;
+        }
+        final Location location = player.getLocation();
+        final SerializableLocation island = geometry.getInnerIsland(location);
+        if (geometry.isOcean(island)) {
+            config.M_ISLAND_ADMIN_OCEAN_ERROR.send(player);
+            return;
+        }
+        final IslandDeed deed = database.loadIsland(island);
+
+        // Success
+        deed.setTax(tax);
+        database.saveIsland(deed);
+        config.M_ISLAND_ADMIN.send(player);
+        onMove(player, player.getLocation());
+        Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
+    }
+
+    public void setTitle(final Player player, final String title) {
+        final Geometry geometry = getGeometry(player.getWorld().getName());
+        if (geometry == null) {
+            config.M_ISLAND_ADMIN_WORLD_ERROR.send(player);
+            return;
+        }
+        final Location location = player.getLocation();
+        final SerializableLocation island = geometry.getInnerIsland(location);
+        if (geometry.isOcean(island)) {
+            config.M_ISLAND_ADMIN_OCEAN_ERROR.send(player);
+            return;
+        }
+        final IslandDeed deed = database.loadIsland(island);
+
+        // Success
+        deed.setTitle(title);
+        database.saveIsland(deed);
+        config.M_ISLAND_ADMIN.send(player);
+        onMove(player, player.getLocation());
+        Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
+    }
+
+    public void setOwner(final Player player, final String owner) {
+        final Geometry geometry = getGeometry(player.getWorld().getName());
+        if (geometry == null) {
+            config.M_ISLAND_ADMIN_WORLD_ERROR.send(player);
+            return;
+        }
+        final Location location = player.getLocation();
+        final SerializableLocation island = geometry.getInnerIsland(location);
+        if (geometry.isOcean(island)) {
+            config.M_ISLAND_ADMIN_OCEAN_ERROR.send(player);
+            return;
+        }
+        final IslandDeed deed = database.loadIsland(island);
+
+        // Success
+        deed.setOwner(owner);
+        database.saveIsland(deed);
+        config.M_ISLAND_ADMIN.send(player);
+        onMove(player, player.getLocation());
+        Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
+    }
+
+    public void setStatus(final Player player, final IslandStatus status) {
+        final Geometry geometry = getGeometry(player.getWorld().getName());
+        if (geometry == null) {
+            config.M_ISLAND_ADMIN_WORLD_ERROR.send(player);
+            return;
+        }
+        final Location location = player.getLocation();
+        final SerializableLocation island = geometry.getInnerIsland(location);
+        if (geometry.isOcean(island)) {
+            config.M_ISLAND_ADMIN_OCEAN_ERROR.send(player);
+            return;
+        }
+        final IslandDeed deed = database.loadIsland(island);
+
+        // Success
+        deed.setStatus(status);
+        database.saveIsland(deed);
+        config.M_ISLAND_ADMIN.send(player);
+        onMove(player, player.getLocation());
+        Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
     }
 }
