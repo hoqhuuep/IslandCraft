@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft;
+package com.github.hoqhuuep.islandcraft.worldgenerator;
 
 public class Geometry {
     public static int ifloordiv(int n, int d) {

@@ -2,8 +2,7 @@ package com.github.hoqhuuep.islandcraft.worldgenerator;
 
 import java.util.Arrays;
 
-import com.github.hoqhuuep.islandcraft.Geometry;
-import com.github.hoqhuuep.islandcraft.customworldchunkmanager.BiomeGenerator;
+import com.github.hoqhuuep.islandcraft.worldgenerator.hack.BiomeGenerator;
 
 public class WorldGenerator implements BiomeGenerator {
     private final long worldSeed;

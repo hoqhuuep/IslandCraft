@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.customworldchunkmanager;
+package com.github.hoqhuuep.islandcraft.worldgenerator.hack;
 
 import net.minecraft.server.v1_7_R1.WorldProvider;
 
@@ -13,7 +13,7 @@ import org.bukkit.event.world.WorldInitEvent;
 import com.github.hoqhuuep.islandcraft.worldgenerator.Biome;
 import com.github.hoqhuuep.islandcraft.worldgenerator.WorldGenerator;
 
-public class CustomWorldChunkManagerListener implements Listener {
+public class HackListener implements Listener {
     private boolean beforeHack = true;
 
     @EventHandler

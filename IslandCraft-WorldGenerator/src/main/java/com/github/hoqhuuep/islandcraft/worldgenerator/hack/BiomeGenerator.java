@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.customworldchunkmanager;
+package com.github.hoqhuuep.islandcraft.worldgenerator.hack;
 
 public interface BiomeGenerator {
     int[] validSpawnBiomes();

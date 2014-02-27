@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.mosaic;
+package com.github.hoqhuuep.islandcraft.worldgenerator.mosaic;
 
 import java.util.ArrayList;
 import java.util.Collections;

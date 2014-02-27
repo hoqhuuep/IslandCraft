@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.customworldchunkmanager;
+package com.github.hoqhuuep.islandcraft.worldgenerator.hack;
 
 import java.util.ArrayList;
 import java.util.List;

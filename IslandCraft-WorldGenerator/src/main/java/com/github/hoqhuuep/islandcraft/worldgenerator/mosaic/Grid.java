@@ -1,9 +1,9 @@
-package com.github.hoqhuuep.islandcraft.mosaic;
+package com.github.hoqhuuep.islandcraft.worldgenerator.mosaic;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.hoqhuuep.islandcraft.Geometry;
+import com.github.hoqhuuep.islandcraft.worldgenerator.Geometry;
 
 public final class Grid<T> {
     private final int xRows;

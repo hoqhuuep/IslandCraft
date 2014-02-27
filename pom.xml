@@ -18,17 +18,17 @@
 	</properties>
 
 	<modules>
+		<module>IslandCraft-Boat</module>
+		<module>IslandCraft-Clock</module>
+		<module>IslandCraft-Compass</module>
+		<module>IslandCraft-Dynmap</module>
 		<module>IslandCraft-LocalChat</module>
 		<module>IslandCraft-PartyChat</module>
 		<module>IslandCraft-PrivateMessage</module>
-		<module>IslandCraft-Clock</module>
-		<module>IslandCraft-Compass</module>
-		<module>IslandCraft-WorldGuard</module>
-		<module>IslandCraft-Dynmap</module>
+		<module>IslandCraft-RealEstate</module>
 		<module>IslandCraft-Suicide</module>
 		<module>IslandCraft-WorldGenerator</module>
-		<module>IslandCraft-RealEstate</module>
-		<module>IslandCraft-Boat</module>
+		<module>IslandCraft-WorldGuard</module>
 	</modules>
 
 	<build>
@@ -63,7 +63,7 @@
 									<type>${project.packaging}</type>
 								</artifactItem>
 							</artifactItems>
-							<outputDirectory>../target/server/plugins</outputDirectory>
+							<outputDirectory>C:/Users/Daniel/workspace/IslandCraft/target/server/plugins</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>

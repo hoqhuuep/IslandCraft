@@ -12,8 +12,8 @@ import java.util.Random;
 
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
-import com.github.hoqhuuep.islandcraft.mosaic.Poisson;
-import com.github.hoqhuuep.islandcraft.mosaic.Site;
+import com.github.hoqhuuep.islandcraft.worldgenerator.mosaic.Poisson;
+import com.github.hoqhuuep.islandcraft.worldgenerator.mosaic.Site;
 
 public class IslandGenerator {
     private static final double minDistance = 8;
