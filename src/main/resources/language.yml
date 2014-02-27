@@ -2,5 +2,3 @@ icsudo-regenerate-world-error: §7[INFO] You cannot regenerate an island from thi
 icsudo-regenerate-ocean-error: §7[INFO] You cannot regenerate the ocean
 island-warp: §7[INFO] Warp successful
 island-warp-error: §7[INFO] Cannot find available island to warp to
-not-yet-implemented: §7[INFO] Not yet implemented
-raw: "%s"

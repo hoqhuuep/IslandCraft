@@ -557,4 +557,29 @@ public class RealEstateManager {
 		onMove(player, player.getLocation());
 		Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
 	}
+
+	// private void regenerateRegion(final IslandDeed island, final Geometry
+	// geometry) {
+	// final Long oldSeed = null; // database.loadSeed(island.getId());
+	// final SerializableRegion region = island.getInnerRegion();
+	// final int minX = region.getMinX() >> 4;
+	// final int minZ = region.getMinZ() >> 4;
+	// final int maxX = region.getMaxX() >> 4;
+	// final int maxZ = region.getMaxZ() >> 4;
+	// if (null != oldSeed) {
+	// database.saveSeed(island.getId(), new Long(new
+	// Random(oldSeed.longValue()).nextLong()));
+	// final World w2 = Bukkit.getWorld(region.getWorld());
+	// for (int x = minX; x < maxX; ++x) {
+	// for (int z = minZ; z < maxZ; ++z) {
+	// w2.unloadChunk(x, z);
+	// }
+	// }
+	// for (int x = minX; x < maxX; ++x) {
+	// for (int z = minZ; z < maxZ; ++z) {
+	// w2.regenerateChunk(x, z);
+	// }
+	// }
+	// }
+	// }
 }
