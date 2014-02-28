@@ -6,67 +6,67 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class SerializableLocation implements Serializable {
-    private static final long serialVersionUID = -4967255498948204773L;
+	private static final long serialVersionUID = -4967255498948204773L;
 
-    private String world;
-    private int x;
-    private int y;
-    private int z;
+	private String world;
+	private int x;
+	private int y;
+	private int z;
 
-    public SerializableLocation() {
-        // Default constructor
-    }
+	public SerializableLocation() {
+		// Default constructor
+	}
 
-    public SerializableLocation(final String world, final int x, final int y, final int z) {
-        this.world = world;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
+	public SerializableLocation(final String world, final int x, final int y, final int z) {
+		this.world = world;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
 
-    @Override
-    public int hashCode() {
-        return (x << 16) | z;
-    }
+	@Override
+	public int hashCode() {
+		return (x << 16) | z;
+	}
 
-    @Override
-    public boolean equals(final Object object) {
-        if (!(object instanceof SerializableLocation)) {
-            return false;
-        }
-        final SerializableLocation other = (SerializableLocation) object;
-        return other.x == x && other.y == y && other.z == z;
-    }
+	@Override
+	public boolean equals(final Object object) {
+		if (!(object instanceof SerializableLocation)) {
+			return false;
+		}
+		final SerializableLocation other = (SerializableLocation) object;
+		return other.x == x && other.y == y && other.z == z;
+	}
 
-    public String getWorld() {
-        return world;
-    }
+	public String getWorld() {
+		return world;
+	}
 
-    public int getX() {
-        return x;
-    }
+	public int getX() {
+		return x;
+	}
 
-    public int getY() {
-        return y;
-    }
+	public int getY() {
+		return y;
+	}
 
-    public int getZ() {
-        return z;
-    }
+	public int getZ() {
+		return z;
+	}
 
-    public void setWorld(final String world) {
-        this.world = world;
-    }
+	public void setWorld(final String world) {
+		this.world = world;
+	}
 
-    public void setX(final int x) {
-        this.x = x;
-    }
+	public void setX(final int x) {
+		this.x = x;
+	}
 
-    public void setY(final int y) {
-        this.y = y;
-    }
+	public void setY(final int y) {
+		this.y = y;
+	}
 
-    public void setZ(final int z) {
-        this.z = z;
-    }
+	public void setZ(final int z) {
+		this.z = z;
+	}
 }

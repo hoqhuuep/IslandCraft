@@ -10,36 +10,36 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerMoveListener implements Listener {
-    private final RealEstateManager realEstateManager;
+	private final RealEstateManager realEstateManager;
 
-    public PlayerMoveListener(final RealEstateManager realEstateManager) {
-        this.realEstateManager = realEstateManager;
-    }
+	public PlayerMoveListener(final RealEstateManager realEstateManager) {
+		this.realEstateManager = realEstateManager;
+	}
 
-    @EventHandler
-    public void onPlayerMove(final PlayerMoveEvent event) {
-        realEstateManager.onMove(event.getPlayer(), event.getTo());
-    }
+	@EventHandler
+	public void onPlayerMove(final PlayerMoveEvent event) {
+		realEstateManager.onMove(event.getPlayer(), event.getTo());
+	}
 
-    @EventHandler
-    public void onPlayerTeleport(final PlayerTeleportEvent event) {
-        realEstateManager.onMove(event.getPlayer(), event.getTo());
-    }
+	@EventHandler
+	public void onPlayerTeleport(final PlayerTeleportEvent event) {
+		realEstateManager.onMove(event.getPlayer(), event.getTo());
+	}
 
-    @EventHandler
-    public void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
-        final Player player = event.getPlayer();
-        realEstateManager.onMove(player, player.getLocation());
-    }
+	@EventHandler
+	public void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
+		final Player player = event.getPlayer();
+		realEstateManager.onMove(player, player.getLocation());
+	}
 
-    @EventHandler
-    public void onPlayerJoin(final PlayerJoinEvent event) {
-        final Player player = event.getPlayer();
-        realEstateManager.onMove(player, player.getLocation());
-    }
+	@EventHandler
+	public void onPlayerJoin(final PlayerJoinEvent event) {
+		final Player player = event.getPlayer();
+		realEstateManager.onMove(player, player.getLocation());
+	}
 
-    @EventHandler
-    public void onPlayerLogout(final PlayerQuitEvent event) {
-        realEstateManager.onMove(event.getPlayer(), null);
-    }
+	@EventHandler
+	public void onPlayerLogout(final PlayerQuitEvent event) {
+		realEstateManager.onMove(event.getPlayer(), null);
+	}
 }

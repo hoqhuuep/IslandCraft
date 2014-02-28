@@ -8,25 +8,25 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "compass")
 public class CompassBean {
-    @Id
-    private String player;
+	@Id
+	private String player;
 
-    @Column
-    private String waypoint;
+	@Column
+	private String waypoint;
 
-    public String getPlayer() {
-        return player;
-    }
+	public String getPlayer() {
+		return player;
+	}
 
-    public String getWaypoint() {
-        return waypoint;
-    }
+	public String getWaypoint() {
+		return waypoint;
+	}
 
-    public void setPlayer(final String player) {
-        this.player = player;
-    }
+	public void setPlayer(final String player) {
+		this.player = player;
+	}
 
-    public void setWaypoint(final String waypoint) {
-        this.waypoint = waypoint;
-    }
+	public void setWaypoint(final String waypoint) {
+		this.waypoint = waypoint;
+	}
 }

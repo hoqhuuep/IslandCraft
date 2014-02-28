@@ -12,32 +12,32 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.avaje.ebean.EbeanServer;
 
 public class PartyChatPlugin extends JavaPlugin {
-    @Override
-    public void onEnable() {
-        saveDefaultConfig();
-        // Hack to ensure database exists
-        try {
-            getDatabase().find(PartyBean.class).findRowCount();
-        } catch (PersistenceException e) {
-            installDDL();
-        }
-        final EbeanServer ebean = getDatabase();
-        final PartyDatabase database = new PartyDatabase(ebean);
-        final PartyChatConfig config = new PartyChatConfig(getConfig());
-        final PartyChatManager manager = new PartyChatManager(database, config);
+	@Override
+	public void onEnable() {
+		saveDefaultConfig();
+		// Hack to ensure database exists
+		try {
+			getDatabase().find(PartyBean.class).findRowCount();
+		} catch (PersistenceException e) {
+			installDDL();
+		}
+		final EbeanServer ebean = getDatabase();
+		final PartyDatabase database = new PartyDatabase(ebean);
+		final PartyChatConfig config = new PartyChatConfig(getConfig());
+		final PartyChatManager manager = new PartyChatManager(database, config);
 
-        final CommandExecutor pCommandExecutor = new PCommandExecutor(manager);
-        getCommand("p").setExecutor(pCommandExecutor);
+		final CommandExecutor pCommandExecutor = new PCommandExecutor(manager);
+		getCommand("p").setExecutor(pCommandExecutor);
 
-        final PartyCommandExecutor partyCommandExecutor = new PartyCommandExecutor(manager);
-        final PluginCommand partyCommand = getCommand("party");
-        partyCommand.setExecutor(partyCommandExecutor);
-        partyCommand.setTabCompleter(partyCommandExecutor);
-    }
+		final PartyCommandExecutor partyCommandExecutor = new PartyCommandExecutor(manager);
+		final PluginCommand partyCommand = getCommand("party");
+		partyCommand.setExecutor(partyCommandExecutor);
+		partyCommand.setTabCompleter(partyCommandExecutor);
+	}
 
-    @Override
-    public List<Class<?>> getDatabaseClasses() {
-        final Class<?>[] classes = {PartyBean.class};
-        return Arrays.asList(classes);
-    }
+	@Override
+	public List<Class<?>> getDatabaseClasses() {
+		final Class<?>[] classes = { PartyBean.class };
+		return Arrays.asList(classes);
+	}
 }
