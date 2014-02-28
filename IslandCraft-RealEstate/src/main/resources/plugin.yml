@@ -37,6 +37,31 @@ commands:
     description: Give a new name to the island you are standing on
     permission: islandcraft.command.island.rename
     usage: /<command> <name...>
+  icset:
+    description: Administration commands for overriding island states
+    permission: islandcraft.command.icset
+    usage: |
+      Use /help <command> [subcommand] for more information
+      /<command> owner - Override the owner of an island
+      /<command> title - Override the title of an island
+      /<command> status - Override the status of an island
+      /<command> tax - Override the tax of an island
+  icset owner:
+    description: Override the owner of an island
+    permission: islandcraft.command.icset.owner
+    usage: /<command> <player>
+  icset title:
+    description: Override the title of an island
+    permission: islandcraft.command.icset.title
+    usage: /<command> <title>
+  icset status:
+    description: Override the status of an island
+    permission: islandcraft.command.icset.status
+    usage: /<command> <status>
+  icset tax:
+    description: Override the tax of an island
+    permission: islandcraft.command.icset.tax
+    usage: /<command> <tax>
 permissions:
   islandcraft.command.island:
     default: true
@@ -46,3 +71,10 @@ permissions:
       islandcraft.command.island.tax: true
       islandcraft.command.island.examine: true
       islandcraft.command.island.rename: true
+  islandcraft.command.icset:
+    default: op
+    children:
+      islandcraft.command.icset.owner: true
+      islandcraft.command.icset.title: true
+      islandcraft.command.icset.status: true
+      islandcraft.command.icset.tax: true

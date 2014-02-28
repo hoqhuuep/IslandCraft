@@ -18,9 +18,9 @@ public class RealEstateConfig {
 	}
 
 	// TODO create these messages in config.yml
-	public final Message M_ISLAND_ADMIN_WORLD_ERROR = null;
-	public final Message M_ISLAND_ADMIN_OCEAN_ERROR = null;
-	public final Message M_ISLAND_ADMIN = null;
+	public final Message M_ICSET_WORLD_ERROR;
+	public final Message M_ICSET_OCEAN_ERROR;
+	public final Message M_ICSET;
 
 	public final Material PURCHASE_COST_ITEM;
 	public final int PURCHASE_COST_AMOUNT;
@@ -131,5 +131,8 @@ public class RealEstateConfig {
 		M_ISLAND_LEAVE_REPOSSESSED = new Message(message.getString("island-leave-repossessed"));
 		M_ISLAND_ENTER_PRIVATE = new Message(message.getString("island-enter-private"));
 		M_ISLAND_LEAVE_PRIVATE = new Message(message.getString("island-leave-private"));
+		M_ICSET_WORLD_ERROR = new Message(message.getString("icset-world-error"));
+		M_ICSET_OCEAN_ERROR = new Message(message.getString("icset-ocean-error"));
+		M_ICSET = new Message(message.getString("icset"));
 	}
 }

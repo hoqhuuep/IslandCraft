@@ -11,10 +11,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class IslandAdminCommandExecutor implements CommandExecutor, TabCompleter {
+public class ICSetCommandExecutor implements CommandExecutor, TabCompleter {
 	private final RealEstateManager realEstateManager;
 
-	public IslandAdminCommandExecutor(final RealEstateManager realEstateManager) {
+	public ICSetCommandExecutor(final RealEstateManager realEstateManager) {
 		this.realEstateManager = realEstateManager;
 	}
 
@@ -74,9 +74,9 @@ public class IslandAdminCommandExecutor implements CommandExecutor, TabCompleter
 	public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
 		final String partialArg;
 		final List<String> completions = new ArrayList<String>();
-		if (0 == args.length) {
+		if (args.length == 0) {
 			partialArg = "";
-		} else if (1 == args.length) {
+		} else if (args.length == 1) {
 			partialArg = args[0].toLowerCase();
 		} else {
 			return null;

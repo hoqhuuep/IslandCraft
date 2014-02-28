@@ -33,6 +33,11 @@ public class RealEstatePlugin extends JavaPlugin {
 		islandCommand.setExecutor(islandCommandExecutor);
 		islandCommand.setTabCompleter(islandCommandExecutor);
 
+		final ICSetCommandExecutor icSetCommandExecutor = new ICSetCommandExecutor(realEstateManager);
+		final PluginCommand icSetCommand = getCommand("icset");
+		icSetCommand.setExecutor(icSetCommandExecutor);
+		icSetCommand.setTabCompleter(icSetCommandExecutor);
+
 		// Events
 		final PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new WorldLoadListener(realEstateManager), this);

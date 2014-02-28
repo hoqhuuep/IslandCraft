@@ -86,3 +86,6 @@ message:
   island-leave-repossessed: "§7[INFO] Now leaving §a%s§7, repossessed from §a%s"
   island-enter-private: "§7[INFO] Welcome to §a%s§7 by §a%s"
   island-leave-private: "§7[INFO] Now leaving §a%s§7 by §a%s"
+  icset-world-error: §7[INFO] You cannot update an island in this world
+  icset-ocean-error: §7[INFO] You cannot update the ocean
+  icset: §7[INFO] Island successfully updated
