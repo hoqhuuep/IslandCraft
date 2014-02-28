@@ -60,7 +60,7 @@ public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
 		return false;
 	}
 
-	private static final String[] OPTIONS = { "purchase", "abandon", "examine", "rename" };
+	private static final String[] OPTIONS = { "purchase", "abandon", "tax", "examine", "rename" };
 
 	@Override
 	public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
