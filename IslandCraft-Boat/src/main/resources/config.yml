@@ -1,0 +1,6 @@
+boat-cost-item: WOOD
+boat-cost-amount: 5
+message:
+  boat: §7[INFO] Boat successfully summoned
+  boat-funds-error: §7[INFO] You need %s wood planks in you inventory to summon a boat
+  boat-riding-error: §7[INFO] You cannot summon a boat while riding

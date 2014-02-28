@@ -371,7 +371,7 @@ public class RealEstateManager {
 
 	private static final Integer FIRST = new Integer(0);
 
-	public boolean takeItems(final Player player, final Material item, final int amount) {
+	private boolean takeItems(final Player player, final Material item, final int amount) {
 		final PlayerInventory inventory = player.getInventory();
 		if (!inventory.containsAtLeast(new ItemStack(item), amount)) {
 			// Not enough

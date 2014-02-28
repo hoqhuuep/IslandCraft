@@ -17,7 +17,6 @@ public class RealEstateConfig {
 		}
 	}
 
-	// TODO create these messages in config.yml
 	public final Message M_ICSET_WORLD_ERROR;
 	public final Message M_ICSET_OCEAN_ERROR;
 	public final Message M_ICSET;
