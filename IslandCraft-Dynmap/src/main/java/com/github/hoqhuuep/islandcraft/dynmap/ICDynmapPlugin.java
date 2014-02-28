@@ -9,6 +9,7 @@ import org.dynmap.markers.MarkerSet;
 public class ICDynmapPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
+		saveDefaultConfig();
 		final DynmapCommonAPI dynmapCommonApi = getPlugin(DynmapPlugin.class);
 		final MarkerAPI markerApi = dynmapCommonApi.getMarkerAPI();
 		MarkerSet markerSet = markerApi.getMarkerSet("islandcraft.markerset");
