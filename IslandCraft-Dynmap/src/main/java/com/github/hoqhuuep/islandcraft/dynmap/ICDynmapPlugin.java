@@ -7,21 +7,18 @@ import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
 public class ICDynmapPlugin extends JavaPlugin {
-    @Override
-    public void onEnable() {
-        final DynmapCommonAPI dynmapCommonApi = getPlugin(DynmapPlugin.class);
-        final MarkerAPI markerApi = dynmapCommonApi.getMarkerAPI();
-        MarkerSet markerSet = markerApi.getMarkerSet("islandcraft.markerset");
-        if (markerSet == null) {
-            markerSet = markerApi.createMarkerSet("islandcraft.markerset", "IslandCraft", null, true);
-        } else {
-            markerSet.setMarkerSetLabel("IslandCraft");
-        }
-        if (markerSet == null) {
-            // TODO handle this
-            return;
-        }
+	@Override
+	public void onEnable() {
+		final DynmapCommonAPI dynmapCommonApi = getPlugin(DynmapPlugin.class);
+		final MarkerAPI markerApi = dynmapCommonApi.getMarkerAPI();
+		MarkerSet markerSet = markerApi.getMarkerSet("islandcraft.markerset");
+		if (markerSet == null) {
+			markerSet = markerApi.createMarkerSet("islandcraft.markerset", "IslandCraft", null, true);
+		} else {
+			markerSet.setMarkerSetLabel("IslandCraft");
+		}
 
-        getServer().getPluginManager().registerEvents(new IslandListener(markerSet), this);
-    }
+		final DynmapConfig config = new DynmapConfig(getConfig());
+		getServer().getPluginManager().registerEvents(new IslandListener(markerSet, config), this);
+	}
 }

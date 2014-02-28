@@ -1,0 +1,58 @@
+reserved:
+  fill-opacity: 0.25
+  fill-color: 0xFF0000
+  line-width: 2
+  line-opacity: 0.5
+  line-color: 0xFF0000
+  description: |
+    <strong>%s</strong><br />
+    Status: Reserved
+resource:
+  fill-opacity: 0.25
+  fill-color: 0xFF0000
+  line-width: 2
+  line-opacity: 0.5
+  line-color: 0xFF0000
+  description: |
+    <strong>%s</strong><br />
+    Status: Resource
+new:
+  fill-opacity: 0.25
+  fill-color: 0xFF0000
+  line-width: 2
+  line-opacity: 0.5
+  line-color: 0xFF0000
+  description: |
+    <strong>%s</strong><br />
+    Status: New
+abandoned:
+  fill-opacity: 0.25
+  fill-color: 0xFF0000
+  line-width: 2
+  line-opacity: 0.5
+  line-color: 0xFF0000
+  description: |
+    <strong>%s</strong><br />
+    Status: Abandoned<br />
+    Previous Owner: %s
+repossessed:
+  fill-opacity: 0.25
+  fill-color: 0xFF0000
+  line-width: 2
+  line-opacity: 0.5
+  line-color: 0xFF0000
+  description: |
+    <strong>%s</strong><br />
+    Status: Repossessed<br />
+    Previous Owner: %s
+private:
+  fill-opacity: 0.25
+  fill-color: 0xFF0000
+  line-width: 2
+  line-opacity: 0.5
+  line-color: 0xFF0000
+  description: |
+    <strong>%s</strong><br />
+    Status: Private<br />
+    Owner: %s<br />
+    Tax Paid: %s
