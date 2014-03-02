@@ -63,7 +63,7 @@
 									<type>${project.packaging}</type>
 								</artifactItem>
 							</artifactItems>
-							<outputDirectory>C:/Users/Daniel/workspace/IslandCraft/target/server/plugins</outputDirectory>
+							<outputDirectory>C:/Users/Daniel/Dropbox/Projects/IslandCraft/workspace/IslandCraft/target/server/plugins</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>

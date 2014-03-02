@@ -42,6 +42,7 @@ public class RealEstateDatabase {
 	}
 
 	public final void saveIsland(final IslandDeed deed) {
+		// TODO sometimes duplicates?
 		ebean.save(deed);
 		cache.put(deed.getId(), deed);
 	}

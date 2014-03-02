@@ -270,7 +270,7 @@ public class RealEstateManager {
 			return;
 		}
 		final List<IslandDeed> deeds = database.loadIslandsByWorld(world);
-		for (IslandDeed deed : deeds) {
+		for (final IslandDeed deed : deeds) {
 			final int tax = deed.getTax();
 			if (tax > 0) {
 				// Decrement tax

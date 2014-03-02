@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
+import org.apache.commons.lang.StringUtils;
+
 @Embeddable
 public class SerializableLocation implements Serializable {
 	private static final long serialVersionUID = -4967255498948204773L;
@@ -35,7 +37,7 @@ public class SerializableLocation implements Serializable {
 			return false;
 		}
 		final SerializableLocation other = (SerializableLocation) object;
-		return other.x == x && other.y == y && other.z == z;
+		return other.x == x && other.y == y && other.z == z && StringUtils.equals(other.world, world);
 	}
 
 	public String getWorld() {
