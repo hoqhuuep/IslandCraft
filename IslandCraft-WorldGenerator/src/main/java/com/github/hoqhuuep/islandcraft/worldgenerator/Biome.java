@@ -10,7 +10,7 @@ public enum Biome {
 	MESA_PLATEAU(39, "Mesa Plateau", new Color(202, 140, 101)),
 	BIRCH_FOREST_HILLS_M(156, "Birch Forest Hills M", new Color(71, 135, 90)),
 	ICE_MOUNTAINS(13, "Ice Mountains", new Color(160, 160, 160)),
-	SWAMPLAND_M(6, "Swampland M", new Color(47, 255, 218)),
+	SWAMPLAND_M(134, "Swampland M", new Color(47, 255, 218)),
 	BIRCH_FOREST_HILLS(28, "Birch Forest Hills", new Color(31, 95, 50)),
 	EXTREME_HILLS_PLUS_M(162, "Extreme Hills+ M", new Color(120, 152, 120)),
 	TAIGA_M(133, "Taiga M", new Color(51, 142, 129)),

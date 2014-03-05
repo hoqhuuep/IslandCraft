@@ -14,11 +14,11 @@ import net.minecraft.server.v1_7_R1.WorldChunkManager;
 import net.minecraft.server.v1_7_R1.WorldType;
 
 public class TestWorldGenerator {
-	private static final int WIDTH = 1920 * 4;
-	private static final int HEIGHT = 1080 * 4;
+	private static final int WIDTH = 1920 * 8;
+	private static final int HEIGHT = 1080 * 8;
 
 	public static void main(final String[] args) throws IOException {
-		testCustom();
+		// testCustom();
 		testDefault();
 	}
 
