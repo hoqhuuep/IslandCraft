@@ -1,6 +1,7 @@
 package com.github.hoqhuuep.islandcraft.worldgenerator;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import com.github.hoqhuuep.islandcraft.worldgenerator.hack.BiomeGenerator;
 
@@ -96,7 +97,8 @@ public class WorldGenerator implements BiomeGenerator {
 	}
 
 	private Long getIslandSeed(final int row, final int column) {
-		return new Long(worldSeed ^ ((long) row << 32 | column & 0xFFFFFFFFL));
+		// return new Long(worldSeed ^ ((long) row << 32 | column & 0xFFFFFFFFL));
+		return new Random(worldSeed ^ ((long) row << 24 | column & 0x00FFFFFFL)).nextLong();
 	}
 
 	@Override

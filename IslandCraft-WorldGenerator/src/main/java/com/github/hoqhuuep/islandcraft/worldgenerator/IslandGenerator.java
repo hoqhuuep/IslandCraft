@@ -32,8 +32,7 @@ public class IslandGenerator {
 		// Find borders
 		final Queue<Site> floodFillOcean = new LinkedList<Site>();
 		for (final Site p : sites) {
-			if (p.x < minDistance || p.x >= xSize - minDistance || p.z < minDistance || p.z >= zSize - minDistance) {
-				p.border = true;
+			if (p.polygon == null) {
 				p.ocean = true;
 				floodFillOcean.add(p);
 			} else {
@@ -48,11 +47,13 @@ public class IslandGenerator {
 
 		// Find oceans and coasts
 		while (!floodFillOcean.isEmpty()) {
-			final Site polygon = floodFillOcean.remove();
-			for (final Site q : polygon.neighbors) {
-				if (polygon.border && !q.ocean) {
-					q.ocean = true;
-					floodFillOcean.add(q);
+			final Site site = floodFillOcean.remove();
+			for (final Site q : site.neighbors) {
+				if (site.polygon == null) {
+					if (!q.ocean) {
+						q.ocean = true;
+						floodFillOcean.add(q);
+					}
 				} else {
 					final double dx = (double) (q.x - (xSize / 2)) / (double) (xSize / 2);
 					final double dz = (double) (q.z - (zSize / 2)) / (double) (zSize / 2);
@@ -83,7 +84,7 @@ public class IslandGenerator {
 		// Create shallow ocean
 		for (final Site p : coastQueue2) {
 			for (final Site q : p.neighbors) {
-				if (q.ocean && !q.border) {
+				if (q.ocean && q.polygon != null) {
 					q.shallow = true;
 				}
 			}

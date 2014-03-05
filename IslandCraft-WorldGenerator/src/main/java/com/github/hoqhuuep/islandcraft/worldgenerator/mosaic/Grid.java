@@ -3,16 +3,10 @@ package com.github.hoqhuuep.islandcraft.worldgenerator.mosaic;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.hoqhuuep.islandcraft.worldgenerator.Geometry;
-
 public final class Grid<T> {
-	private final int xRows;
-	private final int zRows;
 	private final List<List<List<T>>> grid;
 
 	public Grid(final int xRows, final int zRows) {
-		this.xRows = xRows;
-		this.zRows = zRows;
 		grid = new ArrayList<List<List<T>>>(xRows);
 		for (int x = 0; x < xRows; ++x) {
 			final List<List<T>> row = new ArrayList<List<T>>(zRows);
@@ -23,20 +17,14 @@ public final class Grid<T> {
 		}
 	}
 
-	public void add(int xRow, int zRow, final T item) {
-		xRow = Geometry.ifloormod(xRow, xRows);
-		zRow = Geometry.ifloormod(zRow, zRows);
+	public void add(final int xRow, final int zRow, final T item) {
 		grid.get(xRow).get(zRow).add(item);
 	}
 
-	public List<T> getRegion(int xMin, int zMin, int xMax, int zMax) {
-		xMin = Geometry.ifloormod(xMin, xRows);
-		zMin = Geometry.ifloormod(zMin, zRows);
-		xMax = Geometry.ifloormod(xMax + 1, xRows);
-		zMax = Geometry.ifloormod(zMax + 1, zRows);
+	public List<T> getRegion(final int xMin, final int zMin, final int xMax, final int zMax) {
 		final List<T> result = new ArrayList<T>();
-		for (int x = xMin; x != xMax; x = (x + 1) % xRows) {
-			for (int z = zMin; z != zMax; z = (z + 1) % zRows) {
+		for (int x = xMin; x < xMax; ++x) {
+			for (int z = zMin; z < zMax; ++z) {
 				result.addAll(grid.get(x).get(z));
 			}
 		}

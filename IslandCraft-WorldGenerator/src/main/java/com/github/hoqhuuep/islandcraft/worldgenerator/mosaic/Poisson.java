@@ -38,6 +38,7 @@ public final class Poisson {
 					subtractPoint(rangeList, candidate, neighbor);
 				}
 			}
+			subtractEdges(rangeList, candidate);
 			while (!rangeList.isEmpty()) {
 				final double angle = rangeList.random(random);
 				final Site newSite = makePoint(candidate, angle);
@@ -51,6 +52,9 @@ public final class Poisson {
 		firstSite.parent = sites.get(1);
 		// Find Voronoi neighbors
 		for (final Site s : sites) {
+			if (s.polygon == null) {
+				continue;
+			}
 			Collections.sort(s.suspectNeighbors, new AngleComparator(s.parent, s));
 			final Iterator<Site> iterator = s.suspectNeighbors.iterator();
 			Site pa = iterator.next();
@@ -64,10 +68,16 @@ public final class Poisson {
 					}
 				}
 				s.neighbors.add(pb);
+				if (pb.polygon == null) {
+					pb.neighbors.add(s);
+				}
 				s.polygon.addPoint((int) cc.x, (int) cc.z);
 				pa = pb;
 			}
 			s.neighbors.add(s.parent);
+			if (s.parent.polygon == null) {
+				s.parent.neighbors.add(s);
+			}
 			final Site cc = circumcenter(s, pa, s.parent);
 			s.polygon.addPoint((int) cc.x, (int) cc.z);
 		}
@@ -125,26 +135,38 @@ public final class Poisson {
 	private List<Site> gridNeighbors(final Grid<Site> grid, final Site candidate) {
 		int xMin = (int) Math.floor(candidate.x / diameter) - 1;
 		int zMin = (int) Math.floor(candidate.z / diameter) - 1;
-		int xMax = (int) Math.ceil(candidate.x / diameter);
-		int zMax = (int) Math.ceil(candidate.z / diameter);
+		int xMax = (int) Math.ceil(candidate.x / diameter) + 1;
+		int zMax = (int) Math.ceil(candidate.z / diameter) + 1;
+		if (xMin < 0) {
+			xMin = 0;
+		}
+		if (zMin < 0) {
+			zMin = 0;
+		}
+		if (xMax > xSize / diameter) {
+			xMax = (int) Math.floor(xSize / diameter);
+		}
+		if (zMax > zSize / diameter) {
+			zMax = (int) Math.floor(zSize / diameter);
+		}
 		return grid.getRegion(xMin, zMin, xMax, zMax);
 	}
 
-	private void gridAdd(final Grid<Site> grid, final Site point) {
-		int xRow = (int) Math.floor(point.x / diameter);
-		int zRow = (int) Math.floor(point.z / diameter);
-		grid.add(xRow, zRow, point);
+	private void gridAdd(final Grid<Site> grid, final Site site) {
+		int xRow = (int) Math.floor(site.x / diameter);
+		int zRow = (int) Math.floor(site.z / diameter);
+		grid.add(xRow, zRow, site);
 	}
 
-	private Site makePoint(final Site candidate, final double angle) {
-		final double x = candidate.x + Math.cos(angle) * radius;
-		final double z = candidate.z + Math.sin(angle) * radius;
-		return new Site((x + xSize) % xSize, (z + zSize) % zSize);
+	private Site makePoint(final Site site, final double angle) {
+		final double x = site.x + Math.cos(angle) * radius;
+		final double z = site.z + Math.sin(angle) * radius;
+		return new Site(x, z);
 	}
 
 	private void subtractPoint(final RangeList rangeList, final Site candidate, final Site point) {
-		final double dx = ((point.x - candidate.x + 3.0 * xSize / 2.0) % xSize) - xSize / 2.0;
-		final double dz = ((point.z - candidate.z + 3.0 * zSize / 2.0) % zSize) - zSize / 2.0;
+		final double dx = point.x - candidate.x;
+		final double dz = point.z - candidate.z;
 		final double quadrance = dx * dx + dz * dz;
 		if (quadrance < maxQuadrance) {
 			final double distance = Math.sqrt(quadrance);
@@ -158,6 +180,31 @@ public final class Poisson {
 				point.suspectNeighbors.add(candidate);
 			}
 		}
+	}
+
+	private void subtractEdges(final RangeList rangeList, final Site site) {
+		final double x = site.x;
+		final double z = site.z;
+		if (x < radius) {
+			final double theta = Math.acos(x / radius);
+			rangeList.subtract(Math.PI - theta, Math.PI + theta);
+			site.polygon = null;
+		}
+		if (z < radius) {
+			final double theta = Math.acos(z / radius);
+			rangeList.subtract((Math.PI * 3) / 2 - theta, (Math.PI * 3) / 2 + theta);
+			site.polygon = null;
+		}
+		if (x > xSize - radius) {
+			final double theta = Math.acos((xSize - x) / radius);
+			rangeList.subtract(0 - theta, 0 + theta);
+			site.polygon = null;
+		}
+		if (z > zSize - radius) {
+			final double theta = Math.acos((zSize - z) / radius);
+			rangeList.subtract(Math.PI / 2 - theta, Math.PI / 2 + theta);
+			site.polygon = null;
+			}
 	}
 
 	private Site randomPoint(final double xSize, final double zSize, final Random random) {

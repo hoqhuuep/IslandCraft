@@ -12,7 +12,6 @@ public final class Site {
 	public Site parent;
 	public Polygon polygon;
 	public boolean ocean;
-	public boolean border;
 	public boolean mountain;
 	public boolean coast;
 	public boolean shallow;
