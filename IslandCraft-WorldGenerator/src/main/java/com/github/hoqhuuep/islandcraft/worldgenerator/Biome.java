@@ -19,7 +19,7 @@ public enum Biome {
 	SAVANNA(35, "Savanna", new Color(189, 178, 95)),
 	ROOFED_FOREST_M(157, "Roofed Forest M", new Color(104, 121, 66)),
 	MESA_PLATEAU_F(38, "Mesa Plateau F", new Color(176, 151, 101)),
-	MESA_PLATEAU_F_M(167, "Mesa Plateau F M", new Color(216, 191, 141)),
+	MESA_PLATEAU_F_M(166, "Mesa Plateau F M", new Color(216, 191, 141)),
 	MEGA_TAIGA_HILLS(33, "Mega Taiga Hills", new Color(69, 79, 62)),
 	ICE_PLAINS_SPIKES(140, "Ice Plains Spikes", new Color(180, 220, 220)),
 	ICE_PLAINS(12, "Ice Plains", new Color(255, 255, 255)),
