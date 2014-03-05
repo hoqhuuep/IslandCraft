@@ -42,8 +42,21 @@ public class RealEstateDatabase {
 	}
 
 	public final void saveIsland(final IslandDeed deed) {
-		// TODO sometimes duplicates?
-		ebean.save(deed);
-		cache.put(deed.getId(), deed);
+		// Reload bean from database as it might only be a cached one
+		final SerializableLocation id = deed.getId();
+		final IslandDeed fresh = ebean.find(IslandDeed.class, id);
+		if (fresh == null) {
+			ebean.save(deed);
+			cache.put(id, deed);
+			return;
+		}
+		fresh.setInnerRegion(deed.getInnerRegion());
+		fresh.setOuterRegion(deed.getOuterRegion());
+		fresh.setStatus(deed.getStatus());
+		fresh.setOwner(deed.getOwner());
+		fresh.setTitle(deed.getTitle());
+		fresh.setTax(deed.getTax());
+		ebean.update(fresh);
+		cache.put(id, deed);
 	}
 }
