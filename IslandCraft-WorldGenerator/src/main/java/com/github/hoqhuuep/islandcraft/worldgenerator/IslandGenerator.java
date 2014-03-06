@@ -107,18 +107,18 @@ public class IslandGenerator {
 				graphics.setColor(new Color(biomeSelection.outerCoast, true));
 			} else if (site.isInnerCoast) {
 				graphics.setColor(new Color(biomeSelection.innerCoast, true));
-			} else if (noise2(site, 0.25, 320.0, mNoise)) {
-				if (noise2(site, 0.4, 80.0, hillsNoise)) {
+			} else if (noise2(site, 0.375, 160.0, mNoise)) {
+				if (noise2(site, 0.375, 80.0, hillsNoise)) {
 					graphics.setColor(new Color(biomeSelection.hillsM, true));
-				} else if (noise2(site, 0.2, 640.0, specialNoise)) {
+				} else if (noise2(site, 0.375, 160.0, specialNoise)) {
 					graphics.setColor(new Color(biomeSelection.specialM, true));
 				} else {
 					graphics.setColor(new Color(biomeSelection.normalM, true));
 				}
 			} else {
-				if (noise2(site, 0.4, 80.0, hillsNoise)) {
+				if (noise2(site, 0.375, 80.0, hillsNoise)) {
 					graphics.setColor(new Color(biomeSelection.hills, true));
-				} else if (noise2(site, 0.2, 640.0, specialNoise)) {
+				} else if (noise2(site, 0.375, 160.0, specialNoise)) {
 					graphics.setColor(new Color(biomeSelection.special, true));
 				} else {
 					graphics.setColor(new Color(biomeSelection.normal, true));
