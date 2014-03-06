@@ -11,10 +11,9 @@ public final class Site {
 	public final List<Site> neighbors;
 	public Site parent;
 	public Polygon polygon;
-	public boolean ocean;
-	public boolean mountain;
-	public boolean coast;
-	public boolean shallow;
+	public boolean isOcean;
+	public boolean isOuterCoast;
+	public boolean isInnerCoast;
 
 	public Site(final double x, final double z) {
 		this.x = x;

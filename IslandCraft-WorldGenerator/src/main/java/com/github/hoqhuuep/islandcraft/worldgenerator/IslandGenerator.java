@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
+import org.bukkit.util.noise.OctaveGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 import com.github.hoqhuuep.islandcraft.worldgenerator.mosaic.Poisson;
@@ -27,65 +28,63 @@ public class IslandGenerator {
 		final List<Site> sites = poisson.generate(new Random(islandSeed));
 
 		final SimplexOctaveGenerator simplexOctaveGenerator = new SimplexOctaveGenerator(islandSeed, 2);
-		final BiomeSelection biomeSelection = BiomeSelection.select(islandSeed);
+		final IslandBiomeSelection biomeSelection = randomBiome(islandSeed);
 
 		// Find borders
-		final Queue<Site> floodFillOcean = new LinkedList<Site>();
+		final Queue<Site> ocean = new LinkedList<Site>();
 		for (final Site p : sites) {
 			if (p.polygon == null) {
-				p.ocean = true;
-				floodFillOcean.add(p);
-			} else {
-				final double dx = (double) (p.x - (xSize / 2)) / (double) (xSize / 2);
-				final double dz = (double) (p.z - (zSize / 2)) / (double) (zSize / 2);
-				p.mountain = (simplexOctaveGenerator.noise(dx, dz, 2, 0.5, true) / 2 + 0.5) * 3 - CIRCLE * circle(dx, dz) > 1;
+				p.isOcean = true;
+				ocean.add(p);
 			}
 		}
 
-		final List<Site> coastQueue1 = new ArrayList<Site>();
-		final List<Site> coastQueue2 = new ArrayList<Site>();
+		final List<Site> suspectCoast = new ArrayList<Site>();
+		final List<Site> coast = new ArrayList<Site>();
 
 		// Find oceans and coasts
-		while (!floodFillOcean.isEmpty()) {
-			final Site site = floodFillOcean.remove();
-			for (final Site q : site.neighbors) {
+		while (!ocean.isEmpty()) {
+			final Site site = ocean.remove();
+			for (final Site n : site.neighbors) {
 				if (site.polygon == null) {
-					if (!q.ocean) {
-						q.ocean = true;
-						floodFillOcean.add(q);
+					if (!n.isOcean) {
+						n.isOcean = true;
+						ocean.add(n);
 					}
 				} else {
-					final double dx = (double) (q.x - (xSize / 2)) / (double) (xSize / 2);
-					final double dz = (double) (q.z - (zSize / 2)) / (double) (zSize / 2);
-					if (NOISE * (simplexOctaveGenerator.noise(dx, dz, 2, 0.5, true) / 2 + 0.5) + CIRCLE * circle(dx, dz) + SQUARE * square(dx, dz) > THRESHOLD) {
-						if (!q.ocean) {
-							q.ocean = true;
-							floodFillOcean.add(q);
+					final double dx = (double) (n.x - (xSize / 2)) / (double) (xSize / 2);
+					final double dz = (double) (n.z - (zSize / 2)) / (double) (zSize / 2);
+					if (NOISE * noise(dx, dz, simplexOctaveGenerator) + CIRCLE * circle(dx, dz) + SQUARE * square(dx, dz) > THRESHOLD) {
+						if (!n.isOcean) {
+							n.isOcean = true;
+							ocean.add(n);
 						}
 					} else {
-						q.coast = true;
-						coastQueue1.add(q);
+						n.isInnerCoast = true;
+						suspectCoast.add(n);
 					}
 				}
 			}
 		}
 
-		// Remove derpy coasts
-		A: for (final Site p : coastQueue1) {
-			for (final Site q : p.neighbors) {
-				if (!q.ocean && !q.coast) {
-					coastQueue2.add(p);
-					continue A;
+		// Create coast
+		SITE: for (final Site site : suspectCoast) {
+			for (final Site n : site.neighbors) {
+				if (!n.isOcean && !n.isInnerCoast) {
+					coast.add(site);
+					continue SITE;
 				}
 			}
-			p.ocean = true;
+			site.isInnerCoast = false;
+			site.isOcean = true;
 		}
 
 		// Create shallow ocean
-		for (final Site p : coastQueue2) {
-			for (final Site q : p.neighbors) {
-				if (q.ocean && q.polygon != null) {
-					q.shallow = true;
+		for (final Site site : coast) {
+			for (final Site n : site.neighbors) {
+				if (n.isOcean) {
+					n.isOcean = false;
+					n.isOuterCoast = true;
 				}
 			}
 		}
@@ -94,26 +93,22 @@ public class IslandGenerator {
 		final BufferedImage image = new BufferedImage(xSize, zSize, BufferedImage.TYPE_INT_ARGB);
 		final Graphics2D graphics = image.createGraphics();
 		graphics.setComposite(AlphaComposite.Src);
-		graphics.setBackground(new Color(Biome.DEEP_OCEAN.getId(), true));
+		graphics.setBackground(new Color(biomeSelection.ocean, true));
 		graphics.clearRect(0, 0, xSize, zSize);
 
 		// Render island
-		for (Site p : sites) {
-			if (p.ocean) {
-				if (p.shallow) {
-					graphics.setColor(new Color(biomeSelection.ocean, true));
-				} else {
-					continue;
-				}
-			} else if (p.coast) {
-				graphics.setColor(new Color(biomeSelection.beach, true));
-			} else if (p.mountain) {
-				graphics.setColor(new Color(biomeSelection.hills, true));
+		for (final Site site : sites) {
+			if (site.isOcean) {
+				continue;
+			} else if (site.isOuterCoast) {
+				graphics.setColor(new Color(biomeSelection.outerCoast, true));
+			} else if (site.isInnerCoast) {
+				graphics.setColor(new Color(biomeSelection.innerCoast, true));
 			} else {
-				graphics.setColor(new Color(biomeSelection.normal, true));
+				graphics.setColor(new Color(biomeSelection.other.getBiome(site), true));
 			}
-			graphics.fillPolygon(p.polygon);
-			graphics.drawPolygon(p.polygon);
+			graphics.fillPolygon(site.polygon);
+			graphics.drawPolygon(site.polygon);
 		}
 
 		// Save result
@@ -125,6 +120,20 @@ public class IslandGenerator {
 			result[i] = image.getRGB(x, z);
 		}
 		return result;
+	}
+
+	private IslandBiomeSelection randomBiome(long islandSeed) {
+		final Random random = new Random(islandSeed);
+		final List<IslandBiomeSelection> biomeSelections = new ArrayList<IslandBiomeSelection>();
+		biomeSelections.add(new IslandBiomeSelection(Biome.DEEP_OCEAN, Biome.OCEAN, Biome.BEACH, new BiomeNoise(80.0, 0.4, new BiomeNoise(320.0, 0.3,
+				new BiomeConstant(Biome.JUNGLE), new BiomeConstant(Biome.JUNGLE_M), islandSeed + 1), new BiomeConstant(Biome.JUNGLE_HILLS), islandSeed)));
+		biomeSelections.add(new IslandBiomeSelection(Biome.DEEP_OCEAN, Biome.OCEAN, Biome.BEACH, new BiomeNoise(160.0, 0.25, new BiomeNoise(80.0, 0.4,
+				new BiomeConstant(Biome.ROOFED_FOREST), new BiomeConstant(Biome.ROOFED_FOREST_M), islandSeed), new BiomeConstant(Biome.PLAINS), islandSeed)));
+		return biomeSelections.get(random.nextInt(biomeSelections.size()));
+	}
+
+	public static double noise(final double dx, final double dz, final OctaveGenerator octaveGenerator) {
+		return octaveGenerator.noise(dx, dz, 2.0, 0.5, true) / 2.0 + 0.5;
 	}
 
 	public static double circle(final double dx, final double dz) {
