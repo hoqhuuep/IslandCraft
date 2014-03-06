@@ -1,8 +1,9 @@
 package com.github.hoqhuuep.islandcraft.dynmap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class DynmapConfig {
+public class ICDynmapConfig {
 	public static class AreaConfig {
 		public final String DESCRIPTION;
 		public final double FILL_OPACITY;
@@ -18,6 +19,23 @@ public class DynmapConfig {
 			LINE_WIDTH = config.getInt("line-width");
 			LINE_OPACITY = config.getDouble("line-opacity");
 			LINE_COLOR = config.getInt("line-color");
+
+			// Validate configuration values
+			if (FILL_OPACITY < 0 || FILL_OPACITY > 1) {
+				Bukkit.getLogger().severe("IslandCraft-Dynmap config.yml issue. " + config.getCurrentPath() + ".fill-opacity must be between 0.0 and 1.0");
+			}
+			if (FILL_COLOR < 0x000000 || FILL_COLOR > 0xFFFFFF) {
+				Bukkit.getLogger().severe("IslandCraft-Dynmap config.yml issue. " + config.getCurrentPath() + ".fill-color must be between 0x000000 and 0xFFFFFF");
+			}
+			if (LINE_WIDTH < 0) {
+				Bukkit.getLogger().severe("IslandCraft-Dynmap config.yml issue. " + config.getCurrentPath() + ".line-width must not be negative");
+			}
+			if (LINE_OPACITY < 0 || LINE_OPACITY > 1) {
+				Bukkit.getLogger().severe("IslandCraft-Dynmap config.yml issue. " + config.getCurrentPath() + ".line-opacity must be between 0.0 and 1.0");
+			}
+			if (LINE_COLOR < 0x000000 || LINE_COLOR > 0xFFFFFF) {
+				Bukkit.getLogger().severe("IslandCraft-Dynmap config.yml issue. " + config.getCurrentPath() + ".line-color must be between 0x000000 and 0xFFFFFF");
+			}
 		}
 	}
 
@@ -28,7 +46,7 @@ public class DynmapConfig {
 	public final AreaConfig REPOSSESSED;
 	public final AreaConfig PRIVATE;
 
-	public DynmapConfig(final ConfigurationSection config) {
+	public ICDynmapConfig(final ConfigurationSection config) {
 		RESERVED = new AreaConfig(config.getConfigurationSection("reserved"));
 		RESOURCE = new AreaConfig(config.getConfigurationSection("resource"));
 		NEW = new AreaConfig(config.getConfigurationSection("new"));

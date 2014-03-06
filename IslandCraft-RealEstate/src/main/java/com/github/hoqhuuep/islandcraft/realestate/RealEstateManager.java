@@ -199,7 +199,8 @@ public class RealEstateManager {
 			}
 			return;
 		}
-		if (islandCount(name) >= config.MAX_ISLANDS_PER_PLAYER) {
+		// if config.MAX_ISLANDS_PER_PLAYER is -1 then infinite
+		if (config.MAX_ISLANDS_PER_PLAYER > 0 && islandCount(name) >= config.MAX_ISLANDS_PER_PLAYER) {
 			config.M_ISLAND_PURCHASE_MAX_ERROR.send(player);
 			return;
 		}

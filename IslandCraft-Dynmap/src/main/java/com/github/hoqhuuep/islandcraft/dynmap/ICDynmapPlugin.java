@@ -19,7 +19,7 @@ public class ICDynmapPlugin extends JavaPlugin {
 			markerSet.setMarkerSetLabel("IslandCraft");
 		}
 
-		final DynmapConfig config = new DynmapConfig(getConfig());
+		final ICDynmapConfig config = new ICDynmapConfig(getConfig());
 		getServer().getPluginManager().registerEvents(new IslandListener(markerSet, config), this);
 	}
 }

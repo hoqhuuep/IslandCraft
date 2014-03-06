@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerSet;
 
-import com.github.hoqhuuep.islandcraft.dynmap.DynmapConfig.AreaConfig;
+import com.github.hoqhuuep.islandcraft.dynmap.ICDynmapConfig.AreaConfig;
 import com.github.hoqhuuep.islandcraft.realestate.IslandDeed;
 import com.github.hoqhuuep.islandcraft.realestate.IslandEvent;
 import com.github.hoqhuuep.islandcraft.realestate.IslandStatus;
@@ -14,9 +14,9 @@ import com.github.hoqhuuep.islandcraft.realestate.SerializableRegion;
 
 public class IslandListener implements Listener {
 	final MarkerSet markerSet;
-	final DynmapConfig config;
+	final ICDynmapConfig config;
 
-	public IslandListener(final MarkerSet markerSet, final DynmapConfig config) {
+	public IslandListener(final MarkerSet markerSet, final ICDynmapConfig config) {
 		this.markerSet = markerSet;
 		this.config = config;
 	}

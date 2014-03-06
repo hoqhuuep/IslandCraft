@@ -1,5 +1,6 @@
 package com.github.hoqhuuep.islandcraft.realestate;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,10 +18,6 @@ public class RealEstateConfig {
 		}
 	}
 
-	public final Message M_ICSET_WORLD_ERROR;
-	public final Message M_ICSET_OCEAN_ERROR;
-	public final Message M_ICSET;
-
 	public final Material PURCHASE_COST_ITEM;
 	public final int PURCHASE_COST_AMOUNT;
 	public final int PURCHASE_COST_INCREASE;
@@ -31,6 +28,7 @@ public class RealEstateConfig {
 	public final int TAX_DAYS_INCREASE;
 	public final int TAX_DAYS_MAX;
 	public final int MAX_ISLANDS_PER_PLAYER;
+
 	public final Message M_ISLAND_ABANDON;
 	public final Message M_ISLAND_ABANDON_WORLD_ERROR;
 	public final Message M_ISLAND_ABANDON_OCEAN_ERROR;
@@ -74,6 +72,9 @@ public class RealEstateConfig {
 	public final Message M_ISLAND_LEAVE_REPOSSESSED;
 	public final Message M_ISLAND_ENTER_PRIVATE;
 	public final Message M_ISLAND_LEAVE_PRIVATE;
+	public final Message M_ICSET_WORLD_ERROR;
+	public final Message M_ICSET_OCEAN_ERROR;
+	public final Message M_ICSET;
 
 	public RealEstateConfig(final ConfigurationSection config) {
 		PURCHASE_COST_ITEM = Material.matchMaterial(config.getString("purchase-cost-item"));
@@ -86,6 +87,39 @@ public class RealEstateConfig {
 		TAX_DAYS_INCREASE = config.getInt("tax-days-increase");
 		TAX_DAYS_MAX = config.getInt("tax-days-max");
 		MAX_ISLANDS_PER_PLAYER = config.getInt("max-islands-per-player");
+
+		// Validate configuration values
+		if (PURCHASE_COST_ITEM == null) {
+			Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".purchase-cost-item must be a valid item name");
+		}
+		if (PURCHASE_COST_AMOUNT < 0) {
+			Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".purchase-cost-amount must not be negative");
+		}
+		if (PURCHASE_COST_INCREASE < 0) {
+			Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".purchase-cost-increase must not be negative");
+		}
+		if (TAX_COST_ITEM == null) {
+			Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".tax-cost-item must be a valid item name");
+		}
+		if (TAX_COST_AMOUNT < 0) {
+			Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".tax-cost-amount must not be negative");
+		}
+		if (TAX_COST_INCREASE < 0) {
+			Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".tax-cost-increase must not be negative");
+		}
+		if (TAX_DAYS_INITIAL < -1) {
+			Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".tax-days-initial must not be less than -1");
+		}
+		if (TAX_DAYS_INCREASE < 0) {
+			Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".tax-increase must not be negative");
+		}
+		if (TAX_DAYS_MAX < -1) {
+			Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".tax-days-max must not be less than -1");
+		}
+		if (MAX_ISLANDS_PER_PLAYER < -1) {
+			Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".tax-days-max must not be less than -1");
+		}
+
 		final ConfigurationSection message = config.getConfigurationSection("message");
 		M_ISLAND_ABANDON = new Message(message.getString("island-abandon"));
 		M_ISLAND_ABANDON_WORLD_ERROR = new Message(message.getString("island-abandon-world-error"));
