@@ -46,6 +46,7 @@ public class BiomeSelection {
 		}
 	}
 
+	// Missing biomes: FROZEN_RIVER, RIVER, HELL, SKY
 	private static final BiomeSelection[] biomes = {
 			new BiomeSelection(Biome.DEEP_OCEAN, Biome.OCEAN, Biome.BEACH, Biome.BIRCH_FOREST, Biome.BIRCH_FOREST_M, Biome.BIRCH_FOREST_HILLS,
 					Biome.BIRCH_FOREST_HILLS_M, null, null),
