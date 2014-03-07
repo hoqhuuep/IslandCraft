@@ -6,15 +6,18 @@ import org.bukkit.event.world.WorldLoadEvent;
 
 public class WorldLoadListener implements Listener {
 	private final RealEstateManager realEstateManager;
+	private final RealEstateConfig config;
 
-	public WorldLoadListener(final RealEstateManager realEstateManager) {
+	public WorldLoadListener(final RealEstateManager realEstateManager, final RealEstateConfig config) {
 		this.realEstateManager = realEstateManager;
+		this.config = config;
 	}
 
 	@EventHandler
 	public final void onWorldLoad(final WorldLoadEvent event) {
-		if ("world".equals(event.getWorld().getName())) {
-			realEstateManager.addGeometry("world", new Geometry(18, 2, 25));
+		final String name = event.getWorld().getName();
+		if (config.WORLD_CONFIGS.containsKey(name)) {
+			realEstateManager.addGeometry(name, new Geometry(config.WORLD_CONFIGS.get(name)));
 		}
 	}
 }

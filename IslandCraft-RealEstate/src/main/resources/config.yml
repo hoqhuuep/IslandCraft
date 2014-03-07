@@ -8,6 +8,11 @@ tax-days-initial: 500
 tax-days-increase: 500
 tax-days-max: 2000
 max-islands-per-player: 7
+worlds:
+  world:
+    island-size: 288
+    island-separation: 320
+    resource-island-rarity: 0.25
 message:
   island-abandon: §7[INFO] Island successfully abandoned
   island-abandon-world-error: §7[INFO] You cannot abandon an island from this world

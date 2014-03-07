@@ -8,6 +8,8 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+import com.github.hoqhuuep.islandcraft.realestate.RealEstateConfig.WorldConfig;
+
 public class Geometry {
 	private final int islandGap;
 	private final int islandSize;
@@ -15,16 +17,26 @@ public class Geometry {
 	private final int innerRadius;
 	private final int outerRadius;
 	private final int magicNumber;
-	private final int resourceIslandRarity;
+	private final double resourceIslandRarity;
 
-	public Geometry(final int islandSizeChunks, final int islandGapChunks, final int resourceIslandRarity) {
-		islandSize = islandSizeChunks << 4;
-		islandGap = islandGapChunks << 4;
-		islandSeparation = islandSize + islandGap;
-		innerRadius = islandSizeChunks << 3;
+	public Geometry(final int islandSize, final int islandSeparation, final int resourceIslandRarity) {
+		this.islandSize = islandSize;
+		this.islandSeparation = islandSeparation;
+		islandGap = islandSeparation - islandSize;
+		innerRadius = islandSize / 2;
 		outerRadius = innerRadius + islandGap;
 		magicNumber = (islandSize - islandGap) / 2;
 		this.resourceIslandRarity = resourceIslandRarity;
+	}
+
+	public Geometry(final WorldConfig config) {
+		islandSize = config.ISLAND_SIZE;
+		islandSeparation = config.ISLAND_SEPARATION;
+		resourceIslandRarity = config.RESOURCE_ISLAND_RARITY;
+		islandGap = islandSeparation - islandSize;
+		innerRadius = islandSize / 2;
+		outerRadius = innerRadius + islandGap;
+		magicNumber = (islandSize - islandGap) / 2;
 	}
 
 	public final SerializableLocation getInnerIsland(final Location location) {
@@ -169,16 +181,14 @@ public class Geometry {
 		final String world = island.getWorld();
 		final int xMid = island.getX();
 		final int zMid = island.getZ();
-		return new SerializableRegion(world, xMid - innerRadius, 0, zMid - innerRadius, xMid + innerRadius, Bukkit.getWorld(world).getMaxHeight(), zMid
-				+ innerRadius);
+		return new SerializableRegion(world, xMid - innerRadius, 0, zMid - innerRadius, xMid + innerRadius, Bukkit.getWorld(world).getMaxHeight(), zMid + innerRadius);
 	}
 
 	public final SerializableRegion getOuterRegion(final SerializableLocation island) {
 		final String world = island.getWorld();
 		final int xMid = island.getX();
 		final int zMid = island.getZ();
-		return new SerializableRegion(world, xMid - outerRadius, 0, zMid - outerRadius, xMid + outerRadius, Bukkit.getWorld(world).getMaxHeight(), zMid
-				+ outerRadius);
+		return new SerializableRegion(world, xMid - outerRadius, 0, zMid - outerRadius, xMid + outerRadius, Bukkit.getWorld(world).getMaxHeight(), zMid + outerRadius);
 	}
 
 	public final boolean isOcean(final SerializableLocation island) {
@@ -202,10 +212,10 @@ public class Geometry {
 		return random(x, z, worldSeed) < resourceIslandRarity;
 	}
 
-	public final int random(final int x, final int z, final long worldSeed) {
-		final long seed = worldSeed ^ (((long) z << 32) | x & 0xFFFFFFFFL);
+	public final double random(final int x, final int z, final long worldSeed) {
+		final long seed = worldSeed ^ (((long) z << 24) | x & 0x00FFFFFFL);
 		final Random random = new Random(seed);
-		return random.nextInt(100);
+		return random.nextDouble();
 	}
 
 	public static int ifloordiv(int n, int d) {

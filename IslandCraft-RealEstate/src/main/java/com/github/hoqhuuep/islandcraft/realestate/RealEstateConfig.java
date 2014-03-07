@@ -1,5 +1,8 @@
 package com.github.hoqhuuep.islandcraft.realestate;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -18,6 +21,29 @@ public class RealEstateConfig {
 		}
 	}
 
+	public static class WorldConfig {
+		public final int ISLAND_SIZE;
+		public final int ISLAND_SEPARATION;
+		public final double RESOURCE_ISLAND_RARITY;
+
+		public WorldConfig(final ConfigurationSection config) {
+			ISLAND_SIZE = config.getInt("island-size");
+			ISLAND_SEPARATION = config.getInt("island-separation");
+			RESOURCE_ISLAND_RARITY = config.getInt("resource-island-rarity");
+
+			// Validate configuration values
+			if (ISLAND_SIZE <= 0 || ISLAND_SIZE % 32 != 0) {
+				Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".island-size must be a positive multiple of 32");
+			}
+			if (ISLAND_SEPARATION <= ISLAND_SIZE || ISLAND_SEPARATION % 32 != 0) {
+				Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".island-separation must be a multiple of 32 greater than " + config.getCurrentPath() + ".island-size");
+			}
+			if (RESOURCE_ISLAND_RARITY < 0.0 || RESOURCE_ISLAND_RARITY > 1.0) {
+				Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".resource-island-rarity must be between 0.0 and 1.0");
+			}
+		}
+	}
+
 	public final Material PURCHASE_COST_ITEM;
 	public final int PURCHASE_COST_AMOUNT;
 	public final int PURCHASE_COST_INCREASE;
@@ -28,6 +54,7 @@ public class RealEstateConfig {
 	public final int TAX_DAYS_INCREASE;
 	public final int TAX_DAYS_MAX;
 	public final int MAX_ISLANDS_PER_PLAYER;
+	public final Map<String, WorldConfig> WORLD_CONFIGS;
 
 	public final Message M_ISLAND_ABANDON;
 	public final Message M_ISLAND_ABANDON_WORLD_ERROR;
@@ -118,6 +145,12 @@ public class RealEstateConfig {
 		}
 		if (MAX_ISLANDS_PER_PLAYER < -1) {
 			Bukkit.getLogger().severe("IslandCraft-RealEstate config.yml issue. " + config.getCurrentPath() + ".tax-days-max must not be less than -1");
+		}
+
+		WORLD_CONFIGS = new HashMap<String, WorldConfig>();
+		final ConfigurationSection worlds = config.getConfigurationSection("worlds");
+		for (final String key : worlds.getKeys(false)) {
+			WORLD_CONFIGS.put(key, new WorldConfig(worlds.getConfigurationSection(key)));
 		}
 
 		final ConfigurationSection message = config.getConfigurationSection("message");
