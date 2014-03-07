@@ -12,7 +12,7 @@ worlds:
       ice-plains: {ocean: DEEP_OCEAN, outer-coast: OCEAN, inner-coast: FROZEN_OCEAN, normal: ICE_PLAINS, normal-m: ~, hills: ICE_MOUNTAINS, hills-m: ~, special: ICE_PLAINS_SPIKES, special-m: ~}
       jungle: {ocean: DEEP_OCEAN, outer-coast: OCEAN, inner-coast: BEACH, normal: JUNGLE, normal-m: JUNGLE_M, hills: JUNGLE_HILLS, hills-m: ~, special: JUNGLE_EDGE, special-m: JUNGLE_EDGE_M}
       mega-taiga: {ocean: DEEP_OCEAN, outer-coast: OCEAN, inner-coast: BEACH, normal: MEGA_TAIGA, normal-m: MEGA_SPRUCE_TAIGA, hills: MEGA_TAIGA_HILLS, hills-m: MEGA_SPRUCE_TAIGA_HILLS, special: ~, special-m: ~}
-      mesa: {ocean: DEEP_OCEAN, outer-coast: OCEAN, inner-coast: BEACH, normal: MESA, normal-m: MESA_BRYCE, hills: MESA_PLATEAU, hills-m: MESA_PLATEAU_M, special: MESA_PLATEAU_F, special-m: MESA_PLATEAU_F_M}
+      mesa: {ocean: DEEP_OCEAN, outer-coast: OCEAN, inner-coast: MESA, normal: MESA, normal-m: MESA_BRYCE, hills: MESA_PLATEAU, hills-m: MESA_PLATEAU_M, special: MESA_PLATEAU_F, special-m: MESA_PLATEAU_F_M}
       mushroom-island: {ocean: DEEP_OCEAN, outer-coast: OCEAN, inner-coast: MUSHROOM_ISLAND_SHORE, normal: MUSHROOM_ISLAND, normal-m: ~, hills: ~, hills-m: ~, special: ~, special-m: ~}
       plains: {ocean: DEEP_OCEAN, outer-coast: OCEAN, inner-coast: BEACH, normal: PLAINS, normal-m: ~, hills: SUNFLOWER_PLAINS, hills-m: ~, special: FOREST, special-m: FOREST_HILLS}
       roofed-forest: {ocean: DEEP_OCEAN, outer-coast: OCEAN, inner-coast: BEACH, normal: ROOFED_FOREST, normal-m: ROOFED_FOREST_M, hills: ~, hills-m: ~, special: PLAINS, special-m: ~}
