@@ -11,6 +11,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+/**
+ * @author Daniel Simmons
+ * @version 2014-03-07
+ */
 public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
 	private final CompassManager manager;
 
@@ -20,7 +24,7 @@ public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
 
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-		if (null == sender || !(sender instanceof Player) || args.length < 1) {
+		if (sender == null || !(sender instanceof Player) || args.length < 1) {
 			return false;
 		}
 		final Player player = (Player) sender;
@@ -49,7 +53,7 @@ public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
 			manager.onWaypointSet(player, name);
 			return true;
 		} else if ("list".equalsIgnoreCase(args[0])) {
-			if (1 != args.length) {
+			if (args.length != 1) {
 				return false;
 			}
 			manager.onWaypointList(player);
@@ -64,9 +68,9 @@ public class WaypointCommandExecutor implements CommandExecutor, TabCompleter {
 	public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
 		final String partialArg;
 		final List<String> completions = new ArrayList<String>();
-		if (0 == args.length) {
+		if (args.length == 0) {
 			partialArg = "";
-		} else if (1 == args.length) {
+		} else if (args.length == 1) {
 			partialArg = args[0].toLowerCase();
 		} else {
 			return null;

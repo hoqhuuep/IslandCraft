@@ -10,9 +10,7 @@ import org.bukkit.entity.Player;
 
 /**
  * @author Daniel Simmons
- * @see <a
- *      href="https://github.com/hoqhuuep/IslandCraft/wiki /Useful-Extras#better-compass">IslandCraft
- *      wiki</a>
+ * @version 2014-03-07
  */
 public class CompassManager {
 	private static final String BED = "Bed";
@@ -68,14 +66,14 @@ public class CompassManager {
 	 */
 	public final void onNextWaypoint(final Player player, final boolean previous) {
 		if (player.getWorld().getEnvironment() != World.Environment.NORMAL) {
-			config.M_COMPASS_ERROR.send(player);
+			player.sendMessage(config.M_COMPASS_ERROR);
 			return;
 		}
 		final String name = player.getName();
 		final String oldWaypoint = getWaypoint(name);
 		final String newWaypoint = getNext(name, oldWaypoint, previous);
 		if (setWaypoint(player, newWaypoint)) {
-			config.M_COMPASS.send(player, newWaypoint);
+			player.sendMessage(String.format(config.M_COMPASS, newWaypoint));
 		}
 	}
 
@@ -87,7 +85,7 @@ public class CompassManager {
 	 */
 	public final void onWaypointSet(final Player player, final String waypoint) {
 		if (setWaypoint(player, waypoint)) {
-			config.M_COMPASS.send(player, waypoint);
+			player.sendMessage(String.format(config.M_COMPASS, waypoint));
 		}
 	}
 
@@ -99,15 +97,15 @@ public class CompassManager {
 	 */
 	public final void onWaypointAdd(final Player player, final String waypoint) {
 		if (player.getWorld().getEnvironment() != World.Environment.NORMAL) {
-			config.M_WAYPOINT_ADD_WORLD_ERROR.send(player);
+			player.sendMessage(config.M_WAYPOINT_ADD_WORLD_ERROR);
 			return;
 		}
 		if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
-			config.M_WAYPOINT_ADD_RESERVED_ERROR.send(player);
+			player.sendMessage(config.M_WAYPOINT_ADD_RESERVED_ERROR);
 			return;
 		}
 		database.saveWaypoint(player.getName(), waypoint, player.getLocation());
-		config.M_WAYPOINT_ADD.send(player, waypoint);
+		player.sendMessage(String.format(config.M_WAYPOINT_ADD, waypoint));
 	}
 
 	/**
@@ -118,16 +116,16 @@ public class CompassManager {
 	 */
 	public final void onWaypointRemove(final Player player, final String waypoint) {
 		if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
-			config.M_WAYPOINT_REMOVE_ERROR.send(player);
+			player.sendMessage(config.M_WAYPOINT_REMOVE_ERROR);
 			return;
 		}
 		final String name = player.getName();
 		if (!getWaypoints(name).contains(waypoint)) {
-			config.M_WAYPOINT_EXISTS_ERROR.send(player);
+			player.sendMessage(config.M_WAYPOINT_EXISTS_ERROR);
 			return;
 		}
 		database.saveWaypoint(name, waypoint, null);
-		config.M_WAYPOINT_REMOVE.send(player, waypoint);
+		player.sendMessage(String.format(config.M_WAYPOINT_REMOVE, waypoint));
 	}
 
 	/**
@@ -138,7 +136,8 @@ public class CompassManager {
 	public final void onWaypointList(final Player player) {
 		final String name = player.getName();
 		final List<String> waypoints = getWaypoints(name);
-		config.M_WAYPOINT_LIST.send(player, StringUtils.join(waypoints, ", "));
+		final String waypointList = StringUtils.join(waypoints, ", ");
+		player.sendMessage(String.format(config.M_WAYPOINT_LIST, waypointList));
 	}
 
 	private boolean setWaypoint(final Player player, final String waypoint) {
@@ -148,7 +147,7 @@ public class CompassManager {
 		} else {
 			Location location = database.loadWaypoint(name, waypoint);
 			if (location == null) {
-				config.M_WAYPOINT_SET_ERROR.send(player, waypoint);
+				player.sendMessage(String.format(config.M_WAYPOINT_SET_ERROR, waypoint));
 				return false;
 			}
 			if (!player.getWorld().getName().equalsIgnoreCase(location.getWorld().getName())) {

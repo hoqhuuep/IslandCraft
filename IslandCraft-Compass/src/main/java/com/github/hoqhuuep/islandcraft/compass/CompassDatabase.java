@@ -8,6 +8,10 @@ import org.bukkit.Location;
 
 import com.avaje.ebean.EbeanServer;
 
+/**
+ * @author Daniel Simmons
+ * @version 2014-03-07
+ */
 public class CompassDatabase {
 	private final EbeanServer ebean;
 

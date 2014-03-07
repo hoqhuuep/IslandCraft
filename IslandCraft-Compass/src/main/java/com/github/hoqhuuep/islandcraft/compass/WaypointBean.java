@@ -5,6 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * @author Daniel Simmons
+ * @version 2014-03-07
+ */
 @Entity
 @Table(name = "waypoint")
 public class WaypointBean {

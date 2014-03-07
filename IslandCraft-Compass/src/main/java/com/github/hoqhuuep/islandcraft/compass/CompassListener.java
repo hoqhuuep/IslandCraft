@@ -11,6 +11,10 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+/**
+ * @author Daniel Simmons
+ * @version 2014-03-07
+ */
 public class CompassListener implements Listener {
 	private final CompassManager manager;
 
@@ -30,7 +34,7 @@ public class CompassListener implements Listener {
 	@EventHandler
 	public final void onPlayerBedEnter(final PlayerBedEnterEvent event) {
 		final Player player = event.getPlayer();
-		if (null == player) {
+		if (player == null) {
 			return;
 		}
 		manager.onUseBed(player);

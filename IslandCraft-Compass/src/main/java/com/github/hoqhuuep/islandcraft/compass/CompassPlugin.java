@@ -8,6 +8,10 @@ import javax.persistence.PersistenceException;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * @author Daniel Simmons
+ * @version 2014-03-07
+ */
 public class CompassPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
@@ -25,6 +29,7 @@ public class CompassPlugin extends JavaPlugin {
 		final CompassManager manager = new CompassManager(database, config);
 		final WaypointCommandExecutor commandExecutor = new WaypointCommandExecutor(manager);
 		getServer().getPluginManager().registerEvents(new CompassListener(manager), this);
+
 		final PluginCommand waypointCommand = getCommand("waypoint");
 		waypointCommand.setExecutor(commandExecutor);
 		waypointCommand.setTabCompleter(commandExecutor);
