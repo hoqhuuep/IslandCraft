@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.githup.hoqhuuep</groupId>
 		<artifactId>IslandCraft</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.0.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>IslandCraft-WorldGuard</artifactId>
 
@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>com.githup.hoqhuuep</groupId>
 			<artifactId>IslandCraft-RealEstate</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.3-SNAPSHOT</version>
 			<scope>compile</scope>
 			<type>jar</type>
 		</dependency>
