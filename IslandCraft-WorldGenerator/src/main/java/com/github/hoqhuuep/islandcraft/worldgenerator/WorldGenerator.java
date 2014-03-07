@@ -7,17 +7,13 @@ import com.github.hoqhuuep.islandcraft.worldgenerator.hack.BiomeGenerator;
 
 public class WorldGenerator implements BiomeGenerator {
 	private final long worldSeed;
-	private final int islandSize;
-	private final int islandSeparation;
-	private final int interIslandBiome;
+	private final WorldConfig config;
 	private final IslandCache islandCache;
 
-	public WorldGenerator(final long worldSeed, final int islandSize, final int islandSeparation, final int interIslandBiome) {
+	public WorldGenerator(final long worldSeed, final WorldConfig config) {
 		this.worldSeed = worldSeed;
-		this.islandSize = islandSize;
-		this.islandSeparation = islandSeparation;
-		this.interIslandBiome = interIslandBiome;
-		islandCache = new IslandCache(islandSize, islandSize);
+		this.config = config;
+		islandCache = new IslandCache(config);
 	}
 
 	/**
@@ -36,19 +32,19 @@ public class WorldGenerator implements BiomeGenerator {
 		// xRelative, zRelative = coordinates relative to top-left of nearest
 		// island
 		// row, column = nearest island
-		final int zPrime = z + islandSize / 2;
-		final int zRelative = Geometry.ifloormod(zPrime, islandSeparation);
-		if (zRelative >= islandSize) {
-			return interIslandBiome;
+		final int zPrime = z + config.ISLAND_SIZE / 2;
+		final int zRelative = Geometry.ifloormod(zPrime, config.ISLAND_SEPARATION);
+		if (zRelative >= config.ISLAND_SIZE) {
+			return config.INTER_ISLAND_BIOME;
 		}
 
-		final int row = Geometry.ifloordiv(zPrime, islandSeparation);
-		final int xPrime = (row % 2 == 0) ? (x + islandSize / 2) : (x + (islandSize + islandSeparation) / 2);
-		final int xRelative = Geometry.ifloormod(xPrime, islandSeparation);
-		if (xRelative >= islandSize) {
-			return interIslandBiome;
+		final int row = Geometry.ifloordiv(zPrime, config.ISLAND_SEPARATION);
+		final int xPrime = (row % 2 == 0) ? (x + config.ISLAND_SIZE / 2) : (x + (config.ISLAND_SIZE + config.ISLAND_SEPARATION) / 2);
+		final int xRelative = Geometry.ifloormod(xPrime, config.ISLAND_SEPARATION);
+		if (xRelative >= config.ISLAND_SIZE) {
+			return config.INTER_ISLAND_BIOME;
 		}
-		final int column = Geometry.ifloordiv(xPrime, islandSeparation);
+		final int column = Geometry.ifloordiv(xPrime, config.ISLAND_SEPARATION);
 		return islandCache.biomeAt(xRelative, zRelative, getIslandSeed(row, column));
 	}
 
@@ -71,20 +67,20 @@ public class WorldGenerator implements BiomeGenerator {
 		// xRelative, zRelative = coordinates relative to top-left of nearest
 		// island
 		// row, column = nearest island
-		final int zPrime = z + islandSize / 2;
-		final int zRelative = Geometry.ifloormod(zPrime, islandSeparation);
-		if (zRelative >= islandSize) {
-			Arrays.fill(result, interIslandBiome);
+		final int zPrime = z + config.ISLAND_SIZE / 2;
+		final int zRelative = Geometry.ifloormod(zPrime, config.ISLAND_SEPARATION);
+		if (zRelative >= config.ISLAND_SIZE) {
+			Arrays.fill(result, config.INTER_ISLAND_BIOME);
 			return result;
 		}
-		final int row = Geometry.ifloordiv(zPrime, islandSeparation);
-		final int xPrime = (row % 2 == 0) ? (x + islandSize / 2) : (x + (islandSize + islandSeparation) / 2);
-		final int xRelative = Geometry.ifloormod(xPrime, islandSeparation);
-		if (xRelative >= islandSize) {
-			Arrays.fill(result, interIslandBiome);
+		final int row = Geometry.ifloordiv(zPrime, config.ISLAND_SEPARATION);
+		final int xPrime = (row % 2 == 0) ? (x + config.ISLAND_SIZE / 2) : (x + (config.ISLAND_SIZE + config.ISLAND_SEPARATION) / 2);
+		final int xRelative = Geometry.ifloormod(xPrime, config.ISLAND_SEPARATION);
+		if (xRelative >= config.ISLAND_SIZE) {
+			Arrays.fill(result, config.INTER_ISLAND_BIOME);
 			return result;
 		}
-		final int column = Geometry.ifloordiv(xPrime, islandSeparation);
+		final int column = Geometry.ifloordiv(xPrime, config.ISLAND_SEPARATION);
 		return islandCache.biomeChunk(xRelative, zRelative, getIslandSeed(row, column), result);
 	}
 
@@ -97,7 +93,8 @@ public class WorldGenerator implements BiomeGenerator {
 	}
 
 	private Long getIslandSeed(final int row, final int column) {
-		// return new Long(worldSeed ^ ((long) row << 32 | column & 0xFFFFFFFFL));
+		// return new Long(worldSeed ^ ((long) row << 32 | column &
+		// 0xFFFFFFFFL));
 		return new Random(worldSeed ^ ((long) row << 24 | column & 0x00FFFFFFL)).nextLong();
 	}
 

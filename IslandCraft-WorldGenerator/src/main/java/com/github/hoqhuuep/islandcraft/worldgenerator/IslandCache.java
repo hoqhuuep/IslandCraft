@@ -5,28 +5,26 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class IslandCache {
-	private final int xSize;
-	private final int zSize;
 	private final Map<Long, int[]> cache;
 	private final Map<Long, Long> timestamp;
 	private final IslandGenerator islandGenerator;
+	private final WorldConfig config;
 
-	public IslandCache(final int xSize, final int zSize) {
-		this.xSize = xSize;
-		this.zSize = zSize;
+	public IslandCache(final WorldConfig config) {
+		this.config = config;
 		cache = new HashMap<Long, int[]>();
 		timestamp = new HashMap<Long, Long>();
-		islandGenerator = new IslandGenerator();
+		islandGenerator = new IslandGenerator(config);
 	}
 
 	public int biomeAt(final int xRelative, final int zRelative, final Long islandSeed) {
-		return getIsland(islandSeed)[zRelative * xSize + xRelative];
+		return getIsland(islandSeed)[zRelative * config.ISLAND_SIZE + xRelative];
 	}
 
 	public int[] biomeChunk(final int xRelative, final int zRelative, final Long islandSeed, final int[] result) {
 		final int[] island = getIsland(islandSeed);
 		for (int z = 0; z < 16; ++z) {
-			System.arraycopy(island, xSize * (zRelative + z) + xRelative, result, z * 16, 16);
+			System.arraycopy(island, config.ISLAND_SIZE * (zRelative + z) + xRelative, result, z * 16, 16);
 		}
 		return result;
 	}
@@ -53,7 +51,7 @@ public class IslandCache {
 		if (cachedIsland != null) {
 			return cachedIsland;
 		}
-		final int[] newIsland = islandGenerator.generate(xSize, zSize, islandSeed);
+		final int[] newIsland = islandGenerator.generate(islandSeed);
 		cache.put(islandSeed, newIsland);
 		return newIsland;
 	}

@@ -23,11 +23,11 @@ public class TestWorldGenerator {
 	}
 
 	public static void testCustom() throws IOException {
-		final WorldChunkManager worldChunkManager = new CustomWorldChunkManager(new WorldGenerator(0, 288, 320, Biome.DEEP_OCEAN.getId()));
+		final WorldChunkManager worldChunkManager = new CustomWorldChunkManager(new WorldGenerator(0, null));
 		final BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		for (int j = 0; j < HEIGHT; ++j) {
 			for (int i = 0; i < WIDTH; ++i) {
-				image.setRGB(i, j, Biome.fromId[worldChunkManager.getBiome(i - WIDTH / 2, j - HEIGHT / 2).id].getColor().getRGB());
+				image.setRGB(i, j, Biome.fromId[worldChunkManager.getBiome(i - WIDTH / 2, j - HEIGHT / 2).id].COLOR.getRGB());
 			}
 			if (j % 120 == 0) {
 				System.out.println("LINE: " + j);
@@ -42,7 +42,7 @@ public class TestWorldGenerator {
 		final BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		for (int j = 0; j < HEIGHT; ++j) {
 			for (int i = 0; i < WIDTH; ++i) {
-				image.setRGB(i, j, Biome.fromId[worldChunkManager.getBiome(i - WIDTH / 2, j - HEIGHT / 2).id].getColor().getRGB());
+				image.setRGB(i, j, Biome.fromId[worldChunkManager.getBiome(i - WIDTH / 2, j - HEIGHT / 2).id].COLOR.getRGB());
 			}
 			if (j % 120 == 0) {
 				System.out.println("LINE: " + j);

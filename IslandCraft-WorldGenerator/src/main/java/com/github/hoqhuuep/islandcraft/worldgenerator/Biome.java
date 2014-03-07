@@ -65,25 +65,20 @@ public enum Biome {
 	TAIGA_HILLS(19, "Taiga Hills", new Color(22, 57, 51)),
 	TAIGA_M(133, "Taiga M", new Color(51, 142, 129));
 
-	private final Color color;
-	private final int id;
+	public final Color COLOR;
+	public final String NAME;
+	public final int ID;
+
 	public static final Biome[] fromId = new Biome[256];
 	static {
 		for (Biome biome : values()) {
-			fromId[biome.getId()] = biome;
+			fromId[biome.ID] = biome;
 		}
 	}
 
-	private Biome(int id, String name, Color color) {
-		this.id = id;
-		this.color = color;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public Color getColor() {
-		return color;
+	private Biome(final int id, final String name, final Color color) {
+		ID = id;
+		NAME = name;
+		COLOR = color;
 	}
 }

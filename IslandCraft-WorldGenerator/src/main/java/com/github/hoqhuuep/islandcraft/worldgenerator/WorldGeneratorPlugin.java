@@ -7,6 +7,8 @@ import com.github.hoqhuuep.islandcraft.worldgenerator.hack.HackListener;
 public class WorldGeneratorPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
-		getServer().getPluginManager().registerEvents(new HackListener(), this);
+		saveDefaultConfig();
+		final WorldGeneratorConfig config = new WorldGeneratorConfig(getConfig());
+		getServer().getPluginManager().registerEvents(new HackListener(config), this);
 	}
 }
