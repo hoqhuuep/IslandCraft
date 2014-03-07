@@ -21,7 +21,7 @@ public class ICDynmapConfig {
 			LINE_COLOR = config.getInt("line-color");
 
 			// Validate configuration values
-			if (FILL_OPACITY < 0 || FILL_OPACITY > 1) {
+			if (FILL_OPACITY < 0.0 || FILL_OPACITY > 1.0) {
 				Bukkit.getLogger().severe("IslandCraft-Dynmap config.yml issue. " + config.getCurrentPath() + ".fill-opacity must be between 0.0 and 1.0");
 			}
 			if (FILL_COLOR < 0x000000 || FILL_COLOR > 0xFFFFFF) {
@@ -30,7 +30,7 @@ public class ICDynmapConfig {
 			if (LINE_WIDTH < 0) {
 				Bukkit.getLogger().severe("IslandCraft-Dynmap config.yml issue. " + config.getCurrentPath() + ".line-width must not be negative");
 			}
-			if (LINE_OPACITY < 0 || LINE_OPACITY > 1) {
+			if (LINE_OPACITY < 0.0 || LINE_OPACITY > 1.0) {
 				Bukkit.getLogger().severe("IslandCraft-Dynmap config.yml issue. " + config.getCurrentPath() + ".line-opacity must be between 0.0 and 1.0");
 			}
 			if (LINE_COLOR < 0x000000 || LINE_COLOR > 0xFFFFFF) {
