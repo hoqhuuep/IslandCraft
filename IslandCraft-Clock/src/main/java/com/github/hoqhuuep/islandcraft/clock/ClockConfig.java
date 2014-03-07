@@ -1,27 +1,34 @@
 package com.github.hoqhuuep.islandcraft.clock;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
+/**
+ * @author Daniel Simmons
+ * @version 2014-03-07
+ */
 public class ClockConfig {
-	public static class Message {
-		private final String format;
+	/**
+	 * Message sent to player when they right click with a clock. Parameters:
+	 * <code>hour</code>, <code>minute</code>.
+	 */
+	public final String M_CLOCK;
 
-		private Message(final String format) {
-			this.format = format;
-		}
+	/**
+	 * Message sent to player when they right click with a clock in the nether
+	 * or end. No parameters.
+	 */
+	public final String M_CLOCK_ERROR;
 
-		public void send(final CommandSender to, final Object... args) {
-			to.sendMessage(String.format(format, args));
-		}
-	}
-
-	public final Message M_CLOCK;
-	public final Message M_CLOCK_ERROR;
-
+	/**
+	 * Creates a <code>ClockConfig</code> object.
+	 * 
+	 * @param config
+	 *            a bukkit configuration section. Usually obtained by calling
+	 *            <code>plugin.getConfig()</code>. Must contain the right keys.
+	 */
 	public ClockConfig(final ConfigurationSection config) {
 		final ConfigurationSection message = config.getConfigurationSection("message");
-		M_CLOCK = new Message(message.getString("clock"));
-		M_CLOCK_ERROR = new Message(message.getString("clock-error"));
+		M_CLOCK = message.getString("clock");
+		M_CLOCK_ERROR = message.getString("clock-error");
 	}
 }
