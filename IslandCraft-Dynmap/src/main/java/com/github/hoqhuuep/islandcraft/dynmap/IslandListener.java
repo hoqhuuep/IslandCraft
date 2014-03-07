@@ -5,7 +5,6 @@ import org.bukkit.event.Listener;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerSet;
 
-import com.github.hoqhuuep.islandcraft.dynmap.ICDynmapConfig.AreaConfig;
 import com.github.hoqhuuep.islandcraft.realestate.IslandDeed;
 import com.github.hoqhuuep.islandcraft.realestate.IslandEvent;
 import com.github.hoqhuuep.islandcraft.realestate.IslandStatus;

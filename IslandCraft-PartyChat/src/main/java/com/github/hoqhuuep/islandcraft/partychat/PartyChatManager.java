@@ -19,26 +19,26 @@ public class PartyChatManager {
 		final String name = sender.getName();
 		final String oldParty = database.loadParty(name);
 		if (oldParty != null) {
-			config.M_PARTY_LEAVE.send(sender, oldParty);
+			sender.sendMessage(String.format(config.M_PARTY_LEAVE, oldParty));
 
 			// Notify members that player has left
 			final List<String> memberNames = database.loadMembers(oldParty);
 			for (final String memberName : memberNames) {
 				final CommandSender member = getCommandSender(sender.getServer(), memberName);
 				if (member != null && !member.getName().equalsIgnoreCase(name)) {
-					config.M_PARTY_LEAVE_NOTIFY.send(member, name);
+					member.sendMessage(String.format(config.M_PARTY_LEAVE_NOTIFY, name));
 				}
 			}
 		}
 		database.saveParty(name, party);
-		config.M_PARTY_JOIN.send(sender, party);
+		sender.sendMessage(String.format(config.M_PARTY_JOIN, party));
 
 		// Notify members that player has joined
 		final List<String> memberNames = database.loadMembers(party);
 		for (final String memberName : memberNames) {
 			final CommandSender member = getCommandSender(sender.getServer(), memberName);
 			if (member != null && !member.getName().equalsIgnoreCase(name)) {
-				config.M_PARTY_JOIN_NOTIFY.send(member, name);
+				member.sendMessage(String.format(config.M_PARTY_JOIN_NOTIFY, name));
 			}
 		}
 	}
@@ -47,18 +47,18 @@ public class PartyChatManager {
 		final String name = sender.getName();
 		final String party = database.loadParty(name);
 		if (party == null) {
-			config.M_PARTY_NONE.send(sender);
+			sender.sendMessage(config.M_PARTY_NONE);
 			return;
 		}
 		database.saveParty(name, null);
-		config.M_PARTY_LEAVE.send(sender, party);
+		sender.sendMessage(String.format(config.M_PARTY_LEAVE, party));
 
 		// Notify members that player has left
 		final List<String> memberNames = database.loadMembers(party);
 		for (final String memberName : memberNames) {
 			final CommandSender member = getCommandSender(sender.getServer(), memberName);
 			if (member != null && !member.getName().equalsIgnoreCase(name)) {
-				config.M_PARTY_LEAVE_NOTIFY.send(member, name);
+				member.sendMessage(String.format(config.M_PARTY_LEAVE_NOTIFY, name));
 			}
 		}
 	}
@@ -66,26 +66,26 @@ public class PartyChatManager {
 	public final void displayMembers(final CommandSender sender) {
 		final String party = database.loadParty(sender.getName());
 		if (party == null) {
-			config.M_PARTY_NONE.send(sender);
+			sender.sendMessage(config.M_PARTY_NONE);
 			return;
 		}
 		final List<String> members = database.loadMembers(party);
 		final String formattedMembers = StringUtils.join(members, ", ");
-		config.M_PARTY_MEMBERS.send(sender, formattedMembers);
+		sender.sendMessage(String.format(config.M_PARTY_MEMBERS, formattedMembers));
 	}
 
 	public final void sendMessage(final CommandSender sender, final String message) {
 		final String name = sender.getName();
 		final String party = database.loadParty(name);
 		if (party == null) {
-			config.M_P_ERROR.send(sender);
+			sender.sendMessage(config.M_P_ERROR);
 			return;
 		}
 		final List<String> memberNames = database.loadMembers(party);
 		for (final String memberName : memberNames) {
 			final CommandSender member = getCommandSender(sender.getServer(), memberName);
 			if (member != null) {
-				config.M_P.send(member, name, party, message);
+				member.sendMessage(String.format(config.M_P, name, party, message));
 			}
 		}
 	}

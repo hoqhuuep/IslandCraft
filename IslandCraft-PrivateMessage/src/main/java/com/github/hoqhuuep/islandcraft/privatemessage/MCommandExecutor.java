@@ -30,7 +30,7 @@ public class MCommandExecutor implements CommandExecutor {
 		final String toName = args[0];
 		final CommandSender to = getCommandSender(sender.getServer(), toName);
 		if (to == null) {
-			config.M_M_ERROR.send(sender);
+			sender.sendMessage(config.M_M_ERROR);
 			return true;
 		}
 		manager.sendMessage(sender, to, message);

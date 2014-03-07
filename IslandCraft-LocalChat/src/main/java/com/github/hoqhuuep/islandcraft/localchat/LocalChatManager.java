@@ -20,7 +20,7 @@ public class LocalChatManager {
 			final Location toLocation = to.getLocation();
 			final double radius = config.LOCAL_CHAT_RADIUS;
 			if (fromLocation.distanceSquared(toLocation) <= radius * radius) {
-				config.M_L.send(to, fromName, message);
+				to.sendMessage(String.format(config.M_L, fromName, message));
 			}
 		}
 	}

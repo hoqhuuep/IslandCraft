@@ -8,8 +8,6 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import com.github.hoqhuuep.islandcraft.realestate.RealEstateConfig.WorldConfig;
-
 public class Geometry {
 	private final int islandGap;
 	private final int islandSize;
