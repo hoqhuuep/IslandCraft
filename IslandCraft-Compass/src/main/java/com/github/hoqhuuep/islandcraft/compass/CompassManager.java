@@ -29,7 +29,7 @@ public class CompassManager {
 	 * 
 	 * @param player
 	 */
-	public final void onDeath(final Player player) {
+	public void onDeath(final Player player) {
 		final Location location = player.getLocation();
 		final String name = player.getName();
 		database.saveWaypoint(name, DEATH_POINT, location);
@@ -44,7 +44,7 @@ public class CompassManager {
 	 * 
 	 * @param player
 	 */
-	public final void onUseBed(final Player player) {
+	public void onUseBed(final Player player) {
 		final Location location = player.getLocation();
 		final String name = player.getName();
 		database.saveWaypoint(name, BED, location);
@@ -54,7 +54,7 @@ public class CompassManager {
 		}
 	}
 
-	public final void onRespawn(final Player player) {
+	public void onRespawn(final Player player) {
 		setWaypoint(player, SPAWN);
 	}
 
@@ -64,14 +64,14 @@ public class CompassManager {
 	 * 
 	 * @param player
 	 */
-	public final void onNextWaypoint(final Player player, final boolean previous) {
+	public void onNextWaypoint(final Player player) {
 		if (player.getWorld().getEnvironment() != World.Environment.NORMAL) {
 			player.sendMessage(config.M_COMPASS_ERROR);
 			return;
 		}
 		final String name = player.getName();
 		final String oldWaypoint = getWaypoint(name);
-		final String newWaypoint = getNext(name, oldWaypoint, previous);
+		final String newWaypoint = getNext(name, oldWaypoint, player.isSneaking());
 		if (setWaypoint(player, newWaypoint)) {
 			player.sendMessage(String.format(config.M_COMPASS, newWaypoint));
 		}
@@ -83,7 +83,7 @@ public class CompassManager {
 	 * @param player
 	 * @param waypoint
 	 */
-	public final void onWaypointSet(final Player player, final String waypoint) {
+	public void onWaypointSet(final Player player, final String waypoint) {
 		if (setWaypoint(player, waypoint)) {
 			player.sendMessage(String.format(config.M_COMPASS, waypoint));
 		}
@@ -95,7 +95,7 @@ public class CompassManager {
 	 * @param player
 	 * @param waypoint
 	 */
-	public final void onWaypointAdd(final Player player, final String waypoint) {
+	public void onWaypointAdd(final Player player, final String waypoint) {
 		if (player.getWorld().getEnvironment() != World.Environment.NORMAL) {
 			player.sendMessage(config.M_WAYPOINT_ADD_WORLD_ERROR);
 			return;
@@ -114,7 +114,7 @@ public class CompassManager {
 	 * @param player
 	 * @param waypoint
 	 */
-	public final void onWaypointRemove(final Player player, final String waypoint) {
+	public void onWaypointRemove(final Player player, final String waypoint) {
 		if (SPAWN.equalsIgnoreCase(waypoint) || BED.equalsIgnoreCase(waypoint) || DEATH_POINT.equalsIgnoreCase(waypoint)) {
 			player.sendMessage(config.M_WAYPOINT_REMOVE_ERROR);
 			return;
@@ -133,7 +133,7 @@ public class CompassManager {
 	 * 
 	 * @param player
 	 */
-	public final void onWaypointList(final Player player) {
+	public void onWaypointList(final Player player) {
 		final String name = player.getName();
 		final List<String> waypoints = getWaypoints(name);
 		final String waypointList = StringUtils.join(waypoints, ", ");

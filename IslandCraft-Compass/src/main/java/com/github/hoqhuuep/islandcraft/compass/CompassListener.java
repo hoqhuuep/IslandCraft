@@ -41,7 +41,7 @@ public class CompassListener implements Listener {
 		if (material == Material.COMPASS && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) {
 			final Player player = event.getPlayer();
 			if (player.hasPermission("islandcraft.compass")) {
-				manager.onNextWaypoint(player, player.isSneaking());
+				manager.onNextWaypoint(player);
 			}
 		}
 	}
