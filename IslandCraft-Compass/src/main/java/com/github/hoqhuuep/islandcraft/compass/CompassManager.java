@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
  */
 public class CompassManager {
 	private static final String BED = "Bed";
-	private static final String DEATH_POINT = "DeathPoint";
+	private static final String DEATH_POINT = "Latest Death";
 	private static final String SPAWN = "Spawn";
 	private final CompassDatabase database;
 	private final CompassConfig config;

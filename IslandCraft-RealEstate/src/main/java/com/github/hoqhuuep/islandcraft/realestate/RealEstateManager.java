@@ -467,7 +467,7 @@ public class RealEstateManager {
 		geometryMap.put(world, geometry);
 	}
 
-	private Geometry getGeometry(final String world) {
+	public Geometry getGeometry(final String world) {
 		return geometryMap.get(world);
 	}
 

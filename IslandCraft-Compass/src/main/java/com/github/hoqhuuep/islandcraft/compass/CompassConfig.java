@@ -26,9 +26,9 @@ public class CompassConfig {
 		M_WAYPOINT_ADD_WORLD_ERROR = message.getString("waypoint-add-world-error");
 		M_WAYPOINT_ADD_RESERVED_ERROR = message.getString("waypoint-add-reserved-error");
 		M_WAYPOINT_REMOVE = message.getString("waypoint-remove");
-		M_WAYPOINT_EXISTS_ERROR = message.getString("exists-error");
-		M_WAYPOINT_REMOVE_ERROR = message.getString("remove-error");
-		M_WAYPOINT_LIST = message.getString("list");
-		M_WAYPOINT_SET_ERROR = message.getString("set-error");
+		M_WAYPOINT_EXISTS_ERROR = message.getString("waypoint-exists-error");
+		M_WAYPOINT_REMOVE_ERROR = message.getString("waypoint-remove-error");
+		M_WAYPOINT_LIST = message.getString("waypoint-list");
+		M_WAYPOINT_SET_ERROR = message.getString("waypoint-set-error");
 	}
 }

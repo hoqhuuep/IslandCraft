@@ -78,7 +78,7 @@ public class PartyChatManager {
 		final String name = sender.getName();
 		final String party = database.loadParty(name);
 		if (party == null) {
-			sender.sendMessage(config.M_P_ERROR);
+			sender.sendMessage(config.M_PARTY_NONE);
 			return;
 		}
 		final List<String> memberNames = database.loadMembers(party);
