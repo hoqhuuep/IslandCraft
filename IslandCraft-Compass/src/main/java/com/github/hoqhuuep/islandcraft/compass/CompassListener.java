@@ -25,18 +25,12 @@ public class CompassListener implements Listener {
 	@EventHandler
 	public final void onPlayerDeath(final PlayerDeathEvent event) {
 		final Player player = event.getEntity();
-		if (player == null) {
-			return;
-		}
 		manager.onDeath(player);
 	}
 
 	@EventHandler
 	public final void onPlayerBedEnter(final PlayerBedEnterEvent event) {
 		final Player player = event.getPlayer();
-		if (player == null) {
-			return;
-		}
 		manager.onUseBed(player);
 	}
 
@@ -46,28 +40,21 @@ public class CompassListener implements Listener {
 		final Material material = event.getMaterial();
 		if (material == Material.COMPASS && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) {
 			final Player player = event.getPlayer();
-			if (player == null) {
-				return;
+			if (player.hasPermission("islandcraft.compass")) {
+				manager.onNextWaypoint(player, player.isSneaking());
 			}
-			manager.onNextWaypoint(player, player.isSneaking());
 		}
 	}
 
 	@EventHandler
 	public final void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
 		final Player player = event.getPlayer();
-		if (player == null) {
-			return;
-		}
 		manager.onRespawn(player);
 	}
 
 	@EventHandler
 	public final void onPlayerRespawn(final PlayerRespawnEvent event) {
 		final Player player = event.getPlayer();
-		if (player == null) {
-			return;
-		}
 		manager.onRespawn(player);
 	}
 }

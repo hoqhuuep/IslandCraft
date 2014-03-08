@@ -19,7 +19,7 @@ public class CompassDatabase {
 		this.ebean = ebean;
 	}
 
-	public final String loadCompass(final String player) {
+	public String loadCompass(final String player) {
 		final CompassBean bean = ebean.find(CompassBean.class, player);
 		if (bean == null) {
 			return null;
@@ -27,7 +27,7 @@ public class CompassDatabase {
 		return bean.getWaypoint();
 	}
 
-	public final void saveCompass(final String player, final String waypoint) {
+	public void saveCompass(final String player, final String waypoint) {
 		if (waypoint == null) {
 			ebean.delete(CompassBean.class, player);
 			return;
@@ -41,7 +41,7 @@ public class CompassDatabase {
 		ebean.save(bean);
 	}
 
-	public final Location loadWaypoint(final String player, final String waypoint) {
+	public Location loadWaypoint(final String player, final String waypoint) {
 		final String id = player + ":" + waypoint;
 		final WaypointBean bean = ebean.find(WaypointBean.class, id);
 		if (bean == null) {
@@ -50,7 +50,7 @@ public class CompassDatabase {
 		return new Location(Bukkit.getWorld(bean.getWorld()), bean.getX().doubleValue(), bean.getY().doubleValue(), bean.getZ().doubleValue());
 	}
 
-	public final List<String> loadWaypoints(final String player) {
+	public List<String> loadWaypoints(final String player) {
 		final List<WaypointBean> beans = ebean.find(WaypointBean.class).where().ieq("player", player).findList();
 		final List<String> waypoints = new ArrayList<String>(beans.size());
 		for (final WaypointBean bean : beans) {
@@ -59,7 +59,7 @@ public class CompassDatabase {
 		return waypoints;
 	}
 
-	public final void saveWaypoint(final String player, final String waypoint, final Location location) {
+	public void saveWaypoint(final String player, final String waypoint, final Location location) {
 		final String id = player + ":" + waypoint;
 		if (location == null) {
 			ebean.delete(WaypointBean.class, id);

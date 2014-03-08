@@ -39,3 +39,5 @@ permissions:
       islandcraft.command.waypoint.remove: true
       islandcraft.command.waypoint.list: true
       islandcraft.command.waypoint.set: true
+  islandcraft.compass:
+    default: true
