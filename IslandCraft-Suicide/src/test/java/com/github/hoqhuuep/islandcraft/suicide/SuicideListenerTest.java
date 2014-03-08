@@ -22,7 +22,7 @@ public class SuicideListenerTest {
 	private SuicideCommandExecutor suicideCommandExecutor;
 
 	@Mock
-	private SuicideManager suicideManager;
+	private SuicideManager manager;
 	@Mock
 	private Player player;
 	@Mock
@@ -30,14 +30,14 @@ public class SuicideListenerTest {
 
 	@Before
 	public void setUp() {
-		suicideCommandExecutor = new SuicideCommandExecutor(suicideManager);
+		suicideCommandExecutor = new SuicideCommandExecutor(manager);
 	}
 
 	@Test
 	public void testSuicide() {
 		final boolean result = suicideCommandExecutor.onCommand(player, null, null, new String[] {});
 
-		verify(suicideManager).suicide(player);
+		verify(manager).suicide(player);
 		verify(player, never()).sendMessage(anyString());
 		assertEquals(true, result);
 	}
@@ -46,7 +46,7 @@ public class SuicideListenerTest {
 	public void testArgs() {
 		final boolean result = suicideCommandExecutor.onCommand(player, null, null, new String[] { "arg" });
 
-		verify(suicideManager, never()).suicide(any(Player.class));
+		verify(manager, never()).suicide(any(Player.class));
 		verify(player, never()).sendMessage(anyString());
 		assertEquals(false, result);
 	}
@@ -55,7 +55,7 @@ public class SuicideListenerTest {
 	public void testConsole() {
 		final boolean result = suicideCommandExecutor.onCommand(consoleCommandSender, null, null, new String[] {});
 
-		verify(suicideManager, never()).suicide(any(Player.class));
+		verify(manager, never()).suicide(any(Player.class));
 		verify(consoleCommandSender).sendMessage(anyString());
 		assertEquals(true, result);
 	}
@@ -64,7 +64,7 @@ public class SuicideListenerTest {
 	public void testNull() {
 		final boolean result = suicideCommandExecutor.onCommand(null, null, null, new String[] {});
 
-		verify(suicideManager, never()).suicide(any(Player.class));
+		verify(manager, never()).suicide(any(Player.class));
 		assertEquals(true, result);
 	}
 }
