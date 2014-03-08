@@ -4,6 +4,6 @@ import org.bukkit.entity.Player;
 
 public class SuicideManager {
 	public void suicide(final Player player) {
-		player.setHealth(0);
+		player.setHealth(0.0);
 	}
 }

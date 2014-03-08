@@ -14,9 +14,15 @@ public class SuicideCommandExecutor implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+		if (sender == null) {
+			return true;
+		}
 		if (!(sender instanceof Player)) {
 			sender.sendMessage("You can only perform this command as a player");
 			return true;
+		}
+		if (args.length != 0) {
+			return false;
 		}
 		final Player player = (Player) sender;
 		manager.suicide(player);
