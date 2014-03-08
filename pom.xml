@@ -18,7 +18,6 @@
 	</properties>
 
 	<modules>
-		<module>IslandCraft-Boat</module>
 		<module>IslandCraft-Clock</module>
 		<module>IslandCraft-Compass</module>
 		<module>IslandCraft-Dynmap</module>
@@ -26,6 +25,7 @@
 		<module>IslandCraft-PartyChat</module>
 		<module>IslandCraft-PrivateMessage</module>
 		<module>IslandCraft-RealEstate</module>
+		<module>IslandCraft-Recipe</module>
 		<module>IslandCraft-Suicide</module>
 		<module>IslandCraft-WorldGenerator</module>
 		<module>IslandCraft-WorldGuard</module>
