@@ -29,7 +29,6 @@ public class RecipePlugin extends JavaPlugin implements Listener {
 		// Old logs - Block ID 17
 		for (final TreeSpecies logSpecies : new TreeSpecies[] { TreeSpecies.GENERIC, TreeSpecies.REDWOOD, TreeSpecies.BIRCH, TreeSpecies.JUNGLE }) {
 			for (final TreeSpecies woodSpecies : TreeSpecies.values()) {
-				System.out.println(logSpecies + " + " + woodSpecies);
 				final ShapelessRecipe boat = new ShapelessRecipe(new ItemStack(Material.BOAT, 1));
 				boat.addIngredient(1, new Tree(logSpecies));
 				final Tree wood = new Tree(Material.WOOD);
@@ -39,9 +38,9 @@ public class RecipePlugin extends JavaPlugin implements Listener {
 			}
 		}
 		// Acacia and Dark Oak - Block ID 162
+		// TODO fix this when https://bukkit.atlassian.net/browse/BUKKIT-4988
 		for (final TreeSpecies logSpecies : new TreeSpecies[] { TreeSpecies.GENERIC, TreeSpecies.REDWOOD }) {
 			for (final TreeSpecies woodSpecies : TreeSpecies.values()) {
-				System.out.println(logSpecies + " + " + woodSpecies);
 				final ShapelessRecipe boat = new ShapelessRecipe(new ItemStack(Material.BOAT, 1));
 				final Tree log = new Tree(Material.LOG_2);
 				log.setSpecies(logSpecies);
@@ -78,8 +77,8 @@ public class RecipePlugin extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onCraftItem(final CraftItemEvent event) {
 		// This is a temporary work-around because recipes do not sync with the
-		// client correctly. See this bug:
-		// https://bukkit.atlassian.net/browse/BUKKIT-117
+		// client correctly.
+		// TODO fix this when https://bukkit.atlassian.net/browse/BUKKIT-117
 		if (results.contains(event.getRecipe().getResult())) {
 			getServer().getScheduler().runTask(this, new Runnable() {
 				@Override
