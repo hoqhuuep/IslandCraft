@@ -9,7 +9,7 @@ public class PrivateMessagePlugin extends JavaPlugin {
 		saveDefaultConfig();
 		final PrivateMessageConfig config = new PrivateMessageConfig(getConfig());
 		final PrivateMessageManager manager = new PrivateMessageManager(config);
-		final CommandExecutor commandExecutor = new MCommandExecutor(manager, config);
+		final CommandExecutor commandExecutor = new MCommandExecutor(manager);
 		getCommand("m").setExecutor(commandExecutor);
 	}
 }
