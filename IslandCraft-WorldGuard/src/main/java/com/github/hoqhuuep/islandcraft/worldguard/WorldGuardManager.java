@@ -3,6 +3,8 @@ package com.github.hoqhuuep.islandcraft.worldguard;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
+import com.github.hoqhuuep.islandcraft.realestate.IslandDeed;
+import com.github.hoqhuuep.islandcraft.realestate.IslandStatus;
 import com.github.hoqhuuep.islandcraft.realestate.SerializableRegion;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -21,7 +23,18 @@ public class WorldGuardManager {
 		this.worldGuard = worldGuard;
 	}
 
-	public void setPrivate(final SerializableRegion region, final String player) {
+	public void onIsland(final IslandDeed deed) {
+		final IslandStatus status = deed.getStatus();
+		if (status == IslandStatus.RESOURCE) {
+			setPublic(deed.getOuterRegion());
+		} else if (status == IslandStatus.PRIVATE) {
+			setPrivate(deed.getOuterRegion(), deed.getOwner());
+		} else {
+			setReserved(deed.getOuterRegion());
+		}
+	}
+
+	private void setPrivate(final SerializableRegion region, final String player) {
 		final RegionManager regionManager = getRegionManager(region);
 		if (regionManager == null) {
 			return;
@@ -39,7 +52,7 @@ public class WorldGuardManager {
 		addProtectedRegion(regionManager, protectedRegion);
 	}
 
-	public void setReserved(final SerializableRegion region) {
+	private void setReserved(final SerializableRegion region) {
 		final RegionManager regionManager = getRegionManager(region);
 		if (regionManager == null) {
 			return;
@@ -55,7 +68,7 @@ public class WorldGuardManager {
 		addProtectedRegion(regionManager, protectedRegion);
 	}
 
-	public void setPublic(final SerializableRegion region) {
+	private void setPublic(final SerializableRegion region) {
 		final RegionManager regionManager = getRegionManager(region);
 		if (regionManager == null) {
 			return;
@@ -136,7 +149,18 @@ public class WorldGuardManager {
 		regionManager.addRegion(protectedRegion);
 		try {
 			regionManager.save();
-		} catch (final ProtectionDatabaseException e) {
+		} catch (final ProtectionDatabaseException e1) {
+			// Try twice more
+			try {
+				regionManager.save();
+			} catch (final ProtectionDatabaseException e2) {
+				// Try once more
+				try {
+					regionManager.save();
+				} catch (final ProtectionDatabaseException e3) {
+					// Oh well...
+				}
+			}
 		}
 	}
 }
