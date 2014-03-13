@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.realestate;
+package com.github.hoqhuuep.islandcraft.worldgenerator;
 
 import java.io.Serializable;
 
@@ -8,7 +8,7 @@ import org.apache.commons.lang.StringUtils;
 
 @Embeddable
 public class SerializableLocation implements Serializable {
-	private static final long serialVersionUID = -4967255498948204773L;
+	private static final long serialVersionUID = -8420269223046556236L;
 
 	private String world;
 	private int x;

@@ -1,5 +1,8 @@
 package com.github.hoqhuuep.islandcraft.worldgenerator.hack;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.server.v1_7_R1.WorldProvider;
 
 import org.bukkit.Chunk;
@@ -12,13 +15,20 @@ import org.bukkit.event.world.WorldInitEvent;
 
 import com.github.hoqhuuep.islandcraft.worldgenerator.WorldGenerator;
 import com.github.hoqhuuep.islandcraft.worldgenerator.WorldGeneratorConfig;
+import com.github.hoqhuuep.islandcraft.worldgenerator.WorldGeneratorDatabase;
 
 public class HackListener implements Listener {
-	private boolean beforeHack = true;
+	private final Map<String, Boolean> beforeHack;
 	private final WorldGeneratorConfig config;
+	private final WorldGeneratorDatabase database;
 
-	public HackListener(final WorldGeneratorConfig config) {
+	public HackListener(final WorldGeneratorConfig config, final WorldGeneratorDatabase database) {
 		this.config = config;
+		this.database = database;
+		beforeHack = new HashMap<String, Boolean>();
+		for (final String world : config.WORLD_CONFIGS.keySet()) {
+			beforeHack.put(world, true);
+		}
 	}
 
 	@EventHandler
@@ -27,14 +37,14 @@ public class HackListener implements Listener {
 		final String name = world.getName();
 		if (config.WORLD_CONFIGS.containsKey(name)) {
 			world.setSpawnLocation(0, world.getHighestBlockYAt(0, 0), 0);
-			if (beforeHack) {
+			if (beforeHack.get(name)) {
 				final CraftWorld craftWorld = (CraftWorld) world;
 				final WorldProvider worldProvider = craftWorld.getHandle().worldProvider;
 				if (!(worldProvider.e instanceof CustomWorldChunkManager)) {
-					final BiomeGenerator biomeGenerator = new WorldGenerator(world.getSeed(), config.WORLD_CONFIGS.get(name));
+					final BiomeGenerator biomeGenerator = new WorldGenerator(name, world.getSeed(), config.WORLD_CONFIGS.get(name), database);
 					worldProvider.e = new CustomWorldChunkManager(biomeGenerator);
 				}
-				beforeHack = false;
+				beforeHack.put(name, false);
 			}
 		}
 	}
@@ -45,19 +55,19 @@ public class HackListener implements Listener {
 		// point this happens before WorldInitEvent. This event catches the
 		// first one of those chunks, applies the hack, and regenerates the
 		// chunk with the new WorldChunkManager.
-		if (beforeHack) {
-			final World world = event.getWorld();
-			final String name = world.getName();
-			if (config.WORLD_CONFIGS.containsKey(name)) {
+		final World world = event.getWorld();
+		final String name = world.getName();
+		if (config.WORLD_CONFIGS.containsKey(name)) {
+			if (beforeHack.get(name)) {
 				final CraftWorld craftWorld = (CraftWorld) world;
 				final WorldProvider worldProvider = craftWorld.getHandle().worldProvider;
 				if (!(worldProvider.e instanceof CustomWorldChunkManager)) {
-					final BiomeGenerator biomeGenerator = new WorldGenerator(world.getSeed(), config.WORLD_CONFIGS.get(name));
+					final BiomeGenerator biomeGenerator = new WorldGenerator(name, world.getSeed(), config.WORLD_CONFIGS.get(name), database);
 					worldProvider.e = new CustomWorldChunkManager(biomeGenerator);
 					final Chunk chunk = event.getChunk();
 					world.regenerateChunk(chunk.getX(), chunk.getZ());
 				}
-				beforeHack = false;
+				beforeHack.put(name, false);
 			}
 		}
 	}

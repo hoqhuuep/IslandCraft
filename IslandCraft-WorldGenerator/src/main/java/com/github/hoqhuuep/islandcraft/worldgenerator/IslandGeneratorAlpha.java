@@ -16,27 +16,28 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 import com.github.hoqhuuep.islandcraft.worldgenerator.mosaic.Poisson;
 import com.github.hoqhuuep.islandcraft.worldgenerator.mosaic.Site;
 
-public class IslandGenerator {
+public class IslandGeneratorAlpha {
 	private static final double MIN_DISTANCE = 8;
 	private static final double NOISE = 2.7;
 	private static final double CIRCLE = 2;
 	private static final double SQUARE = 0;
 	private static final double THRESHOLD = 2;
+
 	private final WorldConfig config;
 
-	public IslandGenerator(final WorldConfig config) {
+	public IslandGeneratorAlpha(final WorldConfig config) {
 		this.config = config;
 	}
 
-	public int[] generate(final long islandSeed) {
-		final Poisson poisson = new Poisson(config.ISLAND_SIZE, config.ISLAND_SIZE, MIN_DISTANCE);
-		final List<Site> sites = poisson.generate(new Random(islandSeed));
+	public int[] generate(final Long seed, final IslandParametersAlpha parameters) {
 
-		final SimplexOctaveGenerator shapeNoise = new SimplexOctaveGenerator(islandSeed, 2);
-		final SimplexOctaveGenerator hillsNoise = new SimplexOctaveGenerator(islandSeed + 1, 2);
-		final SimplexOctaveGenerator specialNoise = new SimplexOctaveGenerator(islandSeed + 2, 2);
-		final SimplexOctaveGenerator mNoise = new SimplexOctaveGenerator(islandSeed + 3, 2);
-		final BiomeConfig biomeSelection = config.BIOME_CONFIGS[new Random(islandSeed).nextInt(config.BIOME_CONFIGS.length)];
+		final Poisson poisson = new Poisson(config.ISLAND_SIZE, config.ISLAND_SIZE, MIN_DISTANCE);
+		final List<Site> sites = poisson.generate(new Random(seed));
+
+		final SimplexOctaveGenerator shapeNoise = new SimplexOctaveGenerator(seed, 2);
+		final SimplexOctaveGenerator hillsNoise = new SimplexOctaveGenerator(seed + 1, 2);
+		final SimplexOctaveGenerator specialNoise = new SimplexOctaveGenerator(seed + 2, 2);
+		final SimplexOctaveGenerator mNoise = new SimplexOctaveGenerator(seed + 3, 2);
 
 		// Find borders
 		final Queue<Site> ocean = new LinkedList<Site>();
@@ -101,7 +102,7 @@ public class IslandGenerator {
 		final BufferedImage image = new BufferedImage(config.ISLAND_SIZE, config.ISLAND_SIZE, BufferedImage.TYPE_INT_ARGB);
 		final Graphics2D graphics = image.createGraphics();
 		graphics.setComposite(AlphaComposite.Src);
-		graphics.setBackground(new Color(biomeSelection.OCEAN, true));
+		graphics.setBackground(new Color(config.INTER_ISLAND_BIOME, true));
 		graphics.clearRect(0, 0, config.ISLAND_SIZE, config.ISLAND_SIZE);
 
 		// Render island
@@ -109,24 +110,24 @@ public class IslandGenerator {
 			if (site.isOcean) {
 				continue;
 			} else if (site.isOuterCoast) {
-				graphics.setColor(new Color(biomeSelection.OUTER_COAST, true));
+				graphics.setColor(new Color(parameters.OUTER_COAST, true));
 			} else if (site.isInnerCoast) {
-				graphics.setColor(new Color(biomeSelection.INNER_COAST, true));
-			} else if (noise2(site, 0.375, 160.0, mNoise)) {
-				if (noise2(site, 0.375, 80.0, hillsNoise)) {
-					graphics.setColor(new Color(biomeSelection.HILLS_M, true));
-				} else if (noise2(site, 0.375, 160.0, specialNoise)) {
-					graphics.setColor(new Color(biomeSelection.SPECIAL_M, true));
+				graphics.setColor(new Color(parameters.INNER_COAST, true));
+			} else if (noise(site, 0.375, 160.0, mNoise)) {
+				if (noise(site, 0.375, 80.0, hillsNoise)) {
+					graphics.setColor(new Color(parameters.HILLS_M, true));
+				} else if (noise(site, 0.375, 160.0, specialNoise)) {
+					graphics.setColor(new Color(parameters.SPECIAL_M, true));
 				} else {
-					graphics.setColor(new Color(biomeSelection.NORMAL_M, true));
+					graphics.setColor(new Color(parameters.NORMAL_M, true));
 				}
 			} else {
-				if (noise2(site, 0.375, 80.0, hillsNoise)) {
-					graphics.setColor(new Color(biomeSelection.HILLS, true));
-				} else if (noise2(site, 0.375, 160.0, specialNoise)) {
-					graphics.setColor(new Color(biomeSelection.SPECIAL, true));
+				if (noise(site, 0.375, 80.0, hillsNoise)) {
+					graphics.setColor(new Color(parameters.HILLS, true));
+				} else if (noise(site, 0.375, 160.0, specialNoise)) {
+					graphics.setColor(new Color(parameters.SPECIAL, true));
 				} else {
-					graphics.setColor(new Color(biomeSelection.NORMAL, true));
+					graphics.setColor(new Color(parameters.NORMAL, true));
 				}
 			}
 			graphics.fillPolygon(site.polygon);
@@ -144,19 +145,19 @@ public class IslandGenerator {
 		return result;
 	}
 
-	public static boolean noise2(final Site site, final double threshold, final double period, final OctaveGenerator octaveGenerator) {
+	private static boolean noise(final Site site, final double threshold, final double period, final OctaveGenerator octaveGenerator) {
 		return octaveGenerator.noise(site.x / period, site.z / period, 2.0, 0.5, true) / 2.0 + 0.5 < threshold;
 	}
 
-	public static double noise(final double dx, final double dz, final OctaveGenerator octaveGenerator) {
+	private static double noise(final double dx, final double dz, final OctaveGenerator octaveGenerator) {
 		return octaveGenerator.noise(dx, dz, 2.0, 0.5, true) / 2.0 + 0.5;
 	}
 
-	public static double circle(final double dx, final double dz) {
+	private static double circle(final double dx, final double dz) {
 		return (dx * dx + dz * dz) / 2;
 	}
 
-	public static double square(final double dx, final double dz) {
+	private static double square(final double dx, final double dz) {
 		return Math.max(Math.abs(dx), Math.abs(dz));
 	}
 }

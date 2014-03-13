@@ -1,19 +1,18 @@
 package com.github.hoqhuuep.islandcraft.worldgenerator;
 
 import java.util.Arrays;
-import java.util.Random;
 
 import com.github.hoqhuuep.islandcraft.worldgenerator.hack.BiomeGenerator;
 
 public class WorldGenerator implements BiomeGenerator {
-	private final long worldSeed;
 	private final WorldConfig config;
 	private final IslandCache islandCache;
+	private final String world;
 
-	public WorldGenerator(final long worldSeed, final WorldConfig config) {
-		this.worldSeed = worldSeed;
+	public WorldGenerator(final String world, final long worldSeed, final WorldConfig config, final WorldGeneratorDatabase database) {
+		this.world = world;
 		this.config = config;
-		islandCache = new IslandCache(config);
+		islandCache = new IslandCache(worldSeed, config, database);
 	}
 
 	/**
@@ -45,7 +44,7 @@ public class WorldGenerator implements BiomeGenerator {
 			return config.INTER_ISLAND_BIOME;
 		}
 		final int column = Geometry.ifloordiv(xPrime, config.ISLAND_SEPARATION);
-		return islandCache.biomeAt(xRelative, zRelative, getIslandSeed(row, column));
+		return islandCache.biomeAt(getId(row, column), xRelative, zRelative);
 	}
 
 	/**
@@ -81,7 +80,18 @@ public class WorldGenerator implements BiomeGenerator {
 			return result;
 		}
 		final int column = Geometry.ifloordiv(xPrime, config.ISLAND_SEPARATION);
-		return islandCache.biomeChunk(xRelative, zRelative, getIslandSeed(row, column), result);
+		return islandCache.biomeChunk(getId(row, column), xRelative, zRelative, result);
+	}
+
+	private SerializableLocation getId(final int row, final int column) {
+		final int z = row * config.ISLAND_SEPARATION;
+		final int x;
+		if (row % 2 == 0) {
+			x = column * config.ISLAND_SEPARATION;
+		} else {
+			x = column * config.ISLAND_SEPARATION - config.ISLAND_SEPARATION / 2;
+		}
+		return new SerializableLocation(world, x, 0, z);
 	}
 
 	/**
@@ -90,12 +100,6 @@ public class WorldGenerator implements BiomeGenerator {
 	@Override
 	public void cleanupCache() {
 		islandCache.cleanupCache();
-	}
-
-	private Long getIslandSeed(final int row, final int column) {
-		// return new Long(worldSeed ^ ((long) row << 32 | column &
-		// 0xFFFFFFFFL));
-		return new Random(worldSeed ^ ((long) row << 24 | column & 0x00FFFFFFL)).nextLong();
 	}
 
 	@Override

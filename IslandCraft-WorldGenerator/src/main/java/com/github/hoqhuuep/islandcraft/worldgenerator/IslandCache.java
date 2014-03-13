@@ -5,24 +5,26 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class IslandCache {
-	private final Map<Long, int[]> cache;
-	private final Map<Long, Long> timestamp;
-	private final IslandGenerator islandGenerator;
+	private final Map<SerializableLocation, int[]> cache;
+	private final Map<SerializableLocation, Long> timestamp;
 	private final WorldConfig config;
+	private final long worldSeed;
+	private final WorldGeneratorDatabase database;
 
-	public IslandCache(final WorldConfig config) {
+	public IslandCache(final long worldSeed, final WorldConfig config, final WorldGeneratorDatabase database) {
+		this.worldSeed = worldSeed;
 		this.config = config;
-		cache = new HashMap<Long, int[]>();
-		timestamp = new HashMap<Long, Long>();
-		islandGenerator = new IslandGenerator(config);
+		this.database = database;
+		cache = new HashMap<SerializableLocation, int[]>();
+		timestamp = new HashMap<SerializableLocation, Long>();
 	}
 
-	public int biomeAt(final int xRelative, final int zRelative, final Long islandSeed) {
-		return getIsland(islandSeed)[zRelative * config.ISLAND_SIZE + xRelative];
+	public int biomeAt(final SerializableLocation id, final int xRelative, final int zRelative) {
+		return getIsland(id)[zRelative * config.ISLAND_SIZE + xRelative];
 	}
 
-	public int[] biomeChunk(final int xRelative, final int zRelative, final Long islandSeed, final int[] result) {
-		final int[] island = getIsland(islandSeed);
+	public int[] biomeChunk(final SerializableLocation id, final int xRelative, final int zRelative, final int[] result) {
+		final int[] island = getIsland(id);
 		for (int z = 0; z < 16; ++z) {
 			System.arraycopy(island, config.ISLAND_SIZE * (zRelative + z) + xRelative, result, z * 16, 16);
 		}
@@ -34,26 +36,29 @@ public class IslandCache {
 	 */
 	public void cleanupCache() {
 		final int CACHE_TIME = 30000;
-		final Iterator<Long> iterator = timestamp.keySet().iterator();
+		final Iterator<SerializableLocation> iterator = timestamp.keySet().iterator();
 		while (iterator.hasNext()) {
-			final Long islandSeed = iterator.next();
-			if (timestamp.get(islandSeed) + CACHE_TIME >= now()) {
+			final SerializableLocation id = iterator.next();
+			if (timestamp.get(id) + CACHE_TIME >= now()) {
 				iterator.remove();
-				cache.remove(islandSeed);
+				cache.remove(id);
 			}
 		}
 	}
 
-	private int[] getIsland(final Long islandSeed) {
-		final int[] cachedIsland = cache.get(islandSeed);
+	private int[] getIsland(final SerializableLocation id) {
 		// Update last accessed time
-		timestamp.put(islandSeed, now());
+		timestamp.put(id, now());
+
+		final int[] cachedIsland = cache.get(id);
 		if (cachedIsland != null) {
 			return cachedIsland;
 		}
-		final int[] newIsland = islandGenerator.generate(islandSeed);
-		cache.put(islandSeed, newIsland);
-		return newIsland;
+
+		// Generates new island if it doesn't exist
+		final int[] island = database.getIsland(id, worldSeed);
+		cache.put(id, island);
+		return island;
 	}
 
 	private long now() {

@@ -23,7 +23,7 @@ public class TestWorldGenerator {
 	}
 
 	public static void testCustom() throws IOException {
-		final WorldChunkManager worldChunkManager = new CustomWorldChunkManager(new WorldGenerator(0, null));
+		final WorldChunkManager worldChunkManager = new CustomWorldChunkManager(new WorldGenerator(null, 0, null, null));
 		final BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		for (int j = 0; j < HEIGHT; ++j) {
 			for (int i = 0; i < WIDTH; ++i) {

@@ -10,7 +10,7 @@ public class WorldConfig {
 	public final int ISLAND_SIZE;
 	public final int ISLAND_SEPARATION;
 	public final int INTER_ISLAND_BIOME;
-	public final BiomeConfig[] BIOME_CONFIGS;
+	public final IslandParametersAlpha[] BIOME_CONFIGS;
 
 	public WorldConfig(final ConfigurationSection config) {
 		ISLAND_SIZE = config.getInt("island-size");
@@ -26,11 +26,11 @@ public class WorldConfig {
 
 		INTER_ISLAND_BIOME = Biome.valueOf(config.getString("inter-island-biome")).ID;
 
-		final List<BiomeConfig> biomeConfigs = new ArrayList<BiomeConfig>();
+		final List<IslandParametersAlpha> biomeConfigs = new ArrayList<IslandParametersAlpha>();
 		final ConfigurationSection islandBiomes = config.getConfigurationSection("island-biomes");
 		for (final String key : islandBiomes.getKeys(false)) {
-			biomeConfigs.add(new BiomeConfig(islandBiomes.getConfigurationSection(key)));
+			biomeConfigs.add(new IslandParametersAlpha(islandBiomes.getConfigurationSection(key)));
 		}
-		BIOME_CONFIGS = biomeConfigs.toArray(new BiomeConfig[biomeConfigs.size()]);
+		BIOME_CONFIGS = biomeConfigs.toArray(new IslandParametersAlpha[biomeConfigs.size()]);
 	}
 }
