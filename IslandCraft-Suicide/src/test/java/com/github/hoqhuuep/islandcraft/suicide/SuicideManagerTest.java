@@ -5,16 +5,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(PlayerInteractEvent.class)
+@RunWith(MockitoJUnitRunner.class)
 public class SuicideManagerTest {
 	private SuicideManager suicideManager;
 
