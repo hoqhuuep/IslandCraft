@@ -4,5 +4,6 @@ description: Changes the biome distribution of the world to create an ocean with
 author: hoqhuuep
 website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
 main: com.github.hoqhuuep.islandcraft.worldgenerator.WorldGeneratorPlugin
+depend: [IslandCraft-Core]
 load: STARTUP
 database: true

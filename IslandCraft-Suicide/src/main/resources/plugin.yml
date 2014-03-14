@@ -4,6 +4,7 @@ description: A more explicit command for suicide
 author: hoqhuuep
 website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
 main: com.github.hoqhuuep.islandcraft.suicide.SuicidePlugin
+depend: [IslandCraft-Core]
 commands:
   suicide:
     description: Kill yourself

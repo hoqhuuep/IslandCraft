@@ -4,6 +4,7 @@ description: Allows players to send messages to all players within a radius of t
 author: hoqhuuep
 website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
 main: com.github.hoqhuuep.islandcraft.localchat.LocalChatPlugin
+depend: [IslandCraft-Core]
 commands:
   l:
     description: Send a message to nearby players

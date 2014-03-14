@@ -21,9 +21,11 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.dynmap</groupId>
-			<artifactId>dynmap</artifactId>
-			<version>1.9</version>
+			<groupId>com.githup.hoqhuuep</groupId>
+			<artifactId>IslandCraft-Core</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+			<scope>compile</scope>
+			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>com.githup.hoqhuuep</groupId>
@@ -31,6 +33,11 @@
 			<version>0.0.3-SNAPSHOT</version>
 			<scope>compile</scope>
 			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.dynmap</groupId>
+			<artifactId>dynmap</artifactId>
+			<version>1.9</version>
 		</dependency>
 	</dependencies>
 </project>

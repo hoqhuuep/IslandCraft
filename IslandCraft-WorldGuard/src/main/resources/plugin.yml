@@ -4,4 +4,4 @@ description: Allows players to purchase islands
 author: hoqhuuep
 website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
 main: com.github.hoqhuuep.islandcraft.worldguard.ICWorldGuardPlugin
-depend: [WorldEdit, WorldGuard]
+depend: [IslandCraft-Core, IslandCraft-RealEstate, WorldEdit, WorldGuard]

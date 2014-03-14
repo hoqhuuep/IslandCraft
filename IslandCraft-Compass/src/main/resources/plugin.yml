@@ -4,6 +4,7 @@ description: Create waypoints which can be followed with your compass
 author: hoqhuuep
 website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
 main: com.github.hoqhuuep.islandcraft.compass.CompassPlugin
+depend: [IslandCraft-Core]
 database: true
 commands:
   waypoint:

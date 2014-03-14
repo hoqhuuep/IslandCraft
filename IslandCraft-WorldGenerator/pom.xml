@@ -9,6 +9,13 @@
 	<artifactId>IslandCraft-WorldGenerator</artifactId>
 	<dependencies>
 		<dependency>
+			<groupId>com.githup.hoqhuuep</groupId>
+			<artifactId>IslandCraft-Core</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+			<scope>compile</scope>
+			<type>jar</type>
+		</dependency>
+		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
 			<version>1.7.2-R0.3</version>
