@@ -34,7 +34,7 @@ public class ClockManager {
 			final int minute = (int) ((((time + OFFSET) % ONE_HOUR) * MINUTES_PER_HOUR) / ONE_HOUR);
 			final int second = 0; // TODO calculate seconds
 			final Calendar date = Calendar.getInstance();
-			date.set(Calendar.HOUR, hour);
+			date.set(Calendar.HOUR_OF_DAY, hour);
 			date.set(Calendar.MINUTE, minute);
 			date.set(Calendar.SECOND, second);
 			Message.CLOCK_USE.send(to, date.getTime());
