@@ -7,4 +7,13 @@
 		<version>0.0.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>IslandCraft-Clock</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>com.githup.hoqhuuep</groupId>
+			<artifactId>IslandCraft-Core</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+			<scope>compile</scope>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
 </project>

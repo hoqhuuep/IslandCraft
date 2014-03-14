@@ -1,8 +1,12 @@
 package com.github.hoqhuuep.islandcraft.clock;
 
+import java.util.Calendar;
+
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
+
+import com.github.hoqhuuep.islandcraft.core.Message;
 
 /**
  * @author Daniel Simmons
@@ -14,16 +18,6 @@ public class ClockManager {
 	private static final long MINUTES_PER_HOUR = 60;
 	private static final long ONE_HOUR = ONE_DAY / HOURS_PER_DAY;
 	private static final long OFFSET = 6 * ONE_HOUR;
-	private final ClockConfig config;
-
-	/**
-	 * Creates a <code>ClockManager</code> object.
-	 * 
-	 * @param config
-	 */
-	public ClockManager(final ClockConfig config) {
-		this.config = config;
-	}
 
 	/**
 	 * Sends an appropriate message to a player who asks for the time. If they
@@ -38,9 +32,14 @@ public class ClockManager {
 			final long time = world.getTime();
 			final int hour = (int) (((time + OFFSET) % ONE_DAY) / ONE_HOUR);
 			final int minute = (int) ((((time + OFFSET) % ONE_HOUR) * MINUTES_PER_HOUR) / ONE_HOUR);
-			to.sendMessage(String.format(config.M_CLOCK, hour, minute));
+			final int second = 0; // TODO calculate seconds
+			final Calendar date = Calendar.getInstance();
+			date.set(Calendar.HOUR, hour);
+			date.set(Calendar.MINUTE, minute);
+			date.set(Calendar.SECOND, second);
+			Message.CLOCK_USE.send(to, date.getTime());
 		} else {
-			to.sendMessage(config.M_CLOCK_ERROR);
+			Message.CLOCK_USE_WORLD_ERROR.send(to);
 		}
 	}
 }

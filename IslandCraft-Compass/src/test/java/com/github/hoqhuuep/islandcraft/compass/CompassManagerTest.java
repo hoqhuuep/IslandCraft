@@ -1,17 +1,16 @@
 package com.github.hoqhuuep.islandcraft.compass;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +22,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompassManagerTest {
-	private CompassConfig config;
 	private CompassManager manager;
 
 	@Mock
@@ -35,8 +33,7 @@ public class CompassManagerTest {
 
 	@Before
 	public void setUp() {
-		config = new CompassConfig(YamlConfiguration.loadConfiguration(new File("src/main/resources/config.yml")));
-		manager = new CompassManager(database, config);
+		manager = new CompassManager(database);
 
 		when(world.getEnvironment()).thenReturn(Environment.NORMAL);
 		when(world.getName()).thenReturn("world");
@@ -63,16 +60,16 @@ public class CompassManagerTest {
 		inOrder.verify(database).loadCompass("hoqhuuep");
 		inOrder.verify(database).loadWaypoints("hoqhuuep");
 		inOrder.verify(database).loadWaypoint("hoqhuuep", "a");
-		inOrder.verify(player).sendMessage(String.format(config.M_COMPASS, "a"));
+		inOrder.verify(player).sendMessage(anyString());
 
 		inOrder.verify(database).loadCompass("hoqhuuep");
 		inOrder.verify(database).loadWaypoints("hoqhuuep");
 		inOrder.verify(database).loadWaypoint("hoqhuuep", "b");
-		inOrder.verify(player).sendMessage(String.format(config.M_COMPASS, "b"));
+		inOrder.verify(player).sendMessage(anyString());
 
 		inOrder.verify(database).loadCompass("hoqhuuep");
 		inOrder.verify(database).loadWaypoints("hoqhuuep");
-		inOrder.verify(player).sendMessage(String.format(config.M_COMPASS, "Spawn"));
+		inOrder.verify(player).sendMessage(anyString());
 	}
 
 	@Test
@@ -88,16 +85,16 @@ public class CompassManagerTest {
 		inOrder.verify(database).loadCompass("hoqhuuep");
 		inOrder.verify(database).loadWaypoints("hoqhuuep");
 		inOrder.verify(database).loadWaypoint("hoqhuuep", "b");
-		inOrder.verify(player).sendMessage(String.format(config.M_COMPASS, "b"));
+		inOrder.verify(player).sendMessage(anyString());
 
 		inOrder.verify(database).loadCompass("hoqhuuep");
 		inOrder.verify(database).loadWaypoints("hoqhuuep");
-		inOrder.verify(player).sendMessage(String.format(config.M_COMPASS, "Spawn"));
+		inOrder.verify(player).sendMessage(anyString());
 
 		inOrder.verify(database).loadCompass("hoqhuuep");
 		inOrder.verify(database).loadWaypoints("hoqhuuep");
 		inOrder.verify(database).loadWaypoint("hoqhuuep", "a");
-		inOrder.verify(player).sendMessage(String.format(config.M_COMPASS, "a"));
+		inOrder.verify(player).sendMessage(anyString());
 	}
 
 	@Test
@@ -107,6 +104,6 @@ public class CompassManagerTest {
 		manager.onNextWaypoint(player);
 		manager.onNextWaypoint(player);
 
-		verify(player, times(2)).sendMessage(config.M_COMPASS_ERROR);
+		verify(player, times(2)).sendMessage(anyString());
 	}
 }

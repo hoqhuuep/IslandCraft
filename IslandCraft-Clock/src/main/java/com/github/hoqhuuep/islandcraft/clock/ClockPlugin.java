@@ -10,9 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ClockPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
-		saveDefaultConfig();
-		final ClockConfig config = new ClockConfig(getConfig());
-		final ClockManager manager = new ClockManager(config);
+		final ClockManager manager = new ClockManager();
 		final Listener listener = new ClockListener(manager);
 		getServer().getPluginManager().registerEvents(listener, this);
 	}

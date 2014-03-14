@@ -14,29 +14,6 @@ worlds:
     island-separation: 320
     resource-island-rarity: 0.25
 message:
-  island-abandon: §7[-] Island successfully abandoned
-  island-abandon-world-error: §c[-] You cannot abandon an island from this world
-  island-abandon-ocean-error: §c[-] You cannot abandon the ocean
-  island-abandon-owner-error: §c[-] You cannot abandon an island you do not own
-  island-purchase: §7[-] Island successfully purchased
-  island-purchase-world-error: §c[-] You cannot purchase an island from this world
-  island-purchase-ocean-error: §c[-] You cannot purchase the ocean
-  island-purchase-self-error: §c[-] You cannot purchase an island you already own
-  island-purchase-other-error: §c[-] You cannot purchase an island owned by another player
-  island-purchase-reserved-error: §c[-] You cannot purchase a reserved island
-  island-purchase-resource-error: §c[-] You cannot purchase a resource island
-  island-purchase-funds-error: §c[-] You need %s diamonds in your inventory to purchase this island
-  island-purchase-max-error: §c[-] You cannot purchase any more islands
-  island-tax: §7[-] Tax successfully paid
-  island-tax-world-error: §c[-] You cannot pay tax for an island from this world
-  island-tax-ocean-error: §c[-] You cannot pay tax for the ocean
-  island-tax-owner-error: §c[-] You cannot pay tax for an island you do not own
-  island-tax-max-error: §c[-] You cannot pay any more tax for this island
-  island-tax-funds-error: §c[-] You need %s diamonds in your inventory to pay tax for this island
-  island-rename: §7[-] Island successfully renamed
-  island-rename-world-error: §c[-] You cannot rename an island from this world
-  island-rename-ocean-error: §c[-] You cannot rename the ocean
-  island-rename-owner-error: §c[-] You cannot rename an island you do not own
   island-examine-resource: |
     §7[-] You are on a §aResource§7 island:
     §7[-]   Title: §a%s
@@ -77,20 +54,3 @@ message:
     §7[-]   World: §a%s
     §7[-]   X: §a%s
     §7[-]   Z: §a%s
-  island-examine-world-error: §c[-] You cannot examine an island in this world
-  island-examine-ocean-error: §c[-] You are in the ocean
-  island-enter-reserved: §7[-] Welcome to §a%s
-  island-leave-reserved: §7[-] Now leaving §a%s
-  island-enter-resource: §7[-] Welcome to §a%s
-  island-leave-resource: §7[-] Now leaving §a%s
-  island-enter-new: §7[-] Welcome to §a%s
-  island-leave-new: §7[-] Now leaving §a%s
-  island-enter-abandoned: §7[-] Welcome to §a%s§7, abandoned by §a%s
-  island-leave-abandoned: §7[-] Now leaving §a%s§7, abandoned by §a%s
-  island-enter-repossessed: §7[-] Welcome to §a%s§7, repossessed from §a%s
-  island-leave-repossessed: §7[-] Now leaving §a%s§7, repossessed from §a%s
-  island-enter-private: §7[-] Welcome to §a%s§7 by §a%s
-  island-leave-private: §7[-] Now leaving §a%s§7 by §a%s
-  icset-world-error: §c[-] You cannot update an island in this world
-  icset-ocean-error: §c[-] You cannot update the ocean
-  icset: §7[-] Island successfully updated

@@ -3,23 +3,19 @@ package com.github.hoqhuuep.islandcraft.privatemessage;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 
+import com.github.hoqhuuep.islandcraft.core.Message;
+
 public class PrivateMessageManager {
-	private final PrivateMessageConfig config;
-
-	public PrivateMessageManager(final PrivateMessageConfig config) {
-		this.config = config;
-	}
-
 	public void sendMessage(final CommandSender from, final String toName, final String message) {
 		final CommandSender to = getCommandSender(from.getServer(), toName);
 		if (to == null) {
-			from.sendMessage(config.M_M_ERROR);
+			Message.PLAYER_NOT_ONLINE.send(from);
 			return;
 		}
 		final String fromName = from.getName();
-		final String formattedMessage = String.format(config.M_M, fromName, toName, message);
-		from.sendMessage(formattedMessage);
-		to.sendMessage(formattedMessage);
+		final String toNameRevised = to.getName();
+		Message.PRIVATE_MESSAGE.send(from, fromName, toNameRevised, message);
+		Message.PRIVATE_MESSAGE.send(to, fromName, toNameRevised, message);
 	}
 
 	private CommandSender getCommandSender(final Server server, final String name) {

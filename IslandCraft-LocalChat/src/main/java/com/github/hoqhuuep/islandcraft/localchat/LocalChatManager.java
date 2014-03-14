@@ -5,6 +5,8 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import com.github.hoqhuuep.islandcraft.core.Message;
+
 public class LocalChatManager {
 	final LocalChatConfig config;
 
@@ -20,7 +22,7 @@ public class LocalChatManager {
 			final Location toLocation = to.getLocation();
 			final double radius = config.LOCAL_CHAT_RADIUS;
 			if (fromLocation.distanceSquared(toLocation) <= radius * radius) {
-				to.sendMessage(String.format(config.M_L, fromName, message));
+				Message.LOCAL_MESSAGE.send(to, fromName, message);
 			}
 		}
 	}

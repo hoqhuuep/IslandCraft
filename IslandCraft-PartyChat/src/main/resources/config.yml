@@ -1,8 +1,0 @@
-message:
-  p: "[%s->§a%s§f] %s"
-  party-join: §7[-] You are now a member of §a%s
-  party-join-notify: §7[-] §a%s§7 has joined your party
-  party-leave: §7[-] You are no longer a member of §a%s
-  party-leave-notify: §7[-] §a%s§7 has left your party
-  party-members: "§7[-] Members: §a%s"
-  party-none: §c[-] You are not a member of any party

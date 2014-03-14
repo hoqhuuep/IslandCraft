@@ -14,7 +14,6 @@ import com.avaje.ebean.EbeanServer;
 public class PartyChatPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
-		saveDefaultConfig();
 		// Hack to ensure database exists
 		try {
 			getDatabase().find(PartyBean.class).findRowCount();
@@ -23,8 +22,7 @@ public class PartyChatPlugin extends JavaPlugin {
 		}
 		final EbeanServer ebean = getDatabase();
 		final PartyDatabase database = new PartyDatabase(ebean);
-		final PartyChatConfig config = new PartyChatConfig(getConfig());
-		final PartyChatManager manager = new PartyChatManager(database, config);
+		final PartyChatManager manager = new PartyChatManager(database);
 
 		final CommandExecutor pCommandExecutor = new PCommandExecutor(manager);
 		getCommand("p").setExecutor(pCommandExecutor);

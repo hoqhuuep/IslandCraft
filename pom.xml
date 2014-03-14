@@ -18,6 +18,7 @@
 	</properties>
 
 	<modules>
+		<module>IslandCraft-Core</module>
 		<module>IslandCraft-Clock</module>
 		<module>IslandCraft-Compass</module>
 		<module>IslandCraft-Dynmap</module>

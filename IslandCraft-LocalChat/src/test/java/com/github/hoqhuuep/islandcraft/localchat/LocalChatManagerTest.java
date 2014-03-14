@@ -57,8 +57,8 @@ public class LocalChatManagerTest {
 	public void testLocalMessage() {
 		manager.sendLocalMessage(sender, "hello world");
 
-		verify(sender).sendMessage(String.format(config.M_L, "sender", "hello world"));
-		verify(near).sendMessage(String.format(config.M_L, "sender", "hello world"));
+		verify(sender).sendMessage(anyString());
+		verify(near).sendMessage(anyString());
 		verify(far, never()).sendMessage(anyString());
 	}
 
@@ -67,7 +67,7 @@ public class LocalChatManagerTest {
 		manager.sendLocalMessage(far, "hello world");
 
 		verify(sender, never()).sendMessage(anyString());
-		verify(far).sendMessage(String.format(config.M_L, "far", "hello world"));
+		verify(far).sendMessage(anyString());
 		verify(near, never()).sendMessage(anyString());
 	}
 }

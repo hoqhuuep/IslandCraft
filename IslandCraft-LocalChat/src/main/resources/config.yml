@@ -1,3 +1,1 @@
 local-chat-radius: 128
-message:
-  l: "[%s->§alocal§f] %s"

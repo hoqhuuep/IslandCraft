@@ -1,3 +1,0 @@
-message:
-  m: "[%s->%s] %s"
-  m-error: §c[-] No such player
