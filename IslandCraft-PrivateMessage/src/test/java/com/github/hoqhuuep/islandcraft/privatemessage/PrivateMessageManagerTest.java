@@ -29,6 +29,8 @@ public class PrivateMessageManagerTest {
 
 	@Before
 	public void setUp() {
+		manager = new PrivateMessageManager();
+
 		when(player1.getName()).thenReturn("hoqhuuep");
 		when(player2.getName()).thenReturn("hoqhuuep_prime");
 		when(console.getName()).thenReturn("CONSOLE");
