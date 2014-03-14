@@ -1,5 +1,5 @@
 worlds:
-  world:
+  world_islandcraft:
     island-size: 288
     island-separation: 320
     inter-island-biome: DEEP_OCEAN

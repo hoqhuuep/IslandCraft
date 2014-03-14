@@ -9,7 +9,7 @@ tax-days-increase: 500
 tax-days-max: 2000
 max-islands-per-player: 7
 worlds:
-  world:
+  world_islandcraft:
     island-size: 288
     island-separation: 320
     resource-island-rarity: 0.25
