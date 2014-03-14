@@ -10,6 +10,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
+import com.github.hoqhuuep.islandcraft.core.Message;
+
 @Entity
 @Table(name = "island")
 public class IslandDeed {
@@ -17,7 +19,8 @@ public class IslandDeed {
 	private SerializableLocation id;
 
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "world", column = @Column(name = "inner_world")),
+	@AttributeOverrides({
+			@AttributeOverride(name = "world", column = @Column(name = "inner_world")),
 			@AttributeOverride(name = "minX", column = @Column(name = "inner_min_x")),
 			@AttributeOverride(name = "minY", column = @Column(name = "inner_min_y")),
 			@AttributeOverride(name = "minZ", column = @Column(name = "inner_min_z")),
@@ -27,7 +30,8 @@ public class IslandDeed {
 	private SerializableRegion innerRegion;
 
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "world", column = @Column(name = "outer_world")),
+	@AttributeOverrides({
+			@AttributeOverride(name = "world", column = @Column(name = "outer_world")),
 			@AttributeOverride(name = "minX", column = @Column(name = "outer_min_x")),
 			@AttributeOverride(name = "minY", column = @Column(name = "outer_min_y")),
 			@AttributeOverride(name = "minZ", column = @Column(name = "outer_min_z")),
@@ -70,6 +74,30 @@ public class IslandDeed {
 	}
 
 	public String getTitle() {
+		return title;
+	}
+
+	public String getTitleWithDefault() {
+		if (title == null) {
+			if (status == IslandStatus.ABANDONED) {
+				return Message.ISLAND_TITLE_ABANDONED.format();
+			}
+			if (status == IslandStatus.NEW) {
+				return Message.ISLAND_TITLE_NEW.format();
+			}
+			if (status == IslandStatus.PRIVATE) {
+				return Message.ISLAND_TITLE_PRIVATE.format();
+			}
+			if (status == IslandStatus.REPOSSESSED) {
+				return Message.ISLAND_TITLE_REPOSSESSED.format();
+			}
+			if (status == IslandStatus.RESERVED) {
+				return Message.ISLAND_TITLE_RESERVED.format();
+			}
+			if (status == IslandStatus.RESOURCE) {
+				return Message.ISLAND_TITLE_RESOURCE.format();
+			}
+		}
 		return title;
 	}
 

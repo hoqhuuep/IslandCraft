@@ -65,13 +65,13 @@ public class RealEstateManager {
 				deed.setTax(-1);
 				if (geometry.isSpawn(island)) {
 					deed.setStatus(IslandStatus.RESERVED);
-					deed.setTitle("Spawn Island");
+					deed.setTitle(Message.ISLAND_TITLE_SPAWN.format());
 				} else if (geometry.isResource(island, worldSeed)) {
 					deed.setStatus(IslandStatus.RESOURCE);
-					deed.setTitle("Resource Island");
+					deed.setTitle(null);
 				} else {
 					deed.setStatus(IslandStatus.NEW);
-					deed.setTitle("New Island");
+					deed.setTitle(null);
 				}
 				database.saveIsland(deed);
 			}
@@ -133,7 +133,7 @@ public class RealEstateManager {
 		}
 		final IslandDeed deed = database.loadIsland(island);
 		final IslandStatus status = deed.getStatus();
-		final String title = deed.getTitle();
+		final String title = deed.getTitleWithDefault();
 		final String owner = deed.getOwner();
 		final int tax = deed.getTax();
 		if (status == IslandStatus.RESOURCE) {
@@ -208,7 +208,7 @@ public class RealEstateManager {
 		// Success
 		deed.setStatus(IslandStatus.PRIVATE);
 		deed.setOwner(name);
-		deed.setTitle("Private Island");
+		deed.setTitle(null);
 		deed.setTax(config.TAX_DAYS_INITIAL);
 		database.saveIsland(deed);
 		Message.ISLAND_PURCHASE.send(player);
@@ -283,7 +283,7 @@ public class RealEstateManager {
 					if (status == IslandStatus.REPOSSESSED || status == IslandStatus.ABANDONED) {
 						deed.setStatus(IslandStatus.NEW);
 						deed.setOwner(null);
-						deed.setTitle("New Island");
+						deed.setTitle(null);
 						deed.setTax(-1);
 						database.saveIsland(deed);
 						Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
@@ -401,12 +401,12 @@ public class RealEstateManager {
 		}
 		final IslandDeed fromIsland = lastIsland.get(name);
 		if (fromIsland != null) {
-			if (toIsland == null || !equals(toIsland.getTitle(), fromIsland.getTitle()) || !equals(toIsland.getOwner(), fromIsland.getOwner())) {
+			if (toIsland == null || !equals(toIsland.getTitleWithDefault(), fromIsland.getTitleWithDefault()) || !equals(toIsland.getOwner(), fromIsland.getOwner())) {
 				leaveIsland(player, fromIsland);
 			}
 		}
 		if (toIsland != null) {
-			if (fromIsland == null || !equals(toIsland.getTitle(), fromIsland.getTitle()) || !equals(toIsland.getOwner(), fromIsland.getOwner())) {
+			if (fromIsland == null || !equals(toIsland.getTitleWithDefault(), fromIsland.getTitleWithDefault()) || !equals(toIsland.getOwner(), fromIsland.getOwner())) {
 				enterIsland(player, toIsland);
 			}
 		}
@@ -415,7 +415,7 @@ public class RealEstateManager {
 
 	private void enterIsland(final Player player, final IslandDeed deed) {
 		final IslandStatus status = deed.getStatus();
-		final String title = deed.getTitle();
+		String title = deed.getTitleWithDefault();
 		final String owner = deed.getOwner();
 		if (status == IslandStatus.RESOURCE) {
 			Message.ISLAND_ENTER_RESOURCE.send(player, title);
@@ -434,7 +434,7 @@ public class RealEstateManager {
 
 	private void leaveIsland(final Player player, final IslandDeed deed) {
 		final IslandStatus status = deed.getStatus();
-		final String title = deed.getTitle();
+		String title = deed.getTitleWithDefault();
 		final String owner = deed.getOwner();
 		if (status == IslandStatus.RESOURCE) {
 			Message.ISLAND_LEAVE_RESOURCE.send(player, title);

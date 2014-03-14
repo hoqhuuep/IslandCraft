@@ -24,7 +24,7 @@ public class IslandListener implements Listener {
 	public void onIsland(final IslandEvent event) {
 		final IslandDeed deed = event.getDeed();
 		final IslandStatus status = deed.getStatus();
-		final String title = deed.getTitle();
+		final String title = deed.getTitleWithDefault();
 		final SerializableLocation island = deed.getId();
 		final String id = island.getWorld() + "'" + island.getX() + "'" + island.getY() + "'" + island.getZ();
 		final SerializableRegion region = deed.getInnerRegion();

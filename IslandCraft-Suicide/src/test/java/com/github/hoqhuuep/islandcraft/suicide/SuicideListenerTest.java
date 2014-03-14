@@ -56,12 +56,4 @@ public class SuicideListenerTest {
 		verify(consoleCommandSender).sendMessage(anyString());
 		assertEquals(true, result);
 	}
-
-	@Test
-	public void testNull() {
-		final boolean result = suicideCommandExecutor.onCommand(null, null, null, new String[] {});
-
-		verify(manager, never()).suicide(any(Player.class));
-		assertEquals(true, result);
-	}
 }

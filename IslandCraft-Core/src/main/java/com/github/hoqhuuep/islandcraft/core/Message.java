@@ -53,10 +53,18 @@ public enum Message {
 	ISLAND_TAX_OCEAN_ERROR,
 	ISLAND_TAX_OWNER_ERROR,
 	ISLAND_TAX_WORLD_ERROR,
+	ISLAND_TITLE_ABANDONED,
+	ISLAND_TITLE_NEW,
+	ISLAND_TITLE_PRIVATE,
+	ISLAND_TITLE_REPOSSESSED,
+	ISLAND_TITLE_RESERVED,
+	ISLAND_TITLE_RESOURCE,
+	ISLAND_TITLE_SPAWN,
 	ISLAND_UPDATE,
 	ISLAND_UPDATE_OCEAN_ERROR,
 	ISLAND_UPDATE_WORLD_ERROR,
 	LOCAL_MESSAGE,
+	NOT_PLAYER_ERROR,
 	PARTY_JOIN,
 	PARTY_JOIN_NOTIFY,
 	PARTY_LEAVE,
@@ -77,7 +85,11 @@ public enum Message {
 	WAYPOINT_SET_WORLD_ERROR;
 
 	public void send(final CommandSender to, final Object... args) {
-		to.sendMessage(messageFormat.format(args));
+		to.sendMessage(format(args));
+	}
+
+	public String format(final Object... args) {
+		return messageFormat.format(args);
 	}
 
 	public static void setLocale(final Locale locale) {

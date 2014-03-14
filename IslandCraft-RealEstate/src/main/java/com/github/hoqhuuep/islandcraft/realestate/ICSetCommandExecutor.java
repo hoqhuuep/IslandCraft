@@ -11,6 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import com.github.hoqhuuep.islandcraft.core.Message;
+
 public class ICSetCommandExecutor implements CommandExecutor, TabCompleter {
 	private final RealEstateManager realEstateManager;
 
@@ -20,7 +22,11 @@ public class ICSetCommandExecutor implements CommandExecutor, TabCompleter {
 
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-		if (null == sender || !(sender instanceof Player) || args.length < 1) {
+		if (!(sender instanceof Player)) {
+			Message.NOT_PLAYER_ERROR.send(sender);
+			return true;
+		}
+		if (args.length < 1) {
 			return false;
 		}
 		final Player player = (Player) sender;
