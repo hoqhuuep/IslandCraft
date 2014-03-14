@@ -21,13 +21,6 @@ public class RealEstateConfig {
 	public final int MAX_ISLANDS_PER_PLAYER;
 	public final Map<String, WorldConfig> WORLD_CONFIGS;
 
-	public final String M_ISLAND_EXAMINE_RESOURCE;
-	public final String M_ISLAND_EXAMINE_RESERVED;
-	public final String M_ISLAND_EXAMINE_NEW;
-	public final String M_ISLAND_EXAMINE_ABANDONED;
-	public final String M_ISLAND_EXAMINE_REPOSSESSED;
-	public final String M_ISLAND_EXAMINE_PRIVATE;
-
 	public RealEstateConfig(final ConfigurationSection config) {
 		PURCHASE_COST_ITEM = Material.matchMaterial(config.getString("purchase-cost-item"));
 		PURCHASE_COST_AMOUNT = config.getInt("purchase-cost-amount");
@@ -77,13 +70,5 @@ public class RealEstateConfig {
 		for (final String key : worlds.getKeys(false)) {
 			WORLD_CONFIGS.put(key, new WorldConfig(worlds.getConfigurationSection(key)));
 		}
-
-		final ConfigurationSection message = config.getConfigurationSection("message");
-		M_ISLAND_EXAMINE_RESOURCE = message.getString("island-examine-resource");
-		M_ISLAND_EXAMINE_RESERVED = message.getString("island-examine-reserved");
-		M_ISLAND_EXAMINE_NEW = message.getString("island-examine-new");
-		M_ISLAND_EXAMINE_ABANDONED = message.getString("island-examine-abandoned");
-		M_ISLAND_EXAMINE_REPOSSESSED = message.getString("island-examine-repossessed");
-		M_ISLAND_EXAMINE_PRIVATE = message.getString("island-examine-private");
 	}
 }

@@ -131,33 +131,23 @@ public class RealEstateManager {
 			Message.ISLAND_EXAMINE_OCEAN_ERROR.send(player);
 			return;
 		}
-
-		final String world = island.getWorld();
-		final int x = island.getX();
-		final int z = island.getZ();
 		final IslandDeed deed = database.loadIsland(island);
 		final IslandStatus status = deed.getStatus();
 		final String title = deed.getTitle();
 		final String owner = deed.getOwner();
 		final int tax = deed.getTax();
-		final String taxString;
-		if (tax < 0) {
-			taxString = "infinite";
-		} else {
-			taxString = String.valueOf(tax) + " minecraft days";
-		}
 		if (status == IslandStatus.RESOURCE) {
-			player.sendMessage(String.format(config.M_ISLAND_EXAMINE_RESOURCE, title, world, x, z));
+			Message.ISLAND_EXAMINE_RESOURCE.send(player, title, status);
 		} else if (status == IslandStatus.RESERVED) {
-			player.sendMessage(String.format(config.M_ISLAND_EXAMINE_RESERVED, title, world, x, z));
+			Message.ISLAND_EXAMINE_RESERVED.send(player, title, status);
 		} else if (status == IslandStatus.NEW) {
-			player.sendMessage(String.format(config.M_ISLAND_EXAMINE_NEW, title, world, x, z));
+			Message.ISLAND_EXAMINE_NEW.send(player, title, status);
 		} else if (status == IslandStatus.ABANDONED) {
-			player.sendMessage(String.format(config.M_ISLAND_EXAMINE_ABANDONED, owner, title, world, x, z));
+			Message.ISLAND_EXAMINE_ABANDONED.send(player, title, status, owner);
 		} else if (status == IslandStatus.REPOSSESSED) {
-			player.sendMessage(String.format(config.M_ISLAND_EXAMINE_REPOSSESSED, owner, title, world, x, z));
+			Message.ISLAND_EXAMINE_REPOSSESSED.send(player, title, status, owner);
 		} else if (status == IslandStatus.PRIVATE) {
-			player.sendMessage(String.format(config.M_ISLAND_EXAMINE_PRIVATE, owner, title, taxString, world, x, z));
+			Message.ISLAND_EXAMINE_PRIVATE.send(player, title, status, owner, tax);
 		}
 	}
 
