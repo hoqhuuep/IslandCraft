@@ -92,18 +92,17 @@ public enum Message {
 		return messageFormat.format(args);
 	}
 
-	public static void setLocale(final Locale locale) {
-		final ResourceBundle messages = ResourceBundle.getBundle("messages", locale);
+	public static void setBundle(final ResourceBundle bundle) {
 		for (Message message : values()) {
-			final String pattern = StringEscapeUtils.unescapeJava(messages.getString(message.toString()));
-			message.messageFormat = new MessageFormat(pattern, locale);
+			final String pattern = StringEscapeUtils.unescapeJava(bundle.getString(message.toString()));
+			message.messageFormat = new MessageFormat(pattern, bundle.getLocale());
 		}
 	}
 
 	private MessageFormat messageFormat;
 
 	private Message() {
-		final Locale locale = Locale.ENGLISH;
+		final Locale locale = Locale.getDefault();
 		final ResourceBundle messages = ResourceBundle.getBundle("messages", locale);
 		final String pattern = messages.getString(toString());
 		messageFormat = new MessageFormat(pattern, locale);
