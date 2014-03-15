@@ -76,7 +76,7 @@ public class RealEstatePlugin extends JavaPlugin {
 
 	private boolean setupEconomy() {
 		try {
-			final RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+			final RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
 			if (economyProvider != null) {
 				economy = economyProvider.getProvider();
 			}
