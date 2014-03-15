@@ -6,27 +6,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.milkbowl.vault.economy.Economy;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import com.github.hoqhuuep.islandcraft.core.Message;
 
 public class RealEstateManager {
+	private final Economy economy;
 	private final RealEstateDatabase database;
 	private final RealEstateConfig config;
 	private final Map<String, IslandDeed> lastIsland;
 	private final Map<String, Geometry> geometryMap;
 	private final Set<SerializableLocation> loadedIslands;
 
-	public RealEstateManager(final RealEstateDatabase database, final RealEstateConfig config) {
+	public RealEstateManager(final RealEstateDatabase database, final RealEstateConfig config, final Economy economy) {
 		this.database = database;
 		this.config = config;
+		this.economy = economy;
 		lastIsland = new HashMap<String, IslandDeed>();
 		geometryMap = new HashMap<String, Geometry>();
 		loadedIslands = new HashSet<SerializableLocation>();
@@ -158,7 +159,8 @@ public class RealEstateManager {
 	 * @param player
 	 */
 	public final void onPurchase(final Player player) {
-		final Geometry geometry = getGeometry(player.getWorld().getName());
+		final String worldName = player.getWorld().getName();
+		final Geometry geometry = getGeometry(worldName);
 		if (geometry == null) {
 			Message.ISLAND_PURCHASE_WORLD_ERROR.send(player);
 			return;
@@ -172,7 +174,7 @@ public class RealEstateManager {
 
 		final IslandDeed deed = database.loadIsland(island);
 		final IslandStatus status = deed.getStatus();
-		final String name = player.getName();
+		final String playerName = player.getName();
 
 		if (IslandStatus.RESERVED == status) {
 			Message.ISLAND_PURCHASE_RESERVED_ERROR.send(player);
@@ -184,7 +186,7 @@ public class RealEstateManager {
 		}
 		if (IslandStatus.PRIVATE == status) {
 			final String owner = deed.getOwner();
-			if (StringUtils.equals(owner, name)) {
+			if (StringUtils.equals(owner, playerName)) {
 				Message.ISLAND_PURCHASE_SELF_ERROR.send(player);
 			} else {
 				Message.ISLAND_PURCHASE_OTHER_ERROR.send(player);
@@ -192,22 +194,22 @@ public class RealEstateManager {
 			return;
 		}
 		// if config.MAX_ISLANDS_PER_PLAYER is -1 then infinite
-		if (config.MAX_ISLANDS_PER_PLAYER > 0 && islandCount(name) >= config.MAX_ISLANDS_PER_PLAYER) {
+		if (config.MAX_ISLANDS_PER_PLAYER > 0 && islandCount(playerName) >= config.MAX_ISLANDS_PER_PLAYER) {
 			Message.ISLAND_PURCHASE_MAX_ERROR.send(player);
 			return;
 		}
 
-		final int cost = calculatePurchaseCost(name);
+		final int cost = calculatePurchaseCost(playerName);
 
-		if (!takeItems(player, config.PURCHASE_COST_ITEM, cost)) {
+		if (!economy.withdrawPlayer(playerName, worldName, cost).transactionSuccess()) {
 			// Insufficient funds
-			Message.ISLAND_PURCHASE_FUNDS_ERROR.send(player, cost, config.PURCHASE_COST_ITEM);
+			Message.ISLAND_PURCHASE_FUNDS_ERROR.send(player, cost);
 			return;
 		}
 
 		// Success
 		deed.setStatus(IslandStatus.PRIVATE);
-		deed.setOwner(name);
+		deed.setOwner(playerName);
 		deed.setTitle(null);
 		deed.setTax(config.TAX_DAYS_INITIAL);
 		database.saveIsland(deed);
@@ -217,7 +219,8 @@ public class RealEstateManager {
 	}
 
 	public void onTax(final Player player) {
-		final Geometry geometry = getGeometry(player.getWorld().getName());
+		final String worldName = player.getWorld().getName();
+		final Geometry geometry = getGeometry(worldName);
 		if (geometry == null) {
 			Message.ISLAND_TAX_WORLD_ERROR.send(player);
 			return;
@@ -228,9 +231,9 @@ public class RealEstateManager {
 			Message.ISLAND_TAX_OCEAN_ERROR.send(player);
 			return;
 		}
-		final String name = player.getName();
+		final String playerName = player.getName();
 		final IslandDeed deed = database.loadIsland(island);
-		if (deed.getStatus() != IslandStatus.PRIVATE || !deed.getOwner().equals(name)) {
+		if (deed.getStatus() != IslandStatus.PRIVATE || !deed.getOwner().equals(playerName)) {
 			Message.ISLAND_TAX_OWNER_ERROR.send(player);
 			return;
 		}
@@ -241,11 +244,11 @@ public class RealEstateManager {
 			return;
 		}
 
-		final int cost = calculateTaxCost(name);
+		final int cost = calculateTaxCost(playerName);
 
-		if (!takeItems(player, config.TAX_COST_ITEM, cost)) {
+		if (!economy.withdrawPlayer(playerName, worldName, cost).transactionSuccess()) {
 			// Insufficient funds
-			Message.ISLAND_TAX_FUNDS_ERROR.send(player, cost, config.TAX_COST_ITEM);
+			Message.ISLAND_TAX_FUNDS_ERROR.send(player, cost);
 			return;
 		}
 
@@ -360,25 +363,6 @@ public class RealEstateManager {
 			}
 		}
 		return count;
-	}
-
-	private static final Integer FIRST = new Integer(0);
-
-	private boolean takeItems(final Player player, final Material item, final int amount) {
-		final PlayerInventory inventory = player.getInventory();
-		if (!inventory.containsAtLeast(new ItemStack(item), amount)) {
-			// Not enough
-			return false;
-		}
-		final Map<Integer, ItemStack> result = inventory.removeItem(new ItemStack(item, amount));
-		if (!result.isEmpty()) {
-			// Something went wrong, refund
-			final int missing = result.get(FIRST).getAmount();
-			inventory.addItem(new ItemStack(item, amount - missing));
-			return false;
-		}
-		// Success
-		return true;
 	}
 
 	public void onMove(final Player player, final Location to) {

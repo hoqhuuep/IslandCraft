@@ -58,13 +58,7 @@ public class IslandListener implements Listener {
 			areaConfig = config.PRIVATE;
 			final String owner = deed.getOwner();
 			final int tax = deed.getTax();
-			final String taxString;
-			if (tax < 0) {
-				taxString = "infinite";
-			} else {
-				taxString = String.valueOf(tax) + " minecraft days";
-			}
-			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, title, owner, taxString));
+			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, title, owner, tax));
 		} else {
 			// This should never happen...
 			areaConfig = null;

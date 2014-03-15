@@ -1,9 +1,7 @@
-purchase-cost-item: DIAMOND
-purchase-cost-amount: 1
-purchase-cost-increase: 1
-tax-cost-item: DIAMOND
-tax-cost-amount: 1
-tax-cost-increase: 1
+purchase-cost-amount: 1000000
+purchase-cost-increase: 1000000
+tax-cost-amount: 1000000
+tax-cost-increase: 1000000
 tax-days-initial: 500
 tax-days-increase: 500
 tax-days-max: 2000

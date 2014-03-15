@@ -2,30 +2,52 @@ package com.github.hoqhuuep.islandcraft.realestate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.persistence.PersistenceException;
 
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.avaje.ebean.EbeanServer;
 
 public class RealEstatePlugin extends JavaPlugin {
+	private static final Logger log = Logger.getLogger("Minecraft");
+	private Economy economy = null;
+	private RealEstateDatabase database = null;
+	private RealEstateConfig config = null;
+
 	public void onEnable() {
-		saveDefaultConfig();
-		final EbeanServer database = getDatabase();
-		// Hack to ensure database exists
-		try {
-			database.find(IslandDeed.class).findRowCount();
-		} catch (final PersistenceException e) {
-			installDDL();
+		final PluginManager pluginManager = getServer().getPluginManager();
+
+		// Database
+		if (!setupDatabase()) {
+			log.severe(String.format("[%s] - Disabled due to database error!", getDescription().getName()));
+			pluginManager.disablePlugin(this);
+			return;
 		}
 
-		final RealEstateConfig config = new RealEstateConfig(getConfig());
+		// Configuration
+		if (!setupConfig()) {
+			log.severe(String.format("[%s] - Disabled due to config error!", getDescription().getName()));
+			pluginManager.disablePlugin(this);
+			return;
+		}
+
+		// Vault Economy
+		if (!setupEconomy()) {
+			log.severe(String.format("[%s] - Disabled due to no Vault economy dependency found!", getDescription().getName()));
+			pluginManager.disablePlugin(this);
+			return;
+		}
 
 		// Manager
-		final RealEstateManager realEstateManager = new RealEstateManager(new RealEstateDatabase(getDatabase()), config);
+		final RealEstateManager realEstateManager = new RealEstateManager(database, config, economy);
 
 		// Commands
 		final IslandCommandExecutor islandCommandExecutor = new IslandCommandExecutor(realEstateManager);
@@ -39,7 +61,6 @@ public class RealEstatePlugin extends JavaPlugin {
 		icSetCommand.setTabCompleter(icSetCommandExecutor);
 
 		// Events
-		final PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new WorldLoadListener(realEstateManager, config), this);
 		new DawnScheduler(this).run();
 		pluginManager.registerEvents(new DawnListener(realEstateManager), this);
@@ -51,5 +72,46 @@ public class RealEstatePlugin extends JavaPlugin {
 	public List<Class<?>> getDatabaseClasses() {
 		final Class<?>[] classes = { IslandDeed.class, SerializableLocation.class, SerializableRegion.class };
 		return Arrays.asList(classes);
+	}
+
+	private boolean setupEconomy() {
+		try {
+			final RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+			if (economyProvider != null) {
+				economy = economyProvider.getProvider();
+			}
+			return economy != null;
+		} catch (final Exception e) {
+			return false;
+		}
+	}
+
+	private boolean setupDatabase() {
+		try {
+			// Hack to ensure database exists
+			try {
+				getDatabase().find(IslandDeed.class).findRowCount();
+			} catch (final PersistenceException e) {
+				installDDL();
+			}
+			final EbeanServer ebean = getDatabase();
+			if (ebean == null) {
+				return false;
+			}
+			database = new RealEstateDatabase(ebean);
+			return true;
+		} catch (final Exception e) {
+			return false;
+		}
+	}
+
+	private boolean setupConfig() {
+		saveDefaultConfig();
+		final FileConfiguration fileConfig = getConfig();
+		if (fileConfig == null) {
+			return false;
+		}
+		config = new RealEstateConfig(fileConfig);
+		return true;
 	}
 }
