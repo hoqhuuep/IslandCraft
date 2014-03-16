@@ -37,6 +37,7 @@ public class IslandListener implements Listener {
 			areaMarker.setLabel(name, false);
 		}
 		final AreaConfig areaConfig;
+		// TODO update descriptions
 		if (status == IslandStatus.RESERVED) {
 			areaConfig = config.RESERVED;
 			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, name));

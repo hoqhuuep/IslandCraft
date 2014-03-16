@@ -234,7 +234,7 @@ public class RealEstateManager {
 		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
 	}
 
-	public void onAdvertise(final Player player, final Double price) {
+	public void onAdvertise(final Player player, final double price) {
 		final String worldName = player.getWorld().getName();
 		final Geometry geometry = getGeometry(worldName);
 		if (geometry == null) {
@@ -407,7 +407,6 @@ public class RealEstateManager {
 			// Not an IslandCraft world
 			return;
 		}
-		// TODO for sale islands seem to change their price
 		final List<IslandBean> islands = database.loadIslandsByWorld(world);
 		for (final IslandBean island : islands) {
 			final Double taxPaid = island.getTaxPaid();

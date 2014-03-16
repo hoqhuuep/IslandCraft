@@ -25,10 +25,6 @@ public class RealEstateDatabase {
 		return loadedIsland;
 	}
 
-	public final List<IslandBean> loadIslands() {
-		return ebean.find(IslandBean.class).findList();
-	}
-
 	public final List<IslandBean> loadIslandsByWorld(final String world) {
 		return loadIslandsBy("world", world);
 	}
@@ -38,26 +34,31 @@ public class RealEstateDatabase {
 	}
 
 	private List<IslandBean> loadIslandsBy(final String key, final String value) {
-		return ebean.find(IslandBean.class).where().ieq(key, value).findList();
+		final List<IslandBean> result = ebean.find(IslandBean.class).where().ieq(key, value).findList();
+		for (final IslandBean bean : result) {
+			cache.put(bean.getId(), bean);
+		}
+		return result;
 	}
 
-	public final void saveIsland(final IslandBean deed) {
+	public final void saveIsland(final IslandBean island) {
 		// Reload bean from database as it might only be a cached one
-		final SerializableLocation id = deed.getId();
+		final SerializableLocation id = island.getId();
 		final IslandBean fresh = ebean.find(IslandBean.class, id);
 		if (fresh == null) {
-			ebean.save(deed);
-			cache.put(id, deed);
+			ebean.save(island);
+			cache.put(id, island);
 			return;
 		}
-		fresh.setInnerRegion(deed.getInnerRegion());
-		fresh.setOuterRegion(deed.getOuterRegion());
-		fresh.setStatus(deed.getStatus());
-		fresh.setName(deed.getName());
-		fresh.setOwner(deed.getOwner());
-		fresh.setTaxPaid(deed.getTaxPaid());
-		fresh.setTimeToLive(deed.getTimeToLive());
+		fresh.setInnerRegion(island.getInnerRegion());
+		fresh.setOuterRegion(island.getOuterRegion());
+		fresh.setStatus(island.getStatus());
+		fresh.setName(island.getName());
+		fresh.setOwner(island.getOwner());
+		fresh.setPrice(island.getPrice());
+		fresh.setTaxPaid(island.getTaxPaid());
+		fresh.setTimeToLive(island.getTimeToLive());
 		ebean.update(fresh);
-		cache.put(id, deed);
+		cache.put(id, fresh);
 	}
 }
