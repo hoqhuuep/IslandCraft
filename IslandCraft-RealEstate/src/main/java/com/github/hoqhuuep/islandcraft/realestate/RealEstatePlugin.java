@@ -83,16 +83,15 @@ public class RealEstatePlugin extends JavaPlugin {
 		icSetCommand.setTabCompleter(icSetCommandExecutor);
 
 		// Events
-		pluginManager.registerEvents(new WorldLoadListener(realEstateManager, config), this);
+		pluginManager.registerEvents(new LoadListener(realEstateManager, config), this);
 		new DawnScheduler(this).run();
 		pluginManager.registerEvents(new DawnListener(realEstateManager), this);
-		pluginManager.registerEvents(new ChunkLoadListener(realEstateManager), this);
-		pluginManager.registerEvents(new PlayerMoveListener(realEstateManager), this);
+		pluginManager.registerEvents(new PlayerListener(realEstateManager), this);
 	}
 
 	@Override
 	public List<Class<?>> getDatabaseClasses() {
-		final Class<?>[] classes = { IslandDeed.class, SerializableLocation.class, SerializableRegion.class };
+		final Class<?>[] classes = { IslandBean.class, SerializableLocation.class, SerializableRegion.class };
 		return Arrays.asList(classes);
 	}
 
@@ -112,7 +111,7 @@ public class RealEstatePlugin extends JavaPlugin {
 		try {
 			// Hack to ensure database exists
 			try {
-				getDatabase().find(IslandDeed.class).findRowCount();
+				getDatabase().find(IslandBean.class).findRowCount();
 			} catch (final PersistenceException e) {
 				installDDL();
 			}

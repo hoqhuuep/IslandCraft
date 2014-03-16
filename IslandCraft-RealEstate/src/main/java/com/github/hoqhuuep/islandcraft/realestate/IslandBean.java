@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "island")
-public class IslandDeed {
+public class IslandBean {
 	@EmbeddedId
 	private SerializableLocation id;
 
@@ -41,15 +41,33 @@ public class IslandDeed {
 	@Column
 	@Enumerated(EnumType.STRING)
 	private IslandStatus status;
-
+	@Column
+	private String name;
 	@Column
 	private String owner;
-
 	@Column
-	private String title;
-
+	private Double price;
 	@Column
-	private Integer tax;
+	private Double taxPaid;
+	@Column
+	private Double timeToLive;
+
+	public IslandBean() {
+		// Default constructor
+	}
+
+	public IslandBean(final IslandBean other) {
+		// Copy constructor
+		id = other.id;
+		innerRegion = other.innerRegion;
+		outerRegion = other.outerRegion;
+		status = other.status;
+		name = other.name;
+		owner = other.owner;
+		price = other.price;
+		taxPaid = other.taxPaid;
+		timeToLive = other.timeToLive;
+	}
 
 	public SerializableLocation getId() {
 		return id;
@@ -67,40 +85,24 @@ public class IslandDeed {
 		return status;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public String getOwner() {
 		return owner;
 	}
 
-	public String getTitle() {
-		return title;
+	public Double getPrice() {
+		return price;
 	}
 
-	public String getTitleWithDefault() {
-		if (title == null) {
-			if (status == IslandStatus.ABANDONED) {
-				return Message.ISLAND_TITLE_ABANDONED.format();
-			}
-			if (status == IslandStatus.NEW) {
-				return Message.ISLAND_TITLE_NEW.format();
-			}
-			if (status == IslandStatus.PRIVATE) {
-				return Message.ISLAND_TITLE_PRIVATE.format();
-			}
-			if (status == IslandStatus.REPOSSESSED) {
-				return Message.ISLAND_TITLE_REPOSSESSED.format();
-			}
-			if (status == IslandStatus.RESERVED) {
-				return Message.ISLAND_TITLE_RESERVED.format();
-			}
-			if (status == IslandStatus.RESOURCE) {
-				return Message.ISLAND_TITLE_RESOURCE.format();
-			}
-		}
-		return title;
+	public Double getTaxPaid() {
+		return taxPaid;
 	}
 
-	public Integer getTax() {
-		return tax;
+	public Double getTimeToLive() {
+		return timeToLive;
 	}
 
 	public void setId(final SerializableLocation id) {
@@ -119,15 +121,45 @@ public class IslandDeed {
 		this.status = status;
 	}
 
+	public void setName(final String name) {
+		this.name = name;
+	}
+
 	public void setOwner(final String owner) {
 		this.owner = owner;
 	}
 
-	public void setTitle(final String title) {
-		this.title = title;
+	public void setPrice(final Double price) {
+		this.price = price;
 	}
 
-	public void setTax(final Integer tax) {
-		this.tax = tax;
+	public void setTaxPaid(final Double taxPaid) {
+		this.taxPaid = taxPaid;
+	}
+
+	public void setTimeToLive(final Double timeToLive) {
+		this.timeToLive = timeToLive;
+	}
+
+	public String getNameOrDefault() {
+		if (name == null) {
+			switch (status) {
+			case RESERVED:
+				return Message.NAME_RESERVED.format();
+			case RESOURCE:
+				return Message.NAME_RESOURCE.format();
+			case NEW:
+				return Message.NAME_NEW.format();
+			case PRIVATE:
+				return Message.NAME_PRIVATE.format();
+			case ABANDONED:
+				return Message.NAME_ABANDONED.format();
+			case REPOSSESSED:
+				return Message.NAME_REPOSSESSED.format();
+			case FOR_SALE:
+				return Message.NAME_FOR_SALE.format();
+			}
+		}
+		return name;
 	}
 }

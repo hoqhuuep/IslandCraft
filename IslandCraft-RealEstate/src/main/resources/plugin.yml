@@ -17,7 +17,8 @@ commands:
       /<command> abandon - Abandon an island
       /<command> examine - List information about an island
       /<command> rename - Give a new name to an island
-      /<command> tax - Pay tax for an island
+      /<command> paytax - Pay tax for an island
+      /<command> reclaim - Reclaim an abandoned or repossessed island
   island purchase:
     description: Purchase the island you are standing on
     permission: islandcraft.command.island.purchase
@@ -26,9 +27,13 @@ commands:
     description: Abandon the island you are standing on
     permission: islandcraft.command.island.abandon
     usage: /<command>
-  island tax:
+  island paytax:
     description: Pay 500 days tax for the island you are standing on
-    permission: islandcraft.command.island.tax
+    permission: islandcraft.command.island.paytax
+    usage: /<command> <amount>
+  island reclaim:
+    description: Reclaim an abandoned or repossessed island you are standing on
+    permission: islandcraft.command.island.reclaim
     usage: /<command>
   island examine:
     description: List information about the island you are standing on
@@ -44,38 +49,39 @@ commands:
     usage: |
       Use /help <command> [subcommand] for more information
       /<command> owner - Override the owner of an island
-      /<command> title - Override the title of an island
+      /<command> name - Override the name of an island
       /<command> status - Override the status of an island
-      /<command> tax - Override the tax of an island
+      /<command> taxpaid - Override the tax paid for an island
   icset owner:
     description: Override the owner of an island
     permission: islandcraft.command.icset.owner
     usage: /<command> <player>
-  icset title:
-    description: Override the title of an island
-    permission: islandcraft.command.icset.title
+  icset name:
+    description: Override the name of an island
+    permission: islandcraft.command.icset.name
     usage: /<command> <title>
   icset status:
     description: Override the status of an island
     permission: islandcraft.command.icset.status
     usage: /<command> <status>
-  icset tax:
-    description: Override the tax of an island
-    permission: islandcraft.command.icset.tax
-    usage: /<command> <tax>
+  icset taxpaid:
+    description: Override the tax paid for an island
+    permission: islandcraft.command.icset.taxpaid
+    usage: /<command> <taxpaid>
 permissions:
   islandcraft.command.island:
     default: true
     children:
       islandcraft.command.island.purchase: true
       islandcraft.command.island.abandon: true
-      islandcraft.command.island.tax: true
+      islandcraft.command.island.paytax: true
+      islandcraft.command.island.reclaim: true
       islandcraft.command.island.examine: true
       islandcraft.command.island.rename: true
   islandcraft.command.icset:
     default: op
     children:
       islandcraft.command.icset.owner: true
-      islandcraft.command.icset.title: true
+      islandcraft.command.icset.name: true
       islandcraft.command.icset.status: true
-      islandcraft.command.icset.tax: true
+      islandcraft.command.icset.taxpaid: true

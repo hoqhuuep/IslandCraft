@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerSet;
 
-import com.github.hoqhuuep.islandcraft.realestate.IslandDeed;
+import com.github.hoqhuuep.islandcraft.realestate.IslandBean;
 import com.github.hoqhuuep.islandcraft.realestate.IslandEvent;
 import com.github.hoqhuuep.islandcraft.realestate.IslandStatus;
 import com.github.hoqhuuep.islandcraft.realestate.SerializableLocation;
@@ -22,46 +22,51 @@ public class IslandListener implements Listener {
 
 	@EventHandler
 	public void onIsland(final IslandEvent event) {
-		final IslandDeed deed = event.getDeed();
-		final IslandStatus status = deed.getStatus();
-		final String title = deed.getTitleWithDefault();
-		final SerializableLocation island = deed.getId();
-		final String id = island.getWorld() + "'" + island.getX() + "'" + island.getY() + "'" + island.getZ();
-		final SerializableRegion region = deed.getInnerRegion();
+		final IslandBean island = event.getDeed();
+		final SerializableLocation id = island.getId();
+		final IslandStatus status = island.getStatus();
+		final String name = island.getNameOrDefault();
+		final String markerId = id.getWorld() + "'" + id.getX() + "'" + id.getY() + "'" + id.getZ();
+		final SerializableRegion region = island.getInnerRegion();
 		final double[] xs = { region.getMinX(), region.getMinX(), region.getMaxX(), region.getMaxX() };
 		final double[] zs = { region.getMinZ(), region.getMaxZ(), region.getMaxZ(), region.getMinZ() };
-		AreaMarker areaMarker = markerSet.findAreaMarker(id);
+		AreaMarker areaMarker = markerSet.findAreaMarker(markerId);
 		if (areaMarker == null) {
-			areaMarker = markerSet.createAreaMarker(id, title, false, island.getWorld(), xs, zs, true);
+			areaMarker = markerSet.createAreaMarker(markerId, name, false, id.getWorld(), xs, zs, true);
 		} else {
-			areaMarker.setLabel(title, false);
+			areaMarker.setLabel(name, false);
 		}
 		final AreaConfig areaConfig;
 		if (status == IslandStatus.RESERVED) {
 			areaConfig = config.RESERVED;
-			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, title));
+			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, name));
 		} else if (status == IslandStatus.RESOURCE) {
 			areaConfig = config.RESOURCE;
-			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, title));
+			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, name));
 		} else if (status == IslandStatus.NEW) {
 			areaConfig = config.NEW;
-			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, title));
-		} else if (status == IslandStatus.ABANDONED) {
-			areaConfig = config.ABANDONED;
-			final String owner = deed.getOwner();
-			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, title, owner));
-		} else if (status == IslandStatus.REPOSSESSED) {
-			areaConfig = config.REPOSSESSED;
-			final String owner = deed.getOwner();
-			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, title, owner));
+			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, name));
 		} else if (status == IslandStatus.PRIVATE) {
 			areaConfig = config.PRIVATE;
-			final String owner = deed.getOwner();
-			final int tax = deed.getTax();
-			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, title, owner, tax));
+			final String owner = island.getOwner();
+			final double taxPaid = island.getTaxPaid();
+			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, name, owner, taxPaid));
+		} else if (status == IslandStatus.ABANDONED) {
+			areaConfig = config.ABANDONED;
+			final String owner = island.getOwner();
+			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, name, owner));
+		} else if (status == IslandStatus.REPOSSESSED) {
+			areaConfig = config.REPOSSESSED;
+			final String owner = island.getOwner();
+			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, name, owner));
+		} else if (status == IslandStatus.FOR_SALE) {
+			areaConfig = config.PRIVATE;
+			final String owner = island.getOwner();
+			final double taxPaid = island.getTaxPaid();
+			areaMarker.setDescription(String.format(areaConfig.DESCRIPTION, name, owner, taxPaid));
 		} else {
 			// This should never happen...
-			areaConfig = null;
+			return;
 		}
 		areaMarker.setFillStyle(areaConfig.FILL_OPACITY, areaConfig.FILL_COLOR);
 		areaMarker.setLineStyle(areaConfig.LINE_WIDTH, areaConfig.LINE_OPACITY, areaConfig.LINE_COLOR);

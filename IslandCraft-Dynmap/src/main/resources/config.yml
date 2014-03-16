@@ -25,6 +25,17 @@ new:
   description: |
     <strong>%s</strong><br />
     Status: New
+private:
+  fill-opacity: 0.25
+  fill-color: 0x0000FF
+  line-width: 2
+  line-opacity: 0.5
+  line-color: 0x0000FF
+  description: |
+    <strong>%s</strong><br />
+    Status: Private<br />
+    Owner: %s<br />
+    Tax Paid: %s
 abandoned:
   fill-opacity: 0.25
   fill-color: 0xFF0000
@@ -45,7 +56,7 @@ repossessed:
     <strong>%s</strong><br />
     Status: Repossessed<br />
     Previous Owner: %s
-private:
+for-sale:
   fill-opacity: 0.25
   fill-color: 0x0000FF
   line-width: 2

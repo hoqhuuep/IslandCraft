@@ -21,7 +21,7 @@ public class ICSetCommandExecutor implements CommandExecutor, TabCompleter {
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (!(sender instanceof Player)) {
-			Message.NOT_PLAYER_ERROR.send(sender);
+			Message.NOT_PLAYER.send(sender);
 			return true;
 		}
 		if (args.length < 1) {
@@ -34,13 +34,13 @@ public class ICSetCommandExecutor implements CommandExecutor, TabCompleter {
 			}
 			realEstateManager.setOwner(player, args[1]);
 			return true;
-		} else if ("title".equalsIgnoreCase(args[0])) {
+		} else if ("name".equalsIgnoreCase(args[0])) {
 			final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
 			final String name = StringUtils.join(nameArray, " ");
 			if (name.isEmpty()) {
 				return false;
 			}
-			realEstateManager.setTitle(player, name);
+			realEstateManager.setName(player, name);
 			return true;
 		} else if ("status".equalsIgnoreCase(args[0])) {
 			if (2 != args.length) {
@@ -55,7 +55,7 @@ public class ICSetCommandExecutor implements CommandExecutor, TabCompleter {
 			}
 			realEstateManager.setStatus(player, status);
 			return true;
-		} else if ("tax".equalsIgnoreCase(args[0])) {
+		} else if ("taxpaid".equalsIgnoreCase(args[0])) {
 			if (2 != args.length) {
 				return false;
 			}
@@ -66,13 +66,13 @@ public class ICSetCommandExecutor implements CommandExecutor, TabCompleter {
 			} catch (final NumberFormatException e) {
 				return false;
 			}
-			realEstateManager.setTax(player, tax);
+			realEstateManager.setTaxPaid(player, tax);
 			return true;
 		}
 		return false;
 	}
 
-	private static final String[] OPTIONS = { "owner", "title", "status", "tax" };
+	private static final String[] OPTIONS = { "owner", "name", "status", "taxpaid" };
 
 	@Override
 	public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {

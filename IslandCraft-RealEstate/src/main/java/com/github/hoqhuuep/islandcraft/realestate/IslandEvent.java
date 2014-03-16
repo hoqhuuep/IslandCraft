@@ -5,13 +5,13 @@ import org.bukkit.event.HandlerList;
 
 public class IslandEvent extends Event {
 	private static final HandlerList handlers = new HandlerList();
-	private final IslandDeed deed;
+	private final IslandBean deed;
 
-	public IslandEvent(final IslandDeed deed) {
+	public IslandEvent(final IslandBean deed) {
 		this.deed = deed;
 	}
 
-	public final IslandDeed getDeed() {
+	public final IslandBean getDeed() {
 		return deed;
 	}
 

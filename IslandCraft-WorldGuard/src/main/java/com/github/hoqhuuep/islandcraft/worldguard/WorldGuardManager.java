@@ -3,7 +3,7 @@ package com.github.hoqhuuep.islandcraft.worldguard;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
-import com.github.hoqhuuep.islandcraft.realestate.IslandDeed;
+import com.github.hoqhuuep.islandcraft.realestate.IslandBean;
 import com.github.hoqhuuep.islandcraft.realestate.IslandStatus;
 import com.github.hoqhuuep.islandcraft.realestate.SerializableRegion;
 import com.sk89q.worldedit.BlockVector;
@@ -23,11 +23,11 @@ public class WorldGuardManager {
 		this.worldGuard = worldGuard;
 	}
 
-	public void onIsland(final IslandDeed deed) {
+	public void onIsland(final IslandBean deed) {
 		final IslandStatus status = deed.getStatus();
 		if (status == IslandStatus.RESOURCE) {
 			setPublic(deed.getOuterRegion());
-		} else if (status == IslandStatus.PRIVATE) {
+		} else if (status == IslandStatus.PRIVATE || status == IslandStatus.FOR_SALE) {
 			setPrivate(deed.getOuterRegion(), deed.getOwner());
 		} else {
 			setReserved(deed.getOuterRegion());

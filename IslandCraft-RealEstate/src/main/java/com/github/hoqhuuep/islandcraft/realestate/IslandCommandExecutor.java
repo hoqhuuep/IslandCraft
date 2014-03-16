@@ -21,7 +21,7 @@ public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (!(sender instanceof Player)) {
-			Message.NOT_PLAYER_ERROR.send(sender);
+			Message.NOT_PLAYER.send(sender);
 			return true;
 		}
 		if (args.length < 1) {
@@ -40,17 +40,29 @@ public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
 			}
 			realEstateManager.onAbandon(player);
 			return true;
-		} else if ("tax".equalsIgnoreCase(args[0])) {
-			if (1 != args.length) {
+		} else if ("paytax".equalsIgnoreCase(args[0])) {
+			if (2 != args.length) {
 				return false;
 			}
-			realEstateManager.onTax(player);
+			final double amount;
+			try {
+				amount = Double.parseDouble(args[1]);
+			} catch (final NumberFormatException e) {
+				return false;
+			}
+			realEstateManager.onPayTax(player, amount);
 			return true;
 		} else if ("examine".equalsIgnoreCase(args[0])) {
 			if (1 != args.length) {
 				return false;
 			}
 			realEstateManager.onExamine(player);
+			return true;
+		} else if ("reclaim".equalsIgnoreCase(args[0])) {
+			if (1 != args.length) {
+				return false;
+			}
+			realEstateManager.onReclaim(player);
 			return true;
 		} else if ("rename".equalsIgnoreCase(args[0])) {
 			final String[] nameArray = Arrays.copyOfRange(args, 1, args.length);
@@ -64,7 +76,7 @@ public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
 		return false;
 	}
 
-	private static final String[] OPTIONS = { "purchase", "abandon", "tax", "examine", "rename" };
+	private static final String[] OPTIONS = { "purchase", "abandon", "paytax", "examine", "reclaim", "rename" };
 
 	@Override
 	public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {

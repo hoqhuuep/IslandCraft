@@ -189,10 +189,6 @@ public class Geometry {
 		return new SerializableRegion(world, xMid - outerRadius, 0, zMid - outerRadius, xMid + outerRadius, Bukkit.getWorld(world).getMaxHeight(), zMid + outerRadius);
 	}
 
-	public final boolean isOcean(final SerializableLocation island) {
-		return island == null;
-	}
-
 	public final boolean isSpawn(final SerializableLocation island) {
 		return island.getX() == 0 && island.getZ() == 0;
 	}

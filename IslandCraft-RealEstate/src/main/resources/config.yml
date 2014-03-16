@@ -2,9 +2,9 @@ purchase-cost-amount: 1000000
 purchase-cost-increase: 1000000
 tax-cost-amount: 1000000
 tax-cost-increase: 1000000
-tax-days-initial: 500
-tax-days-increase: 500
-tax-days-max: 2000
+tax-initial: 1000000
+tax-increase: 500
+tax-max: 2000
 max-islands-per-player: 7
 worlds:
   world_islandcraft:

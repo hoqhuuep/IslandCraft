@@ -9,10 +9,10 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-public class PlayerMoveListener implements Listener {
+public class PlayerListener implements Listener {
 	private final RealEstateManager realEstateManager;
 
-	public PlayerMoveListener(final RealEstateManager realEstateManager) {
+	public PlayerListener(final RealEstateManager realEstateManager) {
 		this.realEstateManager = realEstateManager;
 	}
 
