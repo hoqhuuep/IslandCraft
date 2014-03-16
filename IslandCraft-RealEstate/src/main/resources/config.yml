@@ -1,10 +1,5 @@
-purchase-cost-amount: 1000000
-purchase-cost-increase: 1000000
-tax-cost-amount: 1000000
-tax-cost-increase: 1000000
-tax-initial: 1000000
-tax-increase: 500
-tax-max: 2000
+initial-tax: 10
+maximum-tax: 10
 max-islands-per-player: 7
 worlds:
   world_islandcraft:

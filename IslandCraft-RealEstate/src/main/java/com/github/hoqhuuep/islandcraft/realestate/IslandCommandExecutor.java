@@ -52,6 +52,18 @@ public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
 			}
 			realEstateManager.onPayTax(player, amount);
 			return true;
+		} else if ("advertise".equalsIgnoreCase(args[0])) {
+			if (2 != args.length) {
+				return false;
+			}
+			final double price;
+			try {
+				price = Double.parseDouble(args[1]);
+			} catch (final NumberFormatException e) {
+				return false;
+			}
+			realEstateManager.onAdvertise(player, price);
+			return true;
 		} else if ("examine".equalsIgnoreCase(args[0])) {
 			if (1 != args.length) {
 				return false;
@@ -76,7 +88,7 @@ public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
 		return false;
 	}
 
-	private static final String[] OPTIONS = { "purchase", "abandon", "paytax", "examine", "reclaim", "rename" };
+	private static final String[] OPTIONS = { "purchase", "abandon", "paytax", "advertise", "examine", "reclaim", "rename" };
 
 	@Override
 	public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {

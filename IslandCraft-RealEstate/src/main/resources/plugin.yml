@@ -18,6 +18,7 @@ commands:
       /<command> examine - List information about an island
       /<command> rename - Give a new name to an island
       /<command> paytax - Pay tax for an island
+      /<command> advertise - Sell an island
       /<command> reclaim - Reclaim an abandoned or repossessed island
   island purchase:
     description: Purchase the island you are standing on
@@ -28,9 +29,13 @@ commands:
     permission: islandcraft.command.island.abandon
     usage: /<command>
   island paytax:
-    description: Pay 500 days tax for the island you are standing on
+    description: Pay tax for the island you are standing on
     permission: islandcraft.command.island.paytax
     usage: /<command> <amount>
+  island advertise:
+    description: Put the island you are standing on up for sale
+    permission: islandcraft.command.island.advertise
+    usage: /<command> <price>
   island reclaim:
     description: Reclaim an abandoned or repossessed island you are standing on
     permission: islandcraft.command.island.reclaim
@@ -75,6 +80,7 @@ permissions:
       islandcraft.command.island.purchase: true
       islandcraft.command.island.abandon: true
       islandcraft.command.island.paytax: true
+      islandcraft.command.island.advertise: true
       islandcraft.command.island.reclaim: true
       islandcraft.command.island.examine: true
       islandcraft.command.island.rename: true

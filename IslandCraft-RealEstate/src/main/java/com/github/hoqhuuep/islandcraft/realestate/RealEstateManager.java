@@ -69,7 +69,7 @@ public class RealEstateManager {
 
 		final double price = island.getPrice();
 		if (!economy.withdrawPlayer(playerName, worldName, price).transactionSuccess()) {
-			Message.PURCHASE_FUNDS_ERROR.send(player, price);
+			Message.PURCHASE_FUNDS_ERROR.send(player, price, economy.currencyNamePlural());
 			return;
 		}
 
@@ -157,6 +157,18 @@ public class RealEstateManager {
 			return;
 		}
 
+		// config.MAX_ISLANDS_PER_PLAYER < 0 => infinite
+		if (config.MAX_ISLANDS_PER_PLAYER >= 0 && islandCount(playerName) >= config.MAX_ISLANDS_PER_PLAYER) {
+			Message.RECLAIM_MAX_ERROR.send(player);
+			return;
+		}
+
+		final double price = island.getPrice();
+		if (!economy.withdrawPlayer(playerName, worldName, price).transactionSuccess()) {
+			Message.RECLAIM_FUNDS_ERROR.send(player, price, economy.currencyNamePlural());
+			return;
+		}
+
 		// Success
 		island.setStatus(IslandStatus.PRIVATE);
 		// = name
@@ -206,7 +218,7 @@ public class RealEstateManager {
 		}
 
 		if (!economy.withdrawPlayer(playerName, worldName, amount).transactionSuccess()) {
-			Message.PAY_TAX_FUNDS_ERROR.send(player, amount);
+			Message.PAY_TAX_FUNDS_ERROR.send(player, amount, economy.currencyNamePlural());
 			return;
 		}
 
@@ -222,7 +234,7 @@ public class RealEstateManager {
 		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
 	}
 
-	public void onAdvertise(final Player player, final Double amount) {
+	public void onAdvertise(final Player player, final Double price) {
 		final String worldName = player.getWorld().getName();
 		final Geometry geometry = getGeometry(worldName);
 		if (geometry == null) {
@@ -251,17 +263,17 @@ public class RealEstateManager {
 			return;
 		}
 
-		// TODO validate amount
+		// TODO validate price
 
 		// Success
 		island.setStatus(IslandStatus.FOR_SALE);
 		// = name
 		// = owner
-		island.setPrice(amount);
+		island.setPrice(price);
 		// = tax paid
 		// = time to live
 		database.saveIsland(island);
-		Message.ADVERTISE.send(player, amount);
+		Message.ADVERTISE.send(player, price, economy.currencyNamePlural());
 		onMove(player, player.getLocation());
 		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
 	}
@@ -368,9 +380,9 @@ public class RealEstateManager {
 		final IslandStatus status = island.getStatus();
 		final String name = island.getNameOrDefault();
 		final String ownerName = island.getOwner();
-		final double price = island.getPrice();
-		final double taxPaid = island.getTaxPaid();
-		final double timeToLive = island.getTimeToLive();
+		final Double price = island.getPrice();
+		final Double taxPaid = island.getTaxPaid();
+		final Double timeToLive = island.getTimeToLive();
 
 		if (status == IslandStatus.RESOURCE) {
 			Message.EXAMINE.send(player, Message.LONG_DESCRIPTION_RESOURCE.format(name, status, timeToLive));
@@ -395,13 +407,14 @@ public class RealEstateManager {
 			// Not an IslandCraft world
 			return;
 		}
+		// TODO for sale islands seem to change their price
 		final List<IslandBean> islands = database.loadIslandsByWorld(world);
 		for (final IslandBean island : islands) {
 			final Double taxPaid = island.getTaxPaid();
 			if (taxPaid != null) {
 				if (taxPaid > 0) {
 					// Decrement tax
-					island.setTaxPaid(taxPaid - 1);
+					island.setTaxPaid(taxPaid - 1); // TODO by amount?
 					database.saveIsland(island);
 					Bukkit.getPluginManager().callEvent(new IslandEvent(island));
 				} else if (taxPaid == 0) {
@@ -516,42 +529,43 @@ public class RealEstateManager {
 		}
 		final IslandBean fromIsland = lastIsland.get(name);
 		if (fromIsland != null) {
-			if (toIsland == null || !equals(toIsland.getNameOrDefault(), fromIsland.getNameOrDefault()) || !equals(toIsland.getOwner(), fromIsland.getOwner())) {
-				announce(player, fromIsland, Message.LEAVE);
+			final String fromDescription = getShortDescription(fromIsland);
+			if (toIsland == null || !getShortDescription(toIsland).equals(fromDescription)) {
+				Message.LEAVE.send(player, fromDescription);
 			}
 		}
 		if (toIsland != null) {
-			if (fromIsland == null || !equals(toIsland.getNameOrDefault(), fromIsland.getNameOrDefault()) || !equals(toIsland.getOwner(), fromIsland.getOwner())) {
-				announce(player, toIsland, Message.ENTER);
+			final String toDescription = getShortDescription(toIsland);
+			if (fromIsland == null || !getShortDescription(fromIsland).equals(toDescription)) {
+				Message.ENTER.send(player, toDescription);
 			}
+			lastIsland.put(name, new IslandBean(toIsland));
+		} else {
+			lastIsland.remove(name);
 		}
-		lastIsland.put(name, new IslandBean(toIsland));
 	}
 
-	private void announce(final Player player, final IslandBean island, final Message message) {
+	private String getShortDescription(final IslandBean island) {
 		final IslandStatus status = island.getStatus();
 		final String name = island.getNameOrDefault();
 		final Double price = island.getPrice();
 		final String ownerName = island.getOwner();
 		if (status == IslandStatus.RESOURCE) {
-			message.send(player, Message.SHORT_DESCRIPTION_RESOURCE.format(name));
+			return Message.SHORT_DESCRIPTION_RESOURCE.format(name);
 		} else if (status == IslandStatus.RESERVED) {
-			message.send(player, Message.SHORT_DESCRIPTION_RESERVED.format(name));
+			return Message.SHORT_DESCRIPTION_RESERVED.format(name);
 		} else if (status == IslandStatus.NEW) {
-			message.send(player, Message.SHORT_DESCRIPTION_NEW.format(name, price, economy.currencyNamePlural()));
+			return Message.SHORT_DESCRIPTION_NEW.format(name, price, economy.currencyNamePlural());
 		} else if (status == IslandStatus.PRIVATE) {
-			message.send(player, Message.SHORT_DESCRIPTION_PRIVATE.format(name, ownerName));
+			return Message.SHORT_DESCRIPTION_PRIVATE.format(name, ownerName);
 		} else if (status == IslandStatus.ABANDONED) {
-			message.send(player, Message.SHORT_DESCRIPTION_ABANDONED.format(name, ownerName));
+			return Message.SHORT_DESCRIPTION_ABANDONED.format(name, ownerName);
 		} else if (status == IslandStatus.REPOSSESSED) {
-			message.send(player, Message.SHORT_DESCRIPTION_REPOSSESSED.format(name, ownerName));
+			return Message.SHORT_DESCRIPTION_REPOSSESSED.format(name, ownerName);
 		} else if (status == IslandStatus.FOR_SALE) {
-			message.send(player, Message.SHORT_DESCRIPTION_FOR_SALE.format(name, ownerName, price, economy.currencyNamePlural()));
+			return Message.SHORT_DESCRIPTION_FOR_SALE.format(name, ownerName, price, economy.currencyNamePlural());
 		}
-	}
-
-	private boolean equals(final Object a, final Object b) {
-		return (a == null && b == null) || (a != null && b != null && a.equals(b));
+		return null;
 	}
 
 	public void addGeometry(final String world, final Geometry geometry) {
