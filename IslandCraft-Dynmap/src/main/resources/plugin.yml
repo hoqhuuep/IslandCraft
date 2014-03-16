@@ -4,4 +4,4 @@ description: Shows IslandCraft layer in Dynmap
 author: hoqhuuep
 website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
 main: com.github.hoqhuuep.islandcraft.dynmap.ICDynmapPlugin
-depend: [IslandCraft-Core, IslandCraft-RealEstate, dynmap]
+depend: [IslandCraft-RealEstate, dynmap]

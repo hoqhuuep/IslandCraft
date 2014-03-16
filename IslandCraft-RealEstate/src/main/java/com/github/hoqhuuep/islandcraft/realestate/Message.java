@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.core;
+package com.github.hoqhuuep.islandcraft.realestate;
 
 import java.text.MessageFormat;
 import java.util.Locale;

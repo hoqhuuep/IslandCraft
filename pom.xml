@@ -18,7 +18,6 @@
 	</properties>
 
 	<modules>
-		<module>IslandCraft-Core</module>
 		<module>IslandCraft-Dynmap</module>
 		<module>IslandCraft-RealEstate</module>
 		<module>IslandCraft-WorldGenerator</module>

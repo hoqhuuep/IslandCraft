@@ -10,8 +10,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
-import com.github.hoqhuuep.islandcraft.core.Message;
-
 @Entity
 @Table(name = "island")
 public class IslandDeed {

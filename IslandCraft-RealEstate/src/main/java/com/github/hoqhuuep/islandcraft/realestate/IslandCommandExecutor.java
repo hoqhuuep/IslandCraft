@@ -11,8 +11,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import com.github.hoqhuuep.islandcraft.core.Message;
-
 public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
 	private final RealEstateManager realEstateManager;
 
