@@ -28,7 +28,7 @@ public class LoadListener implements Listener {
 		final World world = event.getWorld();
 		final String name = world.getName();
 		if (config.WORLD_CONFIGS.containsKey(name)) {
-			realEstateManager.addGeometry(name, new Geometry(config.WORLD_CONFIGS.get(name)));
+			realEstateManager.initWorld(name);
 			for (final Chunk chunk : world.getLoadedChunks()) {
 				chunkLoad(chunk);
 			}
@@ -39,8 +39,7 @@ public class LoadListener implements Listener {
 		final World world = chunk.getWorld();
 		final int x = chunk.getX() * BLOCKS_PER_CHUNK;
 		final int z = chunk.getZ() * BLOCKS_PER_CHUNK;
-		final long seed = world.getSeed();
-		final Location location = new Location(world, x, 0, z);
-		realEstateManager.onLoad(location, seed);
+		final Location location = new Location(world, x, world.getSeaLevel(), z);
+		realEstateManager.onLoad(location);
 	}
 }

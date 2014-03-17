@@ -1,6 +1,6 @@
-initial-tax: 10
-maximum-tax: 10
-max-islands-per-player: 7
+initial-tax: 5
+maximum-tax: 20
+max-islands-per-player: 3
 worlds:
   world_islandcraft:
     island-size: 288

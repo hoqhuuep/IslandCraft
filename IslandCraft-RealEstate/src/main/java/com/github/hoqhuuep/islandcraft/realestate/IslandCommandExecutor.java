@@ -74,6 +74,7 @@ public class IslandCommandExecutor implements CommandExecutor, TabCompleter {
 			if (1 != args.length) {
 				return false;
 			}
+			realEstateManager.onRegenerate(player); // TODO remove this, just a test
 			realEstateManager.onReclaim(player);
 			return true;
 		} else if ("rename".equalsIgnoreCase(args[0])) {

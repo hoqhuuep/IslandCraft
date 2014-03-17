@@ -19,7 +19,7 @@ public class RealEstateManager {
 	private final RealEstateDatabase database;
 	private final RealEstateConfig config;
 	private final Map<String, IslandBean> lastIsland;
-	private final Map<String, Geometry> geometryMap;
+	private final Map<String, IslandCraftWorld> islandCraftWorlds;
 	private final Set<SerializableLocation> loadedIslands;
 
 	public RealEstateManager(final RealEstateDatabase database, final RealEstateConfig config, final Economy economy) {
@@ -27,25 +27,15 @@ public class RealEstateManager {
 		this.config = config;
 		this.economy = economy;
 		lastIsland = new HashMap<String, IslandBean>();
-		geometryMap = new HashMap<String, Geometry>();
+		islandCraftWorlds = new HashMap<String, IslandCraftWorld>();
 		loadedIslands = new HashSet<SerializableLocation>();
 	}
 
 	public final void onPurchase(final Player player) {
-		final String worldName = player.getWorld().getName();
-		final Geometry geometry = getGeometry(worldName);
-		if (geometry == null) {
-			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+		final IslandBean island = getIsland(player);
+		if (island == null) {
 			return;
 		}
-		final Location location = player.getLocation();
-		final SerializableLocation id = geometry.getInnerIsland(location);
-		if (id == null) {
-			Message.NOT_ISLAND.send(player);
-			return;
-		}
-
-		final IslandBean island = database.loadIsland(id);
 		final IslandStatus status = island.getStatus();
 		final String ownerName = island.getOwner();
 		final String playerName = player.getName();
@@ -68,7 +58,7 @@ public class RealEstateManager {
 		}
 
 		final double price = island.getPrice();
-		if (!economy.withdrawPlayer(playerName, worldName, price).transactionSuccess()) {
+		if (!economy.withdrawPlayer(playerName, player.getWorld().getName(), price).transactionSuccess()) {
 			Message.PURCHASE_FUNDS_ERROR.send(player, price, economy.currencyNamePlural());
 			return;
 		}
@@ -80,27 +70,14 @@ public class RealEstateManager {
 		island.setPrice(null);
 		island.setTaxPaid(config.INITIAL_TAX);
 		island.setTimeToLive(null);
-		database.saveIsland(island);
-		Message.PURCHASE.send(player);
-		onMove(player, player.getLocation());
-		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+		updateIsland(island, player, Message.PURCHASE);
 	}
 
 	public final void onAbandon(final Player player) {
-		final String worldName = player.getWorld().getName();
-		final Geometry geometry = getGeometry(worldName);
-		if (geometry == null) {
-			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+		final IslandBean island = getIsland(player);
+		if (island == null) {
 			return;
 		}
-		final Location location = player.getLocation();
-		final SerializableLocation id = geometry.getInnerIsland(location);
-		if (id == null) {
-			Message.NOT_ISLAND.send(player);
-			return;
-		}
-
-		final IslandBean island = database.loadIsland(id);
 		final IslandStatus status = island.getStatus();
 		final String ownerName = island.getOwner();
 		final String playerName = player.getName();
@@ -119,30 +96,17 @@ public class RealEstateManager {
 		island.setStatus(IslandStatus.ABANDONED);
 		// = name
 		// = owner
-		island.setPrice(5000.0); // TODO price to reclaim
+		island.setPrice(config.RECLAIM_PRICE);
 		island.setTaxPaid(null);
-		island.setTimeToLive(10.0); // TODO time to regenerate
-		database.saveIsland(island);
-		Message.ABANDON.send(player);
-		onMove(player, player.getLocation());
-		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+		island.setTimeToLive(config.ABANDONED_REGENERATION_TIME);
+		updateIsland(island, player, Message.ABANDON);
 	}
 
 	public final void onReclaim(final Player player) {
-		final String worldName = player.getWorld().getName();
-		final Geometry geometry = getGeometry(worldName);
-		if (geometry == null) {
-			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+		final IslandBean island = getIsland(player);
+		if (island == null) {
 			return;
 		}
-		final Location location = player.getLocation();
-		final SerializableLocation id = geometry.getInnerIsland(location);
-		if (id == null) {
-			Message.NOT_ISLAND.send(player);
-			return;
-		}
-
-		final IslandBean island = database.loadIsland(id);
 		final IslandStatus status = island.getStatus();
 		final String ownerName = island.getOwner();
 		final String playerName = player.getName();
@@ -164,7 +128,7 @@ public class RealEstateManager {
 		}
 
 		final double price = island.getPrice();
-		if (!economy.withdrawPlayer(playerName, worldName, price).transactionSuccess()) {
+		if (!economy.withdrawPlayer(playerName, player.getWorld().getName(), price).transactionSuccess()) {
 			Message.RECLAIM_FUNDS_ERROR.send(player, price, economy.currencyNamePlural());
 			return;
 		}
@@ -176,27 +140,14 @@ public class RealEstateManager {
 		island.setPrice(null);
 		island.setTaxPaid(config.INITIAL_TAX);
 		island.setTimeToLive(null);
-		database.saveIsland(island);
-		Message.RECLAIM.send(player);
-		onMove(player, player.getLocation());
-		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+		updateIsland(island, player, Message.RECLAIM);
 	}
 
 	public void onPayTax(final Player player, final Double amount) {
-		final String worldName = player.getWorld().getName();
-		final Geometry geometry = getGeometry(worldName);
-		if (geometry == null) {
-			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+		final IslandBean island = getIsland(player);
+		if (island == null) {
 			return;
 		}
-		final Location location = player.getLocation();
-		final SerializableLocation id = geometry.getInnerIsland(location);
-		if (id == null) {
-			Message.NOT_ISLAND.send(player);
-			return;
-		}
-
-		final IslandBean island = database.loadIsland(id);
 		final IslandStatus status = island.getStatus();
 		final String ownerName = island.getOwner();
 		final String playerName = player.getName();
@@ -217,7 +168,7 @@ public class RealEstateManager {
 			return;
 		}
 
-		if (!economy.withdrawPlayer(playerName, worldName, amount).transactionSuccess()) {
+		if (!economy.withdrawPlayer(playerName, player.getWorld().getName(), amount).transactionSuccess()) {
 			Message.PAY_TAX_FUNDS_ERROR.send(player, amount, economy.currencyNamePlural());
 			return;
 		}
@@ -229,26 +180,14 @@ public class RealEstateManager {
 		// = price
 		island.setTaxPaid(newTaxPaid);
 		// = time to live
-		database.saveIsland(island);
-		Message.PAY_TAX.send(player);
-		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+		updateIsland(island, player, Message.PAY_TAX);
 	}
 
 	public void onAdvertise(final Player player, final double price) {
-		final String worldName = player.getWorld().getName();
-		final Geometry geometry = getGeometry(worldName);
-		if (geometry == null) {
-			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+		final IslandBean island = getIsland(player);
+		if (island == null) {
 			return;
 		}
-		final Location location = player.getLocation();
-		final SerializableLocation id = geometry.getInnerIsland(location);
-		if (id == null) {
-			Message.NOT_ISLAND.send(player);
-			return;
-		}
-
-		final IslandBean island = database.loadIsland(id);
 		final IslandStatus status = island.getStatus();
 		final String ownerName = island.getOwner();
 		final String playerName = player.getName();
@@ -272,27 +211,14 @@ public class RealEstateManager {
 		island.setPrice(price);
 		// = tax paid
 		// = time to live
-		database.saveIsland(island);
-		Message.ADVERTISE.send(player, price, economy.currencyNamePlural());
-		onMove(player, player.getLocation());
-		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+		updateIsland(island, player, Message.ADVERTISE, price, economy.currencyNamePlural());
 	}
 
 	public void onRevoke(final Player player) {
-		final String worldName = player.getWorld().getName();
-		final Geometry geometry = getGeometry(worldName);
-		if (geometry == null) {
-			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+		final IslandBean island = getIsland(player);
+		if (island == null) {
 			return;
 		}
-		final Location location = player.getLocation();
-		final SerializableLocation id = geometry.getInnerIsland(location);
-		if (id == null) {
-			Message.NOT_ISLAND.send(player);
-			return;
-		}
-
-		final IslandBean island = database.loadIsland(id);
 		final IslandStatus status = island.getStatus();
 		final String ownerName = island.getOwner();
 		final String playerName = player.getName();
@@ -314,27 +240,14 @@ public class RealEstateManager {
 		island.setPrice(null);
 		// = tax paid
 		// = time to live
-		database.saveIsland(island);
-		Message.REVOKE.send(player);
-		onMove(player, player.getLocation());
-		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+		updateIsland(island, player, Message.REVOKE);
 	}
 
 	public final void onRename(final Player player, final String name) {
-		final String worldName = player.getWorld().getName();
-		final Geometry geometry = getGeometry(worldName);
-		if (geometry == null) {
-			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+		final IslandBean island = getIsland(player);
+		if (island == null) {
 			return;
 		}
-		final Location location = player.getLocation();
-		final SerializableLocation id = geometry.getInnerIsland(location);
-		if (id == null) {
-			Message.NOT_ISLAND.send(player);
-			return;
-		}
-
-		final IslandBean island = database.loadIsland(id);
 		final IslandStatus status = island.getStatus();
 		final String ownerName = island.getOwner();
 		final String playerName = player.getName();
@@ -356,27 +269,14 @@ public class RealEstateManager {
 		// = price
 		// = tax paid
 		// = time to live
-		database.saveIsland(island);
-		Message.RENAME.send(player);
-		onMove(player, player.getLocation());
-		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+		updateIsland(island, player, Message.RENAME);
 	}
 
 	public final void onExamine(final Player player) {
-		final String worldName = player.getWorld().getName();
-		final Geometry geometry = getGeometry(worldName);
-		if (geometry == null) {
-			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+		final IslandBean island = getIsland(player);
+		if (island == null) {
 			return;
 		}
-		final Location location = player.getLocation();
-		final SerializableLocation id = geometry.getInnerIsland(location);
-		if (id == null) {
-			Message.NOT_ISLAND.send(player);
-			return;
-		}
-
-		final IslandBean island = database.loadIsland(id);
 		final IslandStatus status = island.getStatus();
 		final String name = island.getNameOrDefault();
 		final String ownerName = island.getOwner();
@@ -402,7 +302,7 @@ public class RealEstateManager {
 	}
 
 	public void onDawn(final String world) {
-		final Geometry geometry = getGeometry(world);
+		final IslandCraftWorld geometry = islandCraftWorlds.get(world);
 		if (geometry == null) {
 			// Not an IslandCraft world
 			return;
@@ -413,96 +313,107 @@ public class RealEstateManager {
 			if (taxPaid != null) {
 				if (taxPaid > 0) {
 					// Decrement tax
-					island.setTaxPaid(taxPaid - 1); // TODO by amount?
-					database.saveIsland(island);
-					Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+					island.setTaxPaid(taxPaid - config.TAX_PER_DAY);
+					updateIsland(island);
 				} else if (taxPaid == 0) {
 					final IslandStatus status = island.getStatus();
 					if (status == IslandStatus.PRIVATE || status == IslandStatus.FOR_SALE) {
 						// Repossess island
 						island.setStatus(IslandStatus.REPOSSESSED);
-						island.setPrice(5000.0); // TODO price to reclaim
+						island.setPrice(config.RECLAIM_PRICE);
 						island.setTaxPaid(null);
-						island.setTimeToLive(10.0); // TODO time to regenerate
-						database.saveIsland(island);
-						Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+						island.setTimeToLive(config.REPOSSESSED_REGENERATION_TIME);
+						updateIsland(island);
 					}
+				}
+				// tax < 0 => infinite
+			}
+			final Double timeToLive = island.getTimeToLive();
+			if (timeToLive != null) {
+				if (timeToLive > 0) {
+					// Decrement time to live
+					island.setTimeToLive(timeToLive - 1);
+					updateIsland(island);
+				} else if (timeToLive == 0) {
+					final IslandStatus status = island.getStatus();
+					if (status == IslandStatus.ABANDONED || status == IslandStatus.REPOSSESSED) {
+						// Repossess island
+						island.setStatus(IslandStatus.NEW);
+						island.setPrice(config.PURCHASE_PRICE);
+					} else if (status == IslandStatus.RESOURCE) {
+						island.setTimeToLive(config.RESOURCE_REGENERATION_TIME);
+					}
+					// regenerate(island); // TODO this causes way too much lag
+					updateIsland(island);
 				}
 				// tax < 0 => infinite
 			}
 		}
 	}
 
-	private int islandCount(final String player) {
-		final List<IslandBean> islands = database.loadIslandsByOwner(player);
-		int count = 0;
-		for (final IslandBean island : islands) {
-			if (island.getStatus() == IslandStatus.PRIVATE || island.getStatus() == IslandStatus.FOR_SALE) {
-				++count;
-			}
-		}
-		return count;
-	}
-
-	public void onLoad(final Location location, final long worldSeed) {
+	public void onLoad(final Location location) {
 		final World world = location.getWorld();
 		if (world == null) {
 			// Not ready
 			return;
 		}
-		final Geometry geometry = getGeometry(world.getName());
+		final IslandCraftWorld geometry = islandCraftWorlds.get(world.getName());
 		if (geometry == null) {
 			// Not an IslandCraft world
 			return;
 		}
-		for (final SerializableLocation island : geometry.getOuterIslands(location)) {
-			if (loadedIslands.contains(island)) {
+		for (final SerializableLocation id : geometry.getOuterIslands(location)) {
+			if (loadedIslands.contains(id)) {
 				// Only load once, until server is rebooted
 				continue;
 			}
-			IslandBean deed = database.loadIsland(island);
-			if (deed == null) {
-				deed = new IslandBean();
-				deed.setId(new SerializableLocation(island.getWorld(), island.getX(), island.getY(), island.getZ()));
-				deed.setInnerRegion(geometry.getInnerRegion(island));
-				deed.setOuterRegion(geometry.getOuterRegion(island));
-				deed.setOwner(null);
-				deed.setTaxPaid(null);
-				if (geometry.isSpawn(island)) {
-					deed.setStatus(IslandStatus.RESERVED);
-					deed.setName(Message.NAME_SPAWN.format());
-					deed.setPrice(null);
-					deed.setTimeToLive(null);
-				} else if (geometry.isResource(island, worldSeed)) {
-					deed.setStatus(IslandStatus.RESOURCE);
-					deed.setName(null);
-					deed.setPrice(null);
-					deed.setTimeToLive(null); // time to regenerate
+			IslandBean island = database.loadIsland(id);
+			if (island == null) {
+				island = new IslandBean();
+				island.setId(new SerializableLocation(id.getWorld(), id.getX(), id.getY(), id.getZ()));
+				island.setInnerRegion(geometry.getInnerRegion(id));
+				island.setOuterRegion(geometry.getOuterRegion(id));
+				island.setOwner(null);
+				island.setTaxPaid(null);
+				if (geometry.isSpawn(id)) {
+					island.setStatus(IslandStatus.RESERVED);
+					island.setName(Message.NAME_SPAWN.format());
+					island.setPrice(null);
+					island.setTimeToLive(null);
+				} else if (geometry.isResource(id)) {
+					island.setStatus(IslandStatus.RESOURCE);
+					island.setName(null);
+					island.setPrice(null);
+					island.setTimeToLive(config.RESOURCE_REGENERATION_TIME);
 				} else {
-					deed.setStatus(IslandStatus.NEW);
-					deed.setName(null);
-					deed.setPrice(5000.0); // TODO price
-					deed.setTimeToLive(null);
+					island.setStatus(IslandStatus.NEW);
+					island.setName(null);
+					island.setPrice(config.PURCHASE_PRICE);
+					island.setTimeToLive(null);
 				}
-				database.saveIsland(deed);
+				updateIsland(island);
 			}
-			loadedIslands.add(island);
-			Bukkit.getPluginManager().callEvent(new IslandEvent(deed));
+			loadedIslands.add(id);
 		}
 	}
 
 	private static final int BLOCKS_PER_CHUNK = 16;
 
-	public void onRegenerate(final IslandBean island) {
+	public void onRegenerate(final Player player) {
+		regenerate(getIsland(player));
+	}
+
+	private void regenerate(final IslandBean island) {
 		final SerializableRegion region = island.getOuterRegion();
 		final int minX = region.getMinX() / BLOCKS_PER_CHUNK;
 		final int minZ = region.getMinZ() / BLOCKS_PER_CHUNK;
 		final int maxX = region.getMaxX() / BLOCKS_PER_CHUNK;
 		final int maxZ = region.getMaxZ() / BLOCKS_PER_CHUNK;
 		final World world = Bukkit.getWorld(region.getWorld());
-		for (int x = minX; x < maxX; ++x) {
-			for (int z = minZ; z < maxZ; ++z) {
-				world.unloadChunk(x, z);
+		// Must loop from max to min for block populators
+		for (int x = maxX - 1; x >= minX; --x) {
+			for (int z = maxZ - 1; z >= minZ; --z) {
+				// TODO these need to be queued!
 				world.regenerateChunk(x, z);
 			}
 		}
@@ -514,10 +425,10 @@ public class RealEstateManager {
 			lastIsland.remove(name);
 			return;
 		}
-		final Geometry geometry = getGeometry(to.getWorld().getName());
+		final IslandCraftWorld islandCraftWorld = islandCraftWorlds.get(to.getWorld().getName());
 		final IslandBean toIsland;
-		if (geometry != null) {
-			final SerializableLocation toIslandLocation = geometry.getInnerIsland(to);
+		if (islandCraftWorld != null) {
+			final SerializableLocation toIslandLocation = islandCraftWorld.getInnerIsland(to);
 			if (toIslandLocation != null) {
 				toIsland = database.loadIsland(toIslandLocation);
 			} else {
@@ -567,126 +478,104 @@ public class RealEstateManager {
 		return null;
 	}
 
-	public void addGeometry(final String world, final Geometry geometry) {
-		geometryMap.put(world, geometry);
-	}
-
-	public Geometry getGeometry(final String world) {
-		return geometryMap.get(world);
+	public void initWorld(final String worldName) {
+		final WorldConfig worldConfig = config.WORLD_CONFIGS.get(worldName);
+		final IslandCraftWorld islandCraftWorld = new IslandCraftWorld(worldConfig);
+		islandCraftWorlds.put(worldName, islandCraftWorld);
 	}
 
 	public void setTaxPaid(final Player player, final double tax) {
-		final String worldName = player.getWorld().getName();
-		final Geometry geometry = getGeometry(worldName);
-		if (geometry == null) {
-			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+		final IslandBean island = getIsland(player);
+		if (island == null) {
 			return;
 		}
-		final Location location = player.getLocation();
-		final SerializableLocation id = geometry.getInnerIsland(location);
-		if (id == null) {
-			Message.NOT_ISLAND.send(player);
-			return;
-		}
-		final IslandBean island = database.loadIsland(id);
-
 		// Success
 		island.setTaxPaid(tax);
-		database.saveIsland(island);
-		Message.UPDATE.send(player);
-		onMove(player, player.getLocation());
-		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+		updateIsland(island, player, Message.UPDATE);
 	}
 
 	public void setPrice(final Player player, final double price) {
-		final String worldName = player.getWorld().getName();
-		final Geometry geometry = getGeometry(worldName);
-		if (geometry == null) {
-			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+		final IslandBean island = getIsland(player);
+		if (island == null) {
 			return;
 		}
-		final Location location = player.getLocation();
-		final SerializableLocation id = geometry.getInnerIsland(location);
-		if (id == null) {
-			Message.NOT_ISLAND.send(player);
-			return;
-		}
-		final IslandBean island = database.loadIsland(id);
-
 		// Success
 		island.setPrice(price);
-		database.saveIsland(island);
-		Message.UPDATE.send(player);
-		onMove(player, player.getLocation());
-		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+		updateIsland(island, player, Message.UPDATE);
 	}
 
 	public void setName(final Player player, final String title) {
-		final String worldName = player.getWorld().getName();
-		final Geometry geometry = getGeometry(worldName);
-		if (geometry == null) {
-			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+		final IslandBean island = getIsland(player);
+		if (island == null) {
 			return;
 		}
-		final Location location = player.getLocation();
-		final SerializableLocation id = geometry.getInnerIsland(location);
-		if (id == null) {
-			Message.NOT_ISLAND.send(player);
-			return;
-		}
-		final IslandBean island = database.loadIsland(id);
-
 		// Success
 		island.setName(title);
-		database.saveIsland(island);
-		Message.UPDATE.send(player);
-		onMove(player, player.getLocation());
-		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+		updateIsland(island, player, Message.UPDATE);
 	}
 
 	public void setOwner(final Player player, final String owner) {
-		final String worldName = player.getWorld().getName();
-		final Geometry geometry = getGeometry(worldName);
-		if (geometry == null) {
-			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+		final IslandBean island = getIsland(player);
+		if (island == null) {
 			return;
 		}
-		final Location location = player.getLocation();
-		final SerializableLocation id = geometry.getInnerIsland(location);
-		if (id == null) {
-			Message.NOT_ISLAND.send(player);
-			return;
-		}
-		final IslandBean island = database.loadIsland(id);
-
 		// Success
 		island.setOwner(owner);
-		database.saveIsland(island);
-		Message.UPDATE.send(player);
-		onMove(player, player.getLocation());
-		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+		updateIsland(island, player, Message.UPDATE);
 	}
 
 	public void setStatus(final Player player, final IslandStatus status) {
-		final String worldName = player.getWorld().getName();
-		final Geometry geometry = getGeometry(worldName);
-		if (geometry == null) {
-			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+		final IslandBean island = getIsland(player);
+		if (island == null) {
 			return;
 		}
-		final Location location = player.getLocation();
-		final SerializableLocation id = geometry.getInnerIsland(location);
-		if (id == null) {
-			Message.NOT_ISLAND.send(player);
-			return;
-		}
-		final IslandBean island = database.loadIsland(id);
-
 		// Success
 		island.setStatus(status);
+		updateIsland(island, player, Message.UPDATE);
+	}
+
+	private IslandBean getIsland(final Player player) {
+		final String worldName = player.getWorld().getName();
+		final IslandCraftWorld islandCraftWorld = islandCraftWorlds.get(worldName);
+		if (islandCraftWorld == null) {
+			Message.NOT_ISLAND_CRAFT_WORLD.send(player);
+			return null;
+		}
+		final Location location = player.getLocation();
+		final SerializableLocation id = islandCraftWorld.getInnerIsland(location);
+		if (id == null) {
+			Message.NOT_ISLAND.send(player);
+			return null;
+		}
+		return database.loadIsland(id);
+	}
+
+	private void updateIsland(final IslandBean island) {
+		updateIsland(island, null, null);
+	}
+
+	private void updateIsland(final IslandBean island, final Player player, final Message message, final Object... args) {
 		database.saveIsland(island);
-		Message.UPDATE.send(player);
-		onMove(player, player.getLocation());
+		if (player != null && message != null) {
+			message.send(player, args);
+		}
+		for (final String name : lastIsland.keySet()) {
+			final Player witness = Bukkit.getPlayerExact(name);
+			if (witness != null) {
+				onMove(witness, witness.getLocation());
+			}
+		}
 		Bukkit.getPluginManager().callEvent(new IslandEvent(island));
+	}
+
+	private int islandCount(final String player) {
+		final List<IslandBean> islands = database.loadIslandsByOwner(player);
+		int count = 0;
+		for (final IslandBean island : islands) {
+			if (island.getStatus() == IslandStatus.PRIVATE || island.getStatus() == IslandStatus.FOR_SALE) {
+				++count;
+			}
+		}
+		return count;
 	}
 }

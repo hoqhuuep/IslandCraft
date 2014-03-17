@@ -7,8 +7,9 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
-public class Geometry {
+public class IslandCraftWorld {
 	private final int islandGap;
 	private final int islandSize;
 	private final int islandSeparation;
@@ -17,17 +18,7 @@ public class Geometry {
 	private final int magicNumber;
 	private final double resourceIslandRarity;
 
-	public Geometry(final int islandSize, final int islandSeparation, final int resourceIslandRarity) {
-		this.islandSize = islandSize;
-		this.islandSeparation = islandSeparation;
-		islandGap = islandSeparation - islandSize;
-		innerRadius = islandSize / 2;
-		outerRadius = innerRadius + islandGap;
-		magicNumber = (islandSize - islandGap) / 2;
-		this.resourceIslandRarity = resourceIslandRarity;
-	}
-
-	public Geometry(final WorldConfig config) {
+	public IslandCraftWorld(final WorldConfig config) {
 		islandSize = config.ISLAND_SIZE;
 		islandSeparation = config.ISLAND_SEPARATION;
 		resourceIslandRarity = config.RESOURCE_ISLAND_RARITY;
@@ -41,32 +32,33 @@ public class Geometry {
 		if (location == null) {
 			return null;
 		}
-		final int zz = location.getBlockZ() + (islandSize >> 1);
-		final int rz = ifloormod(zz, islandSeparation);
-		if (rz >= islandSize) {
+		final int offsetZ = location.getBlockZ() + islandSize / 2;
+		final int relativeZ = ifloormod(offsetZ, islandSeparation);
+		if (relativeZ >= islandSize) {
 			return null;
 		}
-		final int xx = location.getBlockX() + (islandSize >> 1);
-		final int row = ifloordiv(zz, islandSeparation);
-		final int xxx;
+		final int evenOffsetX = location.getBlockX() + islandSize / 2;
+		final int row = ifloordiv(offsetZ, islandSeparation);
+		final int offsetX;
 		if (0 == row % 2) {
-			xxx = xx;
+			offsetX = evenOffsetX;
 		} else {
-			xxx = xx + (islandSeparation >> 1);
+			offsetX = evenOffsetX + islandSeparation / 2;
 		}
-		final int rx = ifloormod(xxx, islandSeparation);
-		if (rx >= islandSize) {
+		final int relativeX = ifloormod(offsetX, islandSeparation);
+		if (relativeX >= islandSize) {
 			return null;
 		}
-		final int cz = row * islandSeparation;
-		final int col = ifloordiv(xxx, islandSeparation);
-		final int cx;
+		final int centerZ = row * islandSeparation;
+		final int col = ifloordiv(offsetX, islandSeparation);
+		final int centerX;
 		if (0 == row % 2) {
-			cx = col * islandSeparation;
+			centerX = col * islandSeparation;
 		} else {
-			cx = col * islandSeparation - (islandSeparation >> 1);
+			centerX = col * islandSeparation - islandSeparation / 2;
 		}
-		return new SerializableLocation(location.getWorld().getName(), cx, 0, cz);
+		final World world = location.getWorld();
+		return new SerializableLocation(world.getName(), centerX, world.getSeaLevel(), centerZ);
 	}
 
 	// Numbers represent how many island regions a location overlaps.
@@ -112,7 +104,9 @@ public class Geometry {
 		if (location == null) {
 			return Collections.emptyList();
 		}
-		final String world = location.getWorld().getName();
+		final World world = location.getWorld();
+		final String worldName = world.getName();
+		final int seaLevel = world.getSeaLevel();
 		final int x = location.getBlockX();
 		final int z = location.getBlockZ();
 
@@ -139,12 +133,12 @@ public class Geometry {
 			// Left
 			if (relativeX < magicNumber + islandGap * 2) {
 				final int centerX = absoluteHashX - islandSeparation / 2;
-				result.add(new SerializableLocation(world, centerX, 0, centerZ));
+				result.add(new SerializableLocation(worldName, centerX, seaLevel, centerZ));
 			}
 			// Right
 			if (relativeX >= magicNumber + islandGap) {
 				final int centerX = absoluteHashX + islandSeparation / 2;
-				result.add(new SerializableLocation(world, centerX, 0, centerZ));
+				result.add(new SerializableLocation(worldName, centerX, seaLevel, centerZ));
 			}
 		}
 		// Middle
@@ -152,10 +146,10 @@ public class Geometry {
 			// Left
 			if (relativeX < islandGap) {
 				final int centerX = absoluteHashX - islandSeparation;
-				result.add(new SerializableLocation(world, centerX, 0, absoluteHashZ));
+				result.add(new SerializableLocation(worldName, centerX, seaLevel, absoluteHashZ));
 			}
 			// Right
-			result.add(new SerializableLocation(world, absoluteHashX, 0, absoluteHashZ));
+			result.add(new SerializableLocation(worldName, absoluteHashX, seaLevel, absoluteHashZ));
 		}
 		// Bottom
 		if (relativeZ >= islandSize + islandGap) {
@@ -163,12 +157,12 @@ public class Geometry {
 			// Left
 			if (relativeX < magicNumber + islandGap * 2) {
 				final int centerX = absoluteHashX - islandSeparation / 2;
-				result.add(new SerializableLocation(world, centerX, 0, centerZ));
+				result.add(new SerializableLocation(worldName, centerX, seaLevel, centerZ));
 			}
 			// Right
 			if (relativeX >= magicNumber + islandGap) {
 				final int centerX = absoluteHashX + islandSeparation / 2;
-				result.add(new SerializableLocation(world, centerX, 0, centerZ));
+				result.add(new SerializableLocation(worldName, centerX, seaLevel, centerZ));
 			}
 		}
 
@@ -193,7 +187,7 @@ public class Geometry {
 		return island.getX() == 0 && island.getZ() == 0;
 	}
 
-	public final boolean isResource(final SerializableLocation island, final long worldSeed) {
+	public final boolean isResource(final SerializableLocation island) {
 		if (isSpawn(island)) {
 			return false;
 		}
@@ -203,16 +197,18 @@ public class Geometry {
 			// One of the 6 islands adjacent to spawn
 			return true;
 		}
+		final long worldSeed = Bukkit.getWorld(island.getWorld()).getSeed();
 		return random(x, z, worldSeed) < resourceIslandRarity;
 	}
 
-	public final double random(final int x, final int z, final long worldSeed) {
-		final long seed = worldSeed ^ (((long) z << 24) | x & 0x00FFFFFFL);
-		final Random random = new Random(seed);
+	private final double random(final int x, final int z, final long worldSeed) {
+		// Random only uses lower 48 bits of seed
+		final long islandSeed = worldSeed ^ (((long) z << 24) | x & 0x00FFFFFFL);
+		final Random random = new Random(islandSeed);
 		return random.nextDouble();
 	}
 
-	public static int ifloordiv(int n, int d) {
+	private static int ifloordiv(int n, int d) {
 		// Credit to Mark Dickinson
 		// http://stackoverflow.com/a/10466453
 		if (d >= 0)
@@ -221,7 +217,7 @@ public class Geometry {
 			return n <= 0 ? n / d : (n - 1) / d - 1;
 	}
 
-	public static int ifloormod(int n, int d) {
+	private static int ifloormod(int n, int d) {
 		// Credit to Mark Dickinson
 		// http://stackoverflow.com/a/10466453
 		if (d >= 0)

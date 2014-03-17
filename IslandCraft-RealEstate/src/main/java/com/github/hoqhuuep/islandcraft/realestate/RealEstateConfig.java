@@ -8,8 +8,15 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class RealEstateConfig {
 
-	public final Double INITIAL_TAX;
-	public final Double MAXIMUM_TAX;
+	public final double INITIAL_TAX;
+	public final double MAXIMUM_TAX;
+	// TODO get from file
+	public final double PURCHASE_PRICE = 5;
+	public final double RECLAIM_PRICE = 3;
+	public final double TAX_PER_DAY = 1;
+	public final double ABANDONED_REGENERATION_TIME = 3;
+	public final double REPOSSESSED_REGENERATION_TIME = 3;
+	public final double RESOURCE_REGENERATION_TIME = 3;
 
 	public final int MAX_ISLANDS_PER_PLAYER;
 	public final Map<String, WorldConfig> WORLD_CONFIGS;
