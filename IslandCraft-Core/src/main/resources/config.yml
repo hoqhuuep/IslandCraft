@@ -1,0 +1,21 @@
+worlds:
+  world_islandcraft:
+    island-size: 288
+    island-separation: 320
+    inter-island-biome: DEEP_OCEAN
+    island-biomes:
+      birch-forest: {outer-coast: OCEAN, inner-coast: BEACH, normal: BIRCH_FOREST, normal-m: BIRCH_FOREST_M, hills: BIRCH_FOREST_HILLS, hills-m: BIRCH_FOREST_HILLS_M, special: ~, special-m: ~}
+      cold-taiga: {outer-coast: OCEAN, inner-coast: COLD_BEACH, normal: COLD_TAIGA, normal-m: COLD_TAIGA_M, hills: COLD_TAIGA_HILLS, hills-m: ~, special: ~, special-m: ~}
+      desert: {outer-coast: OCEAN, inner-coast: BEACH, normal: DESERT, normal-m: DESERT_M, hills: DESERT_HILLS, hills-m: ~, special: ~, special-m: ~}
+      extreme-hills: {outer-coast: OCEAN, inner-coast: STONE_BEACH, normal: EXTREME_HILLS, normal-m: EXTREME_HILLS_M, hills: EXTREME_HILLS_PLUS, hills-m: EXTREME_HILLS_PLUS_M, special: EXTREME_HILLS_EDGE, special-m: ~}
+      forest: {outer-coast: OCEAN, inner-coast: BEACH, normal: FOREST, normal-m: ~, hills: FOREST_HILLS, hills-m: ~, special: FLOWER_FOREST, special-m: ~}
+      ice-plains: {outer-coast: OCEAN, inner-coast: FROZEN_OCEAN, normal: ICE_PLAINS, normal-m: ~, hills: ICE_MOUNTAINS, hills-m: ~, special: ICE_PLAINS_SPIKES, special-m: ~}
+      jungle: {outer-coast: OCEAN, inner-coast: BEACH, normal: JUNGLE, normal-m: JUNGLE_M, hills: JUNGLE_HILLS, hills-m: ~, special: JUNGLE_EDGE, special-m: JUNGLE_EDGE_M}
+      mega-taiga: {outer-coast: OCEAN, inner-coast: BEACH, normal: MEGA_TAIGA, normal-m: MEGA_SPRUCE_TAIGA, hills: MEGA_TAIGA_HILLS, hills-m: MEGA_SPRUCE_TAIGA_HILLS, special: ~, special-m: ~}
+      mesa: {outer-coast: OCEAN, inner-coast: MESA, normal: MESA, normal-m: MESA_BRYCE, hills: MESA_PLATEAU, hills-m: MESA_PLATEAU_M, special: MESA_PLATEAU_F, special-m: MESA_PLATEAU_F_M}
+      mushroom-island: {outer-coast: OCEAN, inner-coast: MUSHROOM_ISLAND_SHORE, normal: MUSHROOM_ISLAND, normal-m: ~, hills: ~, hills-m: ~, special: ~, special-m: ~}
+      plains: {outer-coast: OCEAN, inner-coast: BEACH, normal: PLAINS, normal-m: ~, hills: SUNFLOWER_PLAINS, hills-m: ~, special: ~, special-m: ~}
+      roofed-forest: {outer-coast: OCEAN, inner-coast: BEACH, normal: ROOFED_FOREST, normal-m: ROOFED_FOREST_M, hills: ~, hills-m: ~, special: ~, special-m: ~}
+      savana: {outer-coast: OCEAN, inner-coast: BEACH, normal: SAVANNA, normal-m: SAVANNA_M, hills: SAVANNA_PLATEAU, hills-m: SAVANNA_PLATEAU_M, special: ~, special-m: ~}
+      swampland: {outer-coast: OCEAN, inner-coast: BEACH, normal: SWAMPLAND, normal-m: SWAMPLAND_M, hills: ~, hills-m: ~, special: ~, special-m: ~}
+      taiga: {outer-coast: OCEAN, inner-coast: BEACH, normal: TAIGA, normal-m: TAIGA_M, hills: TAIGA_HILLS, hills-m: ~, special: ~, special-m: ~}

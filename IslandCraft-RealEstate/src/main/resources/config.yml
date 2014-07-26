@@ -1,8 +1,0 @@
-initial-tax: 5
-maximum-tax: 20
-max-islands-per-player: 3
-worlds:
-  world_islandcraft:
-    island-size: 288
-    island-separation: 320
-    resource-island-rarity: 0.25
