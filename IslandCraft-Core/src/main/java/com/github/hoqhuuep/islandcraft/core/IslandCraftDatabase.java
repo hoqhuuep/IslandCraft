@@ -32,7 +32,7 @@ public class IslandCraftDatabase {
         final String generator = IslandGeneratorAlpha.class.getName();
         final long seed = new Random(worldSeed ^ ((long) id.getX() << 24 | id.getZ() & 0x00FFFFFFL)).nextLong();
         final String world = id.getWorld();
-        final IslandParametersAlpha[] biomeConfigs = config.WORLD_CONFIGS.get(world).BIOME_CONFIGS;
+        final IslandConfig[] biomeConfigs = config.WORLD_CONFIGS.get(world).islandConfigs;
         final Random random = new Random(seed);
         final String parameters = biomeConfigs[random.nextInt(biomeConfigs.length)].toString();
         final IslandBean bean = new IslandBean();
@@ -46,7 +46,7 @@ public class IslandCraftDatabase {
     private Biome[] generate(final IslandBean bean) {
         if (IslandGeneratorAlpha.class.getName().equals(bean.getGenerator())) {
             IslandGeneratorAlpha generator = new IslandGeneratorAlpha(config.WORLD_CONFIGS.get(bean.getId().getWorld()));
-            return generator.generate(bean.getSeed(), new IslandParametersAlpha(bean.getParameters()));
+            return generator.generate(bean.getSeed(), new IslandConfig(bean.getParameters()));
         }
         // Unknown generator
         return null;

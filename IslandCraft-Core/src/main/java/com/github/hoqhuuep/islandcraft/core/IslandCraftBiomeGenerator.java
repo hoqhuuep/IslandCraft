@@ -25,18 +25,18 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         // xRelative, zRelative = coordinates relative to top-left of nearest
         // island
         // row, column = nearest island
-        final int zPrime = z + config.ISLAND_SIZE / 2;
-        final int zRelative = MathHelper.ifloormod(zPrime, config.ISLAND_SEPARATION);
-        if (zRelative >= config.ISLAND_SIZE) {
-            return config.INTER_ISLAND_BIOME;
+        final int zPrime = z + config.islandSize / 2;
+        final int zRelative = MathHelper.ifloormod(zPrime, config.islandSeparation);
+        if (zRelative >= config.islandSize) {
+            return config.interIslandBiome;
         }
-        final int row = MathHelper.ifloordiv(zPrime, config.ISLAND_SEPARATION);
-        final int xPrime = (row % 2 == 0) ? (x + config.ISLAND_SIZE / 2) : (x + (config.ISLAND_SIZE + config.ISLAND_SEPARATION) / 2);
-        final int xRelative = MathHelper.ifloormod(xPrime, config.ISLAND_SEPARATION);
-        if (xRelative >= config.ISLAND_SIZE) {
-            return config.INTER_ISLAND_BIOME;
+        final int row = MathHelper.ifloordiv(zPrime, config.islandSeparation);
+        final int xPrime = (row % 2 == 0) ? (x + config.islandSize / 2) : (x + (config.islandSize + config.islandSeparation) / 2);
+        final int xRelative = MathHelper.ifloormod(xPrime, config.islandSeparation);
+        if (xRelative >= config.islandSize) {
+            return config.interIslandBiome;
         }
-        final int column = MathHelper.ifloordiv(xPrime, config.ISLAND_SEPARATION);
+        final int column = MathHelper.ifloordiv(xPrime, config.islandSeparation);
         final SerializableLocation id = getId(row, column);
         return islandCache.biomeAt(id, xRelative, zRelative);
     }
@@ -49,31 +49,31 @@ public class IslandCraftBiomeGenerator extends BiomeGenerator {
         // xRelative, zRelative = coordinates relative to top-left of nearest
         // island
         // row, column = nearest island
-        final int zPrime = z + config.ISLAND_SIZE / 2;
-        final int zRelative = MathHelper.ifloormod(zPrime, config.ISLAND_SEPARATION);
-        if (zRelative >= config.ISLAND_SIZE) {
-            Arrays.fill(result, config.INTER_ISLAND_BIOME);
+        final int zPrime = z + config.islandSize / 2;
+        final int zRelative = MathHelper.ifloormod(zPrime, config.islandSeparation);
+        if (zRelative >= config.islandSize) {
+            Arrays.fill(result, config.interIslandBiome);
             return result;
         }
-        final int row = MathHelper.ifloordiv(zPrime, config.ISLAND_SEPARATION);
-        final int xPrime = (row % 2 == 0) ? (x + config.ISLAND_SIZE / 2) : (x + (config.ISLAND_SIZE + config.ISLAND_SEPARATION) / 2);
-        final int xRelative = MathHelper.ifloormod(xPrime, config.ISLAND_SEPARATION);
-        if (xRelative >= config.ISLAND_SIZE) {
-            Arrays.fill(result, config.INTER_ISLAND_BIOME);
+        final int row = MathHelper.ifloordiv(zPrime, config.islandSeparation);
+        final int xPrime = (row % 2 == 0) ? (x + config.islandSize / 2) : (x + (config.islandSize + config.islandSeparation) / 2);
+        final int xRelative = MathHelper.ifloormod(xPrime, config.islandSeparation);
+        if (xRelative >= config.islandSize) {
+            Arrays.fill(result, config.interIslandBiome);
             return result;
         }
-        final int column = MathHelper.ifloordiv(xPrime, config.ISLAND_SEPARATION);
+        final int column = MathHelper.ifloordiv(xPrime, config.islandSeparation);
         final SerializableLocation id = getId(row, column);
         return islandCache.biomeChunk(id, xRelative, zRelative, result);
     }
 
     private SerializableLocation getId(final int row, final int column) {
-        final int z = row * config.ISLAND_SEPARATION;
+        final int z = row * config.islandSeparation;
         final int x;
         if (row % 2 == 0) {
-            x = column * config.ISLAND_SEPARATION;
+            x = column * config.islandSeparation;
         } else {
-            x = column * config.ISLAND_SEPARATION - config.ISLAND_SEPARATION / 2;
+            x = column * config.islandSeparation - config.islandSeparation / 2;
         }
         return new SerializableLocation(world, x, 0, z);
     }

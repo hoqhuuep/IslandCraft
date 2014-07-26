@@ -29,8 +29,8 @@ public class IslandGeneratorAlpha {
         this.config = config;
     }
 
-    public Biome[] generate(final Long seed, final IslandParametersAlpha parameters) {
-        final Poisson poisson = new Poisson(config.ISLAND_SIZE, config.ISLAND_SIZE, MIN_DISTANCE);
+    public Biome[] generate(final Long seed, final IslandConfig parameters) {
+        final Poisson poisson = new Poisson(config.islandSize, config.islandSize, MIN_DISTANCE);
         final List<Site> sites = poisson.generate(new Random(seed));
         final SimplexOctaveGenerator shapeNoise = new SimplexOctaveGenerator(seed, 2);
         final SimplexOctaveGenerator hillsNoise = new SimplexOctaveGenerator(seed + 1, 2);
@@ -56,8 +56,8 @@ public class IslandGeneratorAlpha {
                         ocean.add(n);
                     }
                 } else {
-                    final double dx = (double) (n.x - (config.ISLAND_SIZE / 2)) / (double) (config.ISLAND_SIZE / 2);
-                    final double dz = (double) (n.z - (config.ISLAND_SIZE / 2)) / (double) (config.ISLAND_SIZE / 2);
+                    final double dx = (double) (n.x - (config.islandSize / 2)) / (double) (config.islandSize / 2);
+                    final double dz = (double) (n.z - (config.islandSize / 2)) / (double) (config.islandSize / 2);
                     if (NOISE * noise(dx, dz, shapeNoise) + CIRCLE * circle(dx, dz) + SQUARE * square(dx, dz) > THRESHOLD) {
                         if (!n.isOcean) {
                             n.isOcean = true;
@@ -91,11 +91,11 @@ public class IslandGeneratorAlpha {
             }
         }
         // Create blank image
-        final BufferedImage image = new BufferedImage(config.ISLAND_SIZE, config.ISLAND_SIZE, BufferedImage.TYPE_INT_ARGB);
+        final BufferedImage image = new BufferedImage(config.islandSize, config.islandSize, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D graphics = image.createGraphics();
         graphics.setComposite(AlphaComposite.Src);
-        graphics.setBackground(new Color(config.INTER_ISLAND_BIOME.ordinal(), true));
-        graphics.clearRect(0, 0, config.ISLAND_SIZE, config.ISLAND_SIZE);
+        graphics.setBackground(new Color(config.interIslandBiome.ordinal(), true));
+        graphics.clearRect(0, 0, config.islandSize, config.islandSize);
         // Render island
         for (final Site site : sites) {
             if (site.isOcean) {
@@ -126,10 +126,10 @@ public class IslandGeneratorAlpha {
         }
         // Save result
         graphics.dispose();
-        final Biome[] result = new Biome[config.ISLAND_SIZE * config.ISLAND_SIZE];
+        final Biome[] result = new Biome[config.islandSize * config.islandSize];
         for (int i = 0; i < result.length; ++i) {
-            final int x = i % config.ISLAND_SIZE;
-            final int z = i / config.ISLAND_SIZE;
+            final int x = i % config.islandSize;
+            final int z = i / config.islandSize;
             result[i] = Biome.values()[image.getRGB(x, z)];
         }
         return result;

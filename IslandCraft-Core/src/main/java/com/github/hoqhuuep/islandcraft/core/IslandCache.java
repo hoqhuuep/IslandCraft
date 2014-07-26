@@ -22,13 +22,13 @@ public class IslandCache {
     }
 
     public Biome biomeAt(final SerializableLocation id, final int xRelative, final int zRelative) {
-        return getIsland(id)[zRelative * config.ISLAND_SIZE + xRelative];
+        return getIsland(id)[zRelative * config.islandSize + xRelative];
     }
 
     public Biome[] biomeChunk(final SerializableLocation id, final int xRelative, final int zRelative, final Biome[] result) {
         final Biome[] island = getIsland(id);
         for (int z = 0; z < 16; ++z) {
-            System.arraycopy(island, config.ISLAND_SIZE * (zRelative + z) + xRelative, result, z * 16, 16);
+            System.arraycopy(island, config.islandSize * (zRelative + z) + xRelative, result, z * 16, 16);
         }
         return result;
     }

@@ -3,7 +3,7 @@ package com.github.hoqhuuep.islandcraft.core;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class IslandParametersAlpha {
+public class IslandConfig {
     private final Biome outerCoast;
     private final Biome innerCoast;
     private final Biome normal;
@@ -13,7 +13,7 @@ public class IslandParametersAlpha {
     private final Biome forest;
     private final Biome forestMountains;
 
-    public IslandParametersAlpha(final String outerCoast, final String innerCoast, final String normal, final String mountains, final String hills, final String hillsMountains, final String forest, final String forestMountains) {
+    public IslandConfig(final String outerCoast, final String innerCoast, final String normal, final String mountains, final String hills, final String hillsMountains, final String forest, final String forestMountains) {
         this.outerCoast = Biome.valueOf(outerCoast);
         this.innerCoast = Biome.valueOf(innerCoast);
         this.normal = Biome.valueOf(normal);
@@ -44,11 +44,11 @@ public class IslandParametersAlpha {
         }
     }
 
-    public IslandParametersAlpha(final ConfigurationSection config) {
-        this(config.getString("outer-coast"), config.getString("inner-coast"), config.getString("normal"), config.getString("normal-m"), config.getString("hills"), config.getString("hills-m"), config.getString("special"), config.getString("special-m"));
+    public IslandConfig(final ConfigurationSection config) {
+        this(config.getString("outer-coast"), config.getString("inner-coast"), config.getString("normal"), config.getString("mountains"), config.getString("hills"), config.getString("hills-mountains"), config.getString("forest"), config.getString("forest-mountains"));
     }
 
-    public IslandParametersAlpha(final String string) {
+    public IslandConfig(final String string) {
         final String[] parameters = string.split(" ");
         outerCoast = Biome.valueOf(parameters[0]);
         innerCoast = Biome.valueOf(parameters[1]);
