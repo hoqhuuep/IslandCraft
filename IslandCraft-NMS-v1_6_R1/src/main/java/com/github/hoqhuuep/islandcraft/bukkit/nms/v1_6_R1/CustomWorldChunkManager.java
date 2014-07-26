@@ -117,8 +117,8 @@ public class CustomWorldChunkManager extends WorldChunkManager {
     }
 
     /**
-     * Returns true if all biome's in area are in allowedBiomes. x, z and radius are in blocks. Used for checking where
-     * a village can go.
+     * Returns true if all biome's in area are in allowedBiomes. x, z and radius
+     * are in blocks. Used for checking where a village can go.
      */
     @Override
     public boolean a(final int x, final int z, final int radius, @SuppressWarnings("rawtypes") final List allowedBiomes) {
@@ -141,8 +141,9 @@ public class CustomWorldChunkManager extends WorldChunkManager {
     }
 
     /**
-     * Returns random position within biome if it can be found in given area. Otherwise null. Used for initial guess at
-     * spawn point and stronghold locations.
+     * Returns random position within biome if it can be found in given area.
+     * Otherwise null. Used for initial guess at spawn point and stronghold
+     * locations.
      */
     @Override
     public ChunkPosition a(final int x, final int z, final int radius, @SuppressWarnings("rawtypes") final List allowedBiomes, final Random random) {

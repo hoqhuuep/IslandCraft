@@ -5,10 +5,10 @@ import java.util.Map;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public class ICTerrainGeneratorConfig {
+public class IslandCraftConfig {
     public final Map<String, WorldConfig> WORLD_CONFIGS;
 
-    public ICTerrainGeneratorConfig(final ConfigurationSection config) {
+    public IslandCraftConfig(final ConfigurationSection config) {
         WORLD_CONFIGS = new HashMap<String, WorldConfig>();
         final ConfigurationSection worlds = config.getConfigurationSection("worlds");
         for (final String key : worlds.getKeys(false)) {

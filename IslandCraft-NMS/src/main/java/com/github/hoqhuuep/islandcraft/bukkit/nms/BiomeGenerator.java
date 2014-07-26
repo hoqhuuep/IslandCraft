@@ -5,8 +5,8 @@ import org.bukkit.block.Biome;
 
 public abstract class BiomeGenerator {
     /**
-     * Determines which biomes should be used for world generation for the given chunk. Result must be a Biome[256] for
-     * the 16x16 area of the chunk.
+     * Determines which biomes should be used for world generation for the given
+     * chunk. Result must be a Biome[256] for the 16x16 area of the chunk.
      * 
      * @param world
      *            The world the chunk is for
@@ -19,7 +19,8 @@ public abstract class BiomeGenerator {
     public abstract Biome[] generateChunkBiomes(World world, int x, int z);
 
     /**
-     * Determines which biome should used for world generation at the given coordinates.
+     * Determines which biome should used for world generation at the given
+     * coordinates.
      * 
      * @param world
      *            The world the biome is for
@@ -32,7 +33,8 @@ public abstract class BiomeGenerator {
     public abstract Biome generateBiome(World world, int x, int z);
 
     /**
-     * Called by the server every tick. Can be used to occasionally clean up old data from a cache if needed.
+     * Called by the server every tick. Can be used to occasionally clean up old
+     * data from a cache if needed.
      * 
      * @param world
      *            The world the cache is for

@@ -11,9 +11,9 @@ public class IslandCache {
     private final Map<SerializableLocation, Long> timestamp;
     private final WorldConfig config;
     private final long worldSeed;
-    private final ICTerrainGeneratorDatabase database;
+    private final IslandCraftDatabase database;
 
-    public IslandCache(final long worldSeed, final WorldConfig config, final ICTerrainGeneratorDatabase database) {
+    public IslandCache(final long worldSeed, final WorldConfig config, final IslandCraftDatabase database) {
         this.worldSeed = worldSeed;
         this.config = config;
         this.database = database;

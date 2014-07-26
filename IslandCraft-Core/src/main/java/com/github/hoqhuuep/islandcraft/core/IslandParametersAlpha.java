@@ -4,43 +4,43 @@ import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class IslandParametersAlpha {
-    public final Biome OUTER_COAST;
-    public final Biome INNER_COAST;
-    public final Biome NORMAL;
-    public final Biome NORMAL_M;
-    public final Biome HILLS;
-    public final Biome HILLS_M;
-    public final Biome SPECIAL;
-    public final Biome SPECIAL_M;
+    private final Biome outerCoast;
+    private final Biome innerCoast;
+    private final Biome normal;
+    private final Biome mountains;
+    private final Biome hills;
+    private final Biome hillsMountains;
+    private final Biome forest;
+    private final Biome forestMountains;
 
-    public IslandParametersAlpha(final String outerCoast, final String innerCoast, final String normal, final String normalM, final String hills, final String hillsM, final String special, final String specialM) {
-        this.OUTER_COAST = Biome.valueOf(outerCoast);
-        this.INNER_COAST = Biome.valueOf(innerCoast);
-        this.NORMAL = Biome.valueOf(normal);
-        if (normalM != null) {
-            NORMAL_M = Biome.valueOf(normalM);
+    public IslandParametersAlpha(final String outerCoast, final String innerCoast, final String normal, final String mountains, final String hills, final String hillsMountains, final String forest, final String forestMountains) {
+        this.outerCoast = Biome.valueOf(outerCoast);
+        this.innerCoast = Biome.valueOf(innerCoast);
+        this.normal = Biome.valueOf(normal);
+        if (mountains != null) {
+            this.mountains = Biome.valueOf(mountains);
         } else {
-            NORMAL_M = NORMAL;
+            this.mountains = this.getNormal();
         }
         if (hills != null) {
-            HILLS = Biome.valueOf(hills);
+            this.hills = Biome.valueOf(hills);
         } else {
-            HILLS = NORMAL;
+            this.hills = this.getNormal();
         }
-        if (hillsM != null) {
-            HILLS_M = Biome.valueOf(hillsM);
+        if (hillsMountains != null) {
+            this.hillsMountains = Biome.valueOf(hillsMountains);
         } else {
-            HILLS_M = HILLS;
+            this.hillsMountains = this.getHills();
         }
-        if (special != null) {
-            SPECIAL = Biome.valueOf(special);
+        if (forest != null) {
+            this.forest = Biome.valueOf(forest);
         } else {
-            SPECIAL = NORMAL;
+            this.forest = this.getNormal();
         }
-        if (specialM != null) {
-            SPECIAL_M = Biome.valueOf(specialM);
+        if (forestMountains != null) {
+            this.forestMountains = Biome.valueOf(forestMountains);
         } else {
-            SPECIAL_M = SPECIAL;
+            this.forestMountains = this.getForest();
         }
     }
 
@@ -50,18 +50,50 @@ public class IslandParametersAlpha {
 
     public IslandParametersAlpha(final String string) {
         final String[] parameters = string.split(" ");
-        OUTER_COAST = Biome.valueOf(parameters[0]);
-        INNER_COAST = Biome.valueOf(parameters[1]);
-        NORMAL = Biome.valueOf(parameters[2]);
-        NORMAL_M = Biome.valueOf(parameters[3]);
-        HILLS = Biome.valueOf(parameters[4]);
-        HILLS_M = Biome.valueOf(parameters[5]);
-        SPECIAL = Biome.valueOf(parameters[6]);
-        SPECIAL_M = Biome.valueOf(parameters[7]);
+        outerCoast = Biome.valueOf(parameters[0]);
+        innerCoast = Biome.valueOf(parameters[1]);
+        normal = Biome.valueOf(parameters[2]);
+        mountains = Biome.valueOf(parameters[3]);
+        hills = Biome.valueOf(parameters[4]);
+        hillsMountains = Biome.valueOf(parameters[5]);
+        forest = Biome.valueOf(parameters[6]);
+        forestMountains = Biome.valueOf(parameters[7]);
     }
 
     @Override
     public String toString() {
-        return OUTER_COAST + " " + INNER_COAST + " " + NORMAL + " " + NORMAL_M + " " + HILLS + " " + HILLS_M + " " + SPECIAL + " " + SPECIAL_M;
+        return getOuterCoast() + " " + getInnerCoast() + " " + getNormal() + " " + getMountains() + " " + getHills() + " " + getHillsMountains() + " " + getForest() + " " + getForestMountains();
+    }
+
+    public Biome getOuterCoast() {
+        return outerCoast;
+    }
+
+    public Biome getInnerCoast() {
+        return innerCoast;
+    }
+
+    public Biome getNormal() {
+        return normal;
+    }
+
+    public Biome getMountains() {
+        return mountains;
+    }
+
+    public Biome getHills() {
+        return hills;
+    }
+
+    public Biome getHillsMountains() {
+        return hillsMountains;
+    }
+
+    public Biome getForest() {
+        return forest;
+    }
+
+    public Biome getForestMountains() {
+        return forestMountains;
     }
 }

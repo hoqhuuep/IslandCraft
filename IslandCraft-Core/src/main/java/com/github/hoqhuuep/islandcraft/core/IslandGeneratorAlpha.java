@@ -101,24 +101,24 @@ public class IslandGeneratorAlpha {
             if (site.isOcean) {
                 continue;
             } else if (site.isOuterCoast) {
-                graphics.setColor(new Color(parameters.OUTER_COAST.ordinal(), true));
+                graphics.setColor(new Color(parameters.getOuterCoast().ordinal(), true));
             } else if (site.isInnerCoast) {
-                graphics.setColor(new Color(parameters.INNER_COAST.ordinal(), true));
+                graphics.setColor(new Color(parameters.getInnerCoast().ordinal(), true));
             } else if (noise(site, 0.375, 160.0, mNoise)) {
                 if (noise(site, 0.375, 80.0, hillsNoise)) {
-                    graphics.setColor(new Color(parameters.HILLS_M.ordinal(), true));
+                    graphics.setColor(new Color(parameters.getHillsMountains().ordinal(), true));
                 } else if (noise(site, 0.375, 160.0, specialNoise)) {
-                    graphics.setColor(new Color(parameters.SPECIAL_M.ordinal(), true));
+                    graphics.setColor(new Color(parameters.getForestMountains().ordinal(), true));
                 } else {
-                    graphics.setColor(new Color(parameters.NORMAL_M.ordinal(), true));
+                    graphics.setColor(new Color(parameters.getMountains().ordinal(), true));
                 }
             } else {
                 if (noise(site, 0.375, 80.0, hillsNoise)) {
-                    graphics.setColor(new Color(parameters.HILLS.ordinal(), true));
+                    graphics.setColor(new Color(parameters.getHills().ordinal(), true));
                 } else if (noise(site, 0.375, 160.0, specialNoise)) {
-                    graphics.setColor(new Color(parameters.SPECIAL.ordinal(), true));
+                    graphics.setColor(new Color(parameters.getForest().ordinal(), true));
                 } else {
-                    graphics.setColor(new Color(parameters.NORMAL.ordinal(), true));
+                    graphics.setColor(new Color(parameters.getNormal().ordinal(), true));
                 }
             }
             graphics.fillPolygon(site.polygon);

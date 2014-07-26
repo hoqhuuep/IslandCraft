@@ -8,12 +8,12 @@ import org.bukkit.block.Biome;
 
 import com.avaje.ebean.EbeanServer;
 
-public class ICTerrainGeneratorDatabase {
+public class IslandCraftDatabase {
     private final EbeanServer ebean;
-    private final ICTerrainGeneratorConfig config;
+    private final IslandCraftConfig config;
     private final Map<SerializableLocation, IslandBean> cache;
 
-    public ICTerrainGeneratorDatabase(final EbeanServer ebean, final ICTerrainGeneratorConfig config) {
+    public IslandCraftDatabase(final EbeanServer ebean, final IslandCraftConfig config) {
         this.ebean = ebean;
         this.config = config;
         this.cache = new HashMap<SerializableLocation, IslandBean>();

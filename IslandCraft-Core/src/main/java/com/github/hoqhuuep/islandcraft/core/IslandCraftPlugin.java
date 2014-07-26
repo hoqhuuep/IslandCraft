@@ -10,7 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.avaje.ebean.EbeanServer;
 import com.github.hoqhuuep.islandcraft.bukkit.nms.NmsWrapper;
 
-public class ICTerrainGeneratorPlugin extends JavaPlugin {
+public class IslandCraftPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         final NmsWrapper nms = NmsWrapper.getInstance(getServer());
@@ -28,8 +28,8 @@ public class ICTerrainGeneratorPlugin extends JavaPlugin {
         } catch (final PersistenceException e) {
             installDDL();
         }
-        final ICTerrainGeneratorConfig config = new ICTerrainGeneratorConfig(getConfig());
-        getServer().getPluginManager().registerEvents(new HackListener(config, new ICTerrainGeneratorDatabase(getDatabase(), config), nms), this);
+        final IslandCraftConfig config = new IslandCraftConfig(getConfig());
+        getServer().getPluginManager().registerEvents(new BiomeGeneratorListener(config, new IslandCraftDatabase(getDatabase(), config), nms), this);
     }
 
     @Override

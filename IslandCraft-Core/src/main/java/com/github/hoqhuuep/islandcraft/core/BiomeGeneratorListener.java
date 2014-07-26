@@ -13,13 +13,13 @@ import org.bukkit.event.world.WorldInitEvent;
 import com.github.hoqhuuep.islandcraft.bukkit.nms.BiomeGenerator;
 import com.github.hoqhuuep.islandcraft.bukkit.nms.NmsWrapper;
 
-public class HackListener implements Listener {
+public class BiomeGeneratorListener implements Listener {
     private final Map<String, Boolean> beforeHack;
-    private final ICTerrainGeneratorConfig config;
-    private final ICTerrainGeneratorDatabase database;
+    private final IslandCraftConfig config;
+    private final IslandCraftDatabase database;
     private final NmsWrapper nms;
 
-    public HackListener(final ICTerrainGeneratorConfig config, final ICTerrainGeneratorDatabase database, final NmsWrapper nms) {
+    public BiomeGeneratorListener(final IslandCraftConfig config, final IslandCraftDatabase database, final NmsWrapper nms) {
         this.config = config;
         this.database = database;
         this.nms = nms;
@@ -36,7 +36,7 @@ public class HackListener implements Listener {
         if (config.WORLD_CONFIGS.containsKey(name)) {
             world.setSpawnLocation(0, world.getHighestBlockYAt(0, 0), 0);
             if (beforeHack.get(name)) {
-                final BiomeGenerator biomeGenerator = new WorldGenerator(name, world.getSeed(), config.WORLD_CONFIGS.get(name), database);
+                final BiomeGenerator biomeGenerator = new IslandCraftBiomeGenerator(name, world.getSeed(), config.WORLD_CONFIGS.get(name), database);
                 nms.installBiomeGenerator(world, biomeGenerator);
                 beforeHack.put(name, false);
             }
@@ -53,7 +53,7 @@ public class HackListener implements Listener {
         final String name = world.getName();
         if (config.WORLD_CONFIGS.containsKey(name)) {
             if (beforeHack.get(name)) {
-                final BiomeGenerator biomeGenerator = new WorldGenerator(name, world.getSeed(), config.WORLD_CONFIGS.get(name), database);
+                final BiomeGenerator biomeGenerator = new IslandCraftBiomeGenerator(name, world.getSeed(), config.WORLD_CONFIGS.get(name), database);
                 if (nms.installBiomeGenerator(world, biomeGenerator)) {
                     // If this is the very first time, regenerate the chunk
                     if (!database.anyIslands(name)) {

@@ -1,6 +1,6 @@
 package com.github.hoqhuuep.islandcraft.core;
 
-public class Geometry {
+public class MathHelper {
     public static int ifloordiv(int n, int d) {
         // Credit to Mark Dickinson
         // http://stackoverflow.com/a/10466453
