@@ -1,18 +1,15 @@
 package com.github.hoqhuuep.islandcraft.core;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.github.hoqhuuep.islandcraft.api.Island;
+import com.github.hoqhuuep.islandcraft.api.ICBiome;
+import com.github.hoqhuuep.islandcraft.api.ICIsland;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
-import com.github.hoqhuuep.islandcraft.api.IslandConfig;
-import com.github.hoqhuuep.islandcraft.bukkit.YamlIslandConfig;
-import com.github.hoqhuuep.islandcraft.bukkit.nms.ICBiome;
-import com.github.hoqhuuep.islandcraft.database.IslandPK;
+import com.github.hoqhuuep.islandcraft.database.Database;
 
 public class ConcreteWorld implements ICWorld {
     private final String name;
@@ -21,16 +18,17 @@ public class ConcreteWorld implements ICWorld {
     private final int islandSeparation;
     private final int oceanSize;
     private final ICBiome oceanBiome;
-    private final Set<IslandConfig> islandConfigs;
+    private final Database database;
+    private final String generator = IslandGeneratorAlpha.class.getName();
 
-    public ConcreteWorld(final String name, final long seed, final ConfigurationSection config) {
+    public ConcreteWorld(final String name, final long seed, final Database database, final ConfigurationSection config) {
         this.name = name;
         this.seed = seed;
+        this.database = database;
         islandSize = config.getInt("island-size");
         oceanSize = config.getInt("ocean-size");
         islandSeparation = islandSize + oceanSize;
         oceanBiome = ICBiome.valueOf(config.getString("ocean-biome"));
-        islandConfigs = loadIslandConfigs(config.getConfigurationSection("islands"));
 
         // Validate configuration values
         if (islandSize <= 0 || islandSize % 32 != 0) {
@@ -39,15 +37,6 @@ public class ConcreteWorld implements ICWorld {
         if (oceanSize <= 0 || oceanSize % 32 != 0) {
             throw new IllegalArgumentException("IslandCraft-Core config.yml issue. " + config.getCurrentPath() + ".ocean-size must be a positive multiple of 32");
         }
-    }
-
-    private static Set<IslandConfig> loadIslandConfigs(final ConfigurationSection config) {
-        final Set<IslandConfig> islandConfigs = new HashSet<IslandConfig>();
-        for (final String key : config.getKeys(false)) {
-            final IslandConfig islandConfig = new YamlIslandConfig(config.getConfigurationSection(key));
-            islandConfigs.add(islandConfig);
-        }
-        return islandConfigs;
     }
 
     @Override
@@ -76,18 +65,13 @@ public class ConcreteWorld implements ICWorld {
     }
 
     @Override
-    public Set<IslandConfig> getIslandConfigs() {
-        return islandConfigs;
-    }
-
-    @Override
     public ICBiome getBiomeAt(final ICLocation location) {
         return getBiomeAt(location.getX(), location.getZ());
     }
 
     @Override
     public ICBiome getBiomeAt(final int x, final int z) {
-        final Island island = getIslandAt(x, z);
+        final ICIsland island = getIslandAt(x, z);
         if (island == null) {
             return oceanBiome;
         }
@@ -102,7 +86,7 @@ public class ConcreteWorld implements ICWorld {
 
     @Override
     public ICBiome[] getBiomeChunk(int x, int z) {
-        final Island island = getIslandAt(x, z);
+        final ICIsland island = getIslandAt(x, z);
         if (island == null) {
             final ICBiome[] result = new ICBiome[256];
             Arrays.fill(result, oceanBiome);
@@ -113,12 +97,12 @@ public class ConcreteWorld implements ICWorld {
     }
 
     @Override
-    public Island getIslandAt(final ICLocation location) {
+    public ICIsland getIslandAt(final ICLocation location) {
         return getIslandAt(location.getX(), location.getZ());
     }
 
     @Override
-    public Island getIslandAt(final int x, final int z) {
+    public ICIsland getIslandAt(final int x, final int z) {
         // xPrime, zPrime = shift the coordinate system so that 0, 0 is top-left
         // of spawn island
         // xRelative, zRelative = coordinates relative to top-left of nearest
@@ -136,34 +120,39 @@ public class ConcreteWorld implements ICWorld {
             return null;
         }
         final int column = MathHelper.ifloordiv(xPrime, islandSeparation);
-        final IslandPK key = getKey(row, column);
-        return getIsland(key);
+        return getIsland(row, column);
     }
 
     @Override
-    public Set<Island> getIslandsAt(final ICLocation location) {
+    public Set<ICIsland> getIslandsAt(final ICLocation location) {
         return getIslandsAt(location.getX(), location.getZ());
     }
 
     @Override
-    public Set<Island> getIslandsAt(final int x, final int z) {
+    public Set<ICIsland> getIslandsAt(final int x, final int z) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    private IslandPK getKey(final int row, final int column) {
-        final int z = row * islandSeparation;
-        final int x;
+    private ICIsland getIsland(final int row, final int column) {
+        final int centerZ = row * islandSeparation;
+        final int centerX;
         if (row % 2 == 0) {
-            x = column * islandSeparation;
+            centerX = column * islandSeparation;
         } else {
-            x = column * islandSeparation - islandSeparation / 2;
+            centerX = column * islandSeparation - islandSeparation / 2;
         }
-        return new IslandPK(name, x, z);
+        return database.getIsland(this, centerX, centerZ);
     }
 
-    private Island getIsland(final IslandPK key) {
-        // TODO
+    @Override
+    public String getGenerator() {
+        return generator;
+    }
+
+    @Override
+    public Set<String> getParameters() {
+        // TODO Auto-generated method stub
         return null;
     }
 }

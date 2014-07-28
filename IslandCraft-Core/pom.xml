@@ -11,6 +11,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
+			<artifactId>IslandCraft-Api</artifactId>
+			<version>1.0.0-beta-1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS</artifactId>
 			<version>1.0.0-beta-1</version>
 		</dependency>
@@ -89,6 +94,7 @@
 							<artifactSet>
 								<includes>
 									<include>com.github.hoqhuuep:IslandCraft-NMS*</include>
+									<include>com.github.hoqhuuep:IslandCraft-Api</include>
 								</includes>
 							</artifactSet>
 						</configuration>

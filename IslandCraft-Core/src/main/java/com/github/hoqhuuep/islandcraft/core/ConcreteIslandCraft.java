@@ -3,10 +3,10 @@ package com.github.hoqhuuep.islandcraft.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.hoqhuuep.islandcraft.api.IslandCraft;
+import com.github.hoqhuuep.islandcraft.api.ICServer;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
 
-public class ConcreteIslandCraft implements IslandCraft {
+public class ConcreteIslandCraft implements ICServer {
     private final Map<String, ICWorld> worlds;
 
     public ConcreteIslandCraft() {

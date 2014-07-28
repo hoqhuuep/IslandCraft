@@ -1,8 +1,8 @@
 package com.github.hoqhuuep.islandcraft.bukkit;
 
+import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
-import com.github.hoqhuuep.islandcraft.bukkit.nms.BiomeGenerator;
-import com.github.hoqhuuep.islandcraft.bukkit.nms.ICBiome;
+import com.github.hoqhuuep.islandcraft.nms.BiomeGenerator;
 
 public class IslandCraftBiomeGenerator extends BiomeGenerator {
     private final ICWorld world;

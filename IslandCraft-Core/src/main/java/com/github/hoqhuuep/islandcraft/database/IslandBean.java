@@ -17,27 +17,11 @@ public class IslandBean {
     @Id
     private Integer centerZ;
     @Column
-    private Integer innerRegionMinX;
-    @Column
-    private Integer innerRegionMinZ;
-    @Column
-    private Integer innerRegionMaxX;
-    @Column
-    private Integer innerRegionMaxZ;
-    @Column
-    private Integer outerRegionMinX;
-    @Column
-    private Integer outerRegionMinZ;
-    @Column
-    private Integer outerRegionMaxX;
-    @Column
-    private Integer outerRegionMaxZ;
-    @Column
     private Long seed;
     @Column
     private String generator;
     @Column
-    private String parameters;
+    private String parameter;
 
     public String getWorldName() {
         return worldName;
@@ -51,38 +35,6 @@ public class IslandBean {
         return centerZ;
     }
 
-    public Integer getInnerRegionMinX() {
-        return innerRegionMinX;
-    }
-
-    public Integer getInnerRegionMinZ() {
-        return innerRegionMinZ;
-    }
-
-    public Integer getInnerRegionMaxX() {
-        return innerRegionMaxX;
-    }
-
-    public Integer getInnerRegionMaxZ() {
-        return innerRegionMaxZ;
-    }
-
-    public Integer getOuterRegionMinX() {
-        return outerRegionMinX;
-    }
-
-    public Integer getOuterRegionMinZ() {
-        return outerRegionMinZ;
-    }
-
-    public Integer getOuterRegionMaxX() {
-        return outerRegionMaxX;
-    }
-
-    public Integer getOuterRegionMaxZ() {
-        return outerRegionMaxZ;
-    }
-
     public Long getSeed() {
         return seed;
     }
@@ -91,8 +43,8 @@ public class IslandBean {
         return generator;
     }
 
-    public String getParameters() {
-        return parameters;
+    public String getParameter() {
+        return parameter;
     }
 
     public void setWorldName(final String worldName) {
@@ -107,38 +59,6 @@ public class IslandBean {
         this.centerZ = centerZ;
     }
 
-    public void setInnerRegionMinX(final Integer innerRegionMinX) {
-        this.innerRegionMinX = innerRegionMinX;
-    }
-
-    public void setInnerRegionMinZ(final Integer innerRegionMinZ) {
-        this.innerRegionMinZ = innerRegionMinZ;
-    }
-
-    public void setInnerRegionMaxX(final Integer innerRegionMaxX) {
-        this.innerRegionMaxX = innerRegionMaxX;
-    }
-
-    public void setInnerRegionMaxZ(final Integer innerRegionMaxZ) {
-        this.innerRegionMaxZ = innerRegionMaxZ;
-    }
-
-    public void setOuterRegionMinX(final Integer outerRegionMinX) {
-        this.outerRegionMinX = outerRegionMinX;
-    }
-
-    public void setOuterRegionMinZ(final Integer outerRegionMinZ) {
-        this.outerRegionMinZ = outerRegionMinZ;
-    }
-
-    public void setOuterRegionMaxX(final Integer outerRegionMaxX) {
-        this.outerRegionMaxX = outerRegionMaxX;
-    }
-
-    public void setOuterRegionMaxZ(final Integer outerRegionMaxZ) {
-        this.outerRegionMaxZ = outerRegionMaxZ;
-    }
-
     public void setSeed(final Long seed) {
         this.seed = seed;
     }
@@ -147,7 +67,7 @@ public class IslandBean {
         this.generator = generator;
     }
 
-    public void setParameters(final String parameters) {
-        this.parameters = parameters;
+    public void setParameter(final String parameter) {
+        this.parameter = parameter;
     }
 }

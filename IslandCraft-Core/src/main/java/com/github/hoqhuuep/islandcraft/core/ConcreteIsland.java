@@ -1,31 +1,31 @@
 package com.github.hoqhuuep.islandcraft.core;
 
-import com.github.hoqhuuep.islandcraft.api.Island;
-import com.github.hoqhuuep.islandcraft.api.IslandConfig;
+import com.github.hoqhuuep.islandcraft.api.ICBiome;
+import com.github.hoqhuuep.islandcraft.api.ICIsland;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
-import com.github.hoqhuuep.islandcraft.bukkit.nms.ICBiome;
+import com.github.hoqhuuep.islandcraft.api.ICWorld;
 
-public class ConcreteIsland implements Island {
-    private IslandConfig config;
+public class ConcreteIsland implements ICIsland {
     private final CachedIslandGenerator cache;
     private final long seed;
+    private final String generator;
+    private final String parameter;
     private final ICLocation center;
     private final ICRegion innerRegion;
     private final ICRegion outerRegion;
 
-    public ConcreteIsland(final IslandConfig config, final long seed, final ICLocation center, final ICRegion innerRegion, final ICRegion outerRegion) {
+    public ConcreteIsland(final ICWorld world, final int centerX, final int centerZ, final long seed, final String generator, final String parameter) {
         this.cache = null; // TODO
-        this.config = config;
         this.seed = seed;
-        this.center = center;
-        this.innerRegion = innerRegion;
-        this.outerRegion = outerRegion;
-    }
+        this.generator = generator;
+        this.parameter = parameter;
+        this.center = new ICLocation(centerX, centerZ);
 
-    @Override
-    public IslandConfig getConfig() {
-        return config;
+        final int innerRadius = world.getIslandSize() / 2;
+        final int outerRadius = innerRadius + world.getOceanSize();
+        this.innerRegion = new ICRegion(new ICLocation(centerX - innerRadius, centerZ - innerRadius), new ICLocation(centerX + innerRadius, centerZ + innerRadius));
+        this.outerRegion = new ICRegion(new ICLocation(centerX - outerRadius, centerZ - outerRadius), new ICLocation(centerX + outerRadius, centerZ + outerRadius));
     }
 
     @Override
@@ -73,23 +73,13 @@ public class ConcreteIsland implements Island {
         return cache.biomeAll(this);
     }
 
-    private static final int BLOCKS_PER_CHUNK = 16;
+    @Override
+    public String getGenerator() {
+        return generator;
+    }
 
     @Override
-    public void regenerate(final IslandConfig config) {
-        this.config = config;
-        final ICLocation min = innerRegion.getMin();
-        final ICLocation max = innerRegion.getMax();
-        final int minX = min.getX() / BLOCKS_PER_CHUNK;
-        final int minZ = min.getZ() / BLOCKS_PER_CHUNK;
-        final int maxX = max.getX() / BLOCKS_PER_CHUNK;
-        final int maxZ = max.getZ() / BLOCKS_PER_CHUNK;
-        // Must loop from high to low for trees to generate correctly
-        for (int x = maxX - 1; x >= minX; --x) {
-            for (int z = maxZ - 1; z >= minZ; --z) {
-                // TODO queue these?
-                // TODO world.regenerateChunk(x, z);
-            }
-        }
+    public String getParameter() {
+        return parameter;
     }
 }

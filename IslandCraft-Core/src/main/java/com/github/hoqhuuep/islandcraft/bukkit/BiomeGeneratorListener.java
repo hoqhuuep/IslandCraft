@@ -11,18 +11,18 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.WorldInitEvent;
 
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
-import com.github.hoqhuuep.islandcraft.api.IslandCraft;
-import com.github.hoqhuuep.islandcraft.bukkit.nms.BiomeGenerator;
-import com.github.hoqhuuep.islandcraft.bukkit.nms.NmsWrapper;
+import com.github.hoqhuuep.islandcraft.api.ICServer;
 import com.github.hoqhuuep.islandcraft.database.Database;
+import com.github.hoqhuuep.islandcraft.nms.BiomeGenerator;
+import com.github.hoqhuuep.islandcraft.nms.NmsWrapper;
 
 public class BiomeGeneratorListener implements Listener {
     private final Set<String> worldsDone;
-    private final IslandCraft islandCraft;
+    private final ICServer islandCraft;
     private final Database database;
     private final NmsWrapper nms;
 
-    public BiomeGeneratorListener(final IslandCraft islandCraft, final Database database, final NmsWrapper nms) {
+    public BiomeGeneratorListener(final ICServer islandCraft, final Database database, final NmsWrapper nms) {
         this.islandCraft = islandCraft;
         this.database = database;
         this.nms = nms;
@@ -54,7 +54,7 @@ public class BiomeGeneratorListener implements Listener {
             final BiomeGenerator biomeGenerator = new IslandCraftBiomeGenerator(icWorld);
             if (nms.installBiomeGenerator(world, biomeGenerator)) {
                 // If this is the very first time, regenerate the chunk
-                if (!database.anyIslands(name)) {
+                if (!database.anyIslands(icWorld)) {
                     final Chunk chunk = event.getChunk();
                     world.regenerateChunk(chunk.getX(), chunk.getZ());
                 }

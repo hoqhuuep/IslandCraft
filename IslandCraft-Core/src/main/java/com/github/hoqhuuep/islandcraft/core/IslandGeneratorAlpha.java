@@ -13,9 +13,8 @@ import java.util.Random;
 import org.bukkit.util.noise.OctaveGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
-import com.github.hoqhuuep.islandcraft.api.IslandConfig;
-import com.github.hoqhuuep.islandcraft.bukkit.YamlIslandConfig;
-import com.github.hoqhuuep.islandcraft.bukkit.nms.ICBiome;
+import com.github.hoqhuuep.islandcraft.api.ICBiome;
+import com.github.hoqhuuep.islandcraft.bukkit.IslandParameters;
 import com.github.hoqhuuep.islandcraft.core.mosaic.Poisson;
 import com.github.hoqhuuep.islandcraft.core.mosaic.Site;
 
@@ -26,8 +25,8 @@ public class IslandGeneratorAlpha {
     private static final double SQUARE = 0;
     private static final double THRESHOLD = 2;
 
-    public ICBiome[] generate(final int islandSize, final long seed, final ICBiome oceanBiome, final String parameters) {
-        final IslandConfig config = configFromString(parameters);
+    public ICBiome[] generate(final int islandSize, final ICBiome oceanBiome, final long seed, final String parameters) {
+        final IslandParameters config = configFromString(parameters);
         final Poisson poisson = new Poisson(islandSize, islandSize, MIN_DISTANCE);
         final List<Site> sites = poisson.generate(new Random(seed));
         final SimplexOctaveGenerator shapeNoise = new SimplexOctaveGenerator(seed, 2);
@@ -149,8 +148,8 @@ public class IslandGeneratorAlpha {
         return Math.max(Math.abs(dx), Math.abs(dz));
     }
 
-    private IslandConfig configFromString(final String parameters) {
+    private IslandParameters configFromString(final String parameters) {
         final String[] p = parameters.split(" ");
-        return new YamlIslandConfig(p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7]);
+        return new IslandParameters(p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7]);
     }
 }
