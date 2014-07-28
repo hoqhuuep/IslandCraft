@@ -30,19 +30,14 @@ public class Database {
         if (cachedIsland != null) {
             return cachedIsland;
         }
-        IslandBean bean = loadIsland(key);
+        IslandBean bean = ebean.find(IslandBean.class, key);
         if (bean == null) {
             bean = createIsland(world, centerX, centerZ);
             ebean.save(bean);
         }
-        ICIsland newIsland = new DefaultIsland(world, centerX, centerZ, bean.getSeed(), bean.getGenerator(), bean.getParameter());
+        final ICIsland newIsland = new DefaultIsland(world, centerX, centerZ, bean.getSeed(), bean.getGenerator(), bean.getParameter());
         cache.put(key, newIsland);
         return newIsland;
-    }
-
-    private IslandBean loadIsland(final IslandPK key) {
-        final IslandBean loadedIsland = ebean.find(IslandBean.class, key);
-        return loadedIsland;
     }
 
     private IslandBean createIsland(final ICWorld world, final int centerX, final int centerZ) {

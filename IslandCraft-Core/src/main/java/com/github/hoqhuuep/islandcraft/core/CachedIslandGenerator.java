@@ -1,17 +1,17 @@
 package com.github.hoqhuuep.islandcraft.core;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
-
-import net.minecraft.util.com.google.common.cache.CacheBuilder;
-import net.minecraft.util.com.google.common.cache.CacheLoader;
-import net.minecraft.util.com.google.common.cache.LoadingCache;
 
 import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.ICIsland;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
 
 public class CachedIslandGenerator {
     private final static IslandGeneratorAlpha islandGeneratorAlpha = new IslandGeneratorAlpha();
-    private final LoadingCache<ICIsland, ICBiome[]> cache;
+    private final Cache<ICIsland, ICBiome[]> cache;
     private final int islandSize;
 
     public CachedIslandGenerator(final int islandSize, final ICBiome oceanBiome) {
@@ -23,7 +23,9 @@ public class CachedIslandGenerator {
                     return islandGeneratorAlpha.generate(islandSize, oceanBiome, island.getSeed(), island.getParameter());
                 }
                 // Unknown generator
-                return null;
+                final ICBiome[] result = new ICBiome[islandSize * islandSize];
+                Arrays.fill(result, oceanBiome);
+                return result;
             }
         });
     }

@@ -18,66 +18,66 @@ public class CustomWorldChunkManager extends WorldChunkManager {
 
     static {
         biomeMap.put(ICBiome.BEACH, BiomeBase.BEACH);
-        biomeMap.put(ICBiome.BIRCH_FOREST, null);
-        biomeMap.put(ICBiome.BIRCH_FOREST_HILLS, null);
-        biomeMap.put(ICBiome.BIRCH_FOREST_HILLS_M, null);
-        biomeMap.put(ICBiome.BIRCH_FOREST_M, null);
-        biomeMap.put(ICBiome.COLD_BEACH, null);
-        biomeMap.put(ICBiome.COLD_TAIGA, null);
-        biomeMap.put(ICBiome.COLD_TAIGA_HILLS, null);
-        biomeMap.put(ICBiome.COLD_TAIGA_M, null);
-        biomeMap.put(ICBiome.DEEP_OCEAN, null);
+        biomeMap.put(ICBiome.BIRCH_FOREST, BiomeBase.FOREST);
+        biomeMap.put(ICBiome.BIRCH_FOREST_HILLS, BiomeBase.FOREST_HILLS);
+        biomeMap.put(ICBiome.BIRCH_FOREST_HILLS_M, BiomeBase.FOREST_HILLS);
+        biomeMap.put(ICBiome.BIRCH_FOREST_M, BiomeBase.FOREST_HILLS);
+        biomeMap.put(ICBiome.COLD_BEACH, BiomeBase.BEACH);
+        biomeMap.put(ICBiome.COLD_TAIGA, BiomeBase.TAIGA);
+        biomeMap.put(ICBiome.COLD_TAIGA_HILLS, BiomeBase.TAIGA_HILLS);
+        biomeMap.put(ICBiome.COLD_TAIGA_M, BiomeBase.TAIGA_HILLS);
+        biomeMap.put(ICBiome.DEEP_OCEAN, BiomeBase.OCEAN);
         biomeMap.put(ICBiome.DESERT, BiomeBase.DESERT);
         biomeMap.put(ICBiome.DESERT_HILLS, BiomeBase.DESERT_HILLS);
-        biomeMap.put(ICBiome.DESERT_M, null);
+        biomeMap.put(ICBiome.DESERT_M, BiomeBase.DESERT_HILLS);
         biomeMap.put(ICBiome.END, BiomeBase.SKY);
         biomeMap.put(ICBiome.EXTREME_HILLS, BiomeBase.EXTREME_HILLS);
         biomeMap.put(ICBiome.EXTREME_HILLS_EDGE, BiomeBase.SMALL_MOUNTAINS);
-        biomeMap.put(ICBiome.EXTREME_HILLS_M, null);
-        biomeMap.put(ICBiome.EXTREME_HILLS_PLUS, null);
-        biomeMap.put(ICBiome.EXTREME_HILLS_PLUS_M, null);
-        biomeMap.put(ICBiome.FLOWER_FOREST, null);
+        biomeMap.put(ICBiome.EXTREME_HILLS_M, BiomeBase.EXTREME_HILLS);
+        biomeMap.put(ICBiome.EXTREME_HILLS_PLUS, BiomeBase.EXTREME_HILLS);
+        biomeMap.put(ICBiome.EXTREME_HILLS_PLUS_M, BiomeBase.EXTREME_HILLS);
+        biomeMap.put(ICBiome.FLOWER_FOREST, BiomeBase.FOREST);
         biomeMap.put(ICBiome.FOREST, BiomeBase.FOREST);
         biomeMap.put(ICBiome.FOREST_HILLS, BiomeBase.FOREST_HILLS);
         biomeMap.put(ICBiome.FROZEN_OCEAN, BiomeBase.FROZEN_OCEAN);
         biomeMap.put(ICBiome.FROZEN_RIVER, BiomeBase.FROZEN_RIVER);
         biomeMap.put(ICBiome.ICE_MOUNTAINS, BiomeBase.ICE_MOUNTAINS);
         biomeMap.put(ICBiome.ICE_PLAINS, BiomeBase.ICE_PLAINS);
-        biomeMap.put(ICBiome.ICE_PLAINS_SPIKES, null);
+        biomeMap.put(ICBiome.ICE_PLAINS_SPIKES, BiomeBase.ICE_MOUNTAINS);
         biomeMap.put(ICBiome.JUNGLE, BiomeBase.JUNGLE);
-        biomeMap.put(ICBiome.JUNGLE_EDGE, null);
+        biomeMap.put(ICBiome.JUNGLE_EDGE, BiomeBase.JUNGLE);
         biomeMap.put(ICBiome.JUNGLE_HILLS, BiomeBase.JUNGLE_HILLS);
-        biomeMap.put(ICBiome.JUNGLE_M, null);
-        biomeMap.put(ICBiome.JUNGLE_EDGE_M, null);
-        biomeMap.put(ICBiome.MEGA_SPRUCE_TAIGA, null);
-        biomeMap.put(ICBiome.MEGA_SPRUCE_TAIGA_HILLS, null);
-        biomeMap.put(ICBiome.MEGA_TAIGA, null);
-        biomeMap.put(ICBiome.MEGA_TAIGA_HILLS, null);
-        biomeMap.put(ICBiome.MESA, null);
-        biomeMap.put(ICBiome.MESA_BRYCE, null);
-        biomeMap.put(ICBiome.MESA_PLATEAU, null);
-        biomeMap.put(ICBiome.MESA_PLATEAU_F, null);
-        biomeMap.put(ICBiome.MESA_PLATEAU_F_M, null);
-        biomeMap.put(ICBiome.MESA_PLATEAU_M, null);
+        biomeMap.put(ICBiome.JUNGLE_M, BiomeBase.JUNGLE_HILLS);
+        biomeMap.put(ICBiome.JUNGLE_EDGE_M, BiomeBase.JUNGLE_HILLS);
+        biomeMap.put(ICBiome.MEGA_SPRUCE_TAIGA, BiomeBase.TAIGA);
+        biomeMap.put(ICBiome.MEGA_SPRUCE_TAIGA_HILLS, BiomeBase.TAIGA_HILLS);
+        biomeMap.put(ICBiome.MEGA_TAIGA, BiomeBase.TAIGA);
+        biomeMap.put(ICBiome.MEGA_TAIGA_HILLS, BiomeBase.TAIGA_HILLS);
+        biomeMap.put(ICBiome.MESA, BiomeBase.DESERT);
+        biomeMap.put(ICBiome.MESA_BRYCE, BiomeBase.DESERT_HILLS);
+        biomeMap.put(ICBiome.MESA_PLATEAU, BiomeBase.DESERT);
+        biomeMap.put(ICBiome.MESA_PLATEAU_F, BiomeBase.DESERT);
+        biomeMap.put(ICBiome.MESA_PLATEAU_F_M, BiomeBase.DESERT_HILLS);
+        biomeMap.put(ICBiome.MESA_PLATEAU_M, BiomeBase.DESERT_HILLS);
         biomeMap.put(ICBiome.MUSHROOM_ISLAND, BiomeBase.MUSHROOM_ISLAND);
         biomeMap.put(ICBiome.MUSHROOM_ISLAND_SHORE, BiomeBase.MUSHROOM_SHORE);
         biomeMap.put(ICBiome.NETHER, BiomeBase.HELL);
         biomeMap.put(ICBiome.OCEAN, BiomeBase.OCEAN);
         biomeMap.put(ICBiome.PLAINS, BiomeBase.PLAINS);
         biomeMap.put(ICBiome.RIVER, BiomeBase.RIVER);
-        biomeMap.put(ICBiome.ROOFED_FOREST, null);
-        biomeMap.put(ICBiome.ROOFED_FOREST_M, null);
-        biomeMap.put(ICBiome.SAVANNA, null);
-        biomeMap.put(ICBiome.SAVANNA_M, null);
-        biomeMap.put(ICBiome.SAVANNA_PLATEAU, null);
-        biomeMap.put(ICBiome.SAVANNA_PLATEAU_M, null);
-        biomeMap.put(ICBiome.STONE_BEACH, null);
-        biomeMap.put(ICBiome.SUNFLOWER_PLAINS, null);
+        biomeMap.put(ICBiome.ROOFED_FOREST, BiomeBase.FOREST);
+        biomeMap.put(ICBiome.ROOFED_FOREST_M, BiomeBase.FOREST_HILLS);
+        biomeMap.put(ICBiome.SAVANNA, BiomeBase.DESERT);
+        biomeMap.put(ICBiome.SAVANNA_M, BiomeBase.DESERT_HILLS);
+        biomeMap.put(ICBiome.SAVANNA_PLATEAU, BiomeBase.DESERT);
+        biomeMap.put(ICBiome.SAVANNA_PLATEAU_M, BiomeBase.DESERT_HILLS);
+        biomeMap.put(ICBiome.STONE_BEACH, BiomeBase.BEACH);
+        biomeMap.put(ICBiome.SUNFLOWER_PLAINS, BiomeBase.PLAINS);
         biomeMap.put(ICBiome.SWAMPLAND, BiomeBase.SWAMPLAND);
-        biomeMap.put(ICBiome.SWAMPLAND_M, null);
+        biomeMap.put(ICBiome.SWAMPLAND_M, BiomeBase.SWAMPLAND);
         biomeMap.put(ICBiome.TAIGA, BiomeBase.TAIGA);
         biomeMap.put(ICBiome.TAIGA_HILLS, BiomeBase.TAIGA_HILLS);
-        biomeMap.put(ICBiome.TAIGA_M, null);
+        biomeMap.put(ICBiome.TAIGA_M, BiomeBase.TAIGA_HILLS);
     }
 
     private final BiomeCache biomeCache;
@@ -113,11 +113,31 @@ public class CustomWorldChunkManager extends WorldChunkManager {
         // In reality size is always 1 chunk's worth
         final BiomeBase[] biomes = a(null, x, z, xSize, zSize, false);
         for (int i = 0; i < xSize * zSize; i++) {
-            final float wetness = biomes[i].h() / 65536.0F;
+            final float wetness = biomes[i].g() / 65536.0F;
             if (wetness > 1.0F) {
                 result[i] = 1.0F;
             } else {
                 result[i] = wetness;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public float[] getTemperatures(float[] result, int x, int z, int xSize, int zSize) {
+        // Create result array if given one is insufficient
+        if (result == null || result.length < xSize * zSize) {
+            // In reality result is always null
+            result = new float[xSize * zSize];
+        }
+        // In reality size is always 1 chunk's worth
+        final BiomeBase[] biomes = a(null, x, z, xSize, zSize, false);
+        for (int i = 0; i < xSize * zSize; i++) {
+            float temperature = biomes[i].h() / 65536.0F;
+            if (temperature > 1.0F) {
+                result[i] = 1.0F;
+            } else {
+                result[i] = temperature;
             }
         }
         return result;

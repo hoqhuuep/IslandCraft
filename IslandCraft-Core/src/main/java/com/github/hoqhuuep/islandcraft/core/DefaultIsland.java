@@ -81,4 +81,62 @@ public class DefaultIsland implements ICIsland {
     public String getParameter() {
         return parameter;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((cache == null) ? 0 : cache.hashCode());
+        result = prime * result + ((center == null) ? 0 : center.hashCode());
+        result = prime * result + ((generator == null) ? 0 : generator.hashCode());
+        result = prime * result + ((innerRegion == null) ? 0 : innerRegion.hashCode());
+        result = prime * result + ((outerRegion == null) ? 0 : outerRegion.hashCode());
+        result = prime * result + ((parameter == null) ? 0 : parameter.hashCode());
+        result = prime * result + (int) (seed ^ (seed >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DefaultIsland other = (DefaultIsland) obj;
+        if (cache == null) {
+            if (other.cache != null)
+                return false;
+        } else if (!cache.equals(other.cache))
+            return false;
+        if (center == null) {
+            if (other.center != null)
+                return false;
+        } else if (!center.equals(other.center))
+            return false;
+        if (generator == null) {
+            if (other.generator != null)
+                return false;
+        } else if (!generator.equals(other.generator))
+            return false;
+        if (innerRegion == null) {
+            if (other.innerRegion != null)
+                return false;
+        } else if (!innerRegion.equals(other.innerRegion))
+            return false;
+        if (outerRegion == null) {
+            if (other.outerRegion != null)
+                return false;
+        } else if (!outerRegion.equals(other.outerRegion))
+            return false;
+        if (parameter == null) {
+            if (other.parameter != null)
+                return false;
+        } else if (!parameter.equals(other.parameter))
+            return false;
+        if (seed != other.seed)
+            return false;
+        return true;
+    }
 }
