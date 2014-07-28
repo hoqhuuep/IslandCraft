@@ -22,6 +22,7 @@
               <artifactSet>
                 <includes>
                   <include>com.github.hoqhuuep:IslandCraft-NMS*</include>
+                  <include>com.github.hoqhuuep:IslandCraft-Api</include>
                 </includes>
               </artifactSet>
             </configuration>

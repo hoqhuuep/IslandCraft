@@ -31,7 +31,9 @@ public class IslandCraftPlugin extends JavaPlugin {
             setEnabled(false);
             return;
         }
+
         saveDefaultConfig();
+
         final EbeanServer ebean = getDatabase();
         // Hack to ensure database exists
         try {
@@ -39,9 +41,13 @@ public class IslandCraftPlugin extends JavaPlugin {
         } catch (final PersistenceException e) {
             installDDL();
         }
+
         islandCraft = new DefaultIslandCraft();
+
         final Database database = new Database(getDatabase());
+
         final Listener listener = new BiomeGeneratorListener(islandCraft, database, getConfig(), nms);
+
         getServer().getPluginManager().registerEvents(listener, this);
     }
 

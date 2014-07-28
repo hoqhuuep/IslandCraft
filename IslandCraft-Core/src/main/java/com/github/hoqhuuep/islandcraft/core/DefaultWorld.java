@@ -21,8 +21,9 @@ public class DefaultWorld implements ICWorld {
     private final int oceanSize;
     private final ICBiome oceanBiome;
     private final Database database;
-    private final String generator = IslandGeneratorAlpha.class.getName();
+    private final String generator;
     private final Set<String> parameters;
+    private final CachedIslandGenerator cachedIslandGenerator;
 
     public DefaultWorld(final String name, final long seed, final Database database, final ConfigurationSection config) {
         this.name = name;
@@ -41,12 +42,19 @@ public class DefaultWorld implements ICWorld {
             throw new IllegalArgumentException("IslandCraft-Core config.yml issue. " + config.getCurrentPath() + ".ocean-size must be a positive multiple of 32");
         }
 
+        generator = config.getString("generator");
         final ConfigurationSection islands = config.getConfigurationSection("islands");
         final Set<String> keys = islands.getKeys(false);
         parameters = new HashSet<String>(keys.size());
         for (final String key : keys) {
             loadParameters(islands.getConfigurationSection(key));
         }
+
+        cachedIslandGenerator = new CachedIslandGenerator(islandSize, oceanBiome);
+    }
+
+    public CachedIslandGenerator getCachedIslandGenerator() {
+        return cachedIslandGenerator;
     }
 
     private void loadParameters(final ConfigurationSection config) {

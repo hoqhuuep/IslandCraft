@@ -1,5 +1,5 @@
 worlds:
-  world_islandcraft:
+  world:
     ocean-size: 32
     ocean-biome: DEEP_OCEAN
     island-size: 288

@@ -9,37 +9,39 @@ import com.avaje.ebean.EbeanServer;
 import com.github.hoqhuuep.islandcraft.api.ICIsland;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
 import com.github.hoqhuuep.islandcraft.core.DefaultIsland;
+import com.github.hoqhuuep.islandcraft.core.DefaultWorld;
 
 public class Database {
     private final EbeanServer ebean;
-    private final Map<IslandPK, IslandBean> cache;
+    private final Map<IslandPK, ICIsland> cache;
 
     public Database(final EbeanServer ebean) {
         this.ebean = ebean;
-        this.cache = new HashMap<IslandPK, IslandBean>();
+        this.cache = new HashMap<IslandPK, ICIsland>();
     }
 
     public boolean anyIslands(final ICWorld world) {
-        return ebean.find(IslandBean.class).where().ieq("worldName", world.getName()).findRowCount() > 0;
+        return ebean.find(IslandBean.class).where().ieq("world_name", world.getName()).findRowCount() > 0;
     }
 
-    public ICIsland getIsland(final ICWorld world, final int centerX, final int centerZ) {
-        IslandBean bean = loadIsland(world, centerX, centerZ);
+    public ICIsland getIsland(final DefaultWorld world, final int centerX, final int centerZ) {
+        final IslandPK key = new IslandPK(world.getName(), centerX, centerZ);
+        final ICIsland cachedIsland = cache.get(key);
+        if (cachedIsland != null) {
+            return cachedIsland;
+        }
+        IslandBean bean = loadIsland(key);
         if (bean == null) {
             bean = createIsland(world, centerX, centerZ);
             ebean.save(bean);
         }
-        return new DefaultIsland(world, centerX, centerZ, bean.getSeed(), bean.getGenerator(), bean.getParameter());
+        ICIsland newIsland = new DefaultIsland(world, centerX, centerZ, bean.getSeed(), bean.getGenerator(), bean.getParameter());
+        cache.put(key, newIsland);
+        return newIsland;
     }
 
-    private IslandBean loadIsland(final ICWorld world, final int centerX, final int centerZ) {
-        final IslandPK key = new IslandPK(world.getName(), centerX, centerZ);
-        final IslandBean cachedIsland = cache.get(key);
-        if (cachedIsland != null) {
-            return cachedIsland;
-        }
+    private IslandBean loadIsland(final IslandPK key) {
         final IslandBean loadedIsland = ebean.find(IslandBean.class, key);
-        cache.put(key, loadedIsland);
         return loadedIsland;
     }
 
@@ -49,9 +51,7 @@ public class Database {
         final Random random = new Random(seed);
         final String parameter = parameters.toArray()[random.nextInt(parameters.size())].toString();
         final IslandBean bean = new IslandBean();
-        bean.setWorldName(world.getName());
-        bean.setCenterX(centerX);
-        bean.setCenterZ(centerZ);
+        bean.setId(new IslandPK(world.getName(), centerX, centerZ));
         bean.setSeed(seed);
         bean.setGenerator(world.getGenerator());
         bean.setParameter(parameter);

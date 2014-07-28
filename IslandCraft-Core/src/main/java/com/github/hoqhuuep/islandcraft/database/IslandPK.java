@@ -2,14 +2,18 @@ package com.github.hoqhuuep.islandcraft.database;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
+import javax.persistence.Embeddable;
 
-@Entity
+@Embeddable
 public class IslandPK implements Serializable {
     private static final long serialVersionUID = 1336730725392705091L;
     private String worldName;
     private int centerX;
     private int centerZ;
+
+    public IslandPK() {
+        // Default constructor
+    }
 
     public IslandPK(final String worldName, final int centerX, final int centerZ) {
         this.worldName = worldName;

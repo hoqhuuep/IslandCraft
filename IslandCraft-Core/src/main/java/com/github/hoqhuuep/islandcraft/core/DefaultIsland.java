@@ -4,7 +4,6 @@ import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.ICIsland;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
-import com.github.hoqhuuep.islandcraft.api.ICWorld;
 
 public class DefaultIsland implements ICIsland {
     private final CachedIslandGenerator cache;
@@ -15,8 +14,8 @@ public class DefaultIsland implements ICIsland {
     private final ICRegion innerRegion;
     private final ICRegion outerRegion;
 
-    public DefaultIsland(final ICWorld world, final int centerX, final int centerZ, final long seed, final String generator, final String parameter) {
-        this.cache = null; // TODO
+    public DefaultIsland(final DefaultWorld world, final int centerX, final int centerZ, final long seed, final String generator, final String parameter) {
+        this.cache = world.getCachedIslandGenerator();
         this.seed = seed;
         this.generator = generator;
         this.parameter = parameter;
