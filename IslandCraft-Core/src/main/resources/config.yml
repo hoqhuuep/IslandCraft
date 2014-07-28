@@ -3,139 +3,155 @@ worlds:
     ocean-size: 32
     ocean-biome: DEEP_OCEAN
     island-size: 288
+    generator: com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha
     islands:
       birch-forest:
-        outer-coast: OCEAN
-        inner-coast: BEACH
         normal: BIRCH_FOREST
-        mountains: BIRCH_FOREST_MOUNTAINS
+        mountains: BIRCH_FOREST_M
         hills: BIRCH_FOREST_HILLS
-        hills-mountains: BIRCH_FOREST_HILLS_MOUNTAINS
+        hills-mountains: BIRCH_FOREST_HILLS_M
         forest: ~
         forest-mountains: ~
-      cold-taiga:
         outer-coast: OCEAN
-        inner-coast: COLD_BEACH
+        inner-coast: BEACH
+        river: RIVER
+      cold-taiga:
         normal: COLD_TAIGA
-        mountains: COLD_TAIGA_MOUNTAINS
+        mountains: COLD_TAIGA_M
         hills: COLD_TAIGA_HILLS
         hills-mountains: ~
         forest: ~
         forest-mountains: ~
-      desert:
         outer-coast: OCEAN
-        inner-coast: BEACH
+        inner-coast: COLD_BEACH
+        river: FORZEN_RIVER
+      desert:
         normal: DESERT
-        mountains: DESERT_MOUNTAINS
+        mountains: DESERT_M
         hills: DESERT_HILLS
         hills-mountains: ~
         forest: ~
         forest-mountains: ~
-      extreme-hills:
-        outer-coast: OCEAN
-        inner-coast: STONE_BEACH
-        normal: EXTREME_HILLS
-        mountains: EXTREME_HILLS_MOUNTAINS
-        hills: EXTREME_HILLS_PLUS
-        hills-mountains: EXTREME_HILLS_PLUS_MOUNTAINS
-        forest: SMALL_MOUNTAINS
-        forest-mountains: ~
-      forest:
         outer-coast: OCEAN
         inner-coast: BEACH
+        river: RIVER
+      extreme-hills:
+        normal: EXTREME_HILLS
+        mountains: EXTREME_HILLS_M
+        hills: EXTREME_HILLS_PLUS
+        hills-mountains: EXTREME_HILLS_PLUS_M
+        forest: EXTREME_HILLS_EDGE
+        forest-mountains: ~
+        outer-coast: OCEAN
+        inner-coast: STONE_BEACH
+        river: RIVER
+      forest:
         normal: FOREST
         mountains: ~
         hills: FOREST_HILLS
         hills-mountains: ~
         forest: FLOWER_FOREST
         forest-mountains: ~
-      ice-plains:
         outer-coast: OCEAN
-        inner-coast: FROZEN_OCEAN
+        inner-coast: BEACH
+        river: RIVER
+      ice-plains:
         normal: ICE_PLAINS
         mountains: ~
         hills: ICE_MOUNTAINS
         hills-mountains: ~
         forest: ICE_PLAINS_SPIKES
         forest-mountains: ~
-      jungle:
         outer-coast: OCEAN
-        inner-coast: BEACH
+        inner-coast: FROZEN_OCEAN
+        river: FORZEN_RIVER
+      jungle:
         normal: JUNGLE
-        mountains: JUNGLE_MOUNTAINS
+        mountains: JUNGLE_M
         hills: JUNGLE_HILLS
         hills-mountains: ~
         forest: JUNGLE_EDGE
-        forest-mountains: JUNGLE_EDGE_MOUNTAINS
-      mega-taiga:
+        forest-mountains: JUNGLE_EDGE_M
         outer-coast: OCEAN
         inner-coast: BEACH
+        river: RIVER
+      mega-taiga:
         normal: MEGA_TAIGA
         mountains: MEGA_SPRUCE_TAIGA
         hills: MEGA_TAIGA_HILLS
         hills-mountains: MEGA_SPRUCE_TAIGA_HILLS
         forest: ~
         forest-mountains: ~
-      mesa:
         outer-coast: OCEAN
-        inner-coast: MESA
+        inner-coast: BEACH
+        river: RIVER
+      mesa:
         normal: MESA
         mountains: MESA_BRYCE
         hills: MESA_PLATEAU
-        hills-mountains: MESA_PLATEAU_MOUNTAINS
-        forest: MESA_PLATEAU_FOREST
-        forest-mountains: MESA_PLATEAU_FOREST_MOUNTAINS
-      mushroom-island:
+        hills-mountains: MESA_PLATEAU_M
+        forest: MESA_PLATEAU_F
+        forest-mountains: MESA_PLATEAU_F_M
         outer-coast: OCEAN
-        inner-coast: MUSHROOM_SHORE
+        inner-coast: MESA
+        river: RIVER
+      mushroom-island:
         normal: MUSHROOM_ISLAND
         mountains: ~
         hills: ~
         hills-mountains: ~
         forest: ~
         forest-mountains: ~
-      plains:
         outer-coast: OCEAN
-        inner-coast: BEACH
+        inner-coast: MUSHROOM_ISLAND_SHORE
+        river: RIVER
+      plains:
         normal: PLAINS
         mountains: ~
         hills: SUNFLOWER_PLAINS
         hills-mountains: ~
         forest: ~
         forest-mountains: ~
+        outer-coast: OCEAN
+        inner-coast: BEACH
+        river: RIVER
       roofed-forest:
-        outer-coast: OCEAN
-        inner-coast: BEACH
         normal: ROOFED_FOREST
-        mountains: ROOFED_FOREST_MOUNTAINS
+        mountains: ROOFED_FOREST_M
         hills: ~
         hills-mountains: ~
         forest: ~
         forest-mountains: ~
+        outer-coast: OCEAN
+        inner-coast: BEACH
+        river: RIVER
       savana:
-        outer-coast: OCEAN
-        inner-coast: BEACH
         normal: SAVANNA
-        mountains: SAVANNA_MOUNTAINS
+        mountains: SAVANNA_M
         hills: SAVANNA_PLATEAU
-        hills-mountains: SAVANNA_PLATEAU_MOUNTAINS
+        hills-mountains: SAVANNA_PLATEAU_M
         forest: ~
         forest-mountains: ~
-      swampland:
         outer-coast: OCEAN
         inner-coast: BEACH
+        river: RIVER
+      swampland:
         normal: SWAMPLAND
-        mountains: SWAMPLAND_MOUNTAINS
+        mountains: SWAMPLAND_M
         hills: ~
         hills-mountains: ~
         forest: ~
         forest-mountains: ~
-      taiga:
         outer-coast: OCEAN
         inner-coast: BEACH
+        river: RIVER
+      taiga:
         normal: TAIGA
-        mountains: TAIGA_MOUNTAINS
+        mountains: TAIGA_M
         hills: TAIGA_HILLS
         hills-mountains: ~
         forest: ~
         forest-mountains: ~
+        outer-coast: OCEAN
+        inner-coast: BEACH
+        river: RIVER

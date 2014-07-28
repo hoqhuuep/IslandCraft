@@ -6,7 +6,7 @@ import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
 
-public class ConcreteIsland implements ICIsland {
+public class DefaultIsland implements ICIsland {
     private final CachedIslandGenerator cache;
     private final long seed;
     private final String generator;
@@ -15,7 +15,7 @@ public class ConcreteIsland implements ICIsland {
     private final ICRegion innerRegion;
     private final ICRegion outerRegion;
 
-    public ConcreteIsland(final ICWorld world, final int centerX, final int centerZ, final long seed, final String generator, final String parameter) {
+    public DefaultIsland(final ICWorld world, final int centerX, final int centerZ, final long seed, final String generator, final String parameter) {
         this.cache = null; // TODO
         this.seed = seed;
         this.generator = generator;

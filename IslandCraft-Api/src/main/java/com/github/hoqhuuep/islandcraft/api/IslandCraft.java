@@ -1,5 +1,5 @@
 package com.github.hoqhuuep.islandcraft.api;
 
-public interface ICServer {
+public interface IslandCraft {
     ICWorld getWorld(String name);
 }

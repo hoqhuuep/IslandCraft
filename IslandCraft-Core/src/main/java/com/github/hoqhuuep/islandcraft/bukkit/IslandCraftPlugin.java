@@ -12,15 +12,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.avaje.ebean.EbeanServer;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
-import com.github.hoqhuuep.islandcraft.api.ICServer;
-import com.github.hoqhuuep.islandcraft.core.ConcreteIslandCraft;
+import com.github.hoqhuuep.islandcraft.api.IslandCraft;
+import com.github.hoqhuuep.islandcraft.core.DefaultIslandCraft;
 import com.github.hoqhuuep.islandcraft.database.Database;
 import com.github.hoqhuuep.islandcraft.database.IslandBean;
 import com.github.hoqhuuep.islandcraft.database.IslandPK;
 import com.github.hoqhuuep.islandcraft.nms.NmsWrapper;
 
 public class IslandCraftPlugin extends JavaPlugin {
-    private ICServer islandCraft = null;
+    private DefaultIslandCraft islandCraft = null;
 
     @Override
     public void onEnable() {
@@ -39,9 +39,9 @@ public class IslandCraftPlugin extends JavaPlugin {
         } catch (final PersistenceException e) {
             installDDL();
         }
-        islandCraft = new ConcreteIslandCraft();
+        islandCraft = new DefaultIslandCraft();
         final Database database = new Database(getDatabase());
-        final Listener listener = new BiomeGeneratorListener(islandCraft, database, nms);
+        final Listener listener = new BiomeGeneratorListener(islandCraft, database, getConfig(), nms);
         getServer().getPluginManager().registerEvents(listener, this);
     }
 
@@ -51,7 +51,7 @@ public class IslandCraftPlugin extends JavaPlugin {
         return Arrays.asList(classes);
     }
 
-    public ICServer getIslandCraft() {
+    public IslandCraft getIslandCraft() {
         return islandCraft;
     }
 

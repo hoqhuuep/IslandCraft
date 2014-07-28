@@ -1,8 +1,10 @@
 package com.github.hoqhuuep.islandcraft.core;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 
 import com.github.hoqhuuep.islandcraft.api.ICBiome;
@@ -11,7 +13,7 @@ import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
 import com.github.hoqhuuep.islandcraft.database.Database;
 
-public class ConcreteWorld implements ICWorld {
+public class DefaultWorld implements ICWorld {
     private final String name;
     private final long seed;
     private final int islandSize;
@@ -20,8 +22,9 @@ public class ConcreteWorld implements ICWorld {
     private final ICBiome oceanBiome;
     private final Database database;
     private final String generator = IslandGeneratorAlpha.class.getName();
+    private final Set<String> parameters;
 
-    public ConcreteWorld(final String name, final long seed, final Database database, final ConfigurationSection config) {
+    public DefaultWorld(final String name, final long seed, final Database database, final ConfigurationSection config) {
         this.name = name;
         this.seed = seed;
         this.database = database;
@@ -37,6 +40,32 @@ public class ConcreteWorld implements ICWorld {
         if (oceanSize <= 0 || oceanSize % 32 != 0) {
             throw new IllegalArgumentException("IslandCraft-Core config.yml issue. " + config.getCurrentPath() + ".ocean-size must be a positive multiple of 32");
         }
+
+        final ConfigurationSection islands = config.getConfigurationSection("islands");
+        final Set<String> keys = islands.getKeys(false);
+        parameters = new HashSet<String>(keys.size());
+        for (final String key : keys) {
+            loadParameters(islands.getConfigurationSection(key));
+        }
+    }
+
+    private void loadParameters(final ConfigurationSection config) {
+        final String normal = config.getString("normal");
+        final String mountains = config.getString("mountains");
+        final String hills = config.getString("hills");
+        final String hillsMountains = config.getString("hills-mountains");
+        final String forest = config.getString("forest");
+        final String forestMountains = config.getString("forest-mountains");
+        final String outerCoast = config.getString("outer-coast");
+        final String innerCoast = config.getString("inner-coast");
+        final String river = config.getString("river");
+        final String[] parameterArray = { normal, mountains, hills, hillsMountains, forest, forestMountains, outerCoast, innerCoast, river };
+        for (int i = 0; i < parameterArray.length; ++i) {
+            if (parameterArray[i] == null) {
+                parameterArray[i] = "~";
+            }
+        }
+        parameters.add(StringUtils.join(parameterArray, " "));
     }
 
     @Override
@@ -152,7 +181,6 @@ public class ConcreteWorld implements ICWorld {
 
     @Override
     public Set<String> getParameters() {
-        // TODO Auto-generated method stub
-        return null;
+        return parameters;
     }
 }

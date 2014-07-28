@@ -8,7 +8,7 @@ import java.util.Set;
 import com.avaje.ebean.EbeanServer;
 import com.github.hoqhuuep.islandcraft.api.ICIsland;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
-import com.github.hoqhuuep.islandcraft.core.ConcreteIsland;
+import com.github.hoqhuuep.islandcraft.core.DefaultIsland;
 
 public class Database {
     private final EbeanServer ebean;
@@ -29,7 +29,7 @@ public class Database {
             bean = createIsland(world, centerX, centerZ);
             ebean.save(bean);
         }
-        return new ConcreteIsland(world, centerX, centerZ, bean.getSeed(), bean.getGenerator(), bean.getParameter());
+        return new DefaultIsland(world, centerX, centerZ, bean.getSeed(), bean.getGenerator(), bean.getParameter());
     }
 
     private IslandBean loadIsland(final ICWorld world, final int centerX, final int centerZ) {
