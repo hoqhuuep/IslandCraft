@@ -1,16 +1,24 @@
-package com.github.hoqhuuep.islandcraft.core;
+package com.github.hoqhuuep.islandcraft.bukkit;
 
 import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.avaje.ebean.EbeanServer;
+import com.github.hoqhuuep.islandcraft.api.IslandCraft;
 import com.github.hoqhuuep.islandcraft.bukkit.nms.NmsWrapper;
+import com.github.hoqhuuep.islandcraft.core.ConcreteIslandCraft;
+import com.github.hoqhuuep.islandcraft.database.Database;
+import com.github.hoqhuuep.islandcraft.database.IslandBean;
+import com.github.hoqhuuep.islandcraft.database.IslandPK;
 
 public class IslandCraftPlugin extends JavaPlugin {
+    private IslandCraft islandCraft = null;
+
     @Override
     public void onEnable() {
         final NmsWrapper nms = NmsWrapper.getInstance(getServer());
@@ -21,20 +29,26 @@ public class IslandCraftPlugin extends JavaPlugin {
             return;
         }
         saveDefaultConfig();
-        final EbeanServer database = getDatabase();
+        final EbeanServer ebean = getDatabase();
         // Hack to ensure database exists
         try {
-            database.find(IslandBean.class).findRowCount();
+            ebean.find(IslandBean.class).findRowCount();
         } catch (final PersistenceException e) {
             installDDL();
         }
-        final IslandCraftConfig config = new IslandCraftConfig(getConfig());
-        getServer().getPluginManager().registerEvents(new BiomeGeneratorListener(config, new IslandCraftDatabase(getDatabase(), config), nms), this);
+        islandCraft = new ConcreteIslandCraft();
+        final Database database = new Database(islandCraft, getDatabase());
+        final Listener listener = new BiomeGeneratorListener(islandCraft, database, nms);
+        getServer().getPluginManager().registerEvents(listener, this);
     }
 
     @Override
     public List<Class<?>> getDatabaseClasses() {
-        final Class<?>[] classes = { IslandBean.class, SerializableLocation.class };
+        final Class<?>[] classes = { IslandBean.class, IslandPK.class };
         return Arrays.asList(classes);
+    }
+
+    public IslandCraft getIslandCraft() {
+        return islandCraft;
     }
 }

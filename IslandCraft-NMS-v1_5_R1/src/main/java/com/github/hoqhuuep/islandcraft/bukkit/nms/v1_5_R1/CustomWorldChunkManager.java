@@ -1,6 +1,8 @@
 package com.github.hoqhuuep.islandcraft.bukkit.nms.v1_5_R1;
 
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.server.v1_5_R1.BiomeBase;
@@ -8,19 +10,80 @@ import net.minecraft.server.v1_5_R1.BiomeCache;
 import net.minecraft.server.v1_5_R1.ChunkPosition;
 import net.minecraft.server.v1_5_R1.WorldChunkManager;
 
-import org.bukkit.World;
-import org.bukkit.block.Biome;
-import org.bukkit.craftbukkit.v1_5_R1.block.CraftBlock;
-
 import com.github.hoqhuuep.islandcraft.bukkit.nms.BiomeGenerator;
+import com.github.hoqhuuep.islandcraft.bukkit.nms.ICBiome;
 
 public class CustomWorldChunkManager extends WorldChunkManager {
-    private final World world;
+    private static final Map<ICBiome, BiomeBase> biomeMap = new EnumMap<ICBiome, BiomeBase>(ICBiome.class);
+
+    static {
+        biomeMap.put(ICBiome.BEACH, BiomeBase.BEACH);
+        biomeMap.put(ICBiome.BIRCH_FOREST, null);
+        biomeMap.put(ICBiome.BIRCH_FOREST_HILLS, null);
+        biomeMap.put(ICBiome.BIRCH_FOREST_HILLS_M, null);
+        biomeMap.put(ICBiome.BIRCH_FOREST_M, null);
+        biomeMap.put(ICBiome.COLD_BEACH, null);
+        biomeMap.put(ICBiome.COLD_TAIGA, null);
+        biomeMap.put(ICBiome.COLD_TAIGA_HILLS, null);
+        biomeMap.put(ICBiome.COLD_TAIGA_M, null);
+        biomeMap.put(ICBiome.DEEP_OCEAN, null);
+        biomeMap.put(ICBiome.DESERT, BiomeBase.DESERT);
+        biomeMap.put(ICBiome.DESERT_HILLS, BiomeBase.DESERT_HILLS);
+        biomeMap.put(ICBiome.DESERT_M, null);
+        biomeMap.put(ICBiome.END, BiomeBase.SKY);
+        biomeMap.put(ICBiome.EXTREME_HILLS, BiomeBase.EXTREME_HILLS);
+        biomeMap.put(ICBiome.EXTREME_HILLS_EDGE, BiomeBase.SMALL_MOUNTAINS);
+        biomeMap.put(ICBiome.EXTREME_HILLS_M, null);
+        biomeMap.put(ICBiome.EXTREME_HILLS_PLUS, null);
+        biomeMap.put(ICBiome.EXTREME_HILLS_PLUS_M, null);
+        biomeMap.put(ICBiome.FLOWER_FOREST, null);
+        biomeMap.put(ICBiome.FOREST, BiomeBase.FOREST);
+        biomeMap.put(ICBiome.FOREST_HILLS, BiomeBase.FOREST_HILLS);
+        biomeMap.put(ICBiome.FROZEN_OCEAN, BiomeBase.FROZEN_OCEAN);
+        biomeMap.put(ICBiome.FROZEN_RIVER, BiomeBase.FROZEN_RIVER);
+        biomeMap.put(ICBiome.ICE_MOUNTAINS, BiomeBase.ICE_MOUNTAINS);
+        biomeMap.put(ICBiome.ICE_PLAINS, BiomeBase.ICE_PLAINS);
+        biomeMap.put(ICBiome.ICE_PLAINS_SPIKES, null);
+        biomeMap.put(ICBiome.JUNGLE, BiomeBase.JUNGLE);
+        biomeMap.put(ICBiome.JUNGLE_EDGE, null);
+        biomeMap.put(ICBiome.JUNGLE_HILLS, BiomeBase.JUNGLE_HILLS);
+        biomeMap.put(ICBiome.JUNGLE_M, null);
+        biomeMap.put(ICBiome.JUNGLE_EDGE_M, null);
+        biomeMap.put(ICBiome.MEGA_SPRUCE_TAIGA, null);
+        biomeMap.put(ICBiome.MEGA_SPRUCE_TAIGA_HILLS, null);
+        biomeMap.put(ICBiome.MEGA_TAIGA, null);
+        biomeMap.put(ICBiome.MEGA_TAIGA_HILLS, null);
+        biomeMap.put(ICBiome.MESA, null);
+        biomeMap.put(ICBiome.MESA_BRYCE, null);
+        biomeMap.put(ICBiome.MESA_PLATEAU, null);
+        biomeMap.put(ICBiome.MESA_PLATEAU_F, null);
+        biomeMap.put(ICBiome.MESA_PLATEAU_F_M, null);
+        biomeMap.put(ICBiome.MESA_PLATEAU_M, null);
+        biomeMap.put(ICBiome.MUSHROOM_ISLAND, BiomeBase.MUSHROOM_ISLAND);
+        biomeMap.put(ICBiome.MUSHROOM_ISLAND_SHORE, BiomeBase.MUSHROOM_SHORE);
+        biomeMap.put(ICBiome.NETHER, BiomeBase.HELL);
+        biomeMap.put(ICBiome.OCEAN, BiomeBase.OCEAN);
+        biomeMap.put(ICBiome.PLAINS, BiomeBase.PLAINS);
+        biomeMap.put(ICBiome.RIVER, BiomeBase.RIVER);
+        biomeMap.put(ICBiome.ROOFED_FOREST, null);
+        biomeMap.put(ICBiome.ROOFED_FOREST_M, null);
+        biomeMap.put(ICBiome.SAVANNA, null);
+        biomeMap.put(ICBiome.SAVANNA_M, null);
+        biomeMap.put(ICBiome.SAVANNA_PLATEAU, null);
+        biomeMap.put(ICBiome.SAVANNA_PLATEAU_M, null);
+        biomeMap.put(ICBiome.STONE_BEACH, null);
+        biomeMap.put(ICBiome.SUNFLOWER_PLAINS, null);
+        biomeMap.put(ICBiome.SWAMPLAND, BiomeBase.SWAMPLAND);
+        biomeMap.put(ICBiome.SWAMPLAND_M, null);
+        biomeMap.put(ICBiome.TAIGA, BiomeBase.TAIGA);
+        biomeMap.put(ICBiome.TAIGA_HILLS, BiomeBase.TAIGA_HILLS);
+        biomeMap.put(ICBiome.TAIGA_M, null);
+    }
+
     private final BiomeCache biomeCache;
     private final BiomeGenerator biomeGenerator;
 
-    public CustomWorldChunkManager(final World world, final BiomeGenerator biomeGenerator) {
-        this.world = world;
+    public CustomWorldChunkManager(final BiomeGenerator biomeGenerator) {
         this.biomeGenerator = biomeGenerator;
         this.biomeCache = new BiomeCache(this);
     }
@@ -71,8 +134,8 @@ public class CustomWorldChunkManager extends WorldChunkManager {
         for (int i = 0; i < xSize * zSize; ++i) {
             final int x = (xMin + (i % xSize)) << 2;
             final int z = (zMin + (i / xSize)) << 2;
-            final Biome biome = biomeGenerator.generateBiome(world, x, z);
-            result[i] = CraftBlock.biomeToBiomeBase(biome);
+            final ICBiome biome = biomeGenerator.generateBiome(x, z);
+            result[i] = biomeMap.get(biome);
         }
         return result;
     }
@@ -100,17 +163,17 @@ public class CustomWorldChunkManager extends WorldChunkManager {
                 return result;
             }
             // This only happens in getWetness above
-            Biome[] temp = biomeGenerator.generateChunkBiomes(world, xMin, zMin);
+            final ICBiome[] temp = biomeGenerator.generateChunkBiomes(xMin, zMin);
             for (int i = 0; i < xSize * zSize; ++i) {
-                result[i] = CraftBlock.biomeToBiomeBase(temp[i]);
+                result[i] = biomeMap.get(temp[i]);
             }
             return result;
         }
         // In reality this never happens...
         for (int x = 0; x < xSize; ++x) {
             for (int z = 0; z < zSize; ++z) {
-                Biome temp = biomeGenerator.generateBiome(world, xMin + x, zMin + z);
-                result[x + z * xSize] = CraftBlock.biomeToBiomeBase(temp);
+                final ICBiome temp = biomeGenerator.generateBiome(xMin + x, zMin + z);
+                result[x + z * xSize] = biomeMap.get(temp);
             }
         }
         return result;
@@ -174,6 +237,6 @@ public class CustomWorldChunkManager extends WorldChunkManager {
     public void b() {
         // Clean up biomeCache
         biomeCache.a();
-        biomeGenerator.cleanupCache(world);
+        biomeGenerator.cleanupCache();
     }
 }

@@ -1,8 +1,8 @@
 worlds:
   world_islandcraft:
-    island-size: 288
     ocean-size: 32
-    inter-island-biome: DEEP_OCEAN
+    ocean-biome: DEEP_OCEAN
+    island-size: 288
     islands:
       birch-forest:
         outer-coast: OCEAN

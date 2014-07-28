@@ -21,7 +21,7 @@ public class NmsHandler extends NmsWrapper {
             // Already installed
             return false;
         }
-        worldProvider.e = new CustomWorldChunkManager(world, biomeGenerator);
+        worldProvider.e = new CustomWorldChunkManager(biomeGenerator);
         return true;
     }
 }
