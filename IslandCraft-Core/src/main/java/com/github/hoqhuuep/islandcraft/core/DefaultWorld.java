@@ -145,6 +145,9 @@ public class DefaultWorld implements ICWorld {
     @Override
     public ICIsland getIslandAt(final int x, final int z) {
         final ICLocation center = distribution.getIslandCenterAt(x, z, islandSize, oceanSize);
+        if (center == null) {
+            return null;
+        }
         return database.getIsland(this, center.getX(), center.getZ());
     }
 
