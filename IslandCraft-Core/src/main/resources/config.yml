@@ -1,10 +1,11 @@
 worlds:
   world:
-    ocean-size: 32
-    ocean-biome: DEEP_OCEAN
+    distribution: com.github.hoqhuuep.islandcraft.core.HexagonalIslandDistribution
     island-size: 288
+    ocean-size: 32
     generator: com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha
-    islands:
+    ocean-biome: DEEP_OCEAN
+    parameters:
       birch-forest:
         normal: BIRCH_FOREST
         mountains: BIRCH_FOREST_M

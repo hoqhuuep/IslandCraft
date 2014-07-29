@@ -1,5 +1,8 @@
 package com.github.hoqhuuep.islandcraft.api;
 
+/**
+ * Represents a location in a world.
+ */
 public class ICLocation {
     private final int x;
     private final int z;

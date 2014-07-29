@@ -1,5 +1,8 @@
 package com.github.hoqhuuep.islandcraft.api;
 
+/**
+ * Represents a rectangular region in a world.
+ */
 public class ICRegion {
     private final ICLocation min;
     private final ICLocation max;

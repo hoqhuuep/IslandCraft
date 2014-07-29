@@ -11,6 +11,8 @@ import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.ICIsland;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
+import com.github.hoqhuuep.islandcraft.api.IslandDistribution;
+import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
 import com.github.hoqhuuep.islandcraft.database.Database;
 
 public class DefaultWorld implements ICWorld {
@@ -18,15 +20,10 @@ public class DefaultWorld implements ICWorld {
     private final long seed;
     private final int islandSize;
     private final int oceanSize;
-    private final int islandSeparation;
-    private final int twiceIslandSeparation;
-    private final int halfIslandSeparation;
-    private final int magicNumber0;
-    private final int magicNumber1;
-    private final int magicNumber2;
     private final ICBiome oceanBiome;
     private final Database database;
-    private final String generator;
+    private final IslandGenerator generator;
+    private final IslandDistribution distribution;
     private final Set<String> parameters;
     private final CachedIslandGenerator cachedIslandGenerator;
 
@@ -36,12 +33,6 @@ public class DefaultWorld implements ICWorld {
         this.database = database;
         islandSize = config.getInt("island-size");
         oceanSize = config.getInt("ocean-size");
-        islandSeparation = islandSize + oceanSize;
-        twiceIslandSeparation = islandSeparation * 2;
-        halfIslandSeparation = islandSeparation / 2;
-        magicNumber0 = oceanSize + islandSize / 2;
-        magicNumber1 = magicNumber0 - oceanSize / 2;
-        magicNumber2 = magicNumber1 + oceanSize;
 
         oceanBiome = ICBiome.valueOf(config.getString("ocean-biome"));
 
@@ -53,12 +44,14 @@ public class DefaultWorld implements ICWorld {
             throw new IllegalArgumentException("IslandCraft-Core config.yml issue. " + config.getCurrentPath() + ".ocean-size must be a positive multiple of 32");
         }
 
-        generator = config.getString("generator");
-        final ConfigurationSection islands = config.getConfigurationSection("islands");
-        final Set<String> keys = islands.getKeys(false);
+        generator = ICClassLoader.loadGenerator(config.getString("generator"));
+        distribution = ICClassLoader.loadDistribution(config.getString("distribution"));
+
+        final ConfigurationSection parametersSection = config.getConfigurationSection("parameters");
+        final Set<String> keys = parametersSection.getKeys(false);
         parameters = new HashSet<String>(keys.size());
         for (final String key : keys) {
-            loadParameters(islands.getConfigurationSection(key));
+            loadParameters(parametersSection.getConfigurationSection(key));
         }
 
         cachedIslandGenerator = new CachedIslandGenerator(islandSize, oceanBiome);
@@ -151,24 +144,8 @@ public class DefaultWorld implements ICWorld {
 
     @Override
     public ICIsland getIslandAt(final int x, final int z) {
-        // xPrime, zPrime = shift the coordinate system so that 0, 0 is top-left
-        // of spawn island
-        // xRelative, zRelative = coordinates relative to top-left of nearest
-        // island
-        // row, column = nearest island
-        final int zPrime = z + islandSize / 2;
-        final int zRelative = ifloormod(zPrime, islandSeparation);
-        if (zRelative >= islandSize) {
-            return null;
-        }
-        final int row = ifloordiv(zPrime, islandSeparation);
-        final int xPrime = (row % 2 == 0) ? (x + islandSize / 2) : (x + (islandSize + islandSeparation) / 2);
-        final int xRelative = ifloormod(xPrime, islandSeparation);
-        if (xRelative >= islandSize) {
-            return null;
-        }
-        final int column = ifloordiv(xPrime, islandSeparation);
-        return getIsland(row, column);
+        final ICLocation center = distribution.getIslandCenterAt(x, z, islandSize, oceanSize);
+        return database.getIsland(this, center.getX(), center.getZ());
     }
 
     @Override
@@ -178,109 +155,16 @@ public class DefaultWorld implements ICWorld {
 
     @Override
     public Set<ICIsland> getIslandsAt(final int x, final int z) {
-        // Numbers represent how many island regions a location overlaps.
-        // Arrows point towards the centers of the overlapped regions.
-        // @-------+-----------+-------+-----------+
-        // |...^...|.....^.....|..\./..|.....^.....|
-        // |...3...|.....2.....|...3...|.....2.....|
-        // |../.\..|.....v.....|...v...|.....v.....|
-        // +-------+-----------+-------+-----------+
-        // |.......|...............................|
-        // |.......|...............................|
-        // |.......|...............................|
-        // |.......|...............................|
-        // |.......|...............................|
-        // |.......|...............................|
-        // |..<2>..|...............#...............|
-        // |.......|...............................|
-        // |.......|...............................|
-        // |.......|...............................|
-        // |.......|...............................|
-        // |.......|...............................|
-        // |.......|...............................|
-        // +-------+-----------+-------+-----------+
-        // |..\./..|.....^.....|...^...|.....^.....|
-        // |...3...|.....2.....|...3...|.....2.....|
-        // |...v...|.....v.....|../.\..|.....v.....|
-        // +-------+-----------+-------+-----------+
-        // |...................|.......|...........|
-        // |...................|.......|...........|
-        // |...................|.......|...........|
-        // |...................|.......|...........|
-        // |...................|.......|...........|
-        // |...................|.......|...........|
-        // |...1...............|..<2>..|.......1>..|
-        // |...................|.......|...........|
-        // |...................|.......|...........|
-        // |...................|.......|...........|
-        // |...................|.......|...........|
-        // |...................|.......|...........|
-        // |...................|.......|...........|
-        // +-------------------+-------+-----------+
-        // # relative to @
-        final int xPrime = x + magicNumber0;
-        final int zPrime = z + magicNumber0;
-        // # relative to world origin
-        final int absoluteHashX = ifloordiv(xPrime, islandSeparation) * islandSeparation;
-        final int absoluteHashZ = ifloordiv(zPrime, twiceIslandSeparation) * twiceIslandSeparation;
-        // Point to test relative to @
-        final int relativeX = xPrime - absoluteHashX;
-        final int relativeZ = zPrime - absoluteHashZ;
-        final Set<ICIsland> result = new HashSet<ICIsland>(3);
-        // Top
-        if (relativeZ < oceanSize) {
-            final int centerZ = absoluteHashZ - islandSeparation;
-            // Left
-            if (relativeX < magicNumber2) {
-                final int centerX = absoluteHashX - halfIslandSeparation;
-                result.add(getIsland(centerX, centerZ));
-            }
-            // Right
-            if (relativeX >= magicNumber1) {
-                final int centerX = absoluteHashX + halfIslandSeparation;
-                result.add(getIsland(centerX, centerZ));
-            }
+        final Set<ICLocation> centers = distribution.getIslandCentersAt(x, z, islandSize, oceanSize);
+        final Set<ICIsland> islands = new HashSet<ICIsland>(centers.size());
+        for (final ICLocation center : centers) {
+            islands.add(database.getIsland(this, center.getX(), center.getZ()));
         }
-        // Middle
-        if (relativeZ < islandSeparation + oceanSize) {
-            // Left
-            if (relativeX < oceanSize) {
-                final int centerX = absoluteHashX - islandSeparation;
-                result.add(getIsland(centerX, absoluteHashZ));
-            }
-            // Right
-            result.add(getIsland(absoluteHashX, absoluteHashZ));
-        }
-        // Bottom
-        if (relativeZ >= islandSeparation) {
-            final int centerZ = absoluteHashZ + islandSeparation;
-            // Left
-            if (relativeX < magicNumber2) {
-                final int centerX = absoluteHashX - halfIslandSeparation;
-                result.add(getIsland(centerX, centerZ));
-            }
-            // Right
-            if (relativeX >= magicNumber1) {
-                final int centerX = absoluteHashX + halfIslandSeparation;
-                result.add(getIsland(centerX, centerZ));
-            }
-        }
-        return result;
-    }
-
-    private ICIsland getIsland(final int row, final int column) {
-        final int centerZ = row * islandSeparation;
-        final int centerX;
-        if (row % 2 == 0) {
-            centerX = column * islandSeparation;
-        } else {
-            centerX = column * islandSeparation - islandSeparation / 2;
-        }
-        return database.getIsland(this, centerX, centerZ);
+        return islands;
     }
 
     @Override
-    public String getGenerator() {
+    public IslandGenerator getGenerator() {
         return generator;
     }
 
@@ -312,23 +196,5 @@ public class DefaultWorld implements ICWorld {
         } else if (!name.equals(other.name))
             return false;
         return true;
-    }
-
-    private static int ifloordiv(int n, int d) {
-        // Credit to Mark Dickinson
-        // http://stackoverflow.com/a/10466453
-        if (d >= 0)
-            return n >= 0 ? n / d : ~(~n / d);
-        else
-            return n <= 0 ? n / d : (n - 1) / d - 1;
-    }
-
-    private static int ifloormod(int n, int d) {
-        // Credit to Mark Dickinson
-        // http://stackoverflow.com/a/10466453
-        if (d >= 0)
-            return n >= 0 ? n % d : d + ~(~n % d);
-        else
-            return n <= 0 ? n % d : d + 1 + (n - 1) % d;
     }
 }

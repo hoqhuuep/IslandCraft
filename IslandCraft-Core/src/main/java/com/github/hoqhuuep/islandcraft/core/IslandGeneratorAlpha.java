@@ -14,16 +14,18 @@ import org.bukkit.util.noise.OctaveGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 import com.github.hoqhuuep.islandcraft.api.ICBiome;
+import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
 import com.github.hoqhuuep.islandcraft.core.mosaic.Poisson;
 import com.github.hoqhuuep.islandcraft.core.mosaic.Site;
 
-public class IslandGeneratorAlpha {
+public class IslandGeneratorAlpha implements IslandGenerator {
     private static final double MIN_DISTANCE = 8;
     private static final double NOISE = 2.7;
     private static final double CIRCLE = 2;
     private static final double SQUARE = 0;
     private static final double THRESHOLD = 2;
 
+    @Override
     public ICBiome[] generate(final int islandSize, final ICBiome oceanBiome, final long seed, final String parameter) {
         final String[] p = parameter.split(" ");
         final Color ocean = new Color(oceanBiome.ordinal(), true);

@@ -1,5 +1,12 @@
 package com.github.hoqhuuep.islandcraft.api;
 
+/**
+ * Represents a Minecraft biome.
+ * 
+ * In versions previous to 1.7, sensible backups are used for biomes which were
+ * introduced later. For example ROOFED_FOREST will be replaced by FOREST and
+ * DEEP_OCEAN will be replaced by OCEAN.
+ */
 public enum ICBiome {
     BEACH,
     BIRCH_FOREST,

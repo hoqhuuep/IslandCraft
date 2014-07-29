@@ -8,8 +8,10 @@ import java.util.Set;
 import com.avaje.ebean.EbeanServer;
 import com.github.hoqhuuep.islandcraft.api.ICIsland;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
+import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
 import com.github.hoqhuuep.islandcraft.core.DefaultIsland;
 import com.github.hoqhuuep.islandcraft.core.DefaultWorld;
+import com.github.hoqhuuep.islandcraft.core.ICClassLoader;
 
 public class Database {
     private final EbeanServer ebean;
@@ -35,7 +37,8 @@ public class Database {
             bean = createIsland(world, centerX, centerZ);
             ebean.save(bean);
         }
-        final ICIsland newIsland = new DefaultIsland(world, centerX, centerZ, bean.getSeed(), bean.getGenerator(), bean.getParameter());
+        final IslandGenerator generator = ICClassLoader.loadGenerator(bean.getGenerator());
+        final ICIsland newIsland = new DefaultIsland(world, centerX, centerZ, bean.getSeed(), generator, bean.getParameter());
         cache.put(key, newIsland);
         return newIsland;
     }
@@ -48,7 +51,7 @@ public class Database {
         final IslandBean bean = new IslandBean();
         bean.setId(new IslandPK(world.getName(), centerX, centerZ));
         bean.setSeed(seed);
-        bean.setGenerator(world.getGenerator());
+        bean.setGenerator(world.getGenerator().getClass().getName());
         bean.setParameter(parameter);
         return bean;
     }
