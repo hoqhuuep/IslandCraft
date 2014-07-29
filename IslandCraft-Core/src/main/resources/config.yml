@@ -1,3 +1,4 @@
+config-version: 1.0.0
 worlds:
   world_islandcraft:
     distribution: com.github.hoqhuuep.islandcraft.core.HexagonalIslandDistribution

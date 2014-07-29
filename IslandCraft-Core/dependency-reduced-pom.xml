@@ -3,7 +3,7 @@
   <parent>
     <artifactId>IslandCraft</artifactId>
     <groupId>com.github.hoqhuuep</groupId>
-    <version>1.0.0-beta-1</version>
+    <version>1.0.0-beta</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>IslandCraft-Core</artifactId>
@@ -28,6 +28,13 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <finalName>IslandCraft-1.0.0-beta</finalName>
+        </configuration>
       </plugin>
     </plugins>
   </build>
