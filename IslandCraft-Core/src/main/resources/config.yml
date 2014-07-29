@@ -1,5 +1,5 @@
 worlds:
-  world:
+  world_islandcraft:
     distribution: com.github.hoqhuuep.islandcraft.core.HexagonalIslandDistribution
     island-size: 288
     ocean-size: 32
