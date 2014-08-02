@@ -15,13 +15,13 @@ worlds:
   # You can change the world name here or even add more than one world
   world_islandcraft:
     # There is currently only 1 option for ocean-generator. Please use:
-    # com.github.hoqhuuep.islandcraft.core.ConstantOceanGenerator <biome>
-    ocean: com.github.hoqhuuep.islandcraft.core.ConstantOceanGenerator DEEP_OCEAN
+    # com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution <biome>
+    ocean: com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN
     # There are currently 3 options for island-distribution. Please use one of:
     # com.github.hoqhuuep.islandcraft.core.HexagonalIslandDistribution <island-size> <ocean-size>
     # com.github.hoqhuuep.islandcraft.core.SquareIslandDistribution <island-size> <ocean-size>
     # com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution
-    island-distribution: com.github.hoqhuuep.islandcraft.core.HexagonalWorldLayout 288 32
+    island-distribution: com.github.hoqhuuep.islandcraft.core.HexagonalIslandDistribution 288 32
     # There is currently 2 options for island-generators. Please use one of:
     # com.github.hoqhuuep.islandcraft.core.ConstantIslandGenerator <biome>
     # com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha <normal> <mountains> <hills> <hills-mountains> <forest> <forest-mountains> <outer-coast> <inner-coast> <river>

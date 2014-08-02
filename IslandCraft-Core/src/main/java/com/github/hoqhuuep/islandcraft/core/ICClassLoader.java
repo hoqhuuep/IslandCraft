@@ -39,10 +39,12 @@ public class ICClassLoader {
         @SuppressWarnings("unchecked")
         public T load(final String string) {
             try {
-                final String[] args = string.split(" ");
-                final Class<?> subClass = Class.forName(args[0]);
+                final String[] split = string.split(" ");
+                final String className = split[0];
+                final String[] args = Arrays.copyOfRange(split, 1, split.length);
+                final Class<?> subClass = Class.forName(className);
                 final Constructor<?> constructor = subClass.getConstructor(String[].class);
-                return (T) constructor.newInstance((Object[]) Arrays.copyOfRange(args, 1, args.length));
+                return (T) constructor.newInstance(new Object[] { args });
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException("Failed to create instance of " + string, e);
             } catch (InstantiationException e) {

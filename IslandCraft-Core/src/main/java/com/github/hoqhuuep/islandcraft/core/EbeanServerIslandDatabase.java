@@ -3,9 +3,9 @@ package com.github.hoqhuuep.islandcraft.core;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 import com.avaje.ebean.EbeanServer;
@@ -19,7 +19,7 @@ public class EbeanServerIslandDatabase implements IslandDatabase {
 
     @Override
     public void save(final String worldName, final int centerX, final int centerZ, final long islandSeed, final String generator) {
-        final IslandBean bean = new IslandBean(worldName, centerX, centerZ, islandSeed, generator);
+        final IslandBean bean = new IslandBean(new IslandPK(worldName, centerX, centerZ), islandSeed, generator);
         ebeanServer.save(bean);
     }
 
@@ -39,18 +39,10 @@ public class EbeanServerIslandDatabase implements IslandDatabase {
     }
 
     @Entity
-    @IdClass(IslandPK.class)
-    @Table(name = "islandcraft_generator")
+    @Table(name = "islandcraft_core")
     public static class IslandBean {
-        @Id
-        @Column(name = "world_name")
-        private String worldName;
-        @Id
-        @Column(name = "center_x")
-        private int centerX;
-        @Id
-        @Column(name = "center_z")
-        private int centerZ;
+        @EmbeddedId
+        private IslandPK id;
         @Column(name = "island_seed")
         private long islandSeed;
         @Column(name = "generator")
@@ -60,24 +52,14 @@ public class EbeanServerIslandDatabase implements IslandDatabase {
             // Default constructor
         }
 
-        public IslandBean(final String worldName, final int centerX, final int centerZ, final long islandSeed, final String generator) {
-            this.worldName = worldName;
-            this.centerX = centerX;
-            this.centerZ = centerZ;
+        public IslandBean(final IslandPK id, final long islandSeed, final String generator) {
+            this.id = id;
             this.islandSeed = islandSeed;
             this.generator = generator;
         }
 
-        public String getWorldName() {
-            return worldName;
-        }
-
-        public int getCenterX() {
-            return centerX;
-        }
-
-        public int getCenterZ() {
-            return centerZ;
+        public IslandPK getId() {
+            return id;
         }
 
         public long getIslandSeed() {
@@ -88,16 +70,8 @@ public class EbeanServerIslandDatabase implements IslandDatabase {
             return generator;
         }
 
-        public void setWorldName(final String worldName) {
-            this.worldName = worldName;
-        }
-
-        public void setCenterXfinal(int centerX) {
-            this.centerX = centerX;
-        }
-
-        public void setCenterZ(final int centerZ) {
-            this.centerZ = centerZ;
+        public void setId(final IslandPK id) {
+            this.id = id;
         }
 
         public void setIslandSeed(final long islandSeed) {
@@ -109,11 +83,19 @@ public class EbeanServerIslandDatabase implements IslandDatabase {
         }
     }
 
+    @Embeddable
     public static class IslandPK implements Serializable {
         private static final long serialVersionUID = -153559820620740595L;
-        private final String worldName;
-        private final int centerX;
-        private final int centerZ;
+        @Column(name = "world_name")
+        private String worldName;
+        @Column(name = "center_x")
+        private int centerX;
+        @Column(name = "center_z")
+        private int centerZ;
+
+        public IslandPK() {
+            // Default constructor
+        }
 
         public IslandPK(final String worldName, final int centerX, final int centerZ) {
             this.worldName = worldName;
@@ -131,6 +113,49 @@ public class EbeanServerIslandDatabase implements IslandDatabase {
 
         public int getCenterZ() {
             return centerZ;
+        }
+
+        public void setWorldName(final String worldName) {
+            this.worldName = worldName;
+        }
+
+        public void setCenterX(final int centerX) {
+            this.centerX = centerX;
+        }
+
+        public void setCenterZ(final int centerZ) {
+            this.centerZ = centerZ;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + centerX;
+            result = prime * result + centerZ;
+            result = prime * result + ((worldName == null) ? 0 : worldName.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            IslandPK other = (IslandPK) obj;
+            if (centerX != other.centerX)
+                return false;
+            if (centerZ != other.centerZ)
+                return false;
+            if (worldName == null) {
+                if (other.worldName != null)
+                    return false;
+            } else if (!worldName.equals(other.worldName))
+                return false;
+            return true;
         }
     }
 }

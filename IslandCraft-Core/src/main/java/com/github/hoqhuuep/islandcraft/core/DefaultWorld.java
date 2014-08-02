@@ -1,9 +1,10 @@
 package com.github.hoqhuuep.islandcraft.core;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -14,8 +15,10 @@ import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
 import com.github.hoqhuuep.islandcraft.api.IslandDistribution;
-import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
 import com.github.hoqhuuep.islandcraft.core.IslandDatabase;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
 
 public class DefaultWorld implements ICWorld {
     private final String name;
@@ -23,9 +26,10 @@ public class DefaultWorld implements ICWorld {
     private final IslandDatabase database;
     private final BiomeDistribution ocean;
     private final IslandDistribution islandDistribution;
-    private final List<IslandGenerator> islandGenerators;
+    private final List<String> islandGenerators;
     private final IslandCache cache;
     private final ICClassLoader classLoader;
+    private final Cache<ICLocation, ICIsland> databaseCache;
 
     public DefaultWorld(final String name, final long seed, final IslandDatabase database, final ConfigurationSection config, final IslandCache cache, final ICClassLoader classLoader) {
         this.name = name;
@@ -35,11 +39,8 @@ public class DefaultWorld implements ICWorld {
         this.classLoader = classLoader;
         ocean = classLoader.getBiomeDistribution(config.getString("ocean"));
         islandDistribution = classLoader.getIslandDistribution(config.getString("island-distribution"));
-        final List<String> generatorStrings = config.getStringList("island-generators");
-        islandGenerators = new ArrayList<IslandGenerator>(generatorStrings.size());
-        for (final String islandGenerator : generatorStrings) {
-            islandGenerators.add(classLoader.getIslandGenerator(islandGenerator));
-        }
+        islandGenerators = config.getStringList("island-generators");
+        databaseCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.SECONDS).build(new DatabaseCacheLoader());
     }
 
     @Override
@@ -64,7 +65,11 @@ public class DefaultWorld implements ICWorld {
             return ocean.biomeAt(x, z, seed);
         }
         final ICLocation origin = island.getInnerRegion().getMin();
-        return island.getBiomeAt(x - origin.getX(), z - origin.getZ());
+        final ICBiome biome = island.getBiomeAt(x - origin.getX(), z - origin.getZ());
+        if (biome == null) {
+            return ocean.biomeAt(x, z, seed);
+        }
+        return biome;
     }
 
     @Override
@@ -83,13 +88,20 @@ public class DefaultWorld implements ICWorld {
             return chunk;
         }
         final ICLocation origin = island.getInnerRegion().getMin();
-        final ICBiome[] chunk = island.getBiomeChunk(x - origin.getX(), z - origin.getZ());
-        for (int i = 0; i < 256; ++i) {
-            if (chunk[i] == null) {
+        final ICBiome[] biomes = island.getBiomeChunk(x - origin.getX(), z - origin.getZ());
+        if (biomes == null) {
+            final ICBiome[] chunk = new ICBiome[256];
+            for (int i = 0; i < 256; ++i) {
                 chunk[i] = ocean.biomeAt(x + i % 16, z + i / 16, seed);
             }
+            return chunk;
         }
-        return chunk;
+        for (int i = 0; i < 256; ++i) {
+            if (biomes[i] == null) {
+                biomes[i] = ocean.biomeAt(x + i % 16, z + i / 16, seed);
+            }
+        }
+        return biomes;
     }
 
     @Override
@@ -103,7 +115,7 @@ public class DefaultWorld implements ICWorld {
         if (center == null) {
             return null;
         }
-        return fromCenter(center);
+        return databaseCache.apply(center);
     }
 
     @Override
@@ -116,16 +128,33 @@ public class DefaultWorld implements ICWorld {
         final Set<ICLocation> centers = islandDistribution.getCentersAt(x, z, seed);
         final Set<ICIsland> islands = new HashSet<ICIsland>(centers.size());
         for (final ICLocation center : centers) {
-            islands.add(fromCenter(center));
+            islands.add(databaseCache.apply(center));
         }
         return islands;
     }
 
-    private ICIsland fromCenter(final ICLocation center) {
-        final ICRegion innerRegion = islandDistribution.getInnerRegion(center);
-        final ICRegion outerRegion = islandDistribution.getOuterRegion(center);
-        final IslandDatabase.Result result = database.load(name, center.getX(), center.getZ());
-        return new DefaultIsland(innerRegion, outerRegion, result.getIslandSeed(), classLoader.getIslandGenerator(result.getGenerator()), cache);
+    private class DatabaseCacheLoader extends CacheLoader<ICLocation, ICIsland> {
+        @Override
+        public ICIsland load(final ICLocation center) {
+            final ICRegion innerRegion = islandDistribution.getInnerRegion(center);
+            final ICRegion outerRegion = islandDistribution.getOuterRegion(center);
+            IslandDatabase.Result fromDatabase = database.load(name, center.getX(), center.getZ());
+            if (fromDatabase == null) {
+                final long islandSeed = pickIslandSeed(center.getX(), center.getZ());
+                final String generator = pickIslandGenerator(islandSeed);
+                database.save(name, center.getX(), center.getZ(), islandSeed, generator);
+                return new DefaultIsland(innerRegion, outerRegion, islandSeed, classLoader.getIslandGenerator(generator), cache);
+            }
+            return new DefaultIsland(innerRegion, outerRegion, fromDatabase.getIslandSeed(), classLoader.getIslandGenerator(fromDatabase.getGenerator()), cache);
+        }
+
+        private long pickIslandSeed(final int centerX, final int centerZ) {
+            return new Random(seed ^ ((long) centerX << 24 | centerZ & 0x00FFFFFFL)).nextLong();
+        }
+
+        private String pickIslandGenerator(final long islandSeed) {
+            return islandGenerators.get(new Random(islandSeed).nextInt(islandGenerators.size()));
+        }
     }
 
     @Override

@@ -5,4 +5,3 @@ author: hoqhuuep
 website: http://dev.bukkit.org/bukkit-plugins/islandcraft/
 main: com.github.hoqhuuep.islandcraft.bukkit.IslandCraftPlugin
 load: STARTUP
-database: true
