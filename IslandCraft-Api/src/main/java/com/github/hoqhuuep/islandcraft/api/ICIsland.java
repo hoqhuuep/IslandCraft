@@ -5,12 +5,12 @@ package com.github.hoqhuuep.islandcraft.api;
  */
 public interface ICIsland {
     /**
-     * @return The seed used to randomly generate this island.
+     * @return The random seed used to generate this island.
      */
     long getSeed();
 
     /**
-     * @return The name of the Class used to generate this island.
+     * @return The IslandGenerator used to generate this island.
      */
     IslandGenerator getGenerator();
 

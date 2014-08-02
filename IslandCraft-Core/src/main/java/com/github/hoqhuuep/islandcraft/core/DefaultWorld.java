@@ -40,6 +40,10 @@ public class DefaultWorld implements ICWorld {
         ocean = classLoader.getBiomeDistribution(config.getString("ocean"));
         islandDistribution = classLoader.getIslandDistribution(config.getString("island-distribution"));
         islandGenerators = config.getStringList("island-generators");
+        // Load islandGenerators just to make sure there are no errors
+        for (final String islandGenerator : islandGenerators) {
+            classLoader.getIslandGenerator(islandGenerator);
+        }
         databaseCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.SECONDS).build(new DatabaseCacheLoader());
     }
 

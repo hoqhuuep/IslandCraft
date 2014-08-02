@@ -30,10 +30,16 @@ public class IslandCraftPlugin extends JavaPlugin {
         }
 
         saveDefaultConfig();
-
-        islandCraft = new DefaultIslandCraft();
+        if (!getConfig().getString("config-version").equals("1.0.0")) {
+            getLogger().severe("Incompatible config-version found in config.yml");
+            getLogger().info("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
+            setEnabled(false);
+            return;
+        }
 
         final IslandDatabase database = new EbeanServerIslandDatabase(EbeanServerUtil.build(this));
+
+        islandCraft = new DefaultIslandCraft();
 
         final Listener listener = new BiomeGeneratorListener(islandCraft, database, getConfig(), nms);
 
