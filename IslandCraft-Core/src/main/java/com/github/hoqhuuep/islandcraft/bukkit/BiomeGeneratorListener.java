@@ -12,25 +12,31 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.WorldInitEvent;
 
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
+import com.github.hoqhuuep.islandcraft.core.IslandCache;
 import com.github.hoqhuuep.islandcraft.core.DefaultIslandCraft;
 import com.github.hoqhuuep.islandcraft.core.DefaultWorld;
-import com.github.hoqhuuep.islandcraft.database.Database;
+import com.github.hoqhuuep.islandcraft.core.ICClassLoader;
+import com.github.hoqhuuep.islandcraft.core.IslandDatabase;
 import com.github.hoqhuuep.islandcraft.nms.BiomeGenerator;
 import com.github.hoqhuuep.islandcraft.nms.NmsWrapper;
 
 public class BiomeGeneratorListener implements Listener {
     private final Set<String> worldsDone;
     private final DefaultIslandCraft islandCraft;
-    private final Database database;
+    private final IslandDatabase database;
     private final ConfigurationSection worldConfigs;
     private final NmsWrapper nms;
+    private final IslandCache cache;
+    private final ICClassLoader classLoader;
 
-    public BiomeGeneratorListener(final DefaultIslandCraft islandCraft, final Database database, final ConfigurationSection config, final NmsWrapper nms) {
+    public BiomeGeneratorListener(final DefaultIslandCraft islandCraft, final IslandDatabase database, final ConfigurationSection config, final NmsWrapper nms) {
         this.islandCraft = islandCraft;
         this.database = database;
         this.nms = nms;
         this.worldConfigs = config.getConfigurationSection("worlds");
         worldsDone = new HashSet<String>();
+        cache = new IslandCache();
+        classLoader = new ICClassLoader();
     }
 
     @EventHandler
@@ -39,7 +45,7 @@ public class BiomeGeneratorListener implements Listener {
         final String worldName = world.getName();
         final ConfigurationSection config = worldConfigs.getConfigurationSection(worldName);
         if (config != null && !worldsDone.contains(worldName)) {
-            final ICWorld icWorld = new DefaultWorld(worldName, world.getSeed(), database, config);
+            final ICWorld icWorld = new DefaultWorld(worldName, world.getSeed(), database, config, cache, classLoader);
             final BiomeGenerator biomeGenerator = new IslandCraftBiomeGenerator(icWorld);
             nms.installBiomeGenerator(world, biomeGenerator);
             worldsDone.add(worldName);
@@ -57,11 +63,11 @@ public class BiomeGeneratorListener implements Listener {
         final String worldName = world.getName();
         final ConfigurationSection config = worldConfigs.getConfigurationSection(worldName);
         if (config != null && !worldsDone.contains(worldName)) {
-            final ICWorld icWorld = new DefaultWorld(worldName, world.getSeed(), database, config);
+            final ICWorld icWorld = new DefaultWorld(worldName, world.getSeed(), database, config, cache, classLoader);
             final BiomeGenerator biomeGenerator = new IslandCraftBiomeGenerator(icWorld);
             if (nms.installBiomeGenerator(world, biomeGenerator)) {
                 // If this is the very first time, regenerate the chunk
-                if (!database.anyIslands(icWorld)) {
+                if (database.isEmpty(worldName)) {
                     final Chunk chunk = event.getChunk();
                     world.regenerateChunk(chunk.getX(), chunk.getZ());
                 }

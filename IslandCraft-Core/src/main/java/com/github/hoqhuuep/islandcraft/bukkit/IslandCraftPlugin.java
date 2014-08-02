@@ -3,20 +3,17 @@ package com.github.hoqhuuep.islandcraft.bukkit;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-
 import org.bukkit.World;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.avaje.ebean.EbeanServer;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
 import com.github.hoqhuuep.islandcraft.api.IslandCraft;
 import com.github.hoqhuuep.islandcraft.core.DefaultIslandCraft;
-import com.github.hoqhuuep.islandcraft.database.Database;
-import com.github.hoqhuuep.islandcraft.database.IslandBean;
-import com.github.hoqhuuep.islandcraft.database.IslandPK;
+import com.github.hoqhuuep.islandcraft.core.EbeanServerIslandDatabase;
+import com.github.hoqhuuep.islandcraft.core.EbeanServerUtil;
+import com.github.hoqhuuep.islandcraft.core.IslandDatabase;
 import com.github.hoqhuuep.islandcraft.nms.NmsWrapper;
 
 public class IslandCraftPlugin extends JavaPlugin {
@@ -34,17 +31,9 @@ public class IslandCraftPlugin extends JavaPlugin {
 
         saveDefaultConfig();
 
-        final EbeanServer ebean = getDatabase();
-        // Hack to ensure database exists
-        try {
-            ebean.find(IslandBean.class).findRowCount();
-        } catch (final PersistenceException e) {
-            installDDL();
-        }
-
         islandCraft = new DefaultIslandCraft();
 
-        final Database database = new Database(getDatabase());
+        final IslandDatabase database = new EbeanServerIslandDatabase(EbeanServerUtil.build(this));
 
         final Listener listener = new BiomeGeneratorListener(islandCraft, database, getConfig(), nms);
 
@@ -53,7 +42,7 @@ public class IslandCraftPlugin extends JavaPlugin {
 
     @Override
     public List<Class<?>> getDatabaseClasses() {
-        final Class<?>[] classes = { IslandBean.class, IslandPK.class };
+        final Class<?>[] classes = { EbeanServerIslandDatabase.IslandBean.class, EbeanServerIslandDatabase.IslandPK.class };
         return Arrays.asList(classes);
     }
 

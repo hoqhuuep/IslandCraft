@@ -1,159 +1,43 @@
+# Do not modify config-version
 config-version: 1.0.0
+# If verbose-logging is false only warnings and errors will be logged
+verbose-logging: false
+# Same available options as database settings in bukkit.yml
+# http://wiki.bukkit.org/Bukkit.yml#database
+database:
+  driver: org.sqlite.JDBC
+  url: jdbc:sqlite:{DIR}{NAME}.db
+  username: bukkit
+  password: walrus
+  isolation: SERIALIZABLE
 worlds:
+  # By default IslandCraft is enabled on "world_islandcraft".
+  # You can change the world name here or even add more than one world
   world_islandcraft:
-    distribution: com.github.hoqhuuep.islandcraft.core.HexagonalIslandDistribution
-    island-size: 288
-    ocean-size: 32
-    generator: com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha
-    ocean-biome: DEEP_OCEAN
-    parameters:
-      birch-forest:
-        normal: BIRCH_FOREST
-        mountains: BIRCH_FOREST_M
-        hills: BIRCH_FOREST_HILLS
-        hills-mountains: BIRCH_FOREST_HILLS_M
-        forest: ~
-        forest-mountains: ~
-        outer-coast: OCEAN
-        inner-coast: BEACH
-        river: RIVER
-      cold-taiga:
-        normal: COLD_TAIGA
-        mountains: COLD_TAIGA_M
-        hills: COLD_TAIGA_HILLS
-        hills-mountains: ~
-        forest: ~
-        forest-mountains: ~
-        outer-coast: OCEAN
-        inner-coast: COLD_BEACH
-        river: FORZEN_RIVER
-      desert:
-        normal: DESERT
-        mountains: DESERT_M
-        hills: DESERT_HILLS
-        hills-mountains: ~
-        forest: ~
-        forest-mountains: ~
-        outer-coast: OCEAN
-        inner-coast: BEACH
-        river: RIVER
-      extreme-hills:
-        normal: EXTREME_HILLS
-        mountains: EXTREME_HILLS_M
-        hills: EXTREME_HILLS_PLUS
-        hills-mountains: EXTREME_HILLS_PLUS_M
-        forest: EXTREME_HILLS_EDGE
-        forest-mountains: ~
-        outer-coast: OCEAN
-        inner-coast: STONE_BEACH
-        river: RIVER
-      forest:
-        normal: FOREST
-        mountains: ~
-        hills: FOREST_HILLS
-        hills-mountains: ~
-        forest: FLOWER_FOREST
-        forest-mountains: ~
-        outer-coast: OCEAN
-        inner-coast: BEACH
-        river: RIVER
-      ice-plains:
-        normal: ICE_PLAINS
-        mountains: ~
-        hills: ICE_MOUNTAINS
-        hills-mountains: ~
-        forest: ICE_PLAINS_SPIKES
-        forest-mountains: ~
-        outer-coast: OCEAN
-        inner-coast: FROZEN_OCEAN
-        river: FORZEN_RIVER
-      jungle:
-        normal: JUNGLE
-        mountains: JUNGLE_M
-        hills: JUNGLE_HILLS
-        hills-mountains: ~
-        forest: JUNGLE_EDGE
-        forest-mountains: JUNGLE_EDGE_M
-        outer-coast: OCEAN
-        inner-coast: BEACH
-        river: RIVER
-      mega-taiga:
-        normal: MEGA_TAIGA
-        mountains: MEGA_SPRUCE_TAIGA
-        hills: MEGA_TAIGA_HILLS
-        hills-mountains: MEGA_SPRUCE_TAIGA_HILLS
-        forest: ~
-        forest-mountains: ~
-        outer-coast: OCEAN
-        inner-coast: BEACH
-        river: RIVER
-      mesa:
-        normal: MESA
-        mountains: MESA_BRYCE
-        hills: MESA_PLATEAU
-        hills-mountains: MESA_PLATEAU_M
-        forest: MESA_PLATEAU_F
-        forest-mountains: MESA_PLATEAU_F_M
-        outer-coast: OCEAN
-        inner-coast: MESA
-        river: RIVER
-      mushroom-island:
-        normal: MUSHROOM_ISLAND
-        mountains: ~
-        hills: ~
-        hills-mountains: ~
-        forest: ~
-        forest-mountains: ~
-        outer-coast: OCEAN
-        inner-coast: MUSHROOM_ISLAND_SHORE
-        river: RIVER
-      plains:
-        normal: PLAINS
-        mountains: ~
-        hills: SUNFLOWER_PLAINS
-        hills-mountains: ~
-        forest: ~
-        forest-mountains: ~
-        outer-coast: OCEAN
-        inner-coast: BEACH
-        river: RIVER
-      roofed-forest:
-        normal: ROOFED_FOREST
-        mountains: ROOFED_FOREST_M
-        hills: ~
-        hills-mountains: ~
-        forest: ~
-        forest-mountains: ~
-        outer-coast: OCEAN
-        inner-coast: BEACH
-        river: RIVER
-      savana:
-        normal: SAVANNA
-        mountains: SAVANNA_M
-        hills: SAVANNA_PLATEAU
-        hills-mountains: SAVANNA_PLATEAU_M
-        forest: ~
-        forest-mountains: ~
-        outer-coast: OCEAN
-        inner-coast: BEACH
-        river: RIVER
-      swampland:
-        normal: SWAMPLAND
-        mountains: SWAMPLAND_M
-        hills: ~
-        hills-mountains: ~
-        forest: ~
-        forest-mountains: ~
-        outer-coast: OCEAN
-        inner-coast: BEACH
-        river: RIVER
-      taiga:
-        normal: TAIGA
-        mountains: TAIGA_M
-        hills: TAIGA_HILLS
-        hills-mountains: ~
-        forest: ~
-        forest-mountains: ~
-        outer-coast: OCEAN
-        inner-coast: BEACH
-        river: RIVER
+    # There is currently only 1 option for ocean-generator. Please use:
+    # com.github.hoqhuuep.islandcraft.core.ConstantOceanGenerator <biome>
+    ocean: com.github.hoqhuuep.islandcraft.core.ConstantOceanGenerator DEEP_OCEAN
+    # There are currently 3 options for island-distribution. Please use one of:
+    # com.github.hoqhuuep.islandcraft.core.HexagonalIslandDistribution <island-size> <ocean-size>
+    # com.github.hoqhuuep.islandcraft.core.SquareIslandDistribution <island-size> <ocean-size>
+    # com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution
+    island-distribution: com.github.hoqhuuep.islandcraft.core.HexagonalWorldLayout 288 32
+    # There is currently 2 options for island-generators. Please use one of:
+    # com.github.hoqhuuep.islandcraft.core.ConstantIslandGenerator <biome>
+    # com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha <normal> <mountains> <hills> <hills-mountains> <forest> <forest-mountains> <outer-coast> <inner-coast> <river>
+    island-generators:
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha BIRCH_FOREST BIRCH_FOREST_M BIRCH_FOREST_HILLS BIRCH_FOREST_HILLS_M ~ ~ OCEAN BEACH RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha COLD_TAIGA COLD_TAIGA_M COLD_TAIGA_HILLS ~ ~ ~ OCEAN COLD_BEACH FORZEN_RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha DESERT DESERT_M DESERT_HILLS ~ ~ ~ OCEAN BEACH RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha EXTREME_HILLS EXTREME_HILLS_M EXTREME_HILLS_PLUS EXTREME_HILLS_PLUS_M EXTREME_HILLS_EDGE ~ OCEAN STONE_BEACH RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha FOREST ~ FOREST_HILLS ~ FLOWER_FOREST ~ OCEAN BEACH RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha ICE_PLAINS ~ ICE_MOUNTAINS ~ ICE_PLAINS_SPIKES ~ OCEAN FROZEN_OCEAN FORZEN_RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha JUNGLE JUNGLE_M JUNGLE_HILLS ~ JUNGLE_EDGE JUNGLE_EDGE_M OCEAN BEACH RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha MEGA_TAIGA MEGA_SPRUCE_TAIGA MEGA_TAIGA_HILLS MEGA_SPRUCE_TAIGA_HILLS ~ ~ OCEAN BEACH RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha MESA MESA_BRYCE MESA_PLATEAU MESA_PLATEAU_M MESA_PLATEAU_F MESA_PLATEAU_F_M OCEAN MESA RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha MUSHROOM_ISLAND ~ ~ ~ ~ ~ OCEAN MUSHROOM_ISLAND_SHORE RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha PLAINS ~ SUNFLOWER_PLAINS ~ ~ ~ OCEAN BEACH RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha ROOFED_FOREST ROOFED_FOREST_M ~ ~ ~ ~ OCEAN BEACH RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha SAVANNA SAVANNA_M SAVANNA_PLATEAU SAVANNA_PLATEAU_M ~ ~ OCEAN BEACH RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha SWAMPLAND SWAMPLAND_M ~ ~ ~ ~ OCEAN BEACH RIVER
+      - com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha TAIGA TAIGA_M TAIGA_HILLS ~ ~ ~ OCEAN BEACH RIVER

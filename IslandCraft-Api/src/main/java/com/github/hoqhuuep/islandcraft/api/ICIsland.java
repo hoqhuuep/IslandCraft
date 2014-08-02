@@ -15,11 +15,6 @@ public interface ICIsland {
     IslandGenerator getGenerator();
 
     /**
-     * @return The parameter used to generate this island.
-     */
-    String getParameter();
-
-    /**
      * @return The location of the center of this island in the world.
      */
     ICLocation getCenter();

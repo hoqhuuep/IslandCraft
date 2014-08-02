@@ -17,35 +17,6 @@ public interface ICWorld {
     String getName();
 
     /**
-     * @return The size (in blocks) of the length or width of an island in this
-     *         world.
-     */
-    int getIslandSize();
-
-    /**
-     * @return The size (in blocks) of the width of the area of ocean between
-     *         adjacent islands in this world.
-     */
-    int getOceanSize();
-
-    /**
-     * @return The name of the Class which will be used to generate new islands
-     *         in this world.
-     */
-    IslandGenerator getGenerator();
-
-    /**
-     * @return A set of parameters which can be randomly chosen for new islands
-     *         in this world.
-     */
-    Set<String> getParameters();
-
-    /**
-     * @return The biome to use between islands.
-     */
-    ICBiome getOceanBiome();
-
-    /**
      * @param location
      *            Location in the world.
      * @return The biome which will be generated at this location.

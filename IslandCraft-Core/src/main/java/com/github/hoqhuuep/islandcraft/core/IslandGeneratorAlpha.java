@@ -24,27 +24,43 @@ public class IslandGeneratorAlpha implements IslandGenerator {
     private static final double CIRCLE = 2;
     private static final double SQUARE = 0;
     private static final double THRESHOLD = 2;
+    private final Color ocean;
+    private final Color normal;
+    private final Color mountains;
+    private final Color hills;
+    private final Color hillsMountains;
+    private final Color forest;
+    private final Color forestMountains;
+    private final Color outerCoast;
+    private final Color innerCoast;
+
+    // private final Color river; // unused for now
+
+    public IslandGeneratorAlpha(final String[] args) {
+        if (args.length != 9) {
+            throw new IllegalArgumentException("IslandGeneratorAlpha requrires 9 parameters");
+        }
+        ocean = new Color(ICBiome.values().length, true);
+        normal = biomeColor(args[0], ocean);
+        mountains = biomeColor(args[1], normal);
+        hills = biomeColor(args[2], normal);
+        hillsMountains = biomeColor(args[3], hills);
+        forest = biomeColor(args[4], normal);
+        forestMountains = biomeColor(args[5], forest);
+        outerCoast = biomeColor(args[6], normal);
+        innerCoast = biomeColor(args[7], normal);
+        // river = biomeColor(args[8], normal); // unused for now
+    }
 
     @Override
-    public ICBiome[] generate(final int islandSize, final ICBiome oceanBiome, final long seed, final String parameter) {
-        final String[] p = parameter.split(" ");
-        final Color ocean = new Color(oceanBiome.ordinal(), true);
-        final Color normal = biomeColor(p[0], ocean);
-        final Color mountains = biomeColor(p[1], normal);
-        final Color hills = biomeColor(p[2], normal);
-        final Color hillsMountains = biomeColor(p[3], hills);
-        final Color forest = biomeColor(p[4], normal);
-        final Color forestMountains = biomeColor(p[5], forest);
-        final Color outerCoast = biomeColor(p[6], normal);
-        final Color innerCoast = biomeColor(p[7], normal);
-        // final Color river = biomeColor(p[8], normal); // unused for now
+    public ICBiome[] generate(final int xSize, final int zSize, final long islandSeed) {
 
-        final Poisson poisson = new Poisson(islandSize, islandSize, MIN_DISTANCE);
-        final List<Site> sites = poisson.generate(new Random(seed));
-        final SimplexOctaveGenerator shapeNoise = new SimplexOctaveGenerator(seed, 2);
-        final SimplexOctaveGenerator hillsNoise = new SimplexOctaveGenerator(seed + 1, 2);
-        final SimplexOctaveGenerator forestNoise = new SimplexOctaveGenerator(seed + 2, 2);
-        final SimplexOctaveGenerator mountainsNoise = new SimplexOctaveGenerator(seed + 3, 2);
+        final Poisson poisson = new Poisson(xSize, zSize, MIN_DISTANCE);
+        final List<Site> sites = poisson.generate(new Random(islandSeed));
+        final SimplexOctaveGenerator shapeNoise = new SimplexOctaveGenerator(islandSeed, 2);
+        final SimplexOctaveGenerator hillsNoise = new SimplexOctaveGenerator(islandSeed + 1, 2);
+        final SimplexOctaveGenerator forestNoise = new SimplexOctaveGenerator(islandSeed + 2, 2);
+        final SimplexOctaveGenerator mountainsNoise = new SimplexOctaveGenerator(islandSeed + 3, 2);
         // Find borders
         final Queue<Site> oceanSites = new LinkedList<Site>();
         for (final Site site : sites) {
@@ -65,8 +81,8 @@ public class IslandGeneratorAlpha implements IslandGenerator {
                         oceanSites.add(neighbor);
                     }
                 } else {
-                    final double dx = (double) (neighbor.x - (islandSize / 2)) / (double) (islandSize / 2);
-                    final double dz = (double) (neighbor.z - (islandSize / 2)) / (double) (islandSize / 2);
+                    final double dx = (double) (neighbor.x - (xSize / 2)) / (double) (xSize / 2);
+                    final double dz = (double) (neighbor.z - (zSize / 2)) / (double) (zSize / 2);
                     if (NOISE * noise(dx, dz, shapeNoise) + CIRCLE * circle(dx, dz) + SQUARE * square(dx, dz) > THRESHOLD) {
                         if (!neighbor.isOcean) {
                             neighbor.isOcean = true;
@@ -100,11 +116,11 @@ public class IslandGeneratorAlpha implements IslandGenerator {
             }
         }
         // Create blank image
-        final BufferedImage image = new BufferedImage(islandSize, islandSize, BufferedImage.TYPE_INT_ARGB);
+        final BufferedImage image = new BufferedImage(xSize, zSize, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D graphics = image.createGraphics();
         graphics.setComposite(AlphaComposite.Src);
         graphics.setBackground(ocean);
-        graphics.clearRect(0, 0, islandSize, islandSize);
+        graphics.clearRect(0, 0, xSize, zSize);
         // Render island
         for (final Site site : sites) {
             if (site.isOcean) {
@@ -135,11 +151,16 @@ public class IslandGeneratorAlpha implements IslandGenerator {
         }
         // Save result
         graphics.dispose();
-        final ICBiome[] result = new ICBiome[islandSize * islandSize];
+        final ICBiome[] result = new ICBiome[xSize * zSize];
+        final ICBiome[] values = ICBiome.values();
+        final int maxOrdinal = values.length;
         for (int i = 0; i < result.length; ++i) {
-            final int x = i % islandSize;
-            final int z = i / islandSize;
-            result[i] = ICBiome.values()[image.getRGB(x, z)];
+            final int x = i % xSize;
+            final int z = i / xSize;
+            final int ordinal = image.getRGB(x, z);
+            if (ordinal < maxOrdinal) {
+                result[i] = values[ordinal];
+            }
         }
         return result;
     }

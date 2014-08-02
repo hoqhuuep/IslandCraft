@@ -8,18 +8,26 @@ public interface IslandDistribution {
      *            Location in the world.
      * @param z
      *            Location in the world.
+     * @param worldSeed
+     *            The random seed for the world.
      * @return The center of the island whose innerRegion contains the given
      *         location, or null if the location is in the ocean.
      */
-    ICLocation getIslandCenterAt(int x, int z, final int islandSize, final int oceanSize);
+    ICLocation getCenterAt(int x, int z, long worldSeed);
 
     /**
      * @param x
      *            Location in the world.
      * @param z
      *            Location in the world.
+     * @param worldSeed
+     *            The random seed for the world.
      * @return The centers of the set of islands whose outerRegions overlap the
      *         given location.
      */
-    Set<ICLocation> getIslandCentersAt(int x, int z, final int islandSize, final int oceanSize);
+    Set<ICLocation> getCentersAt(int x, int z, long worldSeed);
+
+    ICRegion getInnerRegion(ICLocation center);
+
+    ICRegion getOuterRegion(ICLocation center);
 }

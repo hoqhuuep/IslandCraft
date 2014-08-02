@@ -1,83 +1,45 @@
 package com.github.hoqhuuep.islandcraft.core;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 
+import com.github.hoqhuuep.islandcraft.api.BiomeDistribution;
 import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.ICIsland;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
+import com.github.hoqhuuep.islandcraft.api.ICRegion;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
 import com.github.hoqhuuep.islandcraft.api.IslandDistribution;
 import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
-import com.github.hoqhuuep.islandcraft.database.Database;
+import com.github.hoqhuuep.islandcraft.core.IslandDatabase;
 
 public class DefaultWorld implements ICWorld {
     private final String name;
     private final long seed;
-    private final int islandSize;
-    private final int oceanSize;
-    private final ICBiome oceanBiome;
-    private final Database database;
-    private final IslandGenerator generator;
-    private final IslandDistribution distribution;
-    private final Set<String> parameters;
-    private final CachedIslandGenerator cachedIslandGenerator;
+    private final IslandDatabase database;
+    private final BiomeDistribution ocean;
+    private final IslandDistribution islandDistribution;
+    private final List<IslandGenerator> islandGenerators;
+    private final IslandCache cache;
+    private final ICClassLoader classLoader;
 
-    public DefaultWorld(final String name, final long seed, final Database database, final ConfigurationSection config) {
+    public DefaultWorld(final String name, final long seed, final IslandDatabase database, final ConfigurationSection config, final IslandCache cache, final ICClassLoader classLoader) {
         this.name = name;
         this.seed = seed;
         this.database = database;
-        islandSize = config.getInt("island-size");
-        oceanSize = config.getInt("ocean-size");
-
-        oceanBiome = ICBiome.valueOf(config.getString("ocean-biome"));
-
-        // Validate configuration values
-        if (islandSize <= 0 || islandSize % 32 != 0) {
-            throw new IllegalArgumentException("IslandCraft-Core config.yml issue. " + config.getCurrentPath() + ".island-size must be a positive multiple of 32");
+        this.cache = cache;
+        this.classLoader = classLoader;
+        ocean = classLoader.getBiomeDistribution(config.getString("ocean"));
+        islandDistribution = classLoader.getIslandDistribution(config.getString("island-distribution"));
+        final List<String> generatorStrings = config.getStringList("island-generators");
+        islandGenerators = new ArrayList<IslandGenerator>(generatorStrings.size());
+        for (final String islandGenerator : generatorStrings) {
+            islandGenerators.add(classLoader.getIslandGenerator(islandGenerator));
         }
-        if (oceanSize <= 0 || oceanSize % 32 != 0) {
-            throw new IllegalArgumentException("IslandCraft-Core config.yml issue. " + config.getCurrentPath() + ".ocean-size must be a positive multiple of 32");
-        }
-
-        generator = ICClassLoader.loadGenerator(config.getString("generator"));
-        distribution = ICClassLoader.loadDistribution(config.getString("distribution"));
-
-        final ConfigurationSection parametersSection = config.getConfigurationSection("parameters");
-        final Set<String> keys = parametersSection.getKeys(false);
-        parameters = new HashSet<String>(keys.size());
-        for (final String key : keys) {
-            loadParameters(parametersSection.getConfigurationSection(key));
-        }
-
-        cachedIslandGenerator = new CachedIslandGenerator(islandSize, oceanBiome);
-    }
-
-    public CachedIslandGenerator getCachedIslandGenerator() {
-        return cachedIslandGenerator;
-    }
-
-    private void loadParameters(final ConfigurationSection config) {
-        final String normal = config.getString("normal");
-        final String mountains = config.getString("mountains");
-        final String hills = config.getString("hills");
-        final String hillsMountains = config.getString("hills-mountains");
-        final String forest = config.getString("forest");
-        final String forestMountains = config.getString("forest-mountains");
-        final String outerCoast = config.getString("outer-coast");
-        final String innerCoast = config.getString("inner-coast");
-        final String river = config.getString("river");
-        final String[] parameterArray = { normal, mountains, hills, hillsMountains, forest, forestMountains, outerCoast, innerCoast, river };
-        for (int i = 0; i < parameterArray.length; ++i) {
-            if (parameterArray[i] == null) {
-                parameterArray[i] = "~";
-            }
-        }
-        parameters.add(StringUtils.join(parameterArray, " "));
     }
 
     @Override
@@ -91,21 +53,6 @@ public class DefaultWorld implements ICWorld {
     }
 
     @Override
-    public int getIslandSize() {
-        return islandSize;
-    }
-
-    @Override
-    public int getOceanSize() {
-        return oceanSize;
-    }
-
-    @Override
-    public ICBiome getOceanBiome() {
-        return oceanBiome;
-    }
-
-    @Override
     public ICBiome getBiomeAt(final ICLocation location) {
         return getBiomeAt(location.getX(), location.getZ());
     }
@@ -114,7 +61,7 @@ public class DefaultWorld implements ICWorld {
     public ICBiome getBiomeAt(final int x, final int z) {
         final ICIsland island = getIslandAt(x, z);
         if (island == null) {
-            return oceanBiome;
+            return ocean.biomeAt(x, z, seed);
         }
         final ICLocation origin = island.getInnerRegion().getMin();
         return island.getBiomeAt(x - origin.getX(), z - origin.getZ());
@@ -129,12 +76,20 @@ public class DefaultWorld implements ICWorld {
     public ICBiome[] getBiomeChunk(int x, int z) {
         final ICIsland island = getIslandAt(x, z);
         if (island == null) {
-            final ICBiome[] result = new ICBiome[256];
-            Arrays.fill(result, oceanBiome);
-            return result;
+            final ICBiome[] chunk = new ICBiome[256];
+            for (int i = 0; i < 256; ++i) {
+                chunk[i] = ocean.biomeAt(x + i % 16, z + i / 16, seed);
+            }
+            return chunk;
         }
         final ICLocation origin = island.getInnerRegion().getMin();
-        return island.getBiomeChunk(x - origin.getX(), z - origin.getZ());
+        final ICBiome[] chunk = island.getBiomeChunk(x - origin.getX(), z - origin.getZ());
+        for (int i = 0; i < 256; ++i) {
+            if (chunk[i] == null) {
+                chunk[i] = ocean.biomeAt(x + i % 16, z + i / 16, seed);
+            }
+        }
+        return chunk;
     }
 
     @Override
@@ -144,11 +99,11 @@ public class DefaultWorld implements ICWorld {
 
     @Override
     public ICIsland getIslandAt(final int x, final int z) {
-        final ICLocation center = distribution.getIslandCenterAt(x, z, islandSize, oceanSize);
+        final ICLocation center = islandDistribution.getCenterAt(x, z, seed);
         if (center == null) {
             return null;
         }
-        return database.getIsland(this, center.getX(), center.getZ());
+        return fromCenter(center);
     }
 
     @Override
@@ -158,22 +113,19 @@ public class DefaultWorld implements ICWorld {
 
     @Override
     public Set<ICIsland> getIslandsAt(final int x, final int z) {
-        final Set<ICLocation> centers = distribution.getIslandCentersAt(x, z, islandSize, oceanSize);
+        final Set<ICLocation> centers = islandDistribution.getCentersAt(x, z, seed);
         final Set<ICIsland> islands = new HashSet<ICIsland>(centers.size());
         for (final ICLocation center : centers) {
-            islands.add(database.getIsland(this, center.getX(), center.getZ()));
+            islands.add(fromCenter(center));
         }
         return islands;
     }
 
-    @Override
-    public IslandGenerator getGenerator() {
-        return generator;
-    }
-
-    @Override
-    public Set<String> getParameters() {
-        return parameters;
+    private ICIsland fromCenter(final ICLocation center) {
+        final ICRegion innerRegion = islandDistribution.getInnerRegion(center);
+        final ICRegion outerRegion = islandDistribution.getOuterRegion(center);
+        final IslandDatabase.Result result = database.load(name, center.getX(), center.getZ());
+        return new DefaultIsland(innerRegion, outerRegion, result.getIslandSeed(), classLoader.getIslandGenerator(result.getGenerator()), cache);
     }
 
     @Override
