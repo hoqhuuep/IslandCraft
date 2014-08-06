@@ -7,6 +7,7 @@ import java.util.Arrays;
 import com.github.hoqhuuep.islandcraft.api.BiomeDistribution;
 import com.github.hoqhuuep.islandcraft.api.IslandDistribution;
 import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
+import com.github.hoqhuuep.islandcraft.bukkit.ICLogger;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -38,6 +39,7 @@ public class ICClassLoader {
         @Override
         @SuppressWarnings("unchecked")
         public T load(final String string) {
+            ICLogger.logger.info("Creating instance of class with string: " + string);
             try {
                 final String[] split = string.split(" ");
                 final String className = split[0];

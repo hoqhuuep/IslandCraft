@@ -3,9 +3,12 @@ package com.github.hoqhuuep.islandcraft.core;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
 import com.github.hoqhuuep.islandcraft.api.IslandDistribution;
+import com.github.hoqhuuep.islandcraft.bukkit.ICLogger;
 
 public class SquareIslandDistribution implements IslandDistribution {
     private final int islandSize;
@@ -14,16 +17,20 @@ public class SquareIslandDistribution implements IslandDistribution {
     private final int magicNumber0;
 
     public SquareIslandDistribution(final String[] args) {
+        ICLogger.logger.info("Creating SquareIslandDistribution with args: " + StringUtils.join(args, " "));
         if (args.length != 2) {
+            ICLogger.logger.severe("SquareIslandDistribution requrires 2 parameters, " + args.length + " given");
             throw new IllegalArgumentException("SquareIslandDistribution requrires 2 parameters");
         }
         islandSize = Integer.parseInt(args[0]);
         oceanSize = Integer.parseInt(args[1]);
         // Validate configuration values
         if (islandSize <= 0 || islandSize % 32 != 0) {
+            ICLogger.logger.severe("SquareIslandDistribution.island-size must be a positive multiple of 32");
             throw new IllegalArgumentException("SquareIslandDistribution.island-size must be a positive multiple of 32");
         }
         if (oceanSize <= 0 || oceanSize % 32 != 0) {
+            ICLogger.logger.severe("SquareIslandDistribution.ocean-size must be a positive multiple of 32");
             throw new IllegalArgumentException("SquareIslandDistribution.ocean-size must be a positive multiple of 32");
         }
         islandSeparation = islandSize + oceanSize;

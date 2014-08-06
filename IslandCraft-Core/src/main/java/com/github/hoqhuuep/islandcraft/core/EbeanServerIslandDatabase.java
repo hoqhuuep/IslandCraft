@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.avaje.ebean.EbeanServer;
+import com.github.hoqhuuep.islandcraft.bukkit.ICLogger;
 
 public class EbeanServerIslandDatabase implements IslandDatabase {
     private final EbeanServer ebeanServer;
@@ -19,23 +20,30 @@ public class EbeanServerIslandDatabase implements IslandDatabase {
 
     @Override
     public void save(final String worldName, final int centerX, final int centerZ, final long islandSeed, final String generator) {
+        ICLogger.logger.info(String.format("Saving IslandBean to database with worldName: %s, centerX: %d, centerZ: %d, islandSeed: %d, generator: %s", worldName, centerX, centerZ, islandSeed, generator));
         final IslandBean bean = new IslandBean(new IslandPK(worldName, centerX, centerZ), islandSeed, generator);
         ebeanServer.save(bean);
     }
 
     @Override
     public Result load(final String worldName, final int centerX, final int centerZ) {
+        ICLogger.logger.info(String.format("Loading IslandBean from database with worldName: %s, centerX: %d, centerZ: %d", worldName, centerX, centerZ));
         final IslandPK pk = new IslandPK(worldName, centerX, centerZ);
         final IslandBean bean = ebeanServer.find(IslandBean.class, pk);
         if (bean == null) {
+            ICLogger.logger.info("Result is null");
             return null;
         }
+        ICLogger.logger.info(String.format("Result has islandSeed: %d, generator: %s", bean.getIslandSeed(), bean.getGenerator()));
         return new Result(bean.getIslandSeed(), bean.getGenerator());
     }
 
     @Override
     public boolean isEmpty(final String worldName) {
-        return ebeanServer.find(IslandBean.class).where().ieq("world_name", worldName).findRowCount() == 0;
+        ICLogger.logger.info("Checking if world contains any islands with worldName: " + worldName);
+        boolean result = ebeanServer.find(IslandBean.class).where().ieq("world_name", worldName).findRowCount() == 0;
+        ICLogger.logger.info("Result is: " + result);
+        return result;
     }
 
     @Entity

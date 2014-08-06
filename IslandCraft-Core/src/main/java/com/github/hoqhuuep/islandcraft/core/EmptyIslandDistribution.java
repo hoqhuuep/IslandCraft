@@ -3,13 +3,18 @@ package com.github.hoqhuuep.islandcraft.core;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
 import com.github.hoqhuuep.islandcraft.api.IslandDistribution;
+import com.github.hoqhuuep.islandcraft.bukkit.ICLogger;
 
 public class EmptyIslandDistribution implements IslandDistribution {
     public EmptyIslandDistribution(final String[] args) {
-        if (args.length != 2) {
+        ICLogger.logger.info("Creating EmptyIslandDistribution with args: " + StringUtils.join(args, " "));
+        if (args.length != 0) {
+            ICLogger.logger.severe("EmptyIslandDistribution requrires 0 parameters, " + args.length + " given");
             throw new IllegalArgumentException("EmptyIslandDistribution requrires 0 parameters");
         }
     }

@@ -45,6 +45,7 @@ public class BiomeGeneratorListener implements Listener {
         final String worldName = world.getName();
         final ConfigurationSection config = worldConfigs.getConfigurationSection(worldName);
         if (config != null && !worldsDone.contains(worldName)) {
+            ICLogger.logger.info("Installing biome generator in WorldInitEvent for world with name: " + worldName);
             final ICWorld icWorld = new DefaultWorld(worldName, world.getSeed(), database, config, cache, classLoader);
             final BiomeGenerator biomeGenerator = new IslandCraftBiomeGenerator(icWorld);
             nms.installBiomeGenerator(world, biomeGenerator);
@@ -63,12 +64,14 @@ public class BiomeGeneratorListener implements Listener {
         final String worldName = world.getName();
         final ConfigurationSection config = worldConfigs.getConfigurationSection(worldName);
         if (config != null && !worldsDone.contains(worldName)) {
+            ICLogger.logger.info("Installing biome generator in ChunkLoadEvent for world with name: " + worldName);
             final ICWorld icWorld = new DefaultWorld(worldName, world.getSeed(), database, config, cache, classLoader);
             final BiomeGenerator biomeGenerator = new IslandCraftBiomeGenerator(icWorld);
             if (nms.installBiomeGenerator(world, biomeGenerator)) {
                 // If this is the very first time, regenerate the chunk
                 if (database.isEmpty(worldName)) {
                     final Chunk chunk = event.getChunk();
+                    ICLogger.logger.info(String.format("Regenerating spawn chunk at x: %d, z: %d", chunk.getX(), chunk.getZ()));
                     world.regenerateChunk(chunk.getX(), chunk.getZ());
                 }
             }

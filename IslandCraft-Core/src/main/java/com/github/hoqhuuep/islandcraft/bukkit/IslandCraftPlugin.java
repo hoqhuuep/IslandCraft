@@ -2,6 +2,7 @@ package com.github.hoqhuuep.islandcraft.bukkit;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.World;
 import org.bukkit.event.Listener;
@@ -21,6 +22,8 @@ public class IslandCraftPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        ICLogger.logger = getLogger();
+
         final NmsWrapper nms = NmsWrapper.getInstance(getServer());
         if (nms == null) {
             getLogger().severe("Could not find support for this CraftBukkit version");
@@ -37,6 +40,12 @@ public class IslandCraftPlugin extends JavaPlugin {
             return;
         }
 
+        if (getConfig().getBoolean("verbose-logging")) {
+            ICLogger.logger.setLevel(Level.ALL);
+        } else {
+            ICLogger.logger.setLevel(Level.WARNING);
+        }
+
         final IslandDatabase database = new EbeanServerIslandDatabase(EbeanServerUtil.build(this));
 
         islandCraft = new DefaultIslandCraft();
@@ -44,6 +53,11 @@ public class IslandCraftPlugin extends JavaPlugin {
         final Listener listener = new BiomeGeneratorListener(islandCraft, database, getConfig(), nms);
 
         getServer().getPluginManager().registerEvents(listener, this);
+    }
+
+    @Override
+    public void onDisable() {
+        ICLogger.logger = null;
     }
 
     @Override

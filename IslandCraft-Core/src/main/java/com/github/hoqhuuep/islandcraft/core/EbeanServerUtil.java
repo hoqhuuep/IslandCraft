@@ -17,9 +17,11 @@ import com.avaje.ebean.config.dbplatform.SQLitePlatform;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
+import com.github.hoqhuuep.islandcraft.bukkit.ICLogger;
 
 public class EbeanServerUtil {
     public static EbeanServer build(final JavaPlugin javaPlugin) {
+        ICLogger.logger.info("Creating EbeanServer for plugin with name: " + javaPlugin.getName());
         final String name = javaPlugin.getDescription().getName();
         final ConfigurationSection configurationSection = javaPlugin.getConfig().getConfigurationSection("database");
         final String driver = configurationSection.getString("driver");
