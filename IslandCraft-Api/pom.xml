@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.github.hoqhuuep</groupId>
     <artifactId>IslandCraft</artifactId>
-    <version>1.0.0-beta</version>
+    <version>1.0.0</version>
   </parent>
   <artifactId>IslandCraft-Api</artifactId>
 </project>
