@@ -1,5 +1,7 @@
 package com.github.hoqhuuep.islandcraft.api;
 
+import java.util.Set;
+
 public interface IslandCraft {
     /**
      * Returns the ICWorld for the world with the given name.
@@ -10,4 +12,9 @@ public interface IslandCraft {
      *         not enabled for the world in config.yml
      */
     ICWorld getWorld(String worldName);
+
+    /**
+     * Returns all the worlds for which IslandCraft has been enabled.
+     */
+    Set<ICWorld> getWorlds();
 }
