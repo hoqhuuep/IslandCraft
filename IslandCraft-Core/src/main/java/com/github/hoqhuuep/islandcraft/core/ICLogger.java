@@ -1,4 +1,4 @@
-package com.github.hoqhuuep.islandcraft.bukkit;
+package com.github.hoqhuuep.islandcraft.core;
 
 import java.util.logging.Logger;
 

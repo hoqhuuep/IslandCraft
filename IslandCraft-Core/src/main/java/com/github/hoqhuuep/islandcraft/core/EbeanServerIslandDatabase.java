@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.avaje.ebean.EbeanServer;
-import com.github.hoqhuuep.islandcraft.bukkit.ICLogger;
 
 public class EbeanServerIslandDatabase implements IslandDatabase {
     private final EbeanServer ebeanServer;

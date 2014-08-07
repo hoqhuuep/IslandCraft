@@ -12,6 +12,7 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.WorldInitEvent;
 
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
+import com.github.hoqhuuep.islandcraft.core.ICLogger;
 import com.github.hoqhuuep.islandcraft.core.IslandCache;
 import com.github.hoqhuuep.islandcraft.core.DefaultIslandCraft;
 import com.github.hoqhuuep.islandcraft.core.DefaultWorld;
@@ -24,16 +25,20 @@ public class BiomeGeneratorListener implements Listener {
     private final Set<String> worldsDone;
     private final DefaultIslandCraft islandCraft;
     private final IslandDatabase database;
-    private final ConfigurationSection worldConfigs;
+    private final ConfigurationSection worlds;
     private final NmsWrapper nms;
     private final IslandCache cache;
     private final ICClassLoader classLoader;
 
-    public BiomeGeneratorListener(final DefaultIslandCraft islandCraft, final IslandDatabase database, final ConfigurationSection config, final NmsWrapper nms) {
+    public BiomeGeneratorListener(final DefaultIslandCraft islandCraft, final ConfigurationSection config, final IslandDatabase database, final NmsWrapper nms) {
         this.islandCraft = islandCraft;
         this.database = database;
         this.nms = nms;
-        this.worldConfigs = config.getConfigurationSection("worlds");
+        if (!config.isConfigurationSection("worlds")) {
+            ICLogger.logger.warning("No configuration section for 'worlds' found in config.yml");
+            throw new IllegalArgumentException("No configuration section for 'worlds' found in config.yml");
+        }
+        worlds = config.getConfigurationSection("worlds");
         worldsDone = new HashSet<String>();
         cache = new IslandCache();
         classLoader = new ICClassLoader();
@@ -43,7 +48,7 @@ public class BiomeGeneratorListener implements Listener {
     public void onWorldInit(final WorldInitEvent event) {
         final World world = event.getWorld();
         final String worldName = world.getName();
-        final ConfigurationSection config = worldConfigs.getConfigurationSection(worldName);
+        final ConfigurationSection config = worlds.getConfigurationSection(worldName);
         if (config != null && !worldsDone.contains(worldName)) {
             ICLogger.logger.info("Installing biome generator in WorldInitEvent for world with name: " + worldName);
             final ICWorld icWorld = new DefaultWorld(worldName, world.getSeed(), database, config, cache, classLoader);
@@ -62,7 +67,7 @@ public class BiomeGeneratorListener implements Listener {
         // chunk with the new WorldChunkManager.
         final World world = event.getWorld();
         final String worldName = world.getName();
-        final ConfigurationSection config = worldConfigs.getConfigurationSection(worldName);
+        final ConfigurationSection config = worlds.getConfigurationSection(worldName);
         if (config != null && !worldsDone.contains(worldName)) {
             ICLogger.logger.info("Installing biome generator in ChunkLoadEvent for world with name: " + worldName);
             final ICWorld icWorld = new DefaultWorld(worldName, world.getSeed(), database, config, cache, classLoader);

@@ -7,7 +7,6 @@ import java.util.Arrays;
 import com.github.hoqhuuep.islandcraft.api.BiomeDistribution;
 import com.github.hoqhuuep.islandcraft.api.IslandDistribution;
 import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
-import com.github.hoqhuuep.islandcraft.bukkit.ICLogger;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -24,15 +23,33 @@ public class ICClassLoader {
     }
 
     public IslandDistribution getIslandDistribution(final String string) {
-        return islandDistributionCache.getUnchecked(string);
+        try {
+            return islandDistributionCache.getUnchecked(string);
+        } catch (final Exception e) {
+            ICLogger.logger.warning("Error creating IslandDistribution from string: " + string);
+            ICLogger.logger.warning("Using 'com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution' instead");
+            return new EmptyIslandDistribution(new String[0]);
+        }
     }
 
     public IslandGenerator getIslandGenerator(final String string) {
-        return islandGeneratorCache.getUnchecked(string);
+        try {
+            return islandGeneratorCache.getUnchecked(string);
+        } catch (final Exception e) {
+            ICLogger.logger.warning("Error creating IslandGenerator from string: " + string);
+            ICLogger.logger.warning("Using 'com.github.hoqhuuep.islandcraft.core.EmptyIslandGenerator' instead");
+            return new EmptyIslandGenerator(new String[0]);
+        }
     }
 
     public BiomeDistribution getBiomeDistribution(final String string) {
-        return biomeDistributionCache.getUnchecked(string);
+        try {
+            return biomeDistributionCache.getUnchecked(string);
+        } catch (final Exception e) {
+            ICLogger.logger.warning("Error creating BiomeDistribution from string: " + string);
+            ICLogger.logger.warning("Using 'com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN' instead");
+            return new ConstantBiomeDistribution(new String[] { "DEEP_OCEAN" });
+        }
     }
 
     private static class StringConstructorCacheLoader<T> extends CacheLoader<String, T> {

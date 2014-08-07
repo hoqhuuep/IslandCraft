@@ -4,7 +4,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.github.hoqhuuep.islandcraft.api.BiomeDistribution;
 import com.github.hoqhuuep.islandcraft.api.ICBiome;
-import com.github.hoqhuuep.islandcraft.bukkit.ICLogger;
 
 public class ConstantBiomeDistribution implements BiomeDistribution {
     private final ICBiome biome;

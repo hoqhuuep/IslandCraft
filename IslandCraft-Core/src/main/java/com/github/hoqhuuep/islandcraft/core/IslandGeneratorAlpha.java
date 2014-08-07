@@ -16,7 +16,6 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
-import com.github.hoqhuuep.islandcraft.bukkit.ICLogger;
 import com.github.hoqhuuep.islandcraft.core.mosaic.Poisson;
 import com.github.hoqhuuep.islandcraft.core.mosaic.Site;
 

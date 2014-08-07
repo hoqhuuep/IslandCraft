@@ -6,7 +6,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
-import com.github.hoqhuuep.islandcraft.bukkit.ICLogger;
 
 public class ConstantIslandGenerator implements IslandGenerator {
     private final ICBiome biome;

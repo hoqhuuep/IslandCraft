@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
 import com.github.hoqhuuep.islandcraft.api.IslandDistribution;
-import com.github.hoqhuuep.islandcraft.bukkit.ICLogger;
 
 public class HexagonalIslandDistribution implements IslandDistribution {
     private final int islandSize;

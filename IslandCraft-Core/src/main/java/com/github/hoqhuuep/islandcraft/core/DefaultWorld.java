@@ -1,10 +1,13 @@
 package com.github.hoqhuuep.islandcraft.core;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -37,9 +40,27 @@ public class DefaultWorld implements ICWorld {
         this.database = database;
         this.cache = cache;
         this.classLoader = classLoader;
-        ocean = classLoader.getBiomeDistribution(config.getString("ocean"));
-        islandDistribution = classLoader.getIslandDistribution(config.getString("island-distribution"));
+
+        if (!config.isString("ocean")) {
+            ICLogger.logger.warning("No string-value for 'worlds.' + name + '.ocean' found in config.yml");
+            ICLogger.logger.warning("Default value 'com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN' will be used");
+        }
+        ocean = classLoader.getBiomeDistribution(config.getString("ocean", "com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN"));
+
+        if (!config.isString("island-distribution")) {
+            ICLogger.logger.warning("No string-value for 'worlds.' + name + '.island-distribution' found in config.yml");
+            ICLogger.logger.warning("Default value 'com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution' will be used");
+        }
+        islandDistribution = classLoader.getIslandDistribution(config.getString("island-distribution", "com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution"));
+
+        if (!config.isList("island-generators")) {
+            ICLogger.logger.warning("No list-value for 'worlds.' + name + '.island-generators' found in config.yml");
+            ICLogger.logger.warning("Default value '[com.github.hoqhuuep.islandcraft.core.EmptyIslandGenerator]' will be used");
+        }
         islandGenerators = config.getStringList("island-generators");
+        if (islandGenerators.isEmpty()) {
+            islandGenerators.add("com.github.hoqhuuep.islandcraft.core.EmptyIslandGenerator");
+        }
         // Load islandGenerators just to make sure there are no errors
         for (final String islandGenerator : islandGenerators) {
             classLoader.getIslandGenerator(islandGenerator);
@@ -163,10 +184,7 @@ public class DefaultWorld implements ICWorld {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        return result;
+        return name.hashCode();
     }
 
     @Override
@@ -178,11 +196,6 @@ public class DefaultWorld implements ICWorld {
         if (getClass() != obj.getClass())
             return false;
         final DefaultWorld other = (DefaultWorld) obj;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        return true;
+        return StringUtils.equals(name, other.name);
     }
 }
