@@ -34,7 +34,7 @@ public class BiomeGeneratorListener implements Listener {
         this.islandCraft = islandCraft;
         this.database = database;
         this.nms = nms;
-        if (!config.isConfigurationSection("worlds")) {
+        if (!config.contains("worlds") || !config.isConfigurationSection("worlds")) {
             ICLogger.logger.warning("No configuration section for 'worlds' found in config.yml");
             throw new IllegalArgumentException("No configuration section for 'worlds' found in config.yml");
         }

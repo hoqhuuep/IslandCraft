@@ -29,7 +29,7 @@ public class IslandCraftPlugin extends JavaPlugin {
 
         saveDefaultConfig();
         final ConfigurationSection config = getConfig();
-        if (!config.isString("config-version")) {
+        if (!config.contains("config-version") || !config.isString("config-version")) {
             ICLogger.logger.severe("No string-value for 'config-version' found in config.yml");
             ICLogger.logger.severe("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
             setEnabled(false);
@@ -43,7 +43,7 @@ public class IslandCraftPlugin extends JavaPlugin {
             return;
         }
 
-        if (!config.isBoolean("verbose-logging")) {
+        if (!config.contains("verbose-logging") || !config.isBoolean("verbose-logging")) {
             ICLogger.logger.warning("No boolean-value for 'verbose-logging' found in config.yml");
             ICLogger.logger.warning("Default value 'false' will be used");
         }

@@ -1,6 +1,5 @@
 package com.github.hoqhuuep.islandcraft.core;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -41,20 +40,20 @@ public class DefaultWorld implements ICWorld {
         this.cache = cache;
         this.classLoader = classLoader;
 
-        if (!config.isString("ocean")) {
-            ICLogger.logger.warning("No string-value for 'worlds.' + name + '.ocean' found in config.yml");
+        if (!config.contains("ocean") || !config.isString("ocean")) {
+            ICLogger.logger.warning("No string-value for 'worlds." + name + ".ocean' found in config.yml");
             ICLogger.logger.warning("Default value 'com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN' will be used");
         }
         ocean = classLoader.getBiomeDistribution(config.getString("ocean", "com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN"));
 
-        if (!config.isString("island-distribution")) {
-            ICLogger.logger.warning("No string-value for 'worlds.' + name + '.island-distribution' found in config.yml");
+        if (!config.contains("island-distribution") || !config.isString("island-distribution")) {
+            ICLogger.logger.warning("No string-value for 'worlds." + name + ".island-distribution' found in config.yml");
             ICLogger.logger.warning("Default value 'com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution' will be used");
         }
         islandDistribution = classLoader.getIslandDistribution(config.getString("island-distribution", "com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution"));
 
-        if (!config.isList("island-generators")) {
-            ICLogger.logger.warning("No list-value for 'worlds.' + name + '.island-generators' found in config.yml");
+        if (!config.contains("island-generators") || !config.isList("island-generators")) {
+            ICLogger.logger.warning("No list-value for 'worlds." + name + ".island-generators' found in config.yml");
             ICLogger.logger.warning("Default value '[com.github.hoqhuuep.islandcraft.core.EmptyIslandGenerator]' will be used");
         }
         islandGenerators = config.getStringList("island-generators");
