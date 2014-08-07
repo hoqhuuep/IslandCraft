@@ -6,8 +6,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
-
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 
 import com.github.hoqhuuep.islandcraft.api.BiomeDistribution;
@@ -17,7 +16,6 @@ import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
 import com.github.hoqhuuep.islandcraft.api.IslandDistribution;
-import com.github.hoqhuuep.islandcraft.core.IslandDatabase;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
