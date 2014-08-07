@@ -2,7 +2,6 @@ package com.github.hoqhuuep.islandcraft.core.mosaic;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -61,9 +60,9 @@ public final class Poisson {
             A: while (iterator.hasNext()) {
                 final Site pb = iterator.next();
                 final Site cc = circumcenter(s, pa, pb);
-                final double cq = absq(sub(s, cc));
+                final double cq = absq(AngleComparator.sub(s, cc));
                 for (final Site pc : s.suspectNeighbors) {
-                    if (pc != pa && pc != pb && absq(sub(pc, cc)) < cq) {
+                    if (pc != pa && pc != pb && absq(AngleComparator.sub(pc, cc)) < cq) {
                         continue A;
                     }
                 }
@@ -84,51 +83,21 @@ public final class Poisson {
         return sites;
     }
 
-    private class AngleComparator implements Comparator<Site> {
-        private final Site base;
-        private final Site zero;
-
-        private AngleComparator(final Site base, final Site zero) {
-            this.zero = zero;
-            this.base = sub(base, zero);
-        }
-
-        public final int compare(final Site p1, final Site p2) {
-            return Double.compare(angle(base, sub(p1, zero)), angle(base, sub(p2, zero)));
-        }
-    }
-
     private Site circumcenter(final Site p1, final Site p2, final Site p3) {
         final double q1 = absq(p1);
         final double q2 = absq(p2);
         final double q3 = absq(p3);
-        final Site s12 = sub(p1, p2);
-        final Site s23 = sub(p2, p3);
-        final Site s31 = sub(p3, p1);
+        final Site s12 = AngleComparator.sub(p1, p2);
+        final Site s23 = AngleComparator.sub(p2, p3);
+        final Site s31 = AngleComparator.sub(p3, p1);
         final double d = 0.5 / (p1.x * s23.z + p2.x * s31.z + p3.x * s12.z);
         final double cx = (q1 * s23.z + q2 * s31.z + q3 * s12.z) * d;
         final double cz = -(q1 * s23.x + q2 * s31.x + q3 * s12.x) * d;
         return new Site(cx, cz);
     }
 
-    private double angle(final Site p1, final Site p2) {
-        return (Math.atan2(cross(p1, p2), dot(p1, p2)) + (Math.PI * 2)) % (Math.PI * 2);
-    }
-
-    private Site sub(final Site p1, final Site p2) {
-        return new Site(p1.x - p2.x, p1.z - p2.z);
-    }
-
     private double absq(final Site p) {
         return p.x * p.x + p.z * p.z;
-    }
-
-    private double cross(final Site p1, final Site p2) {
-        return p1.x * p2.z - p1.z * p2.x;
-    }
-
-    private double dot(final Site p1, final Site p2) {
-        return p1.x * p2.x + p1.z * p2.z;
     }
 
     private List<Site> gridNeighbors(final Grid<Site> grid, final Site candidate) {

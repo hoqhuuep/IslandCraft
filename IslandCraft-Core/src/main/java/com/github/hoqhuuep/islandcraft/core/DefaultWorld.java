@@ -160,7 +160,7 @@ public class DefaultWorld implements ICWorld {
         public ICIsland load(final ICLocation center) {
             final ICRegion innerRegion = islandDistribution.getInnerRegion(center, worldSeed);
             final ICRegion outerRegion = islandDistribution.getOuterRegion(center, worldSeed);
-            IslandDatabase.Result fromDatabase = database.load(worldName, center.getX(), center.getZ());
+            final IslandDatabase.Result fromDatabase = database.load(worldName, center.getX(), center.getZ());
             if (fromDatabase == null) {
                 final long islandSeed = pickIslandSeed(center.getX(), center.getZ());
                 final String generator = pickIslandGenerator(islandSeed);
