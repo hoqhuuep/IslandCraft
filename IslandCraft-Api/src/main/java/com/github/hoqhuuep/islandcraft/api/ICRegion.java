@@ -7,15 +7,29 @@ public class ICRegion {
     private final ICLocation min;
     private final ICLocation max;
 
+    /**
+     * Creates an immutable ICRegion.
+     * 
+     * @param min
+     *            the minimum x and z coordinates of this region
+     * @param max
+     *            the maximum x and z coordinates of this region
+     */
     public ICRegion(final ICLocation min, final ICLocation max) {
         this.min = min;
         this.max = max;
     }
 
+    /**
+     * Returns the minimum x and z coordinates of this region
+     */
     public ICLocation getMin() {
         return min;
     }
 
+    /**
+     * Returns the maximum x and z coordinates of this region
+     */
     public ICLocation getMax() {
         return max;
     }

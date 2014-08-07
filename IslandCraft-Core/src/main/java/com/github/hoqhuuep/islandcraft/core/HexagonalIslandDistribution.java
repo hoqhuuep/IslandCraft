@@ -15,9 +15,10 @@ public class HexagonalIslandDistribution implements IslandDistribution {
     private final int islandSeparation;
     private final int twiceIslandSeparation;
     private final int halfIslandSeparation;
-    private final int magicNumber0;
     private final int magicNumber1;
     private final int magicNumber2;
+    private final int innerRadius;
+    private final int outerRadius;
 
     public HexagonalIslandDistribution(final String[] args) {
         ICLogger.logger.info("Creating HexagonalIslandDistribution with args: " + StringUtils.join(args, " "));
@@ -39,8 +40,9 @@ public class HexagonalIslandDistribution implements IslandDistribution {
         islandSeparation = islandSize + oceanSize;
         twiceIslandSeparation = islandSeparation * 2;
         halfIslandSeparation = islandSeparation / 2;
-        magicNumber0 = oceanSize + islandSize / 2;
-        magicNumber1 = magicNumber0 - oceanSize / 2;
+        innerRadius = islandSize / 2;
+        outerRadius = innerRadius + oceanSize;
+        magicNumber1 = outerRadius - oceanSize / 2;
         magicNumber2 = magicNumber1 + oceanSize;
     }
 
@@ -108,8 +110,8 @@ public class HexagonalIslandDistribution implements IslandDistribution {
         // |...................|.......|...........|
         // +-------------------+-------+-----------+
         // # relative to @
-        final int xPrime = x + magicNumber0;
-        final int zPrime = z + magicNumber0;
+        final int xPrime = x + outerRadius;
+        final int zPrime = z + outerRadius;
         // # relative to world origin
         final int absoluteHashX = ifloordiv(xPrime, islandSeparation) * islandSeparation;
         final int absoluteHashZ = ifloordiv(zPrime, twiceIslandSeparation) * twiceIslandSeparation;
@@ -159,18 +161,22 @@ public class HexagonalIslandDistribution implements IslandDistribution {
     }
 
     @Override
-    public ICRegion getInnerRegion(final ICLocation center) {
+    public ICRegion getInnerRegion(final ICLocation center, final long worldSeed) {
         final int centerX = center.getX();
         final int centerZ = center.getZ();
-        final int innerRadius = islandSize / 2;
+        if (!isCenter(centerX, centerZ)) {
+            return null;
+        }
         return new ICRegion(new ICLocation(centerX - innerRadius, centerZ - innerRadius), new ICLocation(centerX + innerRadius, centerZ + innerRadius));
     }
 
     @Override
-    public ICRegion getOuterRegion(final ICLocation center) {
+    public ICRegion getOuterRegion(final ICLocation center, final long worldSeed) {
         final int centerX = center.getX();
         final int centerZ = center.getZ();
-        final int outerRadius = islandSize / 2 + oceanSize;
+        if (!isCenter(centerX, centerZ)) {
+            return null;
+        }
         return new ICRegion(new ICLocation(centerX - outerRadius, centerZ - outerRadius), new ICLocation(centerX + outerRadius, centerZ + outerRadius));
     }
 
@@ -183,6 +189,17 @@ public class HexagonalIslandDistribution implements IslandDistribution {
             centerX = column * islandSeparation - islandSeparation / 2;
         }
         return new ICLocation(centerX, centerZ);
+    }
+
+    private boolean isCenter(final int centerX, final int centerZ) {
+        if (ifloormod(centerZ, islandSeparation) != 0) {
+            return false;
+        }
+        final int row = ifloordiv(centerZ, islandSeparation);
+        if (row % 2 == 0) {
+            return ifloormod(centerX, islandSeparation) == 0;
+        }
+        return ifloormod(centerX, islandSeparation) == halfIslandSeparation;
     }
 
     private static int ifloordiv(int n, int d) {

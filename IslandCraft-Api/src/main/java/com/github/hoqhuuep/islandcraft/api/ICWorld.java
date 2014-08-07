@@ -7,80 +7,99 @@ import java.util.Set;
  */
 public interface ICWorld {
     /**
-     * @return This world's seed (as specified in server.properties).
+     * Returns the random seed used to generate this world (as specified in
+     * server.properties).
      */
     long getSeed();
 
     /**
-     * @return The name of this world.
+     * Returns the name of this world.
      */
     String getName();
 
     /**
+     * Returns the biome which will be generated at the given location.
+     * 
      * @param location
-     *            Location in the world.
-     * @return The biome which will be generated at this location.
+     *            location in the world
+     * @return the biome which will be generated
      */
     ICBiome getBiomeAt(ICLocation location);
 
     /**
+     * Returns the biome which will be generated at the given location.
+     * 
      * @param x
-     *            Location in the world.
+     *            the x-coordinate of the location in the world (measured in
+     *            blocks)
      * @param z
-     *            Location in the world.
-     * @return The biome which will be generated at this location.
+     *            the z-coordinate of the location in the world (measured in
+     *            blocks)
+     * @return the biome which will be generated
      */
     ICBiome getBiomeAt(int x, int z);
 
     /**
+     * Returns the biomes for a whole chunk.
+     * 
      * @param location
-     *            Location in the world.
-     * @return An ICBiome[16 * 16] containing the biomes for the whole chunk.
+     *            location of the chunk in the world
+     * @return an ICBiome[16 * 16] containing the biomes for the whole chunk
+     *         such that each element is at index [x + z * 16]
      */
     ICBiome[] getBiomeChunk(ICLocation location);
 
     /**
+     * Returns the biomes for a whole chunk.
+     * 
      * @param x
-     *            Location in the world.
+     *            location of the chunk in the world (measured in blocks)
      * @param z
-     *            Location in the world.
-     * @return An ICBiome[16 * 16] containing the biomes for the whole chunk.
+     *            location of the chunk in the world (measured in blocks)
+     * @return an ICBiome[16 * 16] containing the biomes for the whole chunk
+     *         such that each element is at index [x + z * 16]
      */
     ICBiome[] getBiomeChunk(int x, int z);
 
     /**
+     * Returns the island whose inner-region contains the given location.
+     * 
      * @param location
-     *            Location in the world.
-     * @return The island at the given location, or null if the location is in
-     *         the ocean.
+     *            the location to check
+     * @return the island or null if the given location is in the ocean
      */
     ICIsland getIslandAt(ICLocation location);
 
     /**
+     * Returns the island whose inner-region contains the given location.
+     * 
      * @param x
-     *            Location in the world.
+     *            the x-coordinate of the location to check (measured in blocks)
      * @param z
-     *            Location in the world.
-     * @return The island at the given location, or null if the location is in
-     *         the ocean.
+     *            the z-coordinate of the location to check (measured in blocks)
+     * @return the island or null if the given location is in the ocean
      */
     ICIsland getIslandAt(int x, int z);
 
     /**
+     * Returns a set containing the islands whose outer-regions contain the
+     * given location.
+     * 
      * @param location
-     *            Location in the world.
-     * @return The set of islands whose outerRegions overlap the given location.
-     *         May contain 1-3 islands.
+     *            the location to check
+     * @return a set containing the centers of the islands
      */
     Set<ICIsland> getIslandsAt(ICLocation location);
 
     /**
+     * Returns a set containing the islands whose outer-regions contain the
+     * given location.
+     * 
      * @param x
-     *            Location in the world.
+     *            the x-coordinate of the location to check (measured in blocks)
      * @param z
-     *            Location in the world.
-     * @return The set of islands whose outerRegions overlap the given location.
-     *         May contain 1-3 islands.
+     *            the z-coordinate of the location to check (measured in blocks)
+     * @return a set containing the centers of the islands
      */
     Set<ICIsland> getIslandsAt(int x, int z);
 }

@@ -14,7 +14,7 @@ public class EmptyIslandDistribution implements IslandDistribution {
         ICLogger.logger.info("Creating EmptyIslandDistribution with args: " + StringUtils.join(args, " "));
         if (args.length != 0) {
             ICLogger.logger.severe("EmptyIslandDistribution requrires 0 parameters, " + args.length + " given");
-            throw new IllegalArgumentException("EmptyIslandDistribution requrires 0 parameters");
+            throw new IllegalArgumentException("EmptyIslandDistribution requrires 0 parameters, " + args.length + " given");
         }
     }
 
@@ -29,12 +29,12 @@ public class EmptyIslandDistribution implements IslandDistribution {
     }
 
     @Override
-    public ICRegion getInnerRegion(final ICLocation center) {
+    public ICRegion getInnerRegion(final ICLocation center, final long worldSeed) {
         return null;
     }
 
     @Override
-    public ICRegion getOuterRegion(final ICLocation center) {
+    public ICRegion getOuterRegion(final ICLocation center, final long worldSeed) {
         return null;
     }
 }

@@ -1,7 +1,6 @@
 package com.github.hoqhuuep.islandcraft.core;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import com.github.hoqhuuep.islandcraft.api.BiomeDistribution;
@@ -64,17 +63,7 @@ public class ICClassLoader {
                 final Class<?> subClass = Class.forName(className);
                 final Constructor<?> constructor = subClass.getConstructor(String[].class);
                 return (T) constructor.newInstance(new Object[] { args });
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException("Failed to create instance of " + string, e);
-            } catch (InstantiationException e) {
-                throw new RuntimeException("Failed to create instance of " + string, e);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("Failed to create instance of " + string, e);
-            } catch (InvocationTargetException e) {
-                throw new RuntimeException("Failed to create instance of " + string, e);
-            } catch (SecurityException e) {
-                throw new RuntimeException("Failed to create instance of " + string, e);
-            } catch (NoSuchMethodException e) {
+            } catch (final Exception e) {
                 throw new RuntimeException("Failed to create instance of " + string, e);
             }
         }

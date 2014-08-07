@@ -5,68 +5,79 @@ package com.github.hoqhuuep.islandcraft.api;
  */
 public interface ICIsland {
     /**
-     * @return The random seed used to generate this island.
+     * Returns the random seed used to generate this island.
      */
     long getSeed();
 
     /**
-     * @return The IslandGenerator used to generate this island.
+     * Returns the IslandGenerator used to generate this island.
      */
     IslandGenerator getGenerator();
 
     /**
-     * @return The location of the center of this island in the world.
+     * Returns the location of the center of this island.
      */
     ICLocation getCenter();
 
     /**
-     * @return The region of this island which does not overlap with neighboring
-     *         islands.
+     * Returns the region of this island which does not overlap with neighboring
+     * islands.
      */
     ICRegion getInnerRegion();
 
     /**
-     * @return The region of this island including the ocean overlapping with
-     *         neighboring islands.
+     * Returns the region of this island including the ocean overlapping with
+     * neighboring islands.
      */
     ICRegion getOuterRegion();
 
     /**
+     * Returns the biome which will be generated at the given location.
+     * 
      * @param relativeLocation
-     *            Location relative to this island. Both coordinates must be
-     *            less than islandSize.
-     * @return The biome which will be generated at this location.
+     *            location relative to this island (must be less than xSize)
+     * @return the biome which will be generated
      */
     ICBiome getBiomeAt(ICLocation relativeLocation);
 
     /**
+     * Returns the biome which will be generated at the given location.
+     * 
      * @param relativeX
-     *            Location relative to this island. Must be less than
-     *            islandSize.
+     *            location relative to this island (must be less than xSize)
      * @param relativeZ
-     *            Location relative to this island. Must be less than
-     *            islandSize.
-     * @return The biome which will be generated at this location.
+     *            location relative to this island (must be less than zSize)
+     * @return the biome which will be generated
      */
     ICBiome getBiomeAt(int relativeX, int relativeZ);
 
     /**
+     * Returns the biomes for a whole chunk.
+     * 
      * @param relativeLocation
-     *            Location of the chunk relative to the island.
-     * @return An ICBiome[16 * 16] containing the biomes for the whole chunk.
+     *            location of the chunk relative to the island
+     * @return an ICBiome[16 * 16] containing the biomes for the whole chunk
+     *         such that each element is at index [x + z * 16]
      */
     ICBiome[] getBiomeChunk(ICLocation relativeLocation);
 
     /**
-     * @param relativeLocation
-     *            Location of the chunk relative to the island.
-     * @return An ICBiome[16 * 16] containing the biomes for the whole chunk.
+     * Returns the biomes for a whole chunk.
+     * 
+     * @param relativeX
+     *            location of the chunk relative to the island
+     * @param relativeZ
+     *            location of the chunk relative to the island
+     * @return an ICBiome[16 * 16] containing the biomes for the whole chunk
+     *         such that each element is at index [x + z * 16]
      */
     ICBiome[] getBiomeChunk(int relativeX, int relativeZ);
 
     /**
-     * @return An ICBiome[islandSize * islandSize] containing the biomes for the
-     *         whole island.
+     * Returns the biomes for the whole island.
+     * 
+     * @return an ICBiome[xSize * zSize] containing the biomes for the whole
+     *         island such that each element is at index [x + z * xSize]
      */
     ICBiome[] getBiomeAll();
 }

@@ -7,15 +7,29 @@ public class ICLocation {
     private final int x;
     private final int z;
 
+    /**
+     * Creates an immutable ICLocation.
+     * 
+     * @param x
+     *            x-coordinate of this location (measured in blocks)
+     * @param z
+     *            z-coordinate of this location (measured in blocks)
+     */
     public ICLocation(final int x, final int z) {
         this.x = x;
         this.z = z;
     }
 
+    /**
+     * Returns the x-coordinate of this location (measured in blocks).
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Returns the z-coordinate of this location (measured in blocks).
+     */
     public int getZ() {
         return z;
     }

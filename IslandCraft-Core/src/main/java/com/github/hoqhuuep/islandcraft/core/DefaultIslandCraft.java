@@ -18,7 +18,7 @@ public class DefaultIslandCraft implements IslandCraft {
     }
 
     @Override
-    public ICWorld getWorld(final String name) {
-        return worlds.get(name);
+    public ICWorld getWorld(final String worldName) {
+        return worlds.get(worldName);
     }
 }

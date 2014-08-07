@@ -13,7 +13,8 @@ public class SquareIslandDistribution implements IslandDistribution {
     private final int islandSize;
     private final int oceanSize;
     private final int islandSeparation;
-    private final int magicNumber0;
+    private final int innerRadius;
+    private final int outerRadius;
 
     public SquareIslandDistribution(final String[] args) {
         ICLogger.logger.info("Creating SquareIslandDistribution with args: " + StringUtils.join(args, " "));
@@ -33,7 +34,8 @@ public class SquareIslandDistribution implements IslandDistribution {
             throw new IllegalArgumentException("SquareIslandDistribution.ocean-size must be a positive multiple of 32");
         }
         islandSeparation = islandSize + oceanSize;
-        magicNumber0 = oceanSize + islandSize / 2;
+        innerRadius = islandSize / 2;
+        outerRadius = innerRadius + oceanSize;
     }
 
     @Override
@@ -82,8 +84,8 @@ public class SquareIslandDistribution implements IslandDistribution {
         // |.......|...............................|
         // +-------+-------------------------------+
         // # relative to @
-        final int xPrime = x + magicNumber0;
-        final int zPrime = z + magicNumber0;
+        final int xPrime = x + outerRadius;
+        final int zPrime = z + outerRadius;
         // # relative to world origin
         final int absoluteHashX = ifloordiv(xPrime, islandSeparation) * islandSeparation;
         final int absoluteHashZ = ifloordiv(zPrime, islandSeparation) * islandSeparation;
@@ -110,18 +112,22 @@ public class SquareIslandDistribution implements IslandDistribution {
     }
 
     @Override
-    public ICRegion getInnerRegion(final ICLocation center) {
+    public ICRegion getInnerRegion(final ICLocation center, final long worldSeed) {
         final int centerX = center.getX();
         final int centerZ = center.getZ();
-        final int innerRadius = islandSize / 2;
+        if (!isCenter(centerX, centerZ)) {
+            return null;
+        }
         return new ICRegion(new ICLocation(centerX - innerRadius, centerZ - innerRadius), new ICLocation(centerX + innerRadius, centerZ + innerRadius));
     }
 
     @Override
-    public ICRegion getOuterRegion(final ICLocation center) {
+    public ICRegion getOuterRegion(final ICLocation center, final long worldSeed) {
         final int centerX = center.getX();
         final int centerZ = center.getZ();
-        final int outerRadius = islandSize / 2 + oceanSize;
+        if (!isCenter(centerX, centerZ)) {
+            return null;
+        }
         return new ICRegion(new ICLocation(centerX - outerRadius, centerZ - outerRadius), new ICLocation(centerX + outerRadius, centerZ + outerRadius));
     }
 
@@ -129,6 +135,10 @@ public class SquareIslandDistribution implements IslandDistribution {
         final int centerZ = row * islandSeparation;
         final int centerX = column * islandSeparation;
         return new ICLocation(centerX, centerZ);
+    }
+
+    private boolean isCenter(final int centerX, final int centerZ) {
+        return ifloormod(centerZ, islandSeparation) == 0 && ifloormod(centerX, islandSeparation) == 0;
     }
 
     private static int ifloordiv(int n, int d) {

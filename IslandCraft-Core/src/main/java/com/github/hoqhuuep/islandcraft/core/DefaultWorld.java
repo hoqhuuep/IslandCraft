@@ -21,8 +21,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 
 public class DefaultWorld implements ICWorld {
-    private final String name;
-    private final long seed;
+    private final String worldName;
+    private final long worldSeed;
     private final IslandDatabase database;
     private final BiomeDistribution ocean;
     private final IslandDistribution islandDistribution;
@@ -32,8 +32,8 @@ public class DefaultWorld implements ICWorld {
     private final Cache<ICLocation, ICIsland> databaseCache;
 
     public DefaultWorld(final String name, final long seed, final IslandDatabase database, final ConfigurationSection config, final IslandCache cache, final ICClassLoader classLoader) {
-        this.name = name;
-        this.seed = seed;
+        this.worldName = name;
+        this.worldSeed = seed;
         this.database = database;
         this.cache = cache;
         this.classLoader = classLoader;
@@ -67,12 +67,12 @@ public class DefaultWorld implements ICWorld {
 
     @Override
     public long getSeed() {
-        return seed;
+        return worldSeed;
     }
 
     @Override
     public String getName() {
-        return name;
+        return worldName;
     }
 
     @Override
@@ -84,12 +84,12 @@ public class DefaultWorld implements ICWorld {
     public ICBiome getBiomeAt(final int x, final int z) {
         final ICIsland island = getIslandAt(x, z);
         if (island == null) {
-            return ocean.biomeAt(x, z, seed);
+            return ocean.biomeAt(x, z, worldSeed);
         }
         final ICLocation origin = island.getInnerRegion().getMin();
         final ICBiome biome = island.getBiomeAt(x - origin.getX(), z - origin.getZ());
         if (biome == null) {
-            return ocean.biomeAt(x, z, seed);
+            return ocean.biomeAt(x, z, worldSeed);
         }
         return biome;
     }
@@ -105,7 +105,7 @@ public class DefaultWorld implements ICWorld {
         if (island == null) {
             final ICBiome[] chunk = new ICBiome[256];
             for (int i = 0; i < 256; ++i) {
-                chunk[i] = ocean.biomeAt(x + i % 16, z + i / 16, seed);
+                chunk[i] = ocean.biomeAt(x + i % 16, z + i / 16, worldSeed);
             }
             return chunk;
         }
@@ -114,13 +114,13 @@ public class DefaultWorld implements ICWorld {
         if (biomes == null) {
             final ICBiome[] chunk = new ICBiome[256];
             for (int i = 0; i < 256; ++i) {
-                chunk[i] = ocean.biomeAt(x + i % 16, z + i / 16, seed);
+                chunk[i] = ocean.biomeAt(x + i % 16, z + i / 16, worldSeed);
             }
             return chunk;
         }
         for (int i = 0; i < 256; ++i) {
             if (biomes[i] == null) {
-                biomes[i] = ocean.biomeAt(x + i % 16, z + i / 16, seed);
+                biomes[i] = ocean.biomeAt(x + i % 16, z + i / 16, worldSeed);
             }
         }
         return biomes;
@@ -133,7 +133,7 @@ public class DefaultWorld implements ICWorld {
 
     @Override
     public ICIsland getIslandAt(final int x, final int z) {
-        final ICLocation center = islandDistribution.getCenterAt(x, z, seed);
+        final ICLocation center = islandDistribution.getCenterAt(x, z, worldSeed);
         if (center == null) {
             return null;
         }
@@ -147,7 +147,7 @@ public class DefaultWorld implements ICWorld {
 
     @Override
     public Set<ICIsland> getIslandsAt(final int x, final int z) {
-        final Set<ICLocation> centers = islandDistribution.getCentersAt(x, z, seed);
+        final Set<ICLocation> centers = islandDistribution.getCentersAt(x, z, worldSeed);
         final Set<ICIsland> islands = new HashSet<ICIsland>(centers.size());
         for (final ICLocation center : centers) {
             islands.add(databaseCache.apply(center));
@@ -158,20 +158,20 @@ public class DefaultWorld implements ICWorld {
     private class DatabaseCacheLoader extends CacheLoader<ICLocation, ICIsland> {
         @Override
         public ICIsland load(final ICLocation center) {
-            final ICRegion innerRegion = islandDistribution.getInnerRegion(center);
-            final ICRegion outerRegion = islandDistribution.getOuterRegion(center);
-            IslandDatabase.Result fromDatabase = database.load(name, center.getX(), center.getZ());
+            final ICRegion innerRegion = islandDistribution.getInnerRegion(center, worldSeed);
+            final ICRegion outerRegion = islandDistribution.getOuterRegion(center, worldSeed);
+            IslandDatabase.Result fromDatabase = database.load(worldName, center.getX(), center.getZ());
             if (fromDatabase == null) {
                 final long islandSeed = pickIslandSeed(center.getX(), center.getZ());
                 final String generator = pickIslandGenerator(islandSeed);
-                database.save(name, center.getX(), center.getZ(), islandSeed, generator);
+                database.save(worldName, center.getX(), center.getZ(), islandSeed, generator);
                 return new DefaultIsland(innerRegion, outerRegion, islandSeed, classLoader.getIslandGenerator(generator), cache);
             }
             return new DefaultIsland(innerRegion, outerRegion, fromDatabase.getIslandSeed(), classLoader.getIslandGenerator(fromDatabase.getGenerator()), cache);
         }
 
         private long pickIslandSeed(final int centerX, final int centerZ) {
-            return new Random(seed ^ ((long) centerX << 24 | centerZ & 0x00FFFFFFL)).nextLong();
+            return new Random(worldSeed ^ ((long) centerX << 24 | centerZ & 0x00FFFFFFL)).nextLong();
         }
 
         private String pickIslandGenerator(final long islandSeed) {
@@ -181,7 +181,7 @@ public class DefaultWorld implements ICWorld {
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return worldName.hashCode();
     }
 
     @Override
@@ -193,6 +193,6 @@ public class DefaultWorld implements ICWorld {
         if (getClass() != obj.getClass())
             return false;
         final DefaultWorld other = (DefaultWorld) obj;
-        return StringUtils.equals(name, other.name);
+        return StringUtils.equals(worldName, other.worldName);
     }
 }
