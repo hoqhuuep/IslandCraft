@@ -18,16 +18,23 @@
             <goals>
               <goal>shade</goal>
             </goals>
-            <configuration>
-              <artifactSet>
-                <includes>
-                  <include>com.github.hoqhuuep:IslandCraft-NMS*</include>
-                  <include>com.github.hoqhuuep:IslandCraft-Api</include>
-                </includes>
-              </artifactSet>
-            </configuration>
           </execution>
         </executions>
+        <configuration>
+          <artifactSet>
+            <includes>
+              <include>org.mcstats.*:*</include>
+              <include>com.github.hoqhuuep:IslandCraft-Api</include>
+              <include>com.github.hoqhuuep:IslandCraft-NMS*</include>
+            </includes>
+          </artifactSet>
+          <relocations>
+            <relocation>
+              <pattern>org.mcstats</pattern>
+              <shadedPattern>com.github.hoqhuuep.islandcraft.mcstats</shadedPattern>
+            </relocation>
+          </relocations>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>

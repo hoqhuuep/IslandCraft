@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 import com.avaje.ebean.EbeanServer;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
@@ -26,6 +27,14 @@ public class IslandCraftPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         ICLogger.logger = getLogger();
+
+        // https://github.com/Hidendra/Plugin-Metrics/wiki/Usage
+        try {
+            final Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (final Exception e) {
+            ICLogger.logger.warning("Failed to start MCStats");
+        }
 
         saveDefaultConfig();
         final ConfigurationSection config = getConfig();
