@@ -25,13 +25,13 @@ public class SquareIslandDistribution implements IslandDistribution {
         islandSize = Integer.parseInt(args[0]);
         oceanSize = Integer.parseInt(args[1]);
         // Validate configuration values
-        if (islandSize <= 0 || islandSize % 32 != 0) {
-            ICLogger.logger.severe("SquareIslandDistribution.island-size must be a positive multiple of 32");
-            throw new IllegalArgumentException("SquareIslandDistribution.island-size must be a positive multiple of 32");
+        if (islandSize <= 0 || islandSize % 2 != 0) {
+            ICLogger.logger.severe("SquareIslandDistribution.island-size must be a positive multiple of 2");
+            throw new IllegalArgumentException("SquareIslandDistribution.island-size must be a positive multiple of 2");
         }
-        if (oceanSize <= 0 || oceanSize % 32 != 0) {
-            ICLogger.logger.severe("SquareIslandDistribution.ocean-size must be a positive multiple of 32");
-            throw new IllegalArgumentException("SquareIslandDistribution.ocean-size must be a positive multiple of 32");
+        if (oceanSize <= 0 || oceanSize % 2 != 0) {
+            ICLogger.logger.severe("SquareIslandDistribution.ocean-size must be a positive multiple of 2");
+            throw new IllegalArgumentException("SquareIslandDistribution.ocean-size must be a positive multiple of 2");
         }
         islandSeparation = islandSize + oceanSize;
         innerRadius = islandSize / 2;

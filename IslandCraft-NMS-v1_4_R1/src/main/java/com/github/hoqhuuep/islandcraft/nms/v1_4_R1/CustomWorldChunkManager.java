@@ -175,21 +175,13 @@ public class CustomWorldChunkManager extends WorldChunkManager {
             result = new BiomeBase[xSize * zSize];
         }
         // More efficient handling of whole chunk
-        if (xSize == 16 && zSize == 16 && (xMin & 0xF) == 0 && (zMin & 0xF) == 0) {
-            if (useCache) {
-                // Happens most of the time
-                final BiomeBase[] biomes = this.biomeCache.e(xMin, zMin);
-                System.arraycopy(biomes, 0, result, 0, xSize * zSize);
-                return result;
-            }
-            // This only happens in getWetness above
-            final ICBiome[] temp = biomeGenerator.generateChunkBiomes(xMin, zMin);
-            for (int i = 0; i < xSize * zSize; ++i) {
-                result[i] = biomeMap.get(temp[i]);
-            }
+        if (useCache && xSize == 16 && zSize == 16 && (xMin & 0xF) == 0 && (zMin & 0xF) == 0) {
+            // Happens most of the time
+            final BiomeBase[] biomes = this.biomeCache.e(xMin, zMin);
+            System.arraycopy(biomes, 0, result, 0, xSize * zSize);
             return result;
         }
-        // In reality this never happens...
+        // This only happens in getWetness above
         for (int x = 0; x < xSize; ++x) {
             for (int z = 0; z < zSize; ++z) {
                 final ICBiome temp = biomeGenerator.generateBiome(xMin + x, zMin + z);
@@ -257,6 +249,5 @@ public class CustomWorldChunkManager extends WorldChunkManager {
     public void b() {
         // Clean up biomeCache
         biomeCache.a();
-        biomeGenerator.cleanupCache();
     }
 }
