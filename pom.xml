@@ -31,6 +31,7 @@
 		<module>IslandCraft-NMS-v1_5_R2</module>
 		<module>IslandCraft-NMS-v1_5_R1</module>
 		<module>IslandCraft-NMS-v1_4_R1</module>
+		<module>IslandCraft-TerrainControl</module>
 		<module>IslandCraft-Api</module>
 	</modules>
 
@@ -49,6 +50,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.9</version>
 				<configuration>
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>

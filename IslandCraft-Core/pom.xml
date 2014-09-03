@@ -74,6 +74,11 @@
 			<artifactId>IslandCraft-NMS-v1_4_R1</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.hoqhuuep</groupId>
+			<artifactId>IslandCraft-TerrainControl</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
