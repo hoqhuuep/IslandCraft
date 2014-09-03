@@ -21,18 +21,6 @@ public class IslandCache {
         return biomes[relativeZ * xSize + relativeX];
     }
 
-    private static final int BLOCKS_PER_CHUNK = 16;
-
-    public ICBiome[] biomeChunk(final ICIsland island, final int relativeX, final int relativeZ) {
-        final int xSize = island.getInnerRegion().getMax().getZ() - island.getInnerRegion().getMin().getZ();
-        final ICBiome[] result = new ICBiome[BLOCKS_PER_CHUNK * BLOCKS_PER_CHUNK];
-        final ICBiome[] biomes = cache.getUnchecked(island);
-        for (int z = 0; z < BLOCKS_PER_CHUNK; ++z) {
-            System.arraycopy(biomes, xSize * (relativeZ + z) + relativeX, result, z * BLOCKS_PER_CHUNK, BLOCKS_PER_CHUNK);
-        }
-        return result;
-    }
-
     public ICBiome[] biomeAll(final ICIsland island) {
         return cache.getUnchecked(island).clone();
     }
