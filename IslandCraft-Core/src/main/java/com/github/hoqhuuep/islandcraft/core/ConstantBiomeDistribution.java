@@ -3,10 +3,9 @@ package com.github.hoqhuuep.islandcraft.core;
 import org.apache.commons.lang.StringUtils;
 
 import com.github.hoqhuuep.islandcraft.api.BiomeDistribution;
-import com.github.hoqhuuep.islandcraft.api.ICBiome;
 
 public class ConstantBiomeDistribution implements BiomeDistribution {
-    private final ICBiome biome;
+    private final int biome;
 
     public ConstantBiomeDistribution(final String[] args) {
         ICLogger.logger.info("Creating ConstantBiomeDistribution with args: " + StringUtils.join(args, " "));
@@ -18,7 +17,7 @@ public class ConstantBiomeDistribution implements BiomeDistribution {
     }
 
     @Override
-    public ICBiome biomeAt(final int x, final int z, final long worldSeed) {
+    public int biomeAt(final int x, final int z, final long worldSeed) {
         return biome;
     }
 }

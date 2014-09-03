@@ -10,7 +10,6 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 
 import com.github.hoqhuuep.islandcraft.api.BiomeDistribution;
-import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.ICIsland;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
@@ -76,18 +75,18 @@ public class DefaultWorld implements ICWorld {
     }
 
     @Override
-    public ICBiome getBiomeAt(final ICLocation location) {
+    public int getBiomeAt(final ICLocation location) {
         return getBiomeAt(location.getX(), location.getZ());
     }
 
     @Override
-    public ICBiome getBiomeAt(final int x, final int z) {
+    public int getBiomeAt(final int x, final int z) {
         final ICIsland island = getIslandAt(x, z);
         if (island == null) {
             return ocean.biomeAt(x, z, worldSeed);
         }
         final ICLocation origin = island.getInnerRegion().getMin();
-        final ICBiome biome = island.getBiomeAt(x - origin.getX(), z - origin.getZ());
+        final Integer biome = island.getBiomeAt(x - origin.getX(), z - origin.getZ());
         if (biome == null) {
             return ocean.biomeAt(x, z, worldSeed);
         }

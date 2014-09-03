@@ -2,7 +2,6 @@ package com.github.hoqhuuep.islandcraft.core;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
 
 public class EmptyIslandGenerator implements IslandGenerator {
@@ -15,8 +14,8 @@ public class EmptyIslandGenerator implements IslandGenerator {
     }
 
     @Override
-    public ICBiome[] generate(final int xSize, final int zSize, final long islandSeed) {
+    public Integer[] generate(final int xSize, final int zSize, final long islandSeed) {
         ICLogger.logger.info(String.format("Generating island from EmptyIslandGenerator with xSize: %d, zSize: %d, islandSeed: %d", xSize, zSize, islandSeed));
-        return new ICBiome[xSize * zSize];
+        return new Integer[xSize * zSize];
     }
 }

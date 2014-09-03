@@ -14,7 +14,6 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.util.noise.OctaveGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
-import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
 import com.github.hoqhuuep.islandcraft.core.mosaic.Poisson;
 import com.github.hoqhuuep.islandcraft.core.mosaic.Site;
@@ -43,7 +42,7 @@ public class IslandGeneratorAlpha implements IslandGenerator {
             ICLogger.logger.severe("IslandGeneratorAlpha requrires 9 parameters, " + args.length + " given");
             throw new IllegalArgumentException("IslandGeneratorAlpha requrires 9 parameters");
         }
-        ocean = new Color(ICBiome.values().length, true);
+        ocean = new Color(-1, true);
         normal = biomeColor(args[0], ocean);
         mountains = biomeColor(args[1], normal);
         hills = biomeColor(args[2], normal);
@@ -56,7 +55,7 @@ public class IslandGeneratorAlpha implements IslandGenerator {
     }
 
     @Override
-    public ICBiome[] generate(final int xSize, final int zSize, final long islandSeed) {
+    public Integer[] generate(final int xSize, final int zSize, final long islandSeed) {
         ICLogger.logger.info(String.format("Generating island from IslandGeneratorAlpha with xSize: %d, zSize: %d, islandSeed: %d, biome: %s", xSize, zSize, islandSeed, ICBiome.values()[normal.getRGB()]));
         final Poisson poisson = new Poisson(xSize, zSize, MIN_DISTANCE);
         final List<Site> sites = poisson.generate(new Random(islandSeed));
@@ -154,15 +153,13 @@ public class IslandGeneratorAlpha implements IslandGenerator {
         }
         // Save result
         graphics.dispose();
-        final ICBiome[] result = new ICBiome[xSize * zSize];
-        final ICBiome[] values = ICBiome.values();
-        final int maxOrdinal = values.length;
+        final Integer[] result = new Integer[xSize * zSize];
         for (int i = 0; i < result.length; ++i) {
             final int x = i % xSize;
             final int z = i / xSize;
-            final int ordinal = image.getRGB(x, z);
-            if (ordinal < maxOrdinal) {
-                result[i] = values[ordinal];
+            final int biome = image.getRGB(x, z);
+            if (biome != -1) {
+                result[i] = biome;
             }
         }
         return result;

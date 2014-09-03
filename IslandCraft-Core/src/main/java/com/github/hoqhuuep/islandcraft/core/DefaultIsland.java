@@ -1,6 +1,5 @@
 package com.github.hoqhuuep.islandcraft.core;
 
-import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.ICIsland;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
@@ -46,17 +45,17 @@ public class DefaultIsland implements ICIsland {
     }
 
     @Override
-    public ICBiome getBiomeAt(final ICLocation relativeLocation) {
+    public Integer getBiomeAt(final ICLocation relativeLocation) {
         return getBiomeAt(relativeLocation.getX(), relativeLocation.getZ());
     }
 
     @Override
-    public ICBiome getBiomeAt(final int relativeX, final int relativeZ) {
+    public Integer getBiomeAt(final int relativeX, final int relativeZ) {
         return cache.biomeAt(this, relativeX, relativeZ);
     }
 
     @Override
-    public ICBiome[] getBiomeAll() {
+    public Integer[] getBiomeAll() {
         return cache.biomeAll(this);
     }
 

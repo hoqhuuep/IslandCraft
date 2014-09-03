@@ -24,7 +24,7 @@ public interface ICWorld {
      *            location in the world
      * @return the biome which will be generated
      */
-    ICBiome getBiomeAt(ICLocation location);
+    int getBiomeAt(ICLocation location);
 
     /**
      * Returns the biome which will be generated at the given location.
@@ -37,7 +37,7 @@ public interface ICWorld {
      *            blocks)
      * @return the biome which will be generated
      */
-    ICBiome getBiomeAt(int x, int z);
+    int getBiomeAt(int x, int z);
 
     /**
      * Returns the island whose inner-region contains the given location.

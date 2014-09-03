@@ -4,11 +4,10 @@ import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
 
 public class ConstantIslandGenerator implements IslandGenerator {
-    private final ICBiome biome;
+    private final int biome;
 
     public ConstantIslandGenerator(final String[] args) {
         ICLogger.logger.info("Creating ConstantIslandGenerator with args: " + StringUtils.join(args, " "));
@@ -20,9 +19,9 @@ public class ConstantIslandGenerator implements IslandGenerator {
     }
 
     @Override
-    public ICBiome[] generate(final int xSize, final int zSize, final long islandSeed) {
+    public Integer[] generate(final int xSize, final int zSize, final long islandSeed) {
         ICLogger.logger.info(String.format("Generating island from ConstantIslandGenerator with xSize: %d, zSize: %d, islandSeed: %d, biome: %s", xSize, zSize, islandSeed, biome));
-        final ICBiome[] result = new ICBiome[xSize * zSize];
+        final Integer[] result = new Integer[xSize * zSize];
         Arrays.fill(result, biome);
         return result;
     }
