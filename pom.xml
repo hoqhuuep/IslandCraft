@@ -20,6 +20,7 @@
 	<modules>
 		<module>IslandCraft-Core</module>
 		<module>IslandCraft-NMS</module>
+		<module>IslandCraft-NMS-v1_8_R1</module>
 		<module>IslandCraft-NMS-v1_7_R4</module>
 		<module>IslandCraft-NMS-v1_7_R3</module>
 		<module>IslandCraft-NMS-v1_7_R2</module>
@@ -53,6 +54,7 @@
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
 				</configuration>
+				<version>2.9</version>
 			</plugin>
 		</plugins>
 	</build>
@@ -61,6 +63,10 @@
 		<repository>
 			<id>bukkit-repo</id>
 			<url>http://repo.bukkit.org/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
 		<repository>
 			<id>Plugin Metrics</id>
@@ -74,7 +80,7 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>10.0.1</version>
-			<scope>provided</scope>
+			<scope>compile</scope>
 		</dependency>
 		<!-- Provided by bukkit -->
 		<dependency>
