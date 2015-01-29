@@ -18,5 +18,5 @@ public interface BiomeDistribution {
      *            the random seed of the world to get the biome from
      * @return the biome to generate
      */
-    int biomeAt(int x, int z, long worldSeed);
+    ICBiome biomeAt(int x, int z, long worldSeed);
 }

@@ -4,24 +4,25 @@ import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
 
 public class ConstantIslandGenerator implements IslandGenerator {
-    private final int biome;
+    private final ICBiome biome;
 
-    public ConstantIslandGenerator(final String worldName, final String[] args) {
+    public ConstantIslandGenerator(final String[] args) {
         ICLogger.logger.info("Creating ConstantIslandGenerator with args: " + StringUtils.join(args, " "));
         if (args.length != 1) {
             ICLogger.logger.severe("ConstantIslandGenerator requrires 1 parameter, " + args.length + " given");
             throw new IllegalArgumentException("ConstantIslandGenerator requrires 1 parameter, " + args.length + " given");
         }
-        biome = ICBiome.biomeIdFromName(worldName, args[0]);
+        biome = ICBiome.valueOf(args[0]);
     }
 
     @Override
-    public int[] generate(final int xSize, final int zSize, final long islandSeed) {
+    public ICBiome[] generate(final int xSize, final int zSize, final long islandSeed) {
         ICLogger.logger.info(String.format("Generating island from ConstantIslandGenerator with xSize: %d, zSize: %d, islandSeed: %d, biome: %s", xSize, zSize, islandSeed, biome));
-        final int[] result = new int[xSize * zSize];
+        final ICBiome[] result = new ICBiome[xSize * zSize];
         Arrays.fill(result, biome);
         return result;
     }

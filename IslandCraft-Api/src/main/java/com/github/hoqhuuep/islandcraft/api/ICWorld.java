@@ -24,7 +24,7 @@ public interface ICWorld {
      *            location in the world
      * @return the biome which will be generated
      */
-    int getBiomeAt(ICLocation location);
+    ICBiome getBiomeAt(ICLocation location);
 
     /**
      * Returns the biome which will be generated at the given location.
@@ -37,7 +37,29 @@ public interface ICWorld {
      *            blocks)
      * @return the biome which will be generated
      */
-    int getBiomeAt(int x, int z);
+    ICBiome getBiomeAt(int x, int z);
+
+    /**
+     * Returns the biomes for a whole chunk.
+     * 
+     * @param location
+     *            location of the chunk in the world
+     * @return an ICBiome[16 * 16] containing the biomes for the whole chunk
+     *         such that each element is at index [x + z * 16]
+     */
+    ICBiome[] getBiomeChunk(ICLocation location);
+
+    /**
+     * Returns the biomes for a whole chunk.
+     * 
+     * @param x
+     *            location of the chunk in the world (measured in blocks)
+     * @param z
+     *            location of the chunk in the world (measured in blocks)
+     * @return an ICBiome[16 * 16] containing the biomes for the whole chunk
+     *         such that each element is at index [x + z * 16]
+     */
+    ICBiome[] getBiomeChunk(int x, int z);
 
     /**
      * Returns the island whose inner-region contains the given location.

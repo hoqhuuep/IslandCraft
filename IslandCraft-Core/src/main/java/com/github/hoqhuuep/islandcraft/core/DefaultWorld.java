@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 
 import com.github.hoqhuuep.islandcraft.api.BiomeDistribution;
+import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.ICIsland;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
@@ -41,13 +42,13 @@ public class DefaultWorld implements ICWorld {
             ICLogger.logger.warning("No string-value for 'worlds." + name + ".ocean' found in config.yml");
             ICLogger.logger.warning("Default value 'com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN' will be used");
         }
-        ocean = classLoader.getBiomeDistribution(name, config.getString("ocean", "com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN"));
+        ocean = classLoader.getBiomeDistribution(config.getString("ocean", "com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN"));
 
         if (!config.contains("island-distribution") || !config.isString("island-distribution")) {
             ICLogger.logger.warning("No string-value for 'worlds." + name + ".island-distribution' found in config.yml");
             ICLogger.logger.warning("Default value 'com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution' will be used");
         }
-        islandDistribution = classLoader.getIslandDistribution(name, config.getString("island-distribution", "com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution"));
+        islandDistribution = classLoader.getIslandDistribution(config.getString("island-distribution", "com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution"));
 
         if (!config.contains("island-generators") || !config.isList("island-generators")) {
             ICLogger.logger.warning("No list-value for 'worlds." + name + ".island-generators' found in config.yml");
@@ -59,7 +60,7 @@ public class DefaultWorld implements ICWorld {
         }
         // Load islandGenerators just to make sure there are no errors
         for (final String islandGenerator : islandGenerators) {
-            classLoader.getIslandGenerator(name, islandGenerator);
+            classLoader.getIslandGenerator(islandGenerator);
         }
         databaseCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.SECONDS).build(new DatabaseCacheLoader());
     }
@@ -75,22 +76,54 @@ public class DefaultWorld implements ICWorld {
     }
 
     @Override
-    public int getBiomeAt(final ICLocation location) {
+    public ICBiome getBiomeAt(final ICLocation location) {
         return getBiomeAt(location.getX(), location.getZ());
     }
 
     @Override
-    public int getBiomeAt(final int x, final int z) {
+    public ICBiome getBiomeAt(final int x, final int z) {
         final ICIsland island = getIslandAt(x, z);
         if (island == null) {
             return ocean.biomeAt(x, z, worldSeed);
         }
         final ICLocation origin = island.getInnerRegion().getMin();
-        final int biome = island.getBiomeAt(x - origin.getX(), z - origin.getZ());
-        if (biome == -1) {
+        final ICBiome biome = island.getBiomeAt(x - origin.getX(), z - origin.getZ());
+        if (biome == null) {
             return ocean.biomeAt(x, z, worldSeed);
         }
         return biome;
+    }
+
+    @Override
+    public ICBiome[] getBiomeChunk(ICLocation location) {
+        return getBiomeChunk(location.getX(), location.getZ());
+    }
+
+    @Override
+    public ICBiome[] getBiomeChunk(int x, int z) {
+        final ICIsland island = getIslandAt(x, z);
+        if (island == null) {
+            final ICBiome[] chunk = new ICBiome[256];
+            for (int i = 0; i < 256; ++i) {
+                chunk[i] = ocean.biomeAt(x + i % 16, z + i / 16, worldSeed);
+            }
+            return chunk;
+        }
+        final ICLocation origin = island.getInnerRegion().getMin();
+        final ICBiome[] biomes = island.getBiomeChunk(x - origin.getX(), z - origin.getZ());
+        if (biomes == null) {
+            final ICBiome[] chunk = new ICBiome[256];
+            for (int i = 0; i < 256; ++i) {
+                chunk[i] = ocean.biomeAt(x + i % 16, z + i / 16, worldSeed);
+            }
+            return chunk;
+        }
+        for (int i = 0; i < 256; ++i) {
+            if (biomes[i] == null) {
+                biomes[i] = ocean.biomeAt(x + i % 16, z + i / 16, worldSeed);
+            }
+        }
+        return biomes;
     }
 
     @Override
@@ -132,9 +165,9 @@ public class DefaultWorld implements ICWorld {
                 final long islandSeed = pickIslandSeed(center.getX(), center.getZ());
                 final String generator = pickIslandGenerator(islandSeed);
                 database.save(worldName, center.getX(), center.getZ(), islandSeed, generator);
-                return new DefaultIsland(innerRegion, outerRegion, islandSeed, classLoader.getIslandGenerator(worldName, generator), cache);
+                return new DefaultIsland(innerRegion, outerRegion, islandSeed, classLoader.getIslandGenerator(generator), cache);
             }
-            return new DefaultIsland(innerRegion, outerRegion, fromDatabase.getIslandSeed(), classLoader.getIslandGenerator(worldName, fromDatabase.getGenerator()), cache);
+            return new DefaultIsland(innerRegion, outerRegion, fromDatabase.getIslandSeed(), classLoader.getIslandGenerator(fromDatabase.getGenerator()), cache);
         }
 
         private long pickIslandSeed(final int centerX, final int centerZ) {

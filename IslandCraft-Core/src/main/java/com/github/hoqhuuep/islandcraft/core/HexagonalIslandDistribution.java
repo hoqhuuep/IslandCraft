@@ -20,7 +20,7 @@ public class HexagonalIslandDistribution implements IslandDistribution {
     private final int innerRadius;
     private final int outerRadius;
 
-    public HexagonalIslandDistribution(final String worldName, final String[] args) {
+    public HexagonalIslandDistribution(final String[] args) {
         ICLogger.logger.info("Creating HexagonalIslandDistribution with args: " + StringUtils.join(args, " "));
         if (args.length != 2) {
             ICLogger.logger.severe("HexagonalIslandDistribution requrires 2 parameters, " + args.length + " given");
@@ -29,13 +29,13 @@ public class HexagonalIslandDistribution implements IslandDistribution {
         islandSize = Integer.parseInt(args[0]);
         oceanSize = Integer.parseInt(args[1]);
         // Validate configuration values
-        if (islandSize <= 0 || islandSize % 2 != 0) {
-            ICLogger.logger.severe("HexagonalIslandDistribution.island-size must be a positive multiple of 2");
-            throw new IllegalArgumentException("HexagonalIslandDistribution.island-size must be a positive multiple of 2");
+        if (islandSize <= 0 || islandSize % 32 != 0) {
+            ICLogger.logger.severe("HexagonalIslandDistribution.island-size must be a positive multiple of 32");
+            throw new IllegalArgumentException("HexagonalIslandDistribution.island-size must be a positive multiple of 32");
         }
-        if (oceanSize <= 0 || oceanSize % 2 != 0) {
-            ICLogger.logger.severe("HexagonalIslandDistribution.ocean-size must be a positive multiple of 2");
-            throw new IllegalArgumentException("HexagonalIslandDistribution.ocean-size must be a positive multiple of 2");
+        if (oceanSize <= 0 || oceanSize % 32 != 0) {
+            ICLogger.logger.severe("HexagonalIslandDistribution.ocean-size must be a positive multiple of 32");
+            throw new IllegalArgumentException("HexagonalIslandDistribution.ocean-size must be a positive multiple of 32");
         }
         islandSeparation = islandSize + oceanSize;
         twiceIslandSeparation = islandSeparation * 2;

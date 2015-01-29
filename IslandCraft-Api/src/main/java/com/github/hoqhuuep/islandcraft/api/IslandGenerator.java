@@ -17,5 +17,5 @@ public interface IslandGenerator {
      * @return an ICBiome[xSize * zSize] containing the biomes for the whole
      *         island such that each element is at index [x + z * xSize]
      */
-    int[] generate(int xSize, int zSize, long islandSeed);
+    ICBiome[] generate(int xSize, int zSize, long islandSeed);
 }

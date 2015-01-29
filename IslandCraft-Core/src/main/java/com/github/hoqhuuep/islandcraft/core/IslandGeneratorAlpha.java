@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.util.noise.OctaveGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
+import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
 import com.github.hoqhuuep.islandcraft.core.mosaic.Poisson;
 import com.github.hoqhuuep.islandcraft.core.mosaic.Site;
@@ -36,27 +37,27 @@ public class IslandGeneratorAlpha implements IslandGenerator {
 
     // private final Color river; // unused for now
 
-    public IslandGeneratorAlpha(final String worldName, final String[] args) {
+    public IslandGeneratorAlpha(final String[] args) {
         ICLogger.logger.info("Creating IslandGeneratorAlpha with args: " + StringUtils.join(args, " "));
         if (args.length != 9) {
             ICLogger.logger.severe("IslandGeneratorAlpha requrires 9 parameters, " + args.length + " given");
             throw new IllegalArgumentException("IslandGeneratorAlpha requrires 9 parameters");
         }
-        ocean = new Color(-1, true);
-        normal = biomeColor(worldName, args[0], ocean);
-        mountains = biomeColor(worldName, args[1], normal);
-        hills = biomeColor(worldName, args[2], normal);
-        hillsMountains = biomeColor(worldName, args[3], hills);
-        forest = biomeColor(worldName, args[4], normal);
-        forestMountains = biomeColor(worldName, args[5], forest);
-        outerCoast = biomeColor(worldName, args[6], normal);
-        innerCoast = biomeColor(worldName, args[7], normal);
+        ocean = new Color(ICBiome.values().length, true);
+        normal = biomeColor(args[0], ocean);
+        mountains = biomeColor(args[1], normal);
+        hills = biomeColor(args[2], normal);
+        hillsMountains = biomeColor(args[3], hills);
+        forest = biomeColor(args[4], normal);
+        forestMountains = biomeColor(args[5], forest);
+        outerCoast = biomeColor(args[6], normal);
+        innerCoast = biomeColor(args[7], normal);
         // river = biomeColor(args[8], normal); // unused for now
     }
 
     @Override
-    public int[] generate(final int xSize, final int zSize, final long islandSeed) {
-        ICLogger.logger.info(String.format("Generating island from IslandGeneratorAlpha with xSize: %d, zSize: %d, islandSeed: %d, biome: %d", xSize, zSize, islandSeed, normal.getRGB()));
+    public ICBiome[] generate(final int xSize, final int zSize, final long islandSeed) {
+        ICLogger.logger.info(String.format("Generating island from IslandGeneratorAlpha with xSize: %d, zSize: %d, islandSeed: %d, biome: %s", xSize, zSize, islandSeed, ICBiome.values()[normal.getRGB()]));
         final Poisson poisson = new Poisson(xSize, zSize, MIN_DISTANCE);
         final List<Site> sites = poisson.generate(new Random(islandSeed));
         final SimplexOctaveGenerator shapeNoise = new SimplexOctaveGenerator(islandSeed, 2);
@@ -153,20 +154,25 @@ public class IslandGeneratorAlpha implements IslandGenerator {
         }
         // Save result
         graphics.dispose();
-        final int[] result = new int[xSize * zSize];
+        final ICBiome[] result = new ICBiome[xSize * zSize];
+        final ICBiome[] values = ICBiome.values();
+        final int maxOrdinal = values.length;
         for (int i = 0; i < result.length; ++i) {
             final int x = i % xSize;
             final int z = i / xSize;
-            result[i] = image.getRGB(x, z);
+            final int ordinal = image.getRGB(x, z);
+            if (ordinal < maxOrdinal) {
+                result[i] = values[ordinal];
+            }
         }
         return result;
     }
 
-    private static Color biomeColor(final String worldName, final String name, final Color backup) {
+    private static Color biomeColor(final String name, final Color backup) {
         if (name.equals("~")) {
             return backup;
         }
-        return new Color(ICBiome.biomeIdFromName(worldName, name), true);
+        return new Color(ICBiome.valueOf(name).ordinal(), true);
     }
 
     private static boolean noise(final Site site, final double threshold, final double period, final OctaveGenerator octaveGenerator) {
