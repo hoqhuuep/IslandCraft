@@ -38,7 +38,7 @@ public interface ICIsland {
      *            location relative to this island (must be less than xSize)
      * @return the biome which will be generated
      */
-    Integer getBiomeAt(ICLocation relativeLocation);
+    int getBiomeAt(ICLocation relativeLocation);
 
     /**
      * Returns the biome which will be generated at the given location.
@@ -49,7 +49,7 @@ public interface ICIsland {
      *            location relative to this island (must be less than zSize)
      * @return the biome which will be generated
      */
-    Integer getBiomeAt(int relativeX, int relativeZ);
+    int getBiomeAt(int relativeX, int relativeZ);
 
     /**
      * Returns the biomes for the whole island.
@@ -57,5 +57,5 @@ public interface ICIsland {
      * @return an ICBiome[xSize * zSize] containing the biomes for the whole
      *         island such that each element is at index [x + z * xSize]
      */
-    Integer[] getBiomeAll();
+    int[] getBiomeAll();
 }

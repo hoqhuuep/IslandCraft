@@ -21,33 +21,33 @@ public class ICClassLoader {
         biomeDistributionCache = CacheBuilder.newBuilder().build(new StringConstructorCacheLoader<BiomeDistribution>());
     }
 
-    public IslandDistribution getIslandDistribution(final String string) {
+    public IslandDistribution getIslandDistribution(final String worldName, final String string) {
         try {
-            return islandDistributionCache.getUnchecked(string);
+            return islandDistributionCache.getUnchecked(worldName + " " + string);
         } catch (final Exception e) {
             ICLogger.logger.warning("Error creating IslandDistribution from string: " + string);
             ICLogger.logger.warning("Using 'com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution' instead");
-            return new EmptyIslandDistribution(new String[0]);
+            return new EmptyIslandDistribution(worldName, new String[0]);
         }
     }
 
-    public IslandGenerator getIslandGenerator(final String string) {
+    public IslandGenerator getIslandGenerator(final String worldName, final String string) {
         try {
-            return islandGeneratorCache.getUnchecked(string);
+            return islandGeneratorCache.getUnchecked(worldName + " " + string);
         } catch (final Exception e) {
             ICLogger.logger.warning("Error creating IslandGenerator from string: " + string);
             ICLogger.logger.warning("Using 'com.github.hoqhuuep.islandcraft.core.EmptyIslandGenerator' instead");
-            return new EmptyIslandGenerator(new String[0]);
+            return new EmptyIslandGenerator(worldName, new String[0]);
         }
     }
 
-    public BiomeDistribution getBiomeDistribution(final String string) {
+    public BiomeDistribution getBiomeDistribution(final String worldName, final String string) {
         try {
-            return biomeDistributionCache.getUnchecked(string);
+            return biomeDistributionCache.getUnchecked(worldName + " " + string);
         } catch (final Exception e) {
             ICLogger.logger.warning("Error creating BiomeDistribution from string: " + string);
             ICLogger.logger.warning("Using 'com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN' instead");
-            return new ConstantBiomeDistribution(new String[] { "DEEP_OCEAN" });
+            return new ConstantBiomeDistribution(worldName, new String[] { "DEEP_OCEAN" });
         }
     }
 
@@ -58,11 +58,12 @@ public class ICClassLoader {
             ICLogger.logger.info("Creating instance of class with string: " + string);
             try {
                 final String[] split = string.split(" ");
-                final String className = split[0];
-                final String[] args = Arrays.copyOfRange(split, 1, split.length);
+                final String worldName = split[0];
+                final String className = split[1];
+                final String[] args = Arrays.copyOfRange(split, 2, split.length);
                 final Class<?> subClass = Class.forName(className);
-                final Constructor<?> constructor = subClass.getConstructor(String[].class);
-                return (T) constructor.newInstance(new Object[] { args });
+                final Constructor<?> constructor = subClass.getConstructor(String.class, String[].class);
+                return (T) constructor.newInstance(worldName, new Object[] { args });
             } catch (final Exception e) {
                 throw new RuntimeException("Failed to create instance of " + string, e);
             }

@@ -20,7 +20,7 @@ public class HexagonalIslandDistribution implements IslandDistribution {
     private final int innerRadius;
     private final int outerRadius;
 
-    public HexagonalIslandDistribution(final String[] args) {
+    public HexagonalIslandDistribution(final String worldName, final String[] args) {
         ICLogger.logger.info("Creating HexagonalIslandDistribution with args: " + StringUtils.join(args, " "));
         if (args.length != 2) {
             ICLogger.logger.severe("HexagonalIslandDistribution requrires 2 parameters, " + args.length + " given");

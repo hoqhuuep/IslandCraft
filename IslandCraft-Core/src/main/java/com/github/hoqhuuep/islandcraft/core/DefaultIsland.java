@@ -45,17 +45,17 @@ public class DefaultIsland implements ICIsland {
     }
 
     @Override
-    public Integer getBiomeAt(final ICLocation relativeLocation) {
+    public int getBiomeAt(final ICLocation relativeLocation) {
         return getBiomeAt(relativeLocation.getX(), relativeLocation.getZ());
     }
 
     @Override
-    public Integer getBiomeAt(final int relativeX, final int relativeZ) {
+    public int getBiomeAt(final int relativeX, final int relativeZ) {
         return cache.biomeAt(this, relativeX, relativeZ);
     }
 
     @Override
-    public Integer[] getBiomeAll() {
+    public int[] getBiomeAll() {
         return cache.biomeAll(this);
     }
 

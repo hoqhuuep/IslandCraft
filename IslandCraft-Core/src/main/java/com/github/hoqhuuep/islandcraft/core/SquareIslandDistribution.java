@@ -16,7 +16,7 @@ public class SquareIslandDistribution implements IslandDistribution {
     private final int innerRadius;
     private final int outerRadius;
 
-    public SquareIslandDistribution(final String[] args) {
+    public SquareIslandDistribution(final String worldName, final String[] args) {
         ICLogger.logger.info("Creating SquareIslandDistribution with args: " + StringUtils.join(args, " "));
         if (args.length != 2) {
             ICLogger.logger.severe("SquareIslandDistribution requrires 2 parameters, " + args.length + " given");

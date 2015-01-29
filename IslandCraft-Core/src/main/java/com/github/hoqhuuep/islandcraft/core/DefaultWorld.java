@@ -41,13 +41,13 @@ public class DefaultWorld implements ICWorld {
             ICLogger.logger.warning("No string-value for 'worlds." + name + ".ocean' found in config.yml");
             ICLogger.logger.warning("Default value 'com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN' will be used");
         }
-        ocean = classLoader.getBiomeDistribution(config.getString("ocean", "com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN"));
+        ocean = classLoader.getBiomeDistribution(name, config.getString("ocean", "com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN"));
 
         if (!config.contains("island-distribution") || !config.isString("island-distribution")) {
             ICLogger.logger.warning("No string-value for 'worlds." + name + ".island-distribution' found in config.yml");
             ICLogger.logger.warning("Default value 'com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution' will be used");
         }
-        islandDistribution = classLoader.getIslandDistribution(config.getString("island-distribution", "com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution"));
+        islandDistribution = classLoader.getIslandDistribution(name, config.getString("island-distribution", "com.github.hoqhuuep.islandcraft.core.EmptyIslandDistribution"));
 
         if (!config.contains("island-generators") || !config.isList("island-generators")) {
             ICLogger.logger.warning("No list-value for 'worlds." + name + ".island-generators' found in config.yml");
@@ -59,7 +59,7 @@ public class DefaultWorld implements ICWorld {
         }
         // Load islandGenerators just to make sure there are no errors
         for (final String islandGenerator : islandGenerators) {
-            classLoader.getIslandGenerator(islandGenerator);
+            classLoader.getIslandGenerator(name, islandGenerator);
         }
         databaseCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.SECONDS).build(new DatabaseCacheLoader());
     }
@@ -86,8 +86,8 @@ public class DefaultWorld implements ICWorld {
             return ocean.biomeAt(x, z, worldSeed);
         }
         final ICLocation origin = island.getInnerRegion().getMin();
-        final Integer biome = island.getBiomeAt(x - origin.getX(), z - origin.getZ());
-        if (biome == null) {
+        final int biome = island.getBiomeAt(x - origin.getX(), z - origin.getZ());
+        if (biome == -1) {
             return ocean.biomeAt(x, z, worldSeed);
         }
         return biome;
@@ -132,9 +132,9 @@ public class DefaultWorld implements ICWorld {
                 final long islandSeed = pickIslandSeed(center.getX(), center.getZ());
                 final String generator = pickIslandGenerator(islandSeed);
                 database.save(worldName, center.getX(), center.getZ(), islandSeed, generator);
-                return new DefaultIsland(innerRegion, outerRegion, islandSeed, classLoader.getIslandGenerator(generator), cache);
+                return new DefaultIsland(innerRegion, outerRegion, islandSeed, classLoader.getIslandGenerator(worldName, generator), cache);
             }
-            return new DefaultIsland(innerRegion, outerRegion, fromDatabase.getIslandSeed(), classLoader.getIslandGenerator(fromDatabase.getGenerator()), cache);
+            return new DefaultIsland(innerRegion, outerRegion, fromDatabase.getIslandSeed(), classLoader.getIslandGenerator(worldName, fromDatabase.getGenerator()), cache);
         }
 
         private long pickIslandSeed(final int centerX, final int centerZ) {

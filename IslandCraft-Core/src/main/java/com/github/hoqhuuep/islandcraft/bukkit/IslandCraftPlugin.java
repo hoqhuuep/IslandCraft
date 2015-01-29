@@ -20,6 +20,9 @@ import com.github.hoqhuuep.islandcraft.core.EbeanServerUtil;
 import com.github.hoqhuuep.islandcraft.core.ICLogger;
 import com.github.hoqhuuep.islandcraft.core.IslandDatabase;
 import com.github.hoqhuuep.islandcraft.nms.NmsWrapper;
+import com.github.hoqhuuep.islandcraft.terraincontrol.IslandCraftBiomeGenerator;
+import com.khorn.terraincontrol.TerrainControl;
+import com.khorn.terraincontrol.bukkit.TCPlugin;
 
 public class IslandCraftPlugin extends JavaPlugin {
     private DefaultIslandCraft islandCraft = null;
@@ -59,8 +62,14 @@ public class IslandCraftPlugin extends JavaPlugin {
         final boolean verboseLogging = config.getBoolean("verbose-logging", false);
         ICLogger.logger.setLevel(verboseLogging ? Level.ALL : Level.WARNING);
 
+        // Check for Terrain Control
+        final TCPlugin terrainControl = getPlugin(TCPlugin.class);
+        if (terrainControl != null) {
+            TerrainControl.getBiomeModeManager().register("IslandCraft", IslandCraftBiomeGenerator.class);
+        }
+
         final NmsWrapper nms = NmsWrapper.getInstance(getServer());
-        if (nms == null) {
+        if (nms == null && terrainControl == null) {
             ICLogger.logger.severe("IslandCraft does not currently support this CraftBukkit version");
             ICLogger.logger.severe("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
             setEnabled(false);
@@ -79,16 +88,18 @@ public class IslandCraftPlugin extends JavaPlugin {
             return;
         }
 
-        try {
-            islandCraft = new DefaultIslandCraft();
-            final Listener listener = new BiomeGeneratorListener(islandCraft, config, database, nms);
-            getServer().getPluginManager().registerEvents(listener, this);
-        } catch (final Exception e) {
-            ICLogger.logger.severe("Error creating or registering BiomeGeneratorListener");
-            ICLogger.logger.severe("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
-            ICLogger.logger.severe("Exception message: " + e.getMessage());
-            setEnabled(false);
-            return;
+        if (terrainControl == null) {
+            try {
+                islandCraft = new DefaultIslandCraft();
+                final Listener listener = new BiomeGeneratorListener(islandCraft, config, database, nms);
+                getServer().getPluginManager().registerEvents(listener, this);
+            } catch (final Exception e) {
+                ICLogger.logger.severe("Error creating or registering BiomeGeneratorListener");
+                ICLogger.logger.severe("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
+                ICLogger.logger.severe("Exception message: " + e.getMessage());
+                setEnabled(false);
+                return;
+            }
         }
     }
 
