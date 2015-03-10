@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.github.hoqhuuep</groupId>
 		<artifactId>IslandCraft</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 	</parent>
 	<artifactId>IslandCraft-Core</artifactId>
 
@@ -18,72 +18,77 @@
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-Api</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.hoqhuuep</groupId>
+			<artifactId>IslandCraft-NMS-v1_8_R2</artifactId>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS-v1_8_R1</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS-v1_7_R4</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS-v1_7_R3</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS-v1_7_R2</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS-v1_7_R1</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS-v1_6_R3</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS-v1_6_R2</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS-v1_6_R1</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS-v1_5_R3</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS-v1_5_R2</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS-v1_5_R1</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
 			<artifactId>IslandCraft-NMS-v1_4_R1</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 	</dependencies>
 
@@ -127,7 +132,7 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<finalName>IslandCraft-1.0.0</finalName>
+					<finalName>IslandCraft-1.0.1</finalName>
 				</configuration>
 			</plugin>
 		</plugins>

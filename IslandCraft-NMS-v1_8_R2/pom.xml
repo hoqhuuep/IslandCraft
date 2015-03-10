@@ -6,14 +6,15 @@
 		<artifactId>IslandCraft</artifactId>
 		<version>1.0.1</version>
 	</parent>
-	<artifactId>IslandCraft-NMS-v1_6_R2</artifactId>
+	<artifactId>IslandCraft-NMS-v1_8_R2</artifactId>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
-			<version>1.6.2-R1.1-SNAPSHOT</version>
-			<scope>provided</scope>
+			<version>1.8.3-R0.1-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>C:\Users\Daniel\Dropbox\Projects\IslandCraft\Spigot-1.8.3\craftbukkit-1.8.3.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
