@@ -56,6 +56,16 @@ public class DefaultIsland implements ICIsland {
     }
 
     @Override
+    public ICBiome[] getBiomeChunk(ICLocation relativeLocation) {
+        return getBiomeChunk(relativeLocation.getX(), relativeLocation.getZ());
+    }
+
+    @Override
+    public ICBiome[] getBiomeChunk(int relativeX, int relativeZ) {
+        return cache.biomeChunk(this, relativeX, relativeZ);
+    }
+
+    @Override
     public ICBiome[] getBiomeAll() {
         return cache.biomeAll(this);
     }

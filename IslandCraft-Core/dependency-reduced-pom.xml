@@ -3,7 +3,7 @@
   <parent>
     <artifactId>IslandCraft</artifactId>
     <groupId>com.github.hoqhuuep</groupId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>IslandCraft-Core</artifactId>
@@ -26,12 +26,17 @@
               <include>org.mcstats.*:*</include>
               <include>com.github.hoqhuuep:IslandCraft-Api</include>
               <include>com.github.hoqhuuep:IslandCraft-NMS*</include>
+              <include>com.google*:*</include>
             </includes>
           </artifactSet>
           <relocations>
             <relocation>
               <pattern>org.mcstats</pattern>
               <shadedPattern>com.github.hoqhuuep.islandcraft.mcstats</shadedPattern>
+            </relocation>
+            <relocation>
+              <pattern>com.google</pattern>
+              <shadedPattern>com.github.hoqhuuep.islandcraft.google</shadedPattern>
             </relocation>
           </relocations>
         </configuration>
@@ -40,24 +45,12 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <finalName>IslandCraft-1.0.0</finalName>
+          <finalName>IslandCraft-1.0.1</finalName>
         </configuration>
       </plugin>
     </plugins>
   </build>
   <dependencies>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>10.0.1</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>jsr305</artifactId>
-          <groupId>com.google.code.findbugs</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>

@@ -95,6 +95,38 @@ public class DefaultWorld implements ICWorld {
     }
 
     @Override
+    public ICBiome[] getBiomeChunk(ICLocation location) {
+        return getBiomeChunk(location.getX(), location.getZ());
+    }
+
+    @Override
+    public ICBiome[] getBiomeChunk(int x, int z) {
+        final ICIsland island = getIslandAt(x, z);
+        if (island == null) {
+            final ICBiome[] chunk = new ICBiome[256];
+            for (int i = 0; i < 256; ++i) {
+                chunk[i] = ocean.biomeAt(x + i % 16, z + i / 16, worldSeed);
+            }
+            return chunk;
+        }
+        final ICLocation origin = island.getInnerRegion().getMin();
+        final ICBiome[] biomes = island.getBiomeChunk(x - origin.getX(), z - origin.getZ());
+        if (biomes == null) {
+            final ICBiome[] chunk = new ICBiome[256];
+            for (int i = 0; i < 256; ++i) {
+                chunk[i] = ocean.biomeAt(x + i % 16, z + i / 16, worldSeed);
+            }
+            return chunk;
+        }
+        for (int i = 0; i < 256; ++i) {
+            if (biomes[i] == null) {
+                biomes[i] = ocean.biomeAt(x + i % 16, z + i / 16, worldSeed);
+            }
+        }
+        return biomes;
+    }
+
+    @Override
     public ICIsland getIslandAt(final ICLocation location) {
         return getIslandAt(location.getX(), location.getZ());
     }
