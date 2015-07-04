@@ -6,6 +6,7 @@ import java.util.logging.Level;
 
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -36,7 +37,7 @@ public class IslandCraftPlugin extends JavaPlugin {
         }
 
         saveDefaultConfig();
-        final ConfigurationSection config = getConfig();
+        FileConfiguration config = getConfig();
         if (!config.contains("config-version") || !config.isString("config-version")) {
             ICLogger.logger.severe("No string-value for 'config-version' found in config.yml");
             ICLogger.logger.severe("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
@@ -80,7 +81,7 @@ public class IslandCraftPlugin extends JavaPlugin {
 
         try {
             islandCraft = new DefaultIslandCraft();
-            final Listener listener = new BiomeGeneratorListener(islandCraft, config, database, nms);
+            final Listener listener = new BiomeGeneratorListener(this, database, nms);
             getServer().getPluginManager().registerEvents(listener, this);
         } catch (final Exception e) {
             ICLogger.logger.severe("Error creating or registering BiomeGeneratorListener");
