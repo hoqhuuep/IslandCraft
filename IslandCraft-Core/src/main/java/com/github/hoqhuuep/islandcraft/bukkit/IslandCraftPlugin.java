@@ -8,7 +8,6 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.Metrics;
 
 import com.avaje.ebean.EbeanServer;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
