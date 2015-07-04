@@ -6,14 +6,14 @@ import java.util.Arrays;
 import com.github.hoqhuuep.islandcraft.api.BiomeDistribution;
 import com.github.hoqhuuep.islandcraft.api.IslandDistribution;
 import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 public class ICClassLoader {
-    private final Cache<String, IslandDistribution> islandDistributionCache;
-    private final Cache<String, IslandGenerator> islandGeneratorCache;
-    private final Cache<String, BiomeDistribution> biomeDistributionCache;
+    private final LoadingCache<String, IslandDistribution> islandDistributionCache;
+    private final LoadingCache<String, IslandGenerator> islandGeneratorCache;
+    private final LoadingCache<String, BiomeDistribution> biomeDistributionCache;
 
     public ICClassLoader() {
         islandDistributionCache = CacheBuilder.newBuilder().build(new StringConstructorCacheLoader<IslandDistribution>());

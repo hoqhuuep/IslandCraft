@@ -16,9 +16,9 @@ import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
 import com.github.hoqhuuep.islandcraft.api.IslandDistribution;
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 public class DefaultWorld implements ICWorld {
     private final String worldName;
@@ -29,7 +29,7 @@ public class DefaultWorld implements ICWorld {
     private final List<String> islandGenerators;
     private final IslandCache cache;
     private final ICClassLoader classLoader;
-    private final Cache<ICLocation, ICIsland> databaseCache;
+    private final LoadingCache<ICLocation, ICIsland> databaseCache;
 
     public DefaultWorld(final String name, final long seed, final IslandDatabase database, final ConfigurationSection config, final IslandCache cache, final ICClassLoader classLoader) {
         this.worldName = name;
@@ -137,7 +137,7 @@ public class DefaultWorld implements ICWorld {
         if (center == null) {
             return null;
         }
-        return databaseCache.apply(center);
+        return databaseCache.getUnchecked(center);
     }
 
     @Override
@@ -150,7 +150,7 @@ public class DefaultWorld implements ICWorld {
         final Set<ICLocation> centers = islandDistribution.getCentersAt(x, z, worldSeed);
         final Set<ICIsland> islands = new HashSet<ICIsland>(centers.size());
         for (final ICLocation center : centers) {
-            islands.add(databaseCache.apply(center));
+            islands.add(databaseCache.getUnchecked(center));
         }
         return islands;
     }
