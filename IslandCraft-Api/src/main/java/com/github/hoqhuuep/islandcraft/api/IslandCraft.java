@@ -12,6 +12,12 @@ public interface IslandCraft {
      *         not enabled for the world in config.yml
      */
     ICWorld getWorld(String worldName);
+    
+    /**
+     * Add an ICWorld
+     * @param world
+     */
+    void addWorld(ICWorld world);
 
     /**
      * Returns all the worlds for which IslandCraft has been enabled.

@@ -1,11 +1,11 @@
-package com.github.hoqhuuep.islandcraft.nms.v1_8_R2;
+package com.github.hoqhuuep.islandcraft.nms.v1_8_R3;
 
 import java.lang.reflect.Field;
 
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 
-import net.minecraft.server.v1_8_R2.WorldProvider;
+import net.minecraft.server.v1_8_R3.WorldProvider;
 
 import com.github.hoqhuuep.islandcraft.nms.BiomeGenerator;
 import com.github.hoqhuuep.islandcraft.nms.NmsWrapper;

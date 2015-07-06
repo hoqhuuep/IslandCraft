@@ -20,7 +20,8 @@
 	<modules>
 		<module>IslandCraft-Core</module>
 		<module>IslandCraft-NMS</module>
-		<module>IslandCraft-NMS-v1_8_R2</module>
+		<module>IslandCraft-NMS-v1_8_R3</module>
+        <module>IslandCraft-NMS-v1_8_R2</module>
 		<module>IslandCraft-NMS-v1_8_R1</module>
 		<module>IslandCraft-NMS-v1_7_R4</module>
 		<module>IslandCraft-NMS-v1_7_R3</module>

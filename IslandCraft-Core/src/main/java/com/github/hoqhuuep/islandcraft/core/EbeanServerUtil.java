@@ -20,7 +20,7 @@ import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 
 public class EbeanServerUtil {
     public static EbeanServer build(final JavaPlugin javaPlugin) {
-        ICLogger.logger.info("Creating EbeanServer for plugin with name: " + javaPlugin.getName());
+        ICLogger.logger.info("Creating EbeanServer for plugin with name: " + javaPlugin.getDescription().getName());
         final String name = javaPlugin.getDescription().getName();
         final ConfigurationSection configurationSection = javaPlugin.getConfig().getConfigurationSection("database");
         final String driver = configurationSection.getString("driver");

@@ -15,10 +15,11 @@ public class DefaultIslandCraft implements IslandCraft {
         this.worlds = new HashMap<String, ICWorld>();
     }
 
+    @Override
     public void addWorld(final ICWorld world) {
         worlds.put(world.getName(), world);
     }
-
+    
     @Override
     public ICWorld getWorld(final String worldName) {
         return worlds.get(worldName);
