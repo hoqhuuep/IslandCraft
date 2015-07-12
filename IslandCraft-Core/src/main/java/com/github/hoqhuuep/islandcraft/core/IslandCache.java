@@ -4,12 +4,12 @@ import java.util.concurrent.TimeUnit;
 
 import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.ICIsland;
+import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 
 public class IslandCache {
-    private final LoadingCache<ICIsland, ICBiome[]> cache;
+    private final Cache<ICIsland, ICBiome[]> cache;
 
     public IslandCache() {
         cache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.SECONDS).build(new IslandCacheLoader());
