@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.hoqhuuep</groupId>
 	<artifactId>IslandCraft</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<packaging>pom</packaging>
 
 	<!-- Project information -->
@@ -21,7 +21,7 @@
 		<module>IslandCraft-Core</module>
 		<module>IslandCraft-NMS</module>
 		<module>IslandCraft-NMS-v1_8_R3</module>
-        <module>IslandCraft-NMS-v1_8_R2</module>
+		<module>IslandCraft-NMS-v1_8_R2</module>
 		<module>IslandCraft-NMS-v1_8_R1</module>
 		<module>IslandCraft-NMS-v1_7_R4</module>
 		<module>IslandCraft-NMS-v1_7_R3</module>

@@ -9,7 +9,6 @@ import net.minecraft.server.v1_8_R3.WorldProvider;
 
 import com.github.hoqhuuep.islandcraft.nms.BiomeGenerator;
 import com.github.hoqhuuep.islandcraft.nms.NmsWrapper;
-import com.github.hoqhuuep.islandcraft.nms.v1_8_R3.CustomWorldChunkManager;
 
 public class NmsHandler extends NmsWrapper {
 
