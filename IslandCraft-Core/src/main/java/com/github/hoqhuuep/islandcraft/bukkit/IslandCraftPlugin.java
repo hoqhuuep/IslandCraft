@@ -1,7 +1,5 @@
 package com.github.hoqhuuep.islandcraft.bukkit;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,6 +26,7 @@ import com.github.hoqhuuep.islandcraft.core.IslandDatabase;
 import com.github.hoqhuuep.islandcraft.nms.NmsWrapper;
 
 public class IslandCraftPlugin extends JavaPlugin {
+
     private DefaultIslandCraft islandCraft = null;
 
     @Override
@@ -97,7 +96,7 @@ public class IslandCraftPlugin extends JavaPlugin {
             return;
         }
     }
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -108,85 +107,68 @@ public class IslandCraftPlugin extends JavaPlugin {
             sender.sendMessage("/ic <reload|create>");
             return false;
         }
-        switch (args[0].toLowerCase()) {
-            default: {
-                sender.sendMessage("/ic <reload|create>");
-                break;
+        if ("reload".equals(args[0])) {
+            sender.sendMessage("Reloaded IslandCraft configuration");
+            reloadConfig();
+        } else if ("create".equals(args[0])) {
+            // ic create 2 1 ConstantBiomeDistribution IslandGeneratorAlpha
+            if (args.length < 4) {
+                sender.sendMessage("/ic create <world> <island-size> <ocean-size>");
+                sender.sendMessage("OR");
+                sender.sendMessage("/ic create <world> <island-size> <ocean-size> [distribution] [generator]");
+                sender.sendMessage("Note: An island size of 1 = 4 chunks");
+                return false;
             }
-            case "reload": {
-                sender.sendMessage("Reloaded IslandCraft configuration");
-                reloadConfig();
-                break;
+            String world = args[1];
+            int island;
+            int ocean;
+            try {
+                island = Integer.parseInt(args[2]) * 32;
+                ocean = Integer.parseInt(args[3]) * 32;
+            } catch (Exception e) {
+                sender.sendMessage("Invalid size for:");
+                sender.sendMessage("/ic create <world> <island-size> <ocean-size> [distribution] [generator]");
+                return false;
             }
-            case "create": {
-                // ic create 2 1 ConstantBiomeDistribution IslandGeneratorAlpha
-                if (args.length < 4) {
-                    sender.sendMessage("/ic create <world> <island-size> <ocean-size>");
-                    sender.sendMessage("OR");
-                    sender.sendMessage("/ic create <world> <island-size> <ocean-size> [distribution] [generator]");
-                    sender.sendMessage("Note: An island size of 1 = 4 chunks");
-                    break;
-                }
-                String world = args[1];
-                int island;
-                int ocean;
-                try {
-                    island = Integer.parseInt(args[2]) * 32;
-                    ocean = Integer.parseInt(args[3]) * 32;
-                }
-                catch (Exception e) {
-                    sender.sendMessage("Invalid size for:");
-                    sender.sendMessage("/ic create <world> <island-size> <ocean-size> [distribution] [generator]");
-                    return false;
-                }
-                String distribution = "SquareIslandDistribution";
-                String generator = "IslandGeneratorAlpha";
-                if (args.length > 4) {
-                    distribution = args[4];
-                }
-                if (args.length > 5) {
-                    distribution = args[5];
-                }
-                FileConfiguration config = getConfig();
-                String path = "worlds." + world;
-                config.set(path + "." + "ocean" , "com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN");
-                config.set(path + "." + "island-distribution" , "com.github.hoqhuuep.islandcraft.core." + distribution + " " + island + " " + ocean);
-                String[] gen_types = {
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " BIRCH_FOREST BIRCH_FOREST_M BIRCH_FOREST_HILLS BIRCH_FOREST_HILLS_M ~ ~ OCEAN BEACH RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " COLD_TAIGA COLD_TAIGA_M COLD_TAIGA_HILLS ~ ~ ~ OCEAN COLD_BEACH FORZEN_RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " DESERT DESERT_M DESERT_HILLS ~ ~ ~ OCEAN BEACH RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " EXTREME_HILLS EXTREME_HILLS_M EXTREME_HILLS_PLUS EXTREME_HILLS_PLUS_M EXTREME_HILLS_EDGE ~ OCEAN STONE_BEACH RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " FOREST ~ FOREST_HILLS ~ FLOWER_FOREST ~ OCEAN BEACH RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " ICE_PLAINS ~ ICE_MOUNTAINS ~ ICE_PLAINS_SPIKES ~ OCEAN FROZEN_OCEAN FORZEN_RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " JUNGLE JUNGLE_M JUNGLE_HILLS ~ JUNGLE_EDGE JUNGLE_EDGE_M OCEAN BEACH RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " MEGA_TAIGA MEGA_SPRUCE_TAIGA MEGA_TAIGA_HILLS MEGA_SPRUCE_TAIGA_HILLS ~ ~ OCEAN BEACH RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " MESA MESA_BRYCE MESA_PLATEAU MESA_PLATEAU_M MESA_PLATEAU_F MESA_PLATEAU_F_M OCEAN MESA RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " MUSHROOM_ISLAND ~ ~ ~ ~ ~ OCEAN MUSHROOM_ISLAND_SHORE RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " PLAINS ~ SUNFLOWER_PLAINS ~ ~ ~ OCEAN BEACH RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " ROOFED_FOREST ROOFED_FOREST_M ~ ~ ~ ~ OCEAN BEACH RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " SAVANNA SAVANNA_M SAVANNA_PLATEAU SAVANNA_PLATEAU_M ~ ~ OCEAN BEACH RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " SWAMPLAND SWAMPLAND_M ~ ~ ~ ~ OCEAN BEACH RIVER",
-                    "com.github.hoqhuuep.islandcraft.core." + generator + " TAIGA TAIGA_M TAIGA_HILLS ~ ~ ~ OCEAN BEACH RIVER"
-                };
-                
-                config.set(path + "." + "island-generators" , gen_types);
-                
-                sender.sendMessage("Saving configuration!");
-                saveConfig();
-                reloadConfig();
-                sender.sendMessage("Generating world; please wait...");
-                if ((Bukkit.getPluginManager().getPlugin("Multiverse-Core") != null) && Bukkit.getPluginManager().getPlugin("Multiverse-Core").isEnabled()) {
-                    Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv create " + world + " normal");
+            String distribution = "SquareIslandDistribution";
+            String generator = "IslandGeneratorAlpha";
+            if (args.length > 4) {
+                distribution = args[4];
+            }
+            if (args.length > 5) {
+                distribution = args[5];
+            }
+            FileConfiguration config = getConfig();
+            String path = "worlds." + world;
+            config.set(path + "." + "ocean", "com.github.hoqhuuep.islandcraft.core.ConstantBiomeDistribution DEEP_OCEAN");
+            config.set(path + "." + "island-distribution", "com.github.hoqhuuep.islandcraft.core." + distribution + " " + island + " " + ocean);
+            String[] gen_types = { "com.github.hoqhuuep.islandcraft.core." + generator + " BIRCH_FOREST BIRCH_FOREST_M BIRCH_FOREST_HILLS BIRCH_FOREST_HILLS_M ~ ~ OCEAN BEACH RIVER", "com.github.hoqhuuep.islandcraft.core." + generator + " COLD_TAIGA COLD_TAIGA_M COLD_TAIGA_HILLS ~ ~ ~ OCEAN COLD_BEACH FORZEN_RIVER",
+                    "com.github.hoqhuuep.islandcraft.core." + generator + " DESERT DESERT_M DESERT_HILLS ~ ~ ~ OCEAN BEACH RIVER", "com.github.hoqhuuep.islandcraft.core." + generator + " EXTREME_HILLS EXTREME_HILLS_M EXTREME_HILLS_PLUS EXTREME_HILLS_PLUS_M EXTREME_HILLS_EDGE ~ OCEAN STONE_BEACH RIVER",
+                    "com.github.hoqhuuep.islandcraft.core." + generator + " FOREST ~ FOREST_HILLS ~ FLOWER_FOREST ~ OCEAN BEACH RIVER", "com.github.hoqhuuep.islandcraft.core." + generator + " ICE_PLAINS ~ ICE_MOUNTAINS ~ ICE_PLAINS_SPIKES ~ OCEAN FROZEN_OCEAN FORZEN_RIVER",
+                    "com.github.hoqhuuep.islandcraft.core." + generator + " JUNGLE JUNGLE_M JUNGLE_HILLS ~ JUNGLE_EDGE JUNGLE_EDGE_M OCEAN BEACH RIVER", "com.github.hoqhuuep.islandcraft.core." + generator + " MEGA_TAIGA MEGA_SPRUCE_TAIGA MEGA_TAIGA_HILLS MEGA_SPRUCE_TAIGA_HILLS ~ ~ OCEAN BEACH RIVER",
+                    "com.github.hoqhuuep.islandcraft.core." + generator + " MESA MESA_BRYCE MESA_PLATEAU MESA_PLATEAU_M MESA_PLATEAU_F MESA_PLATEAU_F_M OCEAN MESA RIVER", "com.github.hoqhuuep.islandcraft.core." + generator + " MUSHROOM_ISLAND ~ ~ ~ ~ ~ OCEAN MUSHROOM_ISLAND_SHORE RIVER",
+                    "com.github.hoqhuuep.islandcraft.core." + generator + " PLAINS ~ SUNFLOWER_PLAINS ~ ~ ~ OCEAN BEACH RIVER", "com.github.hoqhuuep.islandcraft.core." + generator + " ROOFED_FOREST ROOFED_FOREST_M ~ ~ ~ ~ OCEAN BEACH RIVER",
+                    "com.github.hoqhuuep.islandcraft.core." + generator + " SAVANNA SAVANNA_M SAVANNA_PLATEAU SAVANNA_PLATEAU_M ~ ~ OCEAN BEACH RIVER", "com.github.hoqhuuep.islandcraft.core." + generator + " SWAMPLAND SWAMPLAND_M ~ ~ ~ ~ OCEAN BEACH RIVER",
+                    "com.github.hoqhuuep.islandcraft.core." + generator + " TAIGA TAIGA_M TAIGA_HILLS ~ ~ ~ OCEAN BEACH RIVER" };
+
+            config.set(path + "." + "island-generators", gen_types);
+
+            sender.sendMessage("Saving configuration!");
+            saveConfig();
+            reloadConfig();
+            sender.sendMessage("Generating world; please wait...");
+            if ((Bukkit.getPluginManager().getPlugin("Multiverse-Core") != null) && Bukkit.getPluginManager().getPlugin("Multiverse-Core").isEnabled()) {
+                Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv create " + world + " normal");
+            } else {
+                if ((Bukkit.getPluginManager().getPlugin("MultiWorld") != null) && Bukkit.getPluginManager().getPlugin("MultiWorld").isEnabled()) {
+                    Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "mw create " + world);
                 } else {
-                    if ((Bukkit.getPluginManager().getPlugin("MultiWorld") != null) && Bukkit.getPluginManager().getPlugin("MultiWorld").isEnabled()) {
-                        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "mw create " + world);
-                    } else {
-                        Bukkit.createWorld(new WorldCreator(world).environment(World.Environment.NORMAL));
-                    }
+                    Bukkit.createWorld(new WorldCreator(world).environment(World.Environment.NORMAL));
                 }
-                sender.sendMessage("Done!");
-                break;
             }
+            sender.sendMessage("Done!");
+        } else {
+            sender.sendMessage("/ic <reload|create>");
         }
         return true;
     }
@@ -195,7 +177,7 @@ public class IslandCraftPlugin extends JavaPlugin {
     public void onDisable() {
         ICLogger.logger = null;
     }
-    
+
     @Override
     public List<Class<?>> getDatabaseClasses() {
         final Class<?>[] classes = { EbeanServerIslandDatabase.IslandBean.class, EbeanServerIslandDatabase.IslandPK.class };
