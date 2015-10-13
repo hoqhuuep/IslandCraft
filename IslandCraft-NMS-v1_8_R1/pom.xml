@@ -14,7 +14,7 @@
 			<artifactId>craftbukkit</artifactId>
 			<version>1.8-R1-SNAPSHOT</version>
 			<scope>system</scope>
-			<systemPath>C:\Users\Daniel\Dropbox\Projects\IslandCraft\Spigot\craftbukkit-1.8.jar</systemPath>
+			<systemPath>${project.basedir}/../lib/craftbukkit-1.8.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>

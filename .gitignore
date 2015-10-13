@@ -7,3 +7,5 @@ IslandCraft-NMS-v1_8_R1/bin/
 *.class
 *.yml
 /bin/
+
+/lib/*jar

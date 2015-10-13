@@ -13,7 +13,8 @@
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
 			<version>1.4.7-R1.1-SNAPSHOT</version>
-			<scope>provided</scope>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/../lib/craftbukkit-1.4.7.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.github.hoqhuuep</groupId>
