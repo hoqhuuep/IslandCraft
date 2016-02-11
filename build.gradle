@@ -1,0 +1,193 @@
+// To build the Bukkit plugin run 'gradle bukkit'
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+
+group = 'com.github.hoqhuuep'
+version = '1.0.3-SNAPSHOT'
+
+allprojects {
+    repositories {
+        jcenter()
+        maven {
+            name = 'bukkit-repo'
+            url 'http://repo.bukkit.org/content/groups/public/'
+        }
+        maven {
+            name = 'spigot-repo'
+            url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+        }
+        maven {
+            name = 'mcstats-repo'
+            url 'http://repo.mcstats.org/content/repositories/public'
+        }
+        mavenLocal()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    sourceCompatibility = '1.6'
+    targetCompatibility = '1.6'
+}
+
+project(':IslandCraft-API') {
+}
+
+project(':IslandCraft-Core') {
+    dependencies {
+        compile project(':IslandCraft-API')
+        compile project(':IslandCraft-NMS')
+        compile project(':IslandCraft-NMS-v1_4_R1')
+        compile project(':IslandCraft-NMS-v1_5_R1')
+        compile project(':IslandCraft-NMS-v1_5_R2')
+        compile project(':IslandCraft-NMS-v1_5_R3')
+        compile project(':IslandCraft-NMS-v1_6_R1')
+        compile project(':IslandCraft-NMS-v1_6_R2')
+        compile project(':IslandCraft-NMS-v1_6_R3')
+        compile project(':IslandCraft-NMS-v1_7_R1')
+        compile project(':IslandCraft-NMS-v1_7_R2')
+        compile project(':IslandCraft-NMS-v1_7_R3')
+        compile project(':IslandCraft-NMS-v1_7_R4')
+        compile project(':IslandCraft-NMS-v1_8_R1')
+        compile project(':IslandCraft-NMS-v1_8_R2')
+        compile project(':IslandCraft-NMS-v1_8_R3')
+        compile group: 'com.google.guava', name: 'guava', version: '10.0.1'
+        compile group: 'commons-lang', name: 'commons-lang', version: '2.3'
+        compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.2'
+        compile group: 'org.mcstats.bukkit', name: 'metrics', version: 'R7'
+    }
+}
+
+project(':IslandCraft-NMS') {
+    dependencies {
+        compile project(':IslandCraft-API')
+        compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.2'
+    }
+}
+
+project(':IslandCraft-NMS-v1_4_R1') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.4.7-R1.1-SNAPSHOT'
+    }
+}
+
+project(':IslandCraft-NMS-v1_5_R1') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.5-R0.1-SNAPSHOT'
+    }
+}
+
+project(':IslandCraft-NMS-v1_5_R2') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.5.1-R0.3-SNAPSHOT'
+    }
+}
+
+project(':IslandCraft-NMS-v1_5_R3') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.5.2-R1.1-SNAPSHOT'
+    }
+}
+
+project(':IslandCraft-NMS-v1_6_R1') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.6.1-R0.1-SNAPSHOT'
+    }
+}
+
+project(':IslandCraft-NMS-v1_6_R2') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.6.2-R1.1-SNAPSHOT'
+    }
+}
+
+project(':IslandCraft-NMS-v1_6_R3') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.6.4-R2.1-SNAPSHOT'
+    }
+}
+
+project(':IslandCraft-NMS-v1_7_R1') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.7.2-R0.4-SNAPSHOT'
+    }
+}
+
+project(':IslandCraft-NMS-v1_7_R2') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.7.5-R0.1-SNAPSHOT'
+    }
+}
+
+project(':IslandCraft-NMS-v1_7_R3') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.7.9-R0.3-SNAPSHOT'
+    }
+}
+
+project(':IslandCraft-NMS-v1_7_R4') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.7.10-R0.1-SNAPSHOT'
+    }
+}
+
+project(':IslandCraft-NMS-v1_8_R1') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.8-R1-SNAPSHOT'
+    }
+}
+
+project(':IslandCraft-NMS-v1_8_R2') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.8.3-R0.1-SNAPSHOT'
+    }
+}
+
+project(':IslandCraft-NMS-v1_8_R3') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.8.7-R0.1-SNAPSHOT'
+    }
+}
+
+configurations {
+    bukkitPlugin
+}
+
+dependencies {
+    bukkitPlugin (project(':IslandCraft-Core')) {
+        exclude group: 'org.bukkit'
+        exclude group: 'commons-lang'
+    }
+}
+
+task bukkit(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
+    description = 'Create the IslandCraft Bukkit plugin JAR'
+    group = project.group
+    baseName = project.name
+    appendix = 'Bukkit'
+    version = project.version
+    configurations = [ project.configurations.bukkitPlugin ]
+    from {
+        project.configurations.bukkitPlugin
+    }
+    relocate 'com.google', 'com.github.hoqhuuep.islandcraft.google'
+    relocate 'org.mcstats', 'com.github.hoqhuuep.islandcraft.mcstats'
+}

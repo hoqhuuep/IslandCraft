@@ -1,9 +1,9 @@
-/target
-/.settings
-/.checkstyle
-/.classpath
-/.project
-IslandCraft-NMS-v1_8_R1/bin/
+**/build/
+/.checkstyle/
+/.classpath/
+/.gradle/
+/.settings/
 *.class
-*.yml
-/bin/
+*.jar
+!/gradle/wrapper/gradle-wrapper.jar
+*.project
