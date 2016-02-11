@@ -1,9 +1,9 @@
 **/build/
+**/.settings/
 /.checkstyle/
-/.classpath/
 /.gradle/
-/.settings/
 *.class
+*.classpath
 *.jar
 !/gradle/wrapper/gradle-wrapper.jar
 *.project
