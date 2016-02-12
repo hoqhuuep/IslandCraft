@@ -24,6 +24,8 @@ allprojects {
         }
         mavenLocal()
     }
+
+    apply plugin: 'eclipse'
 }
 
 subprojects {
