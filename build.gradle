@@ -11,6 +11,10 @@ allprojects {
     repositories {
         jcenter()
         maven {
+            name = 'sponge-repo'
+            url = 'http://repo.spongepowered.org/maven'
+        }
+        maven {
             name = 'bukkit-repo'
             url 'http://repo.bukkit.org/content/groups/public/'
         }
@@ -32,17 +36,29 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
 
-    sourceCompatibility = '1.6'
-    targetCompatibility = '1.6'
+    sourceCompatibility = '1.7'
+    targetCompatibility = '1.7'
 }
 
 project(':IslandCraft-API') {
 }
 
-project(':IslandCraft-Core') {
+project(':IslandCraft-Common') {
     dependencies {
         compile project(':IslandCraft-API')
-        compile project(':IslandCraft-NMS')
+    }
+}
+
+project(':IslandCraft-Sponge') {
+    dependencies {
+        compile project(':IslandCraft-Common')
+        compile group: 'org.spongepowered', name:'spongeapi', version: '3.0.0'
+    }
+}
+
+project(':IslandCraft-Bukkit') {
+    dependencies {
+        compile project(':IslandCraft-Common')
         compile project(':IslandCraft-NMS-v1_4_R1')
         compile project(':IslandCraft-NMS-v1_5_R1')
         compile project(':IslandCraft-NMS-v1_5_R2')
@@ -57,8 +73,6 @@ project(':IslandCraft-Core') {
         compile project(':IslandCraft-NMS-v1_8_R1')
         compile project(':IslandCraft-NMS-v1_8_R2')
         compile project(':IslandCraft-NMS-v1_8_R3')
-        compile group: 'com.google.guava', name: 'guava', version: '10.0.1'
-        compile group: 'commons-lang', name: 'commons-lang', version: '2.3'
         compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.2'
         compile group: 'org.mcstats.bukkit', name: 'metrics', version: 'R7'
     }
@@ -174,9 +188,8 @@ configurations {
 }
 
 dependencies {
-    bukkitPlugin (project(':IslandCraft-Core')) {
+    bukkitPlugin (project(':IslandCraft-Bukkit')) {
         exclude group: 'org.bukkit'
-        exclude group: 'commons-lang'
     }
 }
 
@@ -190,6 +203,5 @@ task bukkit(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
     from {
         project.configurations.bukkitPlugin
     }
-    relocate 'com.google', 'com.github.hoqhuuep.islandcraft.google'
     relocate 'org.mcstats', 'com.github.hoqhuuep.islandcraft.mcstats'
 }

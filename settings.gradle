@@ -1,5 +1,7 @@
 include 'IslandCraft-API'
-include 'IslandCraft-Core'
+include 'IslandCraft-Common'
+include 'IslandCraft-Bukkit'
+include 'IslandCraft-Sponge'
 include 'IslandCraft-NMS'
 include 'IslandCraft-NMS-v1_4_R1'
 include 'IslandCraft-NMS-v1_5_R1'
