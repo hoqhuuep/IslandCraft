@@ -30,7 +30,7 @@ public class IslandCraftPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		ICLogger.logger = getLogger();
+		ICLogger.logger = new JavaUtilLogger(getLogger());
 		ICNoise.builder = new BukkitNoiseBuilder();
 
 		// https://github.com/Hidendra/Plugin-Metrics/wiki/Usage
@@ -44,15 +44,15 @@ public class IslandCraftPlugin extends JavaPlugin {
 		saveDefaultConfig();
 		FileConfiguration config = getConfig();
 		if (!config.contains("config-version") || !config.isString("config-version")) {
-			ICLogger.logger.severe("No string-value for 'config-version' found in config.yml");
-			ICLogger.logger.severe("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
+			ICLogger.logger.error("No string-value for 'config-version' found in config.yml");
+			ICLogger.logger.error("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
 			setEnabled(false);
 			return;
 		}
 		final String configVersion = config.getString("config-version");
 		if (!configVersion.equals("1.0.0")) {
-			ICLogger.logger.severe("Incompatible config-version found in config.yml");
-			ICLogger.logger.severe("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
+			ICLogger.logger.error("Incompatible config-version found in config.yml");
+			ICLogger.logger.error("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
 			setEnabled(false);
 			return;
 		}
@@ -62,12 +62,12 @@ public class IslandCraftPlugin extends JavaPlugin {
 			ICLogger.logger.warning("Default value 'false' will be used");
 		}
 		final boolean verboseLogging = config.getBoolean("verbose-logging", false);
-		ICLogger.logger.setLevel(verboseLogging ? Level.ALL : Level.WARNING);
+		getLogger().setLevel(verboseLogging ? Level.ALL : Level.WARNING);
 
 		final NmsWrapper nms = NmsWrapper.getInstance(getServer());
 		if (nms == null) {
-			ICLogger.logger.severe("IslandCraft does not currently support this CraftBukkit version");
-			ICLogger.logger.severe("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
+			ICLogger.logger.error("IslandCraft does not currently support this CraftBukkit version");
+			ICLogger.logger.error("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
 			setEnabled(false);
 			return;
 		}
@@ -77,9 +77,9 @@ public class IslandCraftPlugin extends JavaPlugin {
 			final EbeanServer ebeanServer = EbeanServerUtil.build(this);
 			database = new EbeanServerIslandDatabase(ebeanServer);
 		} catch (final Exception e) {
-			ICLogger.logger.severe("Error creating EbeanServer database");
-			ICLogger.logger.severe("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
-			ICLogger.logger.severe("Exception message: " + e.getMessage());
+			ICLogger.logger.error("Error creating EbeanServer database");
+			ICLogger.logger.error("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
+			ICLogger.logger.error("Exception message: " + e.getMessage());
 			setEnabled(false);
 			return;
 		}
@@ -89,9 +89,9 @@ public class IslandCraftPlugin extends JavaPlugin {
 			final Listener listener = new BiomeGeneratorListener(this, database, nms);
 			getServer().getPluginManager().registerEvents(listener, this);
 		} catch (final Exception e) {
-			ICLogger.logger.severe("Error creating or registering BiomeGeneratorListener");
-			ICLogger.logger.severe("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
-			ICLogger.logger.severe("Exception message: " + e.getMessage());
+			ICLogger.logger.error("Error creating or registering BiomeGeneratorListener");
+			ICLogger.logger.error("Check for updates at http://dev.bukkit.org/bukkit-plugins/islandcraft/");
+			ICLogger.logger.error("Exception message: " + e.getMessage());
 			setEnabled(false);
 			return;
 		}

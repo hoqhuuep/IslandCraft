@@ -22,18 +22,18 @@ public class HexagonalIslandDistribution implements IslandDistribution {
     public HexagonalIslandDistribution(final String[] args) {
         ICLogger.logger.info("Creating HexagonalIslandDistribution with args: " + StringUtils.join(args, " "));
         if (args.length != 2) {
-            ICLogger.logger.severe("HexagonalIslandDistribution requrires 2 parameters, " + args.length + " given");
+            ICLogger.logger.error("HexagonalIslandDistribution requrires 2 parameters, " + args.length + " given");
             throw new IllegalArgumentException("HexagonalIslandDistribution requrires 2 parameters");
         }
         islandSize = Integer.parseInt(args[0]);
         oceanSize = Integer.parseInt(args[1]);
         // Validate configuration values
         if (islandSize <= 0 || islandSize % 32 != 0) {
-            ICLogger.logger.severe("HexagonalIslandDistribution.island-size must be a positive multiple of 32");
+            ICLogger.logger.error("HexagonalIslandDistribution.island-size must be a positive multiple of 32");
             throw new IllegalArgumentException("HexagonalIslandDistribution.island-size must be a positive multiple of 32");
         }
         if (oceanSize <= 0 || oceanSize % 32 != 0) {
-            ICLogger.logger.severe("HexagonalIslandDistribution.ocean-size must be a positive multiple of 32");
+            ICLogger.logger.error("HexagonalIslandDistribution.ocean-size must be a positive multiple of 32");
             throw new IllegalArgumentException("HexagonalIslandDistribution.ocean-size must be a positive multiple of 32");
         }
         islandSeparation = islandSize + oceanSize;

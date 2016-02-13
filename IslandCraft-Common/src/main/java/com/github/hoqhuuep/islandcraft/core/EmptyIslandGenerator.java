@@ -8,7 +8,7 @@ public class EmptyIslandGenerator implements IslandGenerator {
     public EmptyIslandGenerator(final String[] args) {
         ICLogger.logger.info("Creating EmptyIslandGenerator with args: " + StringUtils.join(args, " "));
         if (args.length != 0) {
-            ICLogger.logger.severe("EmptyIslandGenerator requrires 0 parameters, " + args.length + " given");
+            ICLogger.logger.error("EmptyIslandGenerator requrires 0 parameters, " + args.length + " given");
             throw new IllegalArgumentException("EmptyIslandGenerator requrires 0 parameters, " + args.length + " given");
         }
     }

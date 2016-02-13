@@ -12,7 +12,7 @@ public class EmptyIslandDistribution implements IslandDistribution {
     public EmptyIslandDistribution(final String[] args) {
         ICLogger.logger.info("Creating EmptyIslandDistribution with args: " + StringUtils.join(args, " "));
         if (args.length != 0) {
-            ICLogger.logger.severe("EmptyIslandDistribution requrires 0 parameters, " + args.length + " given");
+            ICLogger.logger.error("EmptyIslandDistribution requrires 0 parameters, " + args.length + " given");
             throw new IllegalArgumentException("EmptyIslandDistribution requrires 0 parameters, " + args.length + " given");
         }
     }

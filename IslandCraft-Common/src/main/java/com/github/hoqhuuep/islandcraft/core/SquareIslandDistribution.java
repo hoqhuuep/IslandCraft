@@ -18,18 +18,18 @@ public class SquareIslandDistribution implements IslandDistribution {
     public SquareIslandDistribution(final String[] args) {
         ICLogger.logger.info("Creating SquareIslandDistribution with args: " + StringUtils.join(args, " "));
         if (args.length != 2) {
-            ICLogger.logger.severe("SquareIslandDistribution requrires 2 parameters, " + args.length + " given");
+            ICLogger.logger.error("SquareIslandDistribution requrires 2 parameters, " + args.length + " given");
             throw new IllegalArgumentException("SquareIslandDistribution requrires 2 parameters");
         }
         islandSize = Integer.parseInt(args[0]);
         oceanSize = Integer.parseInt(args[1]);
         // Validate configuration values
         if (islandSize <= 0 || islandSize % 32 != 0) {
-            ICLogger.logger.severe("SquareIslandDistribution.island-size must be a positive multiple of 32");
+            ICLogger.logger.error("SquareIslandDistribution.island-size must be a positive multiple of 32");
             throw new IllegalArgumentException("SquareIslandDistribution.island-size must be a positive multiple of 32");
         }
         if (oceanSize <= 0 || oceanSize % 32 != 0) {
-            ICLogger.logger.severe("SquareIslandDistribution.ocean-size must be a positive multiple of 32");
+            ICLogger.logger.error("SquareIslandDistribution.ocean-size must be a positive multiple of 32");
             throw new IllegalArgumentException("SquareIslandDistribution.ocean-size must be a positive multiple of 32");
         }
         islandSeparation = islandSize + oceanSize;

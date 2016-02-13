@@ -12,7 +12,7 @@ public class ConstantIslandGenerator implements IslandGenerator {
     public ConstantIslandGenerator(final String[] args) {
         ICLogger.logger.info("Creating ConstantIslandGenerator with args: " + StringUtils.join(args, " "));
         if (args.length != 1) {
-            ICLogger.logger.severe("ConstantIslandGenerator requrires 1 parameter, " + args.length + " given");
+            ICLogger.logger.error("ConstantIslandGenerator requrires 1 parameter, " + args.length + " given");
             throw new IllegalArgumentException("ConstantIslandGenerator requrires 1 parameter, " + args.length + " given");
         }
         biome = ICBiome.valueOf(args[0]);

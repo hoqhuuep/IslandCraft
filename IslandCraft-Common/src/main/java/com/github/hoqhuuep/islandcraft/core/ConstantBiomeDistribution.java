@@ -10,7 +10,7 @@ public class ConstantBiomeDistribution implements BiomeDistribution {
 	public ConstantBiomeDistribution(final String[] args) {
 		ICLogger.logger.info("Creating ConstantBiomeDistribution with args: " + StringUtils.join(args, " "));
 		if (args.length != 1) {
-			ICLogger.logger.severe("ConstantBiomeDistribution requrires 1 parameter, " + args.length + " given");
+			ICLogger.logger.error("ConstantBiomeDistribution requrires 1 parameter, " + args.length + " given");
 			throw new IllegalArgumentException("ConstantBiomeDistribution requrires 1 parameter");
 		}
 		biome = ICBiome.valueOf(args[0]);

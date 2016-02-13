@@ -205,3 +205,25 @@ task bukkit(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
     }
     relocate 'org.mcstats', 'com.github.hoqhuuep.islandcraft.mcstats'
 }
+
+configurations {
+    spongePlugin
+}
+
+dependencies {
+    spongePlugin (project(':IslandCraft-Sponge')) {
+        exclude group: 'org.spongepowered'
+    }
+}
+
+task sponge(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
+    description = 'Create the IslandCraft Sponge plugin JAR'
+    group = project.group
+    baseName = project.name
+    appendix = 'Sponge'
+    version = project.version
+    configurations = [ project.configurations.spongePlugin ]
+    from {
+        project.configurations.spongePlugin
+    }
+}

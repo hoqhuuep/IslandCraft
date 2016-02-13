@@ -37,7 +37,7 @@ public class IslandGeneratorAlpha implements IslandGenerator {
 	public IslandGeneratorAlpha(final String[] args) {
 		ICLogger.logger.info("Creating IslandGeneratorAlpha with args: " + StringUtils.join(args, " "));
 		if (args.length != 9) {
-			ICLogger.logger.severe("IslandGeneratorAlpha requrires 9 parameters, " + args.length + " given");
+			ICLogger.logger.error("IslandGeneratorAlpha requrires 9 parameters, " + args.length + " given");
 			throw new IllegalArgumentException("IslandGeneratorAlpha requrires 9 parameters");
 		}
 		ocean = new Color(ICBiome.values().length, true);
