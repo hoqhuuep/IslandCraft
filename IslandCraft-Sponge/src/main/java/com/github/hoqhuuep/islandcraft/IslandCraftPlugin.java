@@ -35,6 +35,14 @@ public class IslandCraftPlugin {
 		ICLogger.logger = new Slf4jLogger(logger);
 		ICNoise.builder = new FlowNoiseBuilder();
 
+		// https://github.com/Hidendra/Plugin-Metrics/wiki/Usage
+		try {
+			Metrics metrics = new Metrics(Sponge.getGame(), Sponge.getPluginManager().fromInstance(this).get());
+			metrics.start();
+		} catch (final Exception e) {
+			ICLogger.logger.warning("Failed to start MCStats");
+		}
+
 		config = configLoader.load(ConfigurationOptions.defaults().setShouldCopyDefaults(true));
 
 		Sponge.getRegistry().register(WorldGeneratorModifier.class, new IslandCraftGenerationModifier(config));

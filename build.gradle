@@ -52,9 +52,13 @@ project(':IslandCraft-Common') {
 }
 
 project(':IslandCraft-Sponge') {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+
     dependencies {
         compile project(':IslandCraft-Common')
         compile group: 'org.spongepowered', name:'spongeapi', version: '3.0.0'
+        compile group: 'org.mcstats.sponge', name: 'metrics', version: 'R8-SNAPSHOT'
     }
 }
 
@@ -194,6 +198,7 @@ task sponge(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
     from {
         project.configurations.spongePlugin
     }
+    relocate 'org.mcstats', 'com.github.hoqhuuep.islandcraft.mcstats'
 }
 
 dependencies {

@@ -1,5 +1,3 @@
-package com.github.hoqhuuep.islandcraft.bukkit;
-
 /*
  * Copyright 2011-2013 Tyler Blair. All rights reserved.
  *
@@ -27,15 +25,16 @@ package com.github.hoqhuuep.islandcraft.bukkit;
  * authors and contributors and should not be interpreted as representing official policies,
  * either expressed or implied, of anybody else.
  */
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.scheduler.BukkitTask;
+package com.github.hoqhuuep.islandcraft;
 
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.spongepowered.api.Game;
+import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.scheduler.Task;
+
+import javax.inject.Inject;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -43,19 +42,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPOutputStream;
 
 public class Metrics {
@@ -81,9 +78,14 @@ public class Metrics {
     private static final int PING_INTERVAL = 15;
 
     /**
+     * The game data is being sent for
+     */
+    private final Game game;
+
+    /**
      * The plugin this metrics submits for
      */
-    private final Plugin plugin;
+    private final PluginContainer plugin;
 
     /**
      * All of the custom graphs to submit to metrics
@@ -93,22 +95,27 @@ public class Metrics {
     /**
      * The plugin configuration file
      */
-    private final YamlConfiguration configuration;
+    private CommentedConfigurationNode config;
 
     /**
      * The plugin configuration file
      */
-    private final File configurationFile;
+    private File configurationFile;
+
+    /**
+     * The configuration loader
+     */
+    private ConfigurationLoader<CommentedConfigurationNode> configurationLoader;
 
     /**
      * Unique server id
      */
-    private final String guid;
+    private String guid;
 
     /**
      * Debug mode
      */
-    private final boolean debug;
+    private boolean debug;
 
     /**
      * Lock for synchronization
@@ -118,33 +125,47 @@ public class Metrics {
     /**
      * The scheduled task
      */
-    private volatile int task = -1;
+    private volatile Task task = null;
 
-    public Metrics(final Plugin plugin) throws IOException {
+    @Inject
+    public Metrics(final Game game, final PluginContainer plugin) throws IOException {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
 
+        this.game = game;
         this.plugin = plugin;
 
-        // load the config
+        loadConfiguration();
+    }
+
+    /**
+     * Loads the configuration
+     */
+    private void loadConfiguration() {
         configurationFile = getConfigFile();
-        configuration = YamlConfiguration.loadConfiguration(configurationFile);
+        configurationLoader = HoconConfigurationLoader.builder().setFile(configurationFile).build();
 
-        // add some defaults
-        configuration.addDefault("opt-out", false);
-        configuration.addDefault("guid", UUID.randomUUID().toString());
-        configuration.addDefault("debug", false);
+        try {
+            if (!configurationFile.exists()) {
+                configurationFile.createNewFile();
+                config = configurationLoader.load();
 
-        // Do we need to create the file?
-        if (configuration.get("guid", null) == null) {
-            configuration.options().header("http://mcstats.org").copyDefaults(true);
-            configuration.save(configurationFile);
+                config.setComment("This contains settings for MCStats: http://mcstats.org");
+                config.getNode("mcstats.guid").setValue(UUID.randomUUID().toString());
+                config.getNode("mcstats.opt-out").setValue(false);
+                config.getNode("mcstats.debug").setValue(false);
+
+                configurationLoader.save(config);
+            } else {
+                config = configurationLoader.load();
+            }
+
+            guid = config.getNode("mcstats.guid").getString();
+            debug = config.getNode("mcstats.debug").getBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        // Load the guid then
-        guid = configuration.getString("guid");
-        debug = configuration.getBoolean("debug", false);
     }
 
     /**
@@ -197,13 +218,12 @@ public class Metrics {
             }
 
             // Is metrics already running?
-            if (task != -1) {
+            if (task != null) {
                 return true;
             }
 
             // Begin hitting the server with glorious data
-            task = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
-
+            game.getScheduler().createTaskBuilder().async().interval(PING_INTERVAL, TimeUnit.MINUTES).execute(new Runnable() {
                 private boolean firstPost = true;
 
                 public void run() {
@@ -211,9 +231,9 @@ public class Metrics {
                         // This has to be synchronized or it can collide with the disable method.
                         synchronized (optOutLock) {
                             // Disable Task, if it is running and the server owner decided to opt-out
-                            if (isOptOut() && task != -1) {
-                                plugin.getServer().getScheduler().cancelTask(task);
-                                task = -1;
+                            if (isOptOut() && task != null) {
+                                task.cancel();
+                                task = null;
                                 // Tell all plotters to stop gathering information.
                                 for (Graph graph : graphs) {
                                     graph.onOptOut();
@@ -231,11 +251,11 @@ public class Metrics {
                         firstPost = false;
                     } catch (IOException e) {
                         if (debug) {
-                            Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
+                            System.out.println("[Metrics] " + e.getMessage());
                         }
                     }
                 }
-            }, 0l, PING_INTERVAL * 1200l);
+            }).submit(plugin);
 
             return true;
         }
@@ -248,21 +268,9 @@ public class Metrics {
      */
     public boolean isOptOut() {
         synchronized (optOutLock) {
-            try {
-                // Reload the metrics file
-                configuration.load(getConfigFile());
-            } catch (IOException ex) {
-                if (debug) {
-                    Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
-                }
-                return true;
-            } catch (InvalidConfigurationException ex) {
-                if (debug) {
-                    Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
-                }
-                return true;
-            }
-            return configuration.getBoolean("opt-out", false);
+            loadConfiguration();
+
+            return config.getNode("mcstats.opt-out").getBoolean();
         }
     }
 
@@ -276,12 +284,12 @@ public class Metrics {
         synchronized (optOutLock) {
             // Check if the server owner has already set opt-out, if not, set it.
             if (isOptOut()) {
-                configuration.set("opt-out", false);
-                configuration.save(configurationFile);
+                config.getNode("mcstats.opt-out").setValue(false);
+                configurationLoader.save(config);
             }
 
             // Enable Task, if it is not running
-            if (task == -1) {
+            if (task == null) {
                 start();
             }
         }
@@ -297,14 +305,14 @@ public class Metrics {
         synchronized (optOutLock) {
             // Check if the server owner has already set opt-out, if not, set it.
             if (!isOptOut()) {
-                configuration.set("opt-out", true);
-                configuration.save(configurationFile);
+                config.getNode("mcstats.opt-out").setValue(true);
+                configurationLoader.save(config);
             }
 
             // Disable Task, if it is running
-            if (task != -1) {
-                Bukkit.getScheduler().cancelTask(task);
-                task = -1;
+            if (task != null) {
+                task.cancel();
+                task = null;
             }
         }
     }
@@ -315,37 +323,10 @@ public class Metrics {
      * @return the File object for the config file
      */
     public File getConfigFile() {
-        // I believe the easiest way to get the base folder (e.g craftbukkit set via -P) for plugins to use
-        // is to abuse the plugin object we already have
-        // plugin.getDataFolder() => base/plugins/PluginA/
-        // pluginsFolder => base/plugins/
-        // The base is not necessarily relative to the startup directory.
-        File pluginsFolder = plugin.getDataFolder().getParentFile();
+        // TODO configDir
+        File configFolder = new File("config");
 
-        // return => base/plugins/PluginMetrics/config.yml
-        return new File(new File(pluginsFolder, "PluginMetrics"), "config.yml");
-    }
-    
-    /**
-     * Gets the online player (backwards compatibility)
-     * 
-     * @return online player amount
-     */
-    private int getOnlinePlayers() {
-        try {
-            Method onlinePlayerMethod = Server.class.getMethod("getOnlinePlayers");
-            if(onlinePlayerMethod.getReturnType().equals(Collection.class)) {
-                return ((Collection<?>)onlinePlayerMethod.invoke(Bukkit.getServer())).size();
-            } else {
-                return ((Player[])onlinePlayerMethod.invoke(Bukkit.getServer())).length;
-            }
-        } catch (Exception ex) {
-            if (debug) {
-                Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
-            }
-        }
-        
-        return 0;
+        return new File(configFolder, "PluginMetrics.conf");
     }
 
     /**
@@ -353,12 +334,13 @@ public class Metrics {
      */
     private void postPlugin(final boolean isPing) throws IOException {
         // Server software specific section
-        PluginDescriptionFile description = plugin.getDescription();
-        String pluginName = description.getName();
-        boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
-        String pluginVersion = description.getVersion();
-        String serverVersion = Bukkit.getVersion();
-        int playersOnline = this.getOnlinePlayers();
+        String pluginName = plugin.getName();
+        boolean onlineMode = game.getServer().getOnlineMode(); // TRUE if online mode is enabled
+        String pluginVersion = plugin.getVersion();
+        // TODO no visible way to get MC version at the moment
+        // TODO added by game.getPlatform().getMinecraftVersion() -- impl in 2.1
+        String serverVersion = String.format("%s %s", "Sponge", game.getPlatform().getMinecraftVersion());
+        int playersOnline = game.getServer().getOnlinePlayers().size();
 
         // END server software specific section -- all code below does not use any code outside of this class / Java
 
@@ -555,7 +537,7 @@ public class Metrics {
      * @param json
      * @param key
      * @param value
-     * @throws UnsupportedEncodingException
+     * @throws java.io.UnsupportedEncodingException
      */
     private static void appendJSONPair(StringBuilder json, String key, String value) throws UnsupportedEncodingException {
         boolean isValueNumeric = false;
