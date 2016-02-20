@@ -21,7 +21,6 @@ import com.github.hoqhuuep.islandcraft.api.ICRegion;
 import com.github.hoqhuuep.islandcraft.api.IslandCraft;
 import com.github.hoqhuuep.islandcraft.core.DefaultIslandCraft;
 import com.github.hoqhuuep.islandcraft.core.ICLogger;
-import com.github.hoqhuuep.islandcraft.core.ICNoise;
 import com.github.hoqhuuep.islandcraft.core.IslandDatabase;
 import com.github.hoqhuuep.islandcraft.nms.NmsWrapper;
 
@@ -32,7 +31,6 @@ public class IslandCraftPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		ICLogger.logger = new JavaUtilLogger(getLogger());
-		ICNoise.builder = new BukkitNoiseBuilder();
 
 		// https://github.com/Hidendra/Plugin-Metrics/wiki/Usage
 		try {

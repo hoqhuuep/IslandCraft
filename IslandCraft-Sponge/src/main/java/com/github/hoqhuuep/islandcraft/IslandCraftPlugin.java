@@ -12,7 +12,6 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 
 import com.github.hoqhuuep.islandcraft.core.ICLogger;
-import com.github.hoqhuuep.islandcraft.core.ICNoise;
 import com.google.inject.Inject;
 
 import ninja.leaping.configurate.ConfigurationOptions;
@@ -33,7 +32,6 @@ public class IslandCraftPlugin {
 	@Listener
 	public void onGameInitialization(GameInitializationEvent event) throws IOException {
 		ICLogger.logger = new Slf4jLogger(logger);
-		ICNoise.builder = new FlowNoiseBuilder();
 
 		// https://github.com/Hidendra/Plugin-Metrics/wiki/Usage
 		try {

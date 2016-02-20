@@ -14,6 +14,8 @@ import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
 import com.github.hoqhuuep.islandcraft.core.mosaic.Poisson;
 import com.github.hoqhuuep.islandcraft.core.mosaic.Site;
+import com.github.hoqhuuep.islandcraft.core.noise.Noise;
+import com.github.hoqhuuep.islandcraft.core.noise.OctaveNoise;
 import com.github.hoqhuuep.islandcraft.util.StringUtils;
 
 public class IslandGeneratorAlpha implements IslandGenerator {
@@ -59,10 +61,10 @@ public class IslandGeneratorAlpha implements IslandGenerator {
 				xSize, zSize, islandSeed, ICBiome.values()[normal.getRGB()]));
 		final Poisson poisson = new Poisson(xSize, zSize, MIN_DISTANCE);
 		final List<Site> sites = poisson.generate(new Random(islandSeed));
-		final Noise shapeNoise = ICNoise.builder.build(islandSeed);
-		final Noise hillsNoise = ICNoise.builder.build(islandSeed + 1);
-		final Noise forestNoise = ICNoise.builder.build(islandSeed + 2);
-		final Noise mountainsNoise = ICNoise.builder.build(islandSeed + 3);
+		final Noise shapeNoise = new OctaveNoise(islandSeed);
+		final Noise hillsNoise = new OctaveNoise(islandSeed + 1);
+		final Noise forestNoise = new OctaveNoise(islandSeed + 2);
+		final Noise mountainsNoise = new OctaveNoise(islandSeed + 3);
 		// Find borders
 		final Queue<Site> oceanSites = new LinkedList<Site>();
 		for (final Site site : sites) {
