@@ -64,6 +64,8 @@ public class IslandCraftPlugin {
 
 	@Listener
 	public void onGameStopped(GameStoppedEvent event) throws IOException {
-		configLoader.save(config);
+		if (config != null) {
+			configLoader.save(config);
+		}
 	}
 }
