@@ -21,10 +21,8 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 public class IslandCraftBiomeGenerator implements BiomeGenerator {
 	private final ICWorld icWorld;
 
-	public IslandCraftBiomeGenerator(String worldName, long worldSeed, CommentedConfigurationNode config,
-			IslandDatabase database) {
-		icWorld = new DefaultWorld(worldName, worldSeed, database, new SpongeWorldConfig(config), new IslandCache(),
-				new ICClassLoader());
+	public IslandCraftBiomeGenerator(String worldName, long worldSeed, CommentedConfigurationNode config, IslandDatabase database) {
+		icWorld = new DefaultWorld(worldName, worldSeed, database, new SpongeWorldConfig(config), new IslandCache(), new ICClassLoader());
 	}
 
 	@Override

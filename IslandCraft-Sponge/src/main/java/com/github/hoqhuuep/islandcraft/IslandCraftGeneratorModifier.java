@@ -30,8 +30,7 @@ public class IslandCraftGeneratorModifier implements WorldGeneratorModifier {
 	}
 
 	@Override
-	public void modifyWorldGenerator(WorldCreationSettings world, DataContainer settings,
-			WorldGenerator worldGenerator) {
+	public void modifyWorldGenerator(WorldCreationSettings world, DataContainer settings, WorldGenerator worldGenerator) {
 		String worldName = world.getWorldName();
 		BiomeGenerator islandCraftBiomeGenerator = new IslandCraftBiomeGenerator(worldName, world.getSeed(), config.getNode(worldName), database);
 		worldGenerator.setBiomeGenerator(islandCraftBiomeGenerator);
