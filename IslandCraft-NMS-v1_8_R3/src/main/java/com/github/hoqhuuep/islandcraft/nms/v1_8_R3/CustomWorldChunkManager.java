@@ -94,7 +94,7 @@ public class CustomWorldChunkManager extends WorldChunkManager {
 
     /** Returns a list of biome's which are valid for spawn */
     @Override
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public List a() {
         return super.a();
     }
