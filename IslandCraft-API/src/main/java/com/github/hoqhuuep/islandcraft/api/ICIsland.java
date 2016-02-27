@@ -3,7 +3,7 @@ package com.github.hoqhuuep.islandcraft.api;
 /**
  * Represents an island in an IslandCraft world.
  */
-public interface ICIsland {
+public interface ICIsland<Biome> {
     /**
      * Returns the random seed used to generate this island.
      */
@@ -12,7 +12,7 @@ public interface ICIsland {
     /**
      * Returns the IslandGenerator used to generate this island.
      */
-    IslandGenerator getGenerator();
+    IslandGenerator<Biome> getGenerator();
 
     /**
      * Returns the location of the center of this island.
@@ -38,7 +38,7 @@ public interface ICIsland {
      *            location relative to this island (must be less than xSize)
      * @return the biome which will be generated
      */
-    ICBiome getBiomeAt(ICLocation relativeLocation);
+    Biome getBiomeAt(ICLocation relativeLocation);
 
     /**
      * Returns the biome which will be generated at the given location.
@@ -49,7 +49,7 @@ public interface ICIsland {
      *            location relative to this island (must be less than zSize)
      * @return the biome which will be generated
      */
-    ICBiome getBiomeAt(int relativeX, int relativeZ);
+    Biome getBiomeAt(int relativeX, int relativeZ);
 
     /**
      * Returns the biomes for a whole chunk.
@@ -59,7 +59,7 @@ public interface ICIsland {
      * @return an ICBiome[16 * 16] containing the biomes for the whole chunk
      *         such that each element is at index [x + z * 16]
      */
-    ICBiome[] getBiomeChunk(ICLocation relativeLocation);
+    Biome[] getBiomeChunk(ICLocation relativeLocation);
 
     /**
      * Returns the biomes for a whole chunk.
@@ -71,7 +71,7 @@ public interface ICIsland {
      * @return an ICBiome[16 * 16] containing the biomes for the whole chunk
      *         such that each element is at index [x + z * 16]
      */
-    ICBiome[] getBiomeChunk(int relativeX, int relativeZ);
+    Biome[] getBiomeChunk(int relativeX, int relativeZ);
 
     /**
      * Returns the biomes for the whole island.
@@ -79,5 +79,5 @@ public interface ICIsland {
      * @return an ICBiome[xSize * zSize] containing the biomes for the whole
      *         island such that each element is at index [x + z * xSize]
      */
-    ICBiome[] getBiomeAll();
+    Biome[] getBiomeAll();
 }

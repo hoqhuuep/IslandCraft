@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.block.Biome;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,7 +27,7 @@ import com.github.hoqhuuep.islandcraft.nms.NmsWrapper;
 
 public class IslandCraftPlugin extends JavaPlugin {
 
-	private DefaultIslandCraft islandCraft = null;
+	private IslandCraft<Biome> islandCraft = null;
 
 	@Override
 	public void onEnable() {
@@ -85,7 +86,7 @@ public class IslandCraftPlugin extends JavaPlugin {
 		}
 
 		try {
-			islandCraft = new DefaultIslandCraft();
+			islandCraft = new DefaultIslandCraft<>();
 			final Listener listener = new BiomeGeneratorListener(this, database, nms);
 			getServer().getPluginManager().registerEvents(listener, this);
 		} catch (final Exception e) {
@@ -131,7 +132,7 @@ public class IslandCraftPlugin extends JavaPlugin {
 				return false;
 			}
 			String distribution = "SquareIslandDistribution";
-			String generator = "IslandGeneratorAlpha";
+			String generator = "com.github.hoqhuuep.islandcraft.core.IslandGeneratorAlpha";
 			if (args.length > 4) {
 				distribution = args[4];
 			}
@@ -145,36 +146,22 @@ public class IslandCraftPlugin extends JavaPlugin {
 			config.set(path + "." + "island-distribution",
 					"com.github.hoqhuuep.islandcraft.core." + distribution + " " + island + " " + ocean);
 			String[] gen_types = {
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " BIRCH_FOREST BIRCH_FOREST_M BIRCH_FOREST_HILLS BIRCH_FOREST_HILLS_M ~ ~ OCEAN BEACH RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " COLD_TAIGA COLD_TAIGA_M COLD_TAIGA_HILLS ~ ~ ~ OCEAN COLD_BEACH FROZEN_RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " DESERT DESERT_M DESERT_HILLS ~ ~ ~ OCEAN BEACH RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " EXTREME_HILLS EXTREME_HILLS_M EXTREME_HILLS_PLUS EXTREME_HILLS_PLUS_M EXTREME_HILLS_EDGE ~ OCEAN STONE_BEACH RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " FOREST ~ FOREST_HILLS ~ FLOWER_FOREST ~ OCEAN BEACH RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " ICE_PLAINS ~ ICE_MOUNTAINS ~ ICE_PLAINS_SPIKES ~ OCEAN FROZEN_OCEAN FROZEN_RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " JUNGLE JUNGLE_M JUNGLE_HILLS ~ JUNGLE_EDGE JUNGLE_EDGE_M OCEAN BEACH RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " MEGA_TAIGA MEGA_SPRUCE_TAIGA MEGA_TAIGA_HILLS MEGA_SPRUCE_TAIGA_HILLS ~ ~ OCEAN BEACH RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " MESA MESA_BRYCE MESA_PLATEAU MESA_PLATEAU_M MESA_PLATEAU_F MESA_PLATEAU_F_M OCEAN MESA RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " MUSHROOM_ISLAND ~ ~ ~ ~ ~ OCEAN MUSHROOM_ISLAND_SHORE RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " PLAINS ~ SUNFLOWER_PLAINS ~ ~ ~ OCEAN BEACH RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " ROOFED_FOREST ROOFED_FOREST_M ~ ~ ~ ~ OCEAN BEACH RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " SAVANNA SAVANNA_M SAVANNA_PLATEAU SAVANNA_PLATEAU_M ~ ~ OCEAN BEACH RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " SWAMPLAND SWAMPLAND_M ~ ~ ~ ~ OCEAN BEACH RIVER",
-					"com.github.hoqhuuep.islandcraft.core." + generator
-							+ " TAIGA TAIGA_M TAIGA_HILLS ~ ~ ~ OCEAN BEACH RIVER" };
+				generator + " BIRCH_FOREST BIRCH_FOREST_M BIRCH_FOREST_HILLS BIRCH_FOREST_HILLS_M ~ ~ OCEAN BEACH RIVER",
+				generator + " COLD_TAIGA COLD_TAIGA_M COLD_TAIGA_HILLS ~ ~ ~ OCEAN COLD_BEACH FROZEN_RIVER",
+				generator + " DESERT DESERT_M DESERT_HILLS ~ ~ ~ OCEAN BEACH RIVER",
+				generator + " EXTREME_HILLS EXTREME_HILLS_M EXTREME_HILLS_PLUS EXTREME_HILLS_PLUS_M EXTREME_HILLS_EDGE ~ OCEAN STONE_BEACH RIVER",
+				generator + " FOREST ~ FOREST_HILLS ~ FLOWER_FOREST ~ OCEAN BEACH RIVER",
+				generator + " ICE_PLAINS ~ ICE_MOUNTAINS ~ ICE_PLAINS_SPIKES ~ OCEAN FROZEN_OCEAN FROZEN_RIVER",
+				generator + " JUNGLE JUNGLE_M JUNGLE_HILLS ~ JUNGLE_EDGE JUNGLE_EDGE_M OCEAN BEACH RIVER",
+				generator + " MEGA_TAIGA MEGA_SPRUCE_TAIGA MEGA_TAIGA_HILLS MEGA_SPRUCE_TAIGA_HILLS ~ ~ OCEAN BEACH RIVER",
+				generator + " MESA MESA_BRYCE MESA_PLATEAU MESA_PLATEAU_M MESA_PLATEAU_F MESA_PLATEAU_F_M OCEAN MESA RIVER",
+				generator + " MUSHROOM_ISLAND ~ ~ ~ ~ ~ OCEAN MUSHROOM_ISLAND_SHORE RIVER",
+				generator + " PLAINS ~ SUNFLOWER_PLAINS ~ ~ ~ OCEAN BEACH RIVER",
+				generator + " ROOFED_FOREST ROOFED_FOREST_M ~ ~ ~ ~ OCEAN BEACH RIVER",
+				generator + " SAVANNA SAVANNA_M SAVANNA_PLATEAU SAVANNA_PLATEAU_M ~ ~ OCEAN BEACH RIVER",
+				generator + " SWAMPLAND SWAMPLAND_M ~ ~ ~ ~ OCEAN BEACH RIVER",
+				generator + " TAIGA TAIGA_M TAIGA_HILLS ~ ~ ~ OCEAN BEACH RIVER"
+			};
 
 			config.set(path + "." + "island-generators", gen_types);
 
@@ -213,7 +200,7 @@ public class IslandCraftPlugin extends JavaPlugin {
 		return Arrays.asList(classes);
 	}
 
-	public IslandCraft getIslandCraft() {
+	public IslandCraft<Biome> getIslandCraft() {
 		return islandCraft;
 	}
 

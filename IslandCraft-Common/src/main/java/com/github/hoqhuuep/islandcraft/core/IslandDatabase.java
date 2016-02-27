@@ -5,7 +5,7 @@ public interface IslandDatabase {
         private final long islandSeed;
         private final String generator;
 
-        public Result(final long islandSeed, final String generator) {
+        public Result(long islandSeed, String generator) {
             this.islandSeed = islandSeed;
             this.generator = generator;
         }

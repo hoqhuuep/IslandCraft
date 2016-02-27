@@ -73,7 +73,6 @@ project(':IslandCraft-Bukkit') {
 
 project(':IslandCraft-NMS') {
     dependencies {
-        compile project(':IslandCraft-API')
         compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.2'
     }
 }

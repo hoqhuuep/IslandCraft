@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +15,7 @@ import org.bukkit.event.world.WorldInitEvent;
 import com.github.hoqhuuep.islandcraft.api.ICWorld;
 import com.github.hoqhuuep.islandcraft.core.ICLogger;
 import com.github.hoqhuuep.islandcraft.core.IslandCache;
+import com.github.hoqhuuep.islandcraft.core.BiomeRegistry;
 import com.github.hoqhuuep.islandcraft.core.DefaultWorld;
 import com.github.hoqhuuep.islandcraft.core.ICClassLoader;
 import com.github.hoqhuuep.islandcraft.core.IslandDatabase;
@@ -25,8 +27,9 @@ public class BiomeGeneratorListener implements Listener {
     private final IslandCraftPlugin islandCraft;
     private final IslandDatabase database;
     private final NmsWrapper nms;
-    private final IslandCache cache;
-    private final ICClassLoader classLoader;
+    private final IslandCache<Biome> cache;
+    private final ICClassLoader<Biome> classLoader;
+    private final BiomeRegistry<Biome> biomeRegistry;
 
     public BiomeGeneratorListener(final IslandCraftPlugin plugin, final IslandDatabase database, final NmsWrapper nms) {
         this.islandCraft = plugin;
@@ -36,9 +39,10 @@ public class BiomeGeneratorListener implements Listener {
             ICLogger.logger.warning("No configuration section for 'worlds' found in config.yml");
             throw new IllegalArgumentException("No configuration section for 'worlds' found in config.yml");
         }
-        worldsDone = new HashSet<String>();
-        cache = new IslandCache();
-        classLoader = new ICClassLoader();
+        worldsDone = new HashSet<>();
+        biomeRegistry = new BukkitBiomeRegistry();
+        cache = new IslandCache<>(biomeRegistry);
+        classLoader = new ICClassLoader<>(biomeRegistry);
     }
 
     @EventHandler
@@ -58,7 +62,7 @@ public class BiomeGeneratorListener implements Listener {
             return;
         }
         ICLogger.logger.info("Installing biome generator in WorldInitEvent for world with name: " + worldName);
-        final ICWorld icWorld = new DefaultWorld(worldName, world.getSeed(), database, new BukkitWorldConfig(worldName, config), cache, classLoader);
+        final ICWorld<Biome> icWorld = new DefaultWorld<>(biomeRegistry, worldName, world.getSeed(), database, new BukkitWorldConfig(worldName, config), cache, classLoader);
         final BiomeGenerator biomeGenerator = new IslandCraftBiomeGenerator(icWorld);
         nms.installBiomeGenerator(world, biomeGenerator);
         worldsDone.add(worldName);
@@ -85,7 +89,7 @@ public class BiomeGeneratorListener implements Listener {
             return;
         }
         ICLogger.logger.info("Installing biome generator in ChunkLoadEvent for world with name: " + worldName);
-        final ICWorld icWorld = new DefaultWorld(worldName, world.getSeed(), database, new BukkitWorldConfig(worldName, config), cache, classLoader);
+        final ICWorld<Biome> icWorld = new DefaultWorld<>(biomeRegistry, worldName, world.getSeed(), database, new BukkitWorldConfig(worldName, config), cache, classLoader);
         final BiomeGenerator biomeGenerator = new IslandCraftBiomeGenerator(icWorld);
         if (nms.installBiomeGenerator(world, biomeGenerator)) {
             // If this is the very first time, regenerate the chunk

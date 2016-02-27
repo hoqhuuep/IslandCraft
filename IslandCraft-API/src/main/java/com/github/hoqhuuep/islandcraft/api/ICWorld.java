@@ -5,7 +5,7 @@ import java.util.Set;
 /**
  * Represents an IslandCraft world.
  */
-public interface ICWorld {
+public interface ICWorld<Biome> {
     /**
      * Returns the random seed used to generate this world (as specified in
      * server.properties).
@@ -24,7 +24,7 @@ public interface ICWorld {
      *            location in the world
      * @return the biome which will be generated
      */
-    ICBiome getBiomeAt(ICLocation location);
+    Biome getBiomeAt(ICLocation location);
 
     /**
      * Returns the biome which will be generated at the given location.
@@ -37,7 +37,7 @@ public interface ICWorld {
      *            blocks)
      * @return the biome which will be generated
      */
-    ICBiome getBiomeAt(int x, int z);
+    Biome getBiomeAt(int x, int z);
 
     /**
      * Returns the biomes for a whole chunk.
@@ -47,7 +47,7 @@ public interface ICWorld {
      * @return an ICBiome[16 * 16] containing the biomes for the whole chunk
      *         such that each element is at index [x + z * 16]
      */
-    ICBiome[] getBiomeChunk(ICLocation location);
+    Biome[] getBiomeChunk(ICLocation location);
 
     /**
      * Returns the biomes for a whole chunk.
@@ -59,7 +59,7 @@ public interface ICWorld {
      * @return an ICBiome[16 * 16] containing the biomes for the whole chunk
      *         such that each element is at index [x + z * 16]
      */
-    ICBiome[] getBiomeChunk(int x, int z);
+    Biome[] getBiomeChunk(int x, int z);
 
     /**
      * Returns the island whose inner-region contains the given location.
@@ -68,7 +68,7 @@ public interface ICWorld {
      *            the location to check
      * @return the island or null if the given location is in the ocean
      */
-    ICIsland getIslandAt(ICLocation location);
+    ICIsland<Biome> getIslandAt(ICLocation location);
 
     /**
      * Returns the island whose inner-region contains the given location.
@@ -79,7 +79,7 @@ public interface ICWorld {
      *            the z-coordinate of the location to check (measured in blocks)
      * @return the island or null if the given location is in the ocean
      */
-    ICIsland getIslandAt(int x, int z);
+    ICIsland<Biome> getIslandAt(int x, int z);
 
     /**
      * Returns a set containing the islands whose outer-regions contain the
@@ -89,7 +89,7 @@ public interface ICWorld {
      *            the location to check
      * @return a set containing the centers of the islands
      */
-    Set<ICIsland> getIslandsAt(ICLocation location);
+    Set<ICIsland<Biome>> getIslandsAt(ICLocation location);
 
     /**
      * Returns a set containing the islands whose outer-regions contain the
@@ -101,5 +101,5 @@ public interface ICWorld {
      *            the z-coordinate of the location to check (measured in blocks)
      * @return a set containing the centers of the islands
      */
-    Set<ICIsland> getIslandsAt(int x, int z);
+    Set<ICIsland<Biome>> getIslandsAt(int x, int z);
 }

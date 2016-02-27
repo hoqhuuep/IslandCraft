@@ -3,7 +3,7 @@ package com.github.hoqhuuep.islandcraft.api;
 /**
  * Controls the distribution of biomes in an IslandCraft island.
  */
-public interface IslandGenerator {
+public interface IslandGenerator<Biome> {
     /**
      * Returns an array of biomes for the whole island with the given dimensions
      * and random seed.
@@ -17,5 +17,5 @@ public interface IslandGenerator {
      * @return an ICBiome[xSize * zSize] containing the biomes for the whole
      *         island such that each element is at index [x + z * xSize]
      */
-    ICBiome[] generate(int xSize, int zSize, long islandSeed);
+	Biome[] generate(int xSize, int zSize, long islandSeed);
 }

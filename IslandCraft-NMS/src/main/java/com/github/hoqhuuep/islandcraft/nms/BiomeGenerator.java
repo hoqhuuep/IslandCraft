@@ -1,6 +1,6 @@
 package com.github.hoqhuuep.islandcraft.nms;
 
-import com.github.hoqhuuep.islandcraft.api.ICBiome;
+import org.bukkit.block.Biome;
 
 public abstract class BiomeGenerator {
     /**
@@ -13,7 +13,7 @@ public abstract class BiomeGenerator {
      *            Z-coordinate of the chunk
      * @return Biome[256] containing biomes for each location in the chunk
      */
-    public abstract ICBiome[] generateChunkBiomes(int x, int z);
+    public abstract Biome[] generateChunkBiomes(int x, int z);
 
     /**
      * Determines which biome should used for world generation at the given
@@ -25,7 +25,7 @@ public abstract class BiomeGenerator {
      *            Z-coordinate for the biome
      * @return Biome for the location
      */
-    public abstract ICBiome generateBiome(int x, int z);
+    public abstract Biome generateBiome(int x, int z);
 
     /**
      * Called by the server every tick. Can be used to occasionally clean up old

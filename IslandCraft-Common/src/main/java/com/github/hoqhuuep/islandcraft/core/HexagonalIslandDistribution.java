@@ -19,7 +19,7 @@ public class HexagonalIslandDistribution implements IslandDistribution {
     private final int innerRadius;
     private final int outerRadius;
 
-    public HexagonalIslandDistribution(final String[] args) {
+    public HexagonalIslandDistribution(String[] args) {
         ICLogger.logger.info("Creating HexagonalIslandDistribution with args: " + StringUtils.join(args, " "));
         if (args.length != 2) {
             ICLogger.logger.error("HexagonalIslandDistribution requrires 2 parameters, " + args.length + " given");
@@ -46,7 +46,7 @@ public class HexagonalIslandDistribution implements IslandDistribution {
     }
 
     @Override
-    public ICLocation getCenterAt(int x, int z, final long worldSeed) {
+    public ICLocation getCenterAt(int x, int z, long worldSeed) {
         // xPrime, zPrime = shift the coordinate system so that 0, 0 is top-left
         // of spawn island
         // xRelative, zRelative = coordinates relative to top-left of nearest
@@ -68,7 +68,7 @@ public class HexagonalIslandDistribution implements IslandDistribution {
     }
 
     @Override
-    public Set<ICLocation> getCentersAt(int x, int z, final long worldSeed) {
+    public Set<ICLocation> getCentersAt(int x, int z, long worldSeed) {
         // Numbers represent how many island regions a location overlaps.
         // Arrows point towards the centers of the overlapped regions.
         // @-------+-----------+-------+-----------+
@@ -109,26 +109,26 @@ public class HexagonalIslandDistribution implements IslandDistribution {
         // |...................|.......|...........|
         // +-------------------+-------+-----------+
         // # relative to @
-        final int xPrime = x + outerRadius;
-        final int zPrime = z + outerRadius;
+        int xPrime = x + outerRadius;
+        int zPrime = z + outerRadius;
         // # relative to world origin
-        final int absoluteHashX = ifloordiv(xPrime, islandSeparation) * islandSeparation;
-        final int absoluteHashZ = ifloordiv(zPrime, twiceIslandSeparation) * twiceIslandSeparation;
+        int absoluteHashX = ifloordiv(xPrime, islandSeparation) * islandSeparation;
+        int absoluteHashZ = ifloordiv(zPrime, twiceIslandSeparation) * twiceIslandSeparation;
         // Point to test relative to @
-        final int relativeX = xPrime - absoluteHashX;
-        final int relativeZ = zPrime - absoluteHashZ;
-        final Set<ICLocation> result = new HashSet<ICLocation>(3);
+        int relativeX = xPrime - absoluteHashX;
+        int relativeZ = zPrime - absoluteHashZ;
+        Set<ICLocation> result = new HashSet<ICLocation>(3);
         // Top
         if (relativeZ < oceanSize) {
-            final int centerZ = absoluteHashZ - islandSeparation;
+            int centerZ = absoluteHashZ - islandSeparation;
             // Left
             if (relativeX < magicNumber2) {
-                final int centerX = absoluteHashX - halfIslandSeparation;
+                int centerX = absoluteHashX - halfIslandSeparation;
                 result.add(getCenter(centerX, centerZ));
             }
             // Right
             if (relativeX >= magicNumber1) {
-                final int centerX = absoluteHashX + halfIslandSeparation;
+                int centerX = absoluteHashX + halfIslandSeparation;
                 result.add(getCenter(centerX, centerZ));
             }
         }
@@ -136,7 +136,7 @@ public class HexagonalIslandDistribution implements IslandDistribution {
         if (relativeZ < islandSeparation + oceanSize) {
             // Left
             if (relativeX < oceanSize) {
-                final int centerX = absoluteHashX - islandSeparation;
+                int centerX = absoluteHashX - islandSeparation;
                 result.add(getCenter(centerX, absoluteHashZ));
             }
             // Right
@@ -147,12 +147,12 @@ public class HexagonalIslandDistribution implements IslandDistribution {
             final int centerZ = absoluteHashZ + islandSeparation;
             // Left
             if (relativeX < magicNumber2) {
-                final int centerX = absoluteHashX - halfIslandSeparation;
+                int centerX = absoluteHashX - halfIslandSeparation;
                 result.add(getCenter(centerX, centerZ));
             }
             // Right
             if (relativeX >= magicNumber1) {
-                final int centerX = absoluteHashX + halfIslandSeparation;
+                int centerX = absoluteHashX + halfIslandSeparation;
                 result.add(getCenter(centerX, centerZ));
             }
         }
@@ -160,9 +160,9 @@ public class HexagonalIslandDistribution implements IslandDistribution {
     }
 
     @Override
-    public ICRegion getInnerRegion(final ICLocation center, final long worldSeed) {
-        final int centerX = center.getX();
-        final int centerZ = center.getZ();
+    public ICRegion getInnerRegion(ICLocation center, long worldSeed) {
+        int centerX = center.getX();
+        int centerZ = center.getZ();
         if (!isCenter(centerX, centerZ)) {
             return null;
         }
@@ -170,18 +170,18 @@ public class HexagonalIslandDistribution implements IslandDistribution {
     }
 
     @Override
-    public ICRegion getOuterRegion(final ICLocation center, final long worldSeed) {
-        final int centerX = center.getX();
-        final int centerZ = center.getZ();
+    public ICRegion getOuterRegion(ICLocation center, long worldSeed) {
+        int centerX = center.getX();
+        int centerZ = center.getZ();
         if (!isCenter(centerX, centerZ)) {
             return null;
         }
         return new ICRegion(new ICLocation(centerX - outerRadius, centerZ - outerRadius), new ICLocation(centerX + outerRadius, centerZ + outerRadius));
     }
 
-    private ICLocation getCenter(final int row, final int column) {
-        final int centerZ = row * islandSeparation;
-        final int centerX;
+    private ICLocation getCenter(int row, int column) {
+        int centerZ = row * islandSeparation;
+        int centerX;
         if (row % 2 == 0) {
             centerX = column * islandSeparation;
         } else {
@@ -190,11 +190,11 @@ public class HexagonalIslandDistribution implements IslandDistribution {
         return new ICLocation(centerX, centerZ);
     }
 
-    private boolean isCenter(final int centerX, final int centerZ) {
+    private boolean isCenter(int centerX, int centerZ) {
         if (ifloormod(centerZ, islandSeparation) != 0) {
             return false;
         }
-        final int row = ifloordiv(centerZ, islandSeparation);
+        int row = ifloordiv(centerZ, islandSeparation);
         if (row % 2 == 0) {
             return ifloormod(centerX, islandSeparation) == 0;
         }

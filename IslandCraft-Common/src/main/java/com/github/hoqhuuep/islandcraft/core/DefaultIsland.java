@@ -1,20 +1,19 @@
 package com.github.hoqhuuep.islandcraft.core;
 
-import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.api.ICIsland;
 import com.github.hoqhuuep.islandcraft.api.ICLocation;
 import com.github.hoqhuuep.islandcraft.api.ICRegion;
 import com.github.hoqhuuep.islandcraft.api.IslandGenerator;
 
-public class DefaultIsland implements ICIsland {
-    private final IslandCache cache;
-    private final IslandGenerator generator;
+public class DefaultIsland<Biome> implements ICIsland<Biome> {
+    private final IslandCache<Biome> cache;
+    private final IslandGenerator<Biome> generator;
     private final ICLocation center;
     private final ICRegion innerRegion;
     private final ICRegion outerRegion;
     private final long seed;
 
-    public DefaultIsland(final ICRegion innerRegion, final ICRegion outerRegion, final long seed, final IslandGenerator generator, final IslandCache cache) {
+    public DefaultIsland(ICRegion innerRegion, ICRegion outerRegion, long seed, IslandGenerator<Biome> generator, IslandCache<Biome> cache) {
         this.cache = cache;
         this.seed = seed;
         this.generator = generator;
@@ -46,32 +45,32 @@ public class DefaultIsland implements ICIsland {
     }
 
     @Override
-    public ICBiome getBiomeAt(final ICLocation relativeLocation) {
+    public Biome getBiomeAt(final ICLocation relativeLocation) {
         return getBiomeAt(relativeLocation.getX(), relativeLocation.getZ());
     }
 
     @Override
-    public ICBiome getBiomeAt(final int relativeX, final int relativeZ) {
+    public Biome getBiomeAt(final int relativeX, final int relativeZ) {
         return cache.biomeAt(this, relativeX, relativeZ);
     }
 
     @Override
-    public ICBiome[] getBiomeChunk(ICLocation relativeLocation) {
+    public Biome[] getBiomeChunk(ICLocation relativeLocation) {
         return getBiomeChunk(relativeLocation.getX(), relativeLocation.getZ());
     }
 
     @Override
-    public ICBiome[] getBiomeChunk(int relativeX, int relativeZ) {
+    public Biome[] getBiomeChunk(int relativeX, int relativeZ) {
         return cache.biomeChunk(this, relativeX, relativeZ);
     }
 
     @Override
-    public ICBiome[] getBiomeAll() {
+    public Biome[] getBiomeAll() {
         return cache.biomeAll(this);
     }
 
     @Override
-    public IslandGenerator getGenerator() {
+    public IslandGenerator<Biome> getGenerator() {
         return generator;
     }
 
@@ -94,7 +93,7 @@ public class DefaultIsland implements ICIsland {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        DefaultIsland other = (DefaultIsland) obj;
+        DefaultIsland<?> other = (DefaultIsland<?>) obj;
         if (generator == null) {
             if (other.generator != null)
                 return false;
