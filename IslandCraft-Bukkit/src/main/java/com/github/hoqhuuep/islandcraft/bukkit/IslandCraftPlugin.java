@@ -33,12 +33,13 @@ public class IslandCraftPlugin extends JavaPlugin {
 		ICLogger.logger = new JavaUtilLogger(getLogger());
 
 		// https://github.com/Hidendra/Plugin-Metrics/wiki/Usage
-		try {
-			final Metrics metrics = new Metrics(this);
-			metrics.start();
-		} catch (final Exception e) {
-			ICLogger.logger.warning("Failed to start MCStats");
-		}
+// Temporarily disabled due to incompatibility with 1.9
+//		try {
+//			final Metrics metrics = new Metrics(this);
+//			metrics.start();
+//		} catch (final Exception e) {
+//			ICLogger.logger.warning("Failed to start MCStats");
+//		}
 
 		saveDefaultConfig();
 		FileConfiguration config = getConfig();
