@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'com.github.hoqhuuep'
-version = '1.0.4-SNAPSHOT'
+version = '1.0.4'
 
 allprojects {
     repositories {
