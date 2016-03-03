@@ -5,6 +5,8 @@ IslandCraft is a Bukkit plugin which modifies the terrain generation to create a
 
 **BukkitDev**: http://dev.bukkit.org/bukkit-plugins/islandcraft/
 
+**Sponge Forums**: https://forums.spongepowered.org/t/wip-islandcraft-generates-and-ocean-filled-with-biome-themed-islands/11522
+
 **Wiki**: https://github.com/hoqhuuep/IslandCraft/wiki
 
 ![Savanna](http://dev.bukkit.org/thumbman/images/71/269/200x112/2014-03-22_10.57.54.png.-m1.png) _
