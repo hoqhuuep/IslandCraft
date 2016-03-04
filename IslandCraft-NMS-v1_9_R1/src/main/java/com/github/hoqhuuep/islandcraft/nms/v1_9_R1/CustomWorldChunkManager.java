@@ -1,8 +1,6 @@
 package com.github.hoqhuuep.islandcraft.nms.v1_9_R1;
 
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import org.bukkit.block.Biome;
@@ -13,77 +11,9 @@ import net.minecraft.server.v1_9_R1.BiomeCache;
 import net.minecraft.server.v1_9_R1.BlockPosition;
 import net.minecraft.server.v1_9_R1.WorldChunkManager;
 
-import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.nms.BiomeGenerator;
 
 public class CustomWorldChunkManager extends WorldChunkManager {
-    private static final Map<ICBiome, BiomeBase> biomeMap = new EnumMap<ICBiome, BiomeBase>(ICBiome.class);
-
-    static {
-        biomeMap.put(ICBiome.BEACH, CraftBlock.biomeToBiomeBase(Biome.BEACHES));
-        biomeMap.put(ICBiome.BIRCH_FOREST, CraftBlock.biomeToBiomeBase(Biome.BIRCH_FOREST));
-        biomeMap.put(ICBiome.BIRCH_FOREST_HILLS, CraftBlock.biomeToBiomeBase(Biome.BIRCH_FOREST_HILLS));
-        biomeMap.put(ICBiome.BIRCH_FOREST_HILLS_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_BIRCH_FOREST_HILLS));
-        biomeMap.put(ICBiome.BIRCH_FOREST_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_BIRCH_FOREST));
-        biomeMap.put(ICBiome.COLD_BEACH, CraftBlock.biomeToBiomeBase(Biome.COLD_BEACH));
-        biomeMap.put(ICBiome.COLD_TAIGA, CraftBlock.biomeToBiomeBase(Biome.TAIGA_COLD));
-        biomeMap.put(ICBiome.COLD_TAIGA_HILLS, CraftBlock.biomeToBiomeBase(Biome.TAIGA_COLD_HILLS));
-        biomeMap.put(ICBiome.COLD_TAIGA_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_TAIGA_COLD));
-        biomeMap.put(ICBiome.DEEP_OCEAN, CraftBlock.biomeToBiomeBase(Biome.DEEP_OCEAN));
-        biomeMap.put(ICBiome.DESERT, CraftBlock.biomeToBiomeBase(Biome.DESERT));
-        biomeMap.put(ICBiome.DESERT_HILLS, CraftBlock.biomeToBiomeBase(Biome.DESERT_HILLS));
-        biomeMap.put(ICBiome.DESERT_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_DESERT));
-        biomeMap.put(ICBiome.END, CraftBlock.biomeToBiomeBase(Biome.SKY));
-        biomeMap.put(ICBiome.EXTREME_HILLS, CraftBlock.biomeToBiomeBase(Biome.EXTREME_HILLS));
-        biomeMap.put(ICBiome.EXTREME_HILLS_EDGE, CraftBlock.biomeToBiomeBase(Biome.SMALLER_EXTREME_HILLS));
-        biomeMap.put(ICBiome.EXTREME_HILLS_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_EXTREME_HILLS));
-        biomeMap.put(ICBiome.EXTREME_HILLS_PLUS, CraftBlock.biomeToBiomeBase(Biome.EXTREME_HILLS_WITH_TREES));
-        biomeMap.put(ICBiome.EXTREME_HILLS_PLUS_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_EXTREME_HILLS_WITH_TREES));
-        biomeMap.put(ICBiome.FLOWER_FOREST, CraftBlock.biomeToBiomeBase(Biome.MUTATED_FOREST));
-        biomeMap.put(ICBiome.FOREST, CraftBlock.biomeToBiomeBase(Biome.FOREST));
-        biomeMap.put(ICBiome.FOREST_HILLS, CraftBlock.biomeToBiomeBase(Biome.FOREST_HILLS));
-        biomeMap.put(ICBiome.FROZEN_OCEAN, CraftBlock.biomeToBiomeBase(Biome.FROZEN_OCEAN));
-        biomeMap.put(ICBiome.FROZEN_RIVER, CraftBlock.biomeToBiomeBase(Biome.FROZEN_RIVER));
-        biomeMap.put(ICBiome.ICE_MOUNTAINS, CraftBlock.biomeToBiomeBase(Biome.ICE_MOUNTAINS));
-        biomeMap.put(ICBiome.ICE_PLAINS, CraftBlock.biomeToBiomeBase(Biome.ICE_FLATS));
-        biomeMap.put(ICBiome.ICE_PLAINS_SPIKES, CraftBlock.biomeToBiomeBase(Biome.MUTATED_ICE_FLATS));
-        biomeMap.put(ICBiome.JUNGLE, CraftBlock.biomeToBiomeBase(Biome.JUNGLE));
-        biomeMap.put(ICBiome.JUNGLE_EDGE, CraftBlock.biomeToBiomeBase(Biome.JUNGLE_EDGE));
-        biomeMap.put(ICBiome.JUNGLE_HILLS, CraftBlock.biomeToBiomeBase(Biome.JUNGLE_HILLS));
-        biomeMap.put(ICBiome.JUNGLE_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_JUNGLE));
-        biomeMap.put(ICBiome.JUNGLE_EDGE_M,CraftBlock.biomeToBiomeBase(Biome.MUTATED_JUNGLE_EDGE));
-        biomeMap.put(ICBiome.MEGA_SPRUCE_TAIGA, CraftBlock.biomeToBiomeBase(Biome.MUTATED_REDWOOD_TAIGA));
-        biomeMap.put(ICBiome.MEGA_SPRUCE_TAIGA_HILLS, CraftBlock.biomeToBiomeBase(Biome.MUTATED_REDWOOD_TAIGA_HILLS));
-        biomeMap.put(ICBiome.MEGA_TAIGA, CraftBlock.biomeToBiomeBase(Biome.REDWOOD_TAIGA));
-        biomeMap.put(ICBiome.MEGA_TAIGA_HILLS, CraftBlock.biomeToBiomeBase(Biome.REDWOOD_TAIGA_HILLS));
-        biomeMap.put(ICBiome.MESA, CraftBlock.biomeToBiomeBase(Biome.MESA));
-        biomeMap.put(ICBiome.MESA_BRYCE, CraftBlock.biomeToBiomeBase(Biome.MUTATED_MESA));
-        biomeMap.put(ICBiome.MESA_PLATEAU, CraftBlock.biomeToBiomeBase(Biome.MESA_CLEAR_ROCK));
-        biomeMap.put(ICBiome.MESA_PLATEAU_F, CraftBlock.biomeToBiomeBase(Biome.MESA_ROCK));
-        biomeMap.put(ICBiome.MESA_PLATEAU_F_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_MESA_ROCK));
-        biomeMap.put(ICBiome.MESA_PLATEAU_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_MESA_CLEAR_ROCK));
-        biomeMap.put(ICBiome.MUSHROOM_ISLAND, CraftBlock.biomeToBiomeBase(Biome.MUSHROOM_ISLAND));
-        biomeMap.put(ICBiome.MUSHROOM_ISLAND_SHORE, CraftBlock.biomeToBiomeBase(Biome.MUSHROOM_ISLAND_SHORE));
-        biomeMap.put(ICBiome.NETHER, CraftBlock.biomeToBiomeBase(Biome.HELL));
-        biomeMap.put(ICBiome.OCEAN, CraftBlock.biomeToBiomeBase(Biome.OCEAN));
-        biomeMap.put(ICBiome.PLAINS, CraftBlock.biomeToBiomeBase(Biome.PLAINS));
-        biomeMap.put(ICBiome.RIVER, CraftBlock.biomeToBiomeBase(Biome.RIVER));
-        biomeMap.put(ICBiome.ROOFED_FOREST, CraftBlock.biomeToBiomeBase(Biome.ROOFED_FOREST));
-        biomeMap.put(ICBiome.ROOFED_FOREST_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_ROOFED_FOREST));
-        biomeMap.put(ICBiome.SAVANNA, CraftBlock.biomeToBiomeBase(Biome.SAVANNA));
-        biomeMap.put(ICBiome.SAVANNA_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_SAVANNA));
-        biomeMap.put(ICBiome.SAVANNA_PLATEAU, CraftBlock.biomeToBiomeBase(Biome.SAVANNA_ROCK));
-        biomeMap.put(ICBiome.SAVANNA_PLATEAU_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_SAVANNA_ROCK));
-        biomeMap.put(ICBiome.STONE_BEACH, CraftBlock.biomeToBiomeBase(Biome.STONE_BEACH));
-        biomeMap.put(ICBiome.SUNFLOWER_PLAINS, CraftBlock.biomeToBiomeBase(Biome.MUTATED_PLAINS));
-        biomeMap.put(ICBiome.SWAMPLAND, CraftBlock.biomeToBiomeBase(Biome.SWAMPLAND));
-        biomeMap.put(ICBiome.SWAMPLAND_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_SWAMPLAND));
-        biomeMap.put(ICBiome.TAIGA, CraftBlock.biomeToBiomeBase(Biome.TAIGA));
-        biomeMap.put(ICBiome.TAIGA_HILLS, CraftBlock.biomeToBiomeBase(Biome.TAIGA_HILLS));
-        biomeMap.put(ICBiome.TAIGA_M, CraftBlock.biomeToBiomeBase(Biome.MUTATED_TAIGA));
-        // TODO Biome.VOID -- new end biome???
-    }
-
     private final BiomeCache biomeCache;
     private final BiomeGenerator biomeGenerator;
 
@@ -130,8 +60,8 @@ public class CustomWorldChunkManager extends WorldChunkManager {
         for (int i = 0; i < xSize * zSize; ++i) {
             final int x = (xMin + (i % xSize)) << 2;
             final int z = (zMin + (i / xSize)) << 2;
-            final ICBiome biome = biomeGenerator.generateBiome(x, z);
-            result[i] = biomeMap.get(biome);
+            final Biome biome = biomeGenerator.generateBiome(x, z);
+            result[i] = CraftBlock.biomeToBiomeBase(biome);
         }
         return result;
     }
@@ -159,17 +89,17 @@ public class CustomWorldChunkManager extends WorldChunkManager {
                 return result;
             }
             // This only happens in getWetness above
-            final ICBiome[] temp = biomeGenerator.generateChunkBiomes(xMin, zMin);
+            final Biome[] temp = biomeGenerator.generateChunkBiomes(xMin, zMin);
             for (int i = 0; i < xSize * zSize; ++i) {
-                result[i] = biomeMap.get(temp[i]);
+                result[i] = CraftBlock.biomeToBiomeBase(temp[i]);
             }
             return result;
         }
         // In reality this never happens...
         for (int x = 0; x < xSize; ++x) {
             for (int z = 0; z < zSize; ++z) {
-                final ICBiome temp = biomeGenerator.generateBiome(xMin + x, zMin + z);
-                result[x + z * xSize] = biomeMap.get(temp);
+                final Biome temp = biomeGenerator.generateBiome(xMin + x, zMin + z);
+                result[x + z * xSize] = CraftBlock.biomeToBiomeBase(temp);
             }
         }
         return result;
