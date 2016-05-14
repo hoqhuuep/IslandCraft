@@ -183,6 +183,13 @@ project(':IslandCraft-NMS-v1_9_R1') {
     }
 }
 
+project(':IslandCraft-NMS-v1_9_R2') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.9.4-R0.1-SNAPSHOT'
+    }
+}
+
 configurations {
     spongePlugin
     bukkitPlugin
@@ -255,6 +262,9 @@ dependencies {
         exclude group: 'org.bukkit'
     }
     bukkitPlugin(project(':IslandCraft-NMS-v1_9_R1')) {
+        exclude group: 'org.bukkit'
+    }
+    bukkitPlugin(project(':IslandCraft-NMS-v1_9_R2')) {
         exclude group: 'org.bukkit'
     }
 }
