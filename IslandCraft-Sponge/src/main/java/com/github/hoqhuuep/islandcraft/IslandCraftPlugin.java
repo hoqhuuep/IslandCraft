@@ -21,7 +21,7 @@ import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
-@Plugin(id = "islandcraft", name = "IslandCraft", version = "1.0.7-SNAPSHOT")
+@Plugin(id = "islandcraft", name = "IslandCraft", version = "1.0.7")
 public class IslandCraftPlugin {
 	@Inject
 	private Logger logger;
