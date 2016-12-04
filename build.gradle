@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'com.github.hoqhuuep'
-version = '1.0.6'
+version = '1.0.7'
 
 allprojects {
     repositories {
@@ -66,7 +66,7 @@ project(':IslandCraft-Bukkit') {
     dependencies {
         compile project(':IslandCraft-NMS')
         compile project(':IslandCraft-Common')
-        compile group: 'org.bukkit', name: 'bukkit', version: '1.9-R0.1-SNAPSHOT'
+        compile group: 'org.bukkit', name: 'bukkit', version: '1.11-R0.1-SNAPSHOT'
         compile group: 'org.mcstats.bukkit', name: 'metrics', version: 'R7'
     }
 }
@@ -74,7 +74,7 @@ project(':IslandCraft-Bukkit') {
 project(':IslandCraft-NMS') {
     dependencies {
         compile project(':IslandCraft-API')
-        compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.2'
+        compile group: 'org.bukkit', name: 'bukkit', version: '1.11-R0.1-SNAPSHOT'
     }
 }
 
@@ -197,6 +197,13 @@ project(':IslandCraft-NMS-v1_10_R1') {
     }
 }
 
+project(':IslandCraft-NMS-v1_11_R1') {
+    dependencies {
+        compile project(':IslandCraft-NMS')
+        compile group: 'org.bukkit', name: 'craftbukkit', version: '1.11-R0.1-SNAPSHOT'
+    }
+}
+
 configurations {
     spongePlugin
     bukkitPlugin
@@ -277,6 +284,9 @@ dependencies {
     bukkitPlugin(project(':IslandCraft-NMS-v1_10_R1')) {
         exclude group: 'org.bukkit'
     }
+    bukkitPlugin(project(':IslandCraft-NMS-v1_11_R1')) {
+        exclude group: 'org.bukkit'
+    }
 }
 
 task bukkit(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
@@ -296,7 +306,7 @@ dependencies {
     bukkitLatest (project(':IslandCraft-Bukkit')) {
         exclude group: 'org.bukkit'
     }
-    bukkitLatest(project(':IslandCraft-NMS-v1_10_R1')) {
+    bukkitLatest(project(':IslandCraft-NMS-v1_11_R1')) {
         exclude group: 'org.bukkit'
     }
 }
