@@ -311,7 +311,6 @@ task bukkit(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
         project.configurations.bukkitPlugin
     }
     relocate 'org.mcstats', 'com.github.hoqhuuep.islandcraft.mcstats'
-    relocate 'com.avaje', 'com.github.hoqhuuep.islandcraft.avaje'
 }
 
 dependencies {
@@ -334,5 +333,4 @@ task bukkitLatest(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJ
         project.configurations.bukkitLatest
     }
     relocate 'org.mcstats', 'com.github.hoqhuuep.islandcraft.mcstats'
-    relocate 'com.avaje', 'com.github.hoqhuuep.islandcraft.avaje'
 }
