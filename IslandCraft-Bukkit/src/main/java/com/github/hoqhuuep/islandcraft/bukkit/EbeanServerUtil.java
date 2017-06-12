@@ -20,7 +20,7 @@ import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.github.hoqhuuep.islandcraft.core.ICLogger;
 
 public class EbeanServerUtil {
-    public static EbeanServer build(final JavaPlugin javaPlugin) {
+    public static EbeanServer build(final IslandCraftPlugin javaPlugin) {
         ICLogger.logger.info("Creating EbeanServer for plugin with name: " + javaPlugin.getDescription().getName());
         final String name = javaPlugin.getDescription().getName();
         final ConfigurationSection configurationSection = javaPlugin.getConfig().getConfigurationSection("database");
