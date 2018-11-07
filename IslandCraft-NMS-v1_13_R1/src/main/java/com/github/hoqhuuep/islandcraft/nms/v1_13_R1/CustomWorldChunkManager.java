@@ -1,17 +1,12 @@
 package com.github.hoqhuuep.islandcraft.nms.v1_13_R1;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import net.minecraft.server.v1_13_R1.*;
 import org.bukkit.block.Biome;
 import org.bukkit.craftbukkit.v1_13_R1.block.CraftBlock;
-
-import net.minecraft.server.v1_13_R1.BiomeBase;
-import net.minecraft.server.v1_13_R1.BiomeCache;
-import net.minecraft.server.v1_13_R1.BlockPosition;
-import net.minecraft.server.v1_13_R1.WorldChunkManager;
 
 import com.github.hoqhuuep.islandcraft.api.ICBiome;
 import com.github.hoqhuuep.islandcraft.nms.BiomeGenerator;
@@ -59,7 +54,7 @@ public class CustomWorldChunkManager extends WorldChunkManager {
         biomeMap.put(ICBiome.MESA, CraftBlock.biomeToBiomeBase(Biome.BADLANDS)); // TODO updated to new Biome internal name, recommend updating ICBiome
         biomeMap.put(ICBiome.MESA_BRYCE, CraftBlock.biomeToBiomeBase(Biome.ERODED_BADLANDS)); // TODO updated to new Biome internal name, recommend updating ICBiome
         biomeMap.put(ICBiome.MESA_PLATEAU, CraftBlock.biomeToBiomeBase(Biome.BADLANDS_PLATEAU)); // TODO updated to new Biome internal name, recommend updating ICBiome
-        biomeMap.put(ICBiome.MESA_PLATEAU_F, CraftBlock.biomeToBiomeBase(Biome.WOODED_BADLANDS_PLATEAU // TODO updated to new Biome internal name, recommend updating ICBiome
+        biomeMap.put(ICBiome.MESA_PLATEAU_F, CraftBlock.biomeToBiomeBase(Biome.WOODED_BADLANDS_PLATEAU)); // TODO updated to new Biome internal name, recommend updating ICBiome
         biomeMap.put(ICBiome.MESA_PLATEAU_F_M, CraftBlock.biomeToBiomeBase(Biome.MODIFIED_WOODED_BADLANDS_PLATEAU)); // TODO updated to new Biome internal name, recommend updating ICBiome
         biomeMap.put(ICBiome.MESA_PLATEAU_M, CraftBlock.biomeToBiomeBase(Biome.MODIFIED_BADLANDS_PLATEAU)); // TODO updated to new Biome internal name, recommend updating ICBiome
         biomeMap.put(ICBiome.MUSHROOM_ISLAND, CraftBlock.biomeToBiomeBase(Biome.MUSHROOM_FIELDS)); // TODO updated to new Biome internal name, recommend updating ICBiome
@@ -120,31 +115,15 @@ public class CustomWorldChunkManager extends WorldChunkManager {
 
     /** Returns the biome at a position. Used for various things. */
     @Override
-    public BiomeBase getBiome(BlockPosition blockPosition) {
-        // Get from cache
-        return this.biomeCache.a(blockPosition.getX(), blockPosition.getZ(), (BiomeBase) null);
-    }
-
-    /** Returns the biome at a position. Used for various things. */
-    @Override
     public BiomeBase getBiome(BlockPosition blockPosition, BiomeBase biomeBase) {
         // Get from cache
         return this.biomeCache.a(blockPosition.getX(), blockPosition.getZ(), biomeBase);
     }
 
-    @Override
-    public float a(float a, int b) {
-        // TODO work out what this is used for
-    	return super.a(a, b);
-    }
-
     /** Used for height map and temperature */
     @Override
-    public BiomeBase[] getBiomes(BiomeBase[] result, final int xMin, final int zMin, final int xSize, final int zSize) {
-        // Create result array if given one is insufficient
-        if (result == null || result.length < xSize * zSize) {
-            result = new BiomeBase[xSize * zSize];
-        }
+    public BiomeBase[] getBiomes(final int xMin, final int zMin, final int xSize, final int zSize) {
+        BiomeBase[] result = new BiomeBase[xSize * zSize];
         // 1 in every 4
         for (int i = 0; i < xSize * zSize; ++i) {
             final int x = (xMin + (i % xSize)) << 2;
@@ -157,18 +136,14 @@ public class CustomWorldChunkManager extends WorldChunkManager {
 
     /** Used in chunk creation */
     @Override
-    public BiomeBase[] getBiomeBlock(final BiomeBase[] array, final int x, final int z, final int xSize, final int zSize) {
-        return a(array, x, z, xSize, zSize, true);
+    public BiomeBase[] getBiomeBlock(final int x, final int z, final int xSize, final int zSize) {
+        return a(x, z, xSize, zSize, true);
     }
 
     /** Only used in above method... and getWetness */
     @Override
-    public BiomeBase[] a(BiomeBase[] result, final int xMin, final int zMin, final int xSize, final int zSize, final boolean useCache) {
-        // Create result array if given one is insufficient
-        if (result == null || result.length < xSize * zSize) {
-            // Happens for nether, end, and flat worlds...
-            result = new BiomeBase[xSize * zSize];
-        }
+    public BiomeBase[] a(final int xMin, final int zMin, final int xSize, final int zSize, final boolean useCache) {
+        BiomeBase [] result = new BiomeBase[xSize * zSize];
         // More efficient handling of whole chunk
         if (xSize == 16 && zSize == 16 && (xMin & 0xF) == 0 && (zMin & 0xF) == 0) {
             if (useCache) {
@@ -194,28 +169,28 @@ public class CustomWorldChunkManager extends WorldChunkManager {
         return result;
     }
 
-    /**
-     * Returns true if all biome's in area are in allowedBiomes. x, z and radius
-     * are in blocks. Used for checking where a village can go.
-     */
     @Override
-    public boolean a(final int x, final int z, final int radius, @SuppressWarnings("rawtypes") final List allowedBiomes) {
-        // Convert center and radius to minimum and size
+    public Set<BiomeBase> a(int x, int z, int radius) {
         final int xMin = (x - radius) >> 2;
         final int zMin = (z - radius) >> 2;
         final int xMax = (x + radius) >> 2;
         final int zMax = (z + radius) >> 2;
         final int xSize = xMax - xMin + 1;
         final int zSize = zMax - zMin + 1;
-        // Generate biome's
-        final BiomeBase[] biomes = getBiomes(null, xMin, zMin, xSize, zSize);
+        // Generate biomes
+        final BiomeBase[] biomes = getBiomes(xMin, zMin, xSize, zSize);
         // Make sure all biomes are allowed
-        for (int i = 0; i < xSize * zSize; i++) {
-            if (!allowedBiomes.contains(biomes[i])) {
-                return false;
-            }
-        }
-        return true;
+        return Stream.of(biomes).collect(Collectors.toSet());
+    }
+
+    @Override
+    public boolean a(StructureGenerator<?> structureGenerator) {
+        return a.put(structureGenerator, true);
+    }
+
+    @Override
+    public Set<IBlockData> b() {
+        return b;
     }
 
     /**
@@ -233,7 +208,7 @@ public class CustomWorldChunkManager extends WorldChunkManager {
         final int xSize = xMax - xMin + 1;
         final int zSize = zMax - zMin + 1;
         // Generate biome's
-        final BiomeBase[] biomes = getBiomes(null, xMin, zMin, xSize, zSize);
+        final BiomeBase[] biomes = getBiomes(xMin, zMin, xSize, zSize);
         BlockPosition result = null;
         int count = 0;
         for (int i = 0; i < xSize * zSize; i++) {
@@ -249,7 +224,7 @@ public class CustomWorldChunkManager extends WorldChunkManager {
 
     /** Cleans up biomeCache, called in tick */
     @Override
-    public void b() {
+    public void Y_() {
         // Clean up biomeCache
         biomeCache.a();
         biomeGenerator.cleanupCache();
