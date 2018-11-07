@@ -2,10 +2,9 @@ package com.github.hoqhuuep.islandcraft.nms.v1_13_R1;
 
 import java.lang.reflect.Field;
 
+import net.minecraft.server.v1_13_R1.ChunkGenerator;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
-
-import net.minecraft.server.v1_13_R1.WorldProvider;
 
 import com.github.hoqhuuep.islandcraft.nms.BiomeGenerator;
 import com.github.hoqhuuep.islandcraft.nms.NmsWrapper;
@@ -19,15 +18,11 @@ public class NmsHandler extends NmsWrapper {
             return false;
         }
         final CraftWorld craftWorld = (CraftWorld) world;
-        final WorldProvider worldProvider = craftWorld.getHandle().worldProvider;
+        final ChunkGenerator<?> chunkGenerator = craftWorld.getHandle().getChunkProviderServer().chunkGenerator;
         try {
-            Field field = getField(worldProvider.getClass(), "c");
+            Field field = getField(chunkGenerator.getClass(), "c");
             field.setAccessible(true);
-            if (field.get(worldProvider) instanceof CustomWorldChunkManager) {
-                // Already installed
-                return false;
-            }
-            field.set(worldProvider, new CustomWorldChunkManager(biomeGenerator));
+            field.set(chunkGenerator, new CustomWorldChunkManager(biomeGenerator));
             return true;
         } catch (NoSuchFieldException e) {
             return false;
